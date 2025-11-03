@@ -20,39 +20,3 @@ This system allows dental laboratories to:
 | Authentication | JWT-based |
 
 ## 📂 Project Structure
-dental-lab-monorepo/
-│
-├── frontend/               # React + Next.js web app
-│   ├── package.json
-│   ├── next.config.js
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       ├── styles/
-│       └── utils/
-│
-├── backend/                # Node.js + Express API
-│   ├── package.json
-│   ├── server.js           # Main entry file
-│   ├── .env.example        # Example env vars
-│   ├── src/
-│   │   ├── app.js          # Express app setup
-│   │   ├── config/         # DB connection, env setup
-│   │   ├── controllers/    # Business logic
-│   │   ├── models/         # Mongoose schemas (Lab, Patient, etc.)
-│   │   ├── routes/         # API routes
-│   │   └── utils/          # Helper functions
-│
-├── mobile/                 # Flutter mobile app
-│   ├── pubspec.yaml
-│   ├── lib/
-│   │   ├── main.dart
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   ├── models/
-│   │   └── services/
-│
-├── .gitignore
-└── README.md
-
