@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
+import authRoutes from './src/routes/auth.routes';
 
 const app = express();
 
@@ -20,10 +21,12 @@ app.use(express.urlencoded({ limit: '150mb', extended: true }));
 app.use(compression());
 
 // TODO: Health check endpoint
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toUTCString() });
 });
 
+app.use('/auth', authRoutes)
 // TODO: 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
