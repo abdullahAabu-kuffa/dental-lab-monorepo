@@ -4,11 +4,24 @@
 // Responsibility: Define POST /register, /login, /logout, /refresh endpoints
 
 import { Router } from "express";
-import { login } from "../controllers/auth.controller";
+import { login, register } from "../controllers/auth.controller";
+import { validate } from "../middlewares/validation.middleware";
+import { loginSchema, registerSchema } from "../validators/user.validator";
 const router = Router();
 
 
+/**
+ * POST api/auth/register
+ * Register a new user
+ * Body: { fullName, email, password, phone, clinicName, clinicAddress }
+ */
+router.post('/register', validate(registerSchema), register);
 
-router.post('/login', login)
+/**
+ * POST api/auth/login
+ * Login a user
+ * Body: { email, password }
+ */
+router.post('/login', validate(loginSchema), login)
 
 export default router
