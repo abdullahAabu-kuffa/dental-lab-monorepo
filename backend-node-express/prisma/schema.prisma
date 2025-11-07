@@ -37,5 +37,5 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   refreshToken String   @unique
   createdAt    DateTime @default(now())
-  expiresAt    DateTime
+  expiresAt    DateTime 
 }
