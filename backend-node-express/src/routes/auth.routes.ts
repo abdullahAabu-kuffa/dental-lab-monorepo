@@ -4,7 +4,7 @@
 // Responsibility: Define POST /register, /login, /logout, /refresh endpoints
 
 import { Router } from "express";
-import { login, register } from "../controllers/auth.controller";
+import { login, refreshToken, register } from "../controllers/auth.controller";
 import { validate } from "../middlewares/validation.middleware";
 import { loginSchema, registerSchema } from "../validators/user.validator";
 const router = Router();
@@ -23,5 +23,11 @@ router.post('/register', validate(registerSchema), register);
  * Body: { email, password }
  */
 router.post('/login', validate(loginSchema), login)
+/**
+ * POST /api/auth/refreshToken
+ * @desc Refresh user's access token using refresh token in cookies
+ * @access Public
+ */
+router.post('/refreshToken', refreshToken);
 
 export default router

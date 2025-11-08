@@ -1,7 +1,7 @@
 import Jwt  from "jsonwebtoken";
 import logger from "./logger.util";
 interface TokenPayload {
-  id: string;
+  id: number;
   email: string;
 }
 // logger.info("jwt secret",process.env.JWT_SECRET);

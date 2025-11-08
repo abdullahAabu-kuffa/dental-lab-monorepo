@@ -4,9 +4,10 @@
 // Responsibility: User registration, login verification, JWT generation, token refresh
 
 import { bcryptPassword, verifyPassword } from "../utils/encryption.util";
-import { generateAccessToken } from "../utils/token.util";
+import { generateAccessToken, generateRefreshToken } from "../utils/token.util";
 import {prisma} from "../lib/prisma";
 import logger from "../utils/logger.util";
+import jwt from "jsonwebtoken";
 
 
 interface RegisterInput {
@@ -16,6 +17,10 @@ interface RegisterInput {
   phoneNumber: string;
   clinicName: string;
   clinicAddress: string;
+}
+interface RefreshTokenResult {
+  newAccessToken: string;
+  newRefreshToken: string;
 }
 
 export const registerUser = async (input: RegisterInput) => {
@@ -70,13 +75,88 @@ export const registerUser = async (input: RegisterInput) => {
 }
 
 export const loginUser = async (email: string, password: string) => {
-  const hashedPassword = await bcryptPassword(password);
-  const verfied = await verifyPassword(password, hashedPassword);
-  const accessToken = generateAccessToken({ id: "2", email });
-  console.log(hashedPassword, verfied, accessToken);
+  const user =await prisma.user.findUnique({where: {email}})
+  
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const isPasswordValid  = await verifyPassword(password, user.password);
+  if (!isPasswordValid) {
+    throw new Error("Invalid password")
+  }
+  if (!user.isVerified) {
+    throw new Error("Please check your email to verify your account.");
+  }
+
+  const accessToken = generateAccessToken({id:user.id,email:user.email})
+  const refreshToken = generateRefreshToken({id:user.id,email:user.email})
+  const session =await prisma.session.create({
+    data: {
+      userId:user.id,
+      refreshToken,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    }
+  })
+
   return {
-    accessToken: accessToken,
-    refreshToken: "dummy-refresh",
-    user: { email },
-  };
+    id:user.id,
+    accessToken,
+    refreshToken,
+    email:user.email,
+    name:user.fullName,
+    session
+  }
 };
+
+
+
+
+export const refreshTokenService = async (tokenFromCookie: string):Promise<RefreshTokenResult> => {
+    if (!tokenFromCookie) throw new Error("No Refresh Token");
+
+    // let payload: any;
+    // try {
+    //   payload = jwt.verify(tokenFromCookie, process.env.REFRESH_TOKEN_SECRET!);
+    // } catch {
+    //   throw new Error("Invalid or tampered refresh token");
+    // }
+    const session = await prisma.session.findUnique({
+      where: { refreshToken: tokenFromCookie },
+    });
+
+      if (!session) throw new Error("Invalid refresh token");
+
+    if (new Date() > session.expiresAt) {
+      await prisma.session.delete({ where: { id: session.id } });
+      throw new Error("Refresh token expired")
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+    });
+    if (!user?.isVerified) throw new Error("Please verify your email before login.");
+    
+    // if (!user || !user.isActive) {
+    //   await prisma.session.delete({ where: { id: session.id } });
+    //   throw new Error("Account disabled or deleted");
+    // }
+    const newAccessToken = generateAccessToken({
+      id: user.id,
+      email: user.email,
+    });
+
+    const newRefreshToken = generateRefreshToken({
+      id: user.id,
+      email: user.email,
+    });
+
+    await prisma.session.update({
+      where: { id: session.id },
+      data: {
+        refreshToken: newRefreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return { newAccessToken, newRefreshToken };
+}
