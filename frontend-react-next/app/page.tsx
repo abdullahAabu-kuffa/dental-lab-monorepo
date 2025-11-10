@@ -1,4 +1,4 @@
-import HeroSec from "./src/components/organisms/HeroSec For EX/HeroSex";
+import HeroSec from "./src/components/organisms/HeroSec 1/HeroSec";
 
 
 export default function Home() {

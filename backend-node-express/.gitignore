@@ -9,5 +9,5 @@ logs/
 .vscode/
 .idea/
 coverage/
-
+package-lock.json
 /generated/prisma

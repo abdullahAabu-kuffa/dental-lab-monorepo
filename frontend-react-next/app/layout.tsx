@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "./src/components/organisms/Navbar/Navbar";
+import Sidebar from "./dashboard/_components/@sidebar";
 const geistSans = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
@@ -35,6 +36,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
       >
+        {/* <Sidebar /> */}
+        {/* <Navbar /> */}
         {children} 
       </body>
     </html>
