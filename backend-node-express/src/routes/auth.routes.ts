@@ -6,6 +6,7 @@ import { Router } from "express";
 import { register, login, refreshToken, logout } from "../controllers/auth.controller";
 import { validate } from "../middlewares/validation.middleware";
 import { loginSchema, registerSchema } from "../validators/user.validator";
+import { throttleLogin } from "../middlewares/rate-limit.middleware";
 
 const router = Router();
 
@@ -90,9 +91,11 @@ router.post("/register", validate(registerSchema), register);
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: ahmed@clinic.com
  *               password:
  *                 type: string
  *                 format: password
+ *                 example: Test1234
  *     responses:
  *       200:
  *         description: Login successful
@@ -100,8 +103,23 @@ router.post("/register", validate(registerSchema), register);
  *           Set-Cookie:
  *             schema:
  *               type: string
- *               example: refreshToken=eyJhbGciOiJI...
- *             description: HttpOnly refresh token
+ *               example: refreshToken=eyJhbGciOiJI...; HttpOnly; Secure; SameSite=Strict
+ *             description: HttpOnly refresh token cookie
+ *           X-RateLimit-Limit:
+ *             schema:
+ *               type: integer
+ *               example: 5
+ *             description: Maximum number of login attempts allowed
+ *           X-RateLimit-Remaining:
+ *             schema:
+ *               type: integer
+ *               example: 4
+ *             description: Number of login attempts remaining
+ *           X-RateLimit-Reset:
+ *             schema:
+ *               type: string
+ *               format: date-time
+ *             description: Time when rate limit will reset
  *         content:
  *           application/json:
  *             schema:
@@ -109,16 +127,66 @@ router.post("/register", validate(registerSchema), register);
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: Login successful
  *                 accessToken:
- *                   type: string
+ *                       type: string
+ *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
- *         description: Invalid credentials or unverified account
+ *         description: Invalid credentials, email not verified, or account inactive
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Invalid email or password
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 401
  *       403:
- *         description: Account disabled
+ *         description: Account inactive
+ *       429:
+ *         description: Too many login attempts
+ *         headers:
+ *           Retry-After:
+ *             schema:
+ *               type: integer
+ *               example: 900
+ *             description: Number of seconds to wait before retrying
+ *           X-RateLimit-Limit:
+ *             schema:
+ *               type: integer
+ *               example: 5
+ *           X-RateLimit-Remaining:
+ *             schema:
+ *               type: integer
+ *               example: 0
+ *           X-RateLimit-Reset:
+ *             schema:
+ *               type: string
+ *               format: date-time
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Too many failed login attempts. Please try again in 15 minutes.
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 429
  *       500:
  *         description: Internal server error
  */
-router.post("/login", validate(loginSchema), login);
+router.post("/login",throttleLogin, validate(loginSchema), login);
 
 /**
  * @swagger
