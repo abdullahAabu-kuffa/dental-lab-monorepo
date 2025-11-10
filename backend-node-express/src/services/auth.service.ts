@@ -76,89 +76,126 @@ export const registerUser = async (input: RegisterInput) => {
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { email } });
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-  const isPasswordValid = await verifyPassword(password, user.password);
-  if (!isPasswordValid) {
-    throw new Error("Invalid password");
-  }
-  if (!user.isVerified) {
-    throw new Error("Please check your email to verify your account.");
-  }
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const isPasswordValid = await verifyPassword(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
+    }
+    if (!user.isVerified) {
+      throw new Error("Please check your email to verify your account.");
+    }
 
-  const accessToken = generateAccessToken({ id: user.id, email: user.email });
-  const refreshToken = generateRefreshToken({ id: user.id, email: user.email });
-  const session = await prisma.session.create({
-    data: {
-      userId: user.id,
+    const allSessions = await prisma.session.findMany({
+      where: { userId: user.id },
+    });
+    if (allSessions.length > 2) {
+      const sessionsToDelete = [...allSessions]
+        .sort((a, b) => a.expiresAt.getTime() - b.expiresAt.getTime())
+        .slice(0, allSessions.length - 2);
+
+      await prisma.session.deleteMany({
+        where: { id: { in: sessionsToDelete.map((s) => s.id) } },
+      });
+    }
+
+    const accessToken = generateAccessToken({ id: user.id, email: user.email });
+    const refreshToken = generateRefreshToken({
+      id: user.id,
+      email: user.email,
+    });
+    const session = await prisma.session.create({
+      data: {
+        userId: user.id,
+        refreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return {
+      id: user.id,
+      accessToken,
       refreshToken,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    },
-  });
-
-  return {
-    id: user.id,
-    accessToken,
-    refreshToken,
-    email: user.email,
-    name: user.fullName,
-    session,
-  };
+      email: user.email,
+      name: user.fullName,
+      session,
+    };
+  } catch (error: any) {
+    logger.error(`[Login Error]: ${error.message}`);
+    throw error;
+  }
 };
 
 export const refreshTokenService = async (
   tokenFromCookie: string
 ): Promise<RefreshTokenResult> => {
-  if (!tokenFromCookie) throw new Error("No Refresh Token");
-
-  let payload: any;
   try {
-    payload = jwt.verify(tokenFromCookie, process.env.JWT_REFRESH_SECRET!);
-  } catch {
-    throw new Error("Invalid or tampered refresh token");
+    if (!tokenFromCookie) throw new Error("No Refresh Token");
+
+    let payload: any;
+    try {
+      payload = jwt.verify(tokenFromCookie, process.env.JWT_REFRESH_SECRET!);
+    } catch {
+      throw new Error("Invalid or tampered refresh token");
+    }
+    const session = await prisma.session.findUnique({
+      where: { refreshToken: tokenFromCookie },
+    });
+
+    if (!session) throw new Error("Invalid refresh token");
+
+    if (new Date() > session.expiresAt) {
+      await prisma.session.delete({ where: { id: session.id } });
+      throw new Error("Refresh token expired");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+    });
+
+    if (!user?.isVerified)
+      throw new Error("Please verify your email before login.");
+    const allSessions = await prisma.session.findMany({
+      where: { userId: user.id },
+    });
+
+    if (allSessions.length > 3) {
+      const sessionsToDelete = [...allSessions]
+        .sort((a, b) => a.expiresAt.getTime() - b.expiresAt.getTime())
+        .slice(0, allSessions.length - 3);
+
+      await prisma.session.deleteMany({
+        where: { id: { in: sessionsToDelete.map((s) => s.id) } },
+      });
+    }
+    // if (!user || !user.isActive) {
+    //   await prisma.session.delete({ where: { id: session.id } });
+    //   throw new Error("Account disabled or deleted");
+    // }
+    const newAccessToken = generateAccessToken({
+      id: user.id,
+      email: user.email,
+    });
+    const newRefreshToken = generateRefreshToken({
+      id: user.id,
+      email: user.email,
+    });
+
+    await prisma.session.update({
+      where: { id: session.id },
+      data: {
+        refreshToken: newRefreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return { newAccessToken, newRefreshToken };
+  } catch (error: any) {
+    logger.error(`[Refresh Token Error]: ${error.message}`);
+    throw error;
   }
-  const session = await prisma.session.findUnique({
-    where: { refreshToken: tokenFromCookie },
-  });
-
-  if (!session) throw new Error("Invalid refresh token");
-
-  if (new Date() > session.expiresAt) {
-    await prisma.session.delete({ where: { id: session.id } });
-    throw new Error("Refresh token expired");
-  }
-
-  const user = await prisma.user.findUnique({where: { id: session.userId }});
-
-  if (!user?.isVerified)
-    throw new Error("Please verify your email before login.");
-  const allSessions = await prisma.session.findMany({where: { userId: user.id }});
-
-  if (allSessions.length > 3) {
-    const sessionsToDelete = [...allSessions]
-      .sort((a, b) => a.expiresAt.getTime() - b.expiresAt.getTime())
-      .slice(0, allSessions.length - 3);
-
-    await prisma.session.deleteMany({where: { id: { in: sessionsToDelete.map((s) => s.id) } }});
-  }
-  // if (!user || !user.isActive) {
-  //   await prisma.session.delete({ where: { id: session.id } });
-  //   throw new Error("Account disabled or deleted");
-  // }
-  const newAccessToken = generateAccessToken({id: user.id,email: user.email,});
-  const newRefreshToken = generateRefreshToken({id: user.id,email: user.email});
-
-  await prisma.session.update({
-    where: { id: session.id },
-    data: {
-      refreshToken: newRefreshToken,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    },
-  });
-
-  return { newAccessToken, newRefreshToken };
 };
-

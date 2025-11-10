@@ -18,7 +18,7 @@ setupSwagger(app);
 // TODO: Security middleware
 app.use(helmet());
 app.use(cors());
- 
+
 // TODO: Body parser
 app.use(express.json({ limit: "150mb" }));
 app.use(express.urlencoded({ limit: "150mb", extended: true }));
