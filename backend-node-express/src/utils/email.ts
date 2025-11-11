@@ -10,7 +10,7 @@ export const sendStyledEmail = async (to: string,subject: string,htmlContent: st
     });
 
     const mailOptions = {
-        from: `"Dental Lab Support" <${process.env.GMAIL_USER}>`,
+        from: `"Avante Dental Solutions Support" <${process.env.GMAIL_USER}>`,
         to: to,
         subject:subject,
         html: htmlContent,

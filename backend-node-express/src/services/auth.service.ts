@@ -1,5 +1,3 @@
-
-import { transports } from "winston";
 // TODO: Authentication Service
 // Purpose: Handle authentication business logic (decoupled from Express)
 // Usage: Called by auth controller
@@ -10,10 +8,8 @@ import { generateAccessToken, generateRefreshToken } from "../utils/token.util";
 import { prisma } from "../lib/prisma";
 import logger from "../utils/logger.util";
 import jwt from "jsonwebtoken";
-import { logout } from "../controllers/auth.controller";
-import nodemailer from "nodemailer";
-import { error } from "console";
 import { sendStyledEmail } from "../utils/email";
+import { buildEmailTemplate } from "../utils/emailTemplate";
 
 interface RegisterInput {
   fullName: string;
@@ -55,7 +51,6 @@ export const registerUser = async (input: RegisterInput) => {
         phoneNumber,
         clinicName,
         clinicAddress,
-        isVerified: true, // temporary till we implement email verification
         isActive: false,
       },
       select: {
@@ -66,11 +61,42 @@ export const registerUser = async (input: RegisterInput) => {
         clinicName: true,
         clinicAddress: true,
         role: true,
-        isVerified: true,
         isActive: true,
         createdAt: true,
       },
     });
+
+    const htmlTemplate = buildEmailTemplate({
+      title: "Registration Successful",
+      body: `
+      <p style="font-size:16px;">Hello <strong>${fullName}</strong>,</p>
+      <p style="font-size:15px; line-height:1.6; color:#555;">
+        Thank you for registering with <strong>Avante Dental Solutions</strong>!
+        Your account is now created and is pending admin approval.
+      </p>
+      <div style="background:#e7f3ff; border-left:4px solid #BDB0A7; padding:20px; margin:25px 0; border-radius:6px;">
+        <p style="margin:0 0 12px 0; font-size:15px; color:#333;"><strong>Registration Details:</strong></p>
+        <p style="margin:8px 0; font-size:14px; color:#555;">Email: <strong>${email}</strong></p>
+        <p style="margin:8px 0; font-size:14px; color:#555;">Clinic: <strong>${clinicName}</strong></p>
+      </div>
+      <div style="background:#fffbea; border-left:4px solid #ffc107; padding:20px; margin:25px 0; border-radius:6px;">
+        <p style="margin:0 0 12px 0; font-size:15px; color:#333;"><strong>Next Steps:</strong></p>
+        <p style="font-size:14px; line-height:1.6; color:#555; margin:8px 0;">
+          Our team will review your registration and activate your account soon.<br>
+          You will receive a notification when your account is active.
+        </p>
+      </div>
+      <p style="font-size:14px; color:#777;">
+        For questions, please contact our support team.
+      </p>
+    `,
+      showButton: false,
+    });
+    await sendStyledEmail(
+      email,
+      "Welcome to Avante Dental Solutions - Registration Received",
+      htmlTemplate
+    );
 
     logger.info(`New user registered: ${email} (awaiting admin approval)`);
     return user;
@@ -89,9 +115,6 @@ export const loginUser = async (email: string, password: string) => {
     const isPasswordValid = await verifyPassword(password, user.password);
     if (!isPasswordValid) {
       throw new Error("Invalid password");
-    }
-    if (!user.isVerified) {
-      throw new Error("Please check your email to verify your account.");
     }
 
     const allSessions = await prisma.session.findMany({
@@ -161,8 +184,10 @@ export const refreshTokenService = async (
       where: { id: session.userId },
     });
 
-    if (!user?.isVerified)
-      throw new Error("Please verify your email before login.");
+    if (!user) {
+      await prisma.session.delete({ where: { id: session.id } });
+      throw new Error("User not found");
+    }
     const allSessions = await prisma.session.findMany({
       where: { userId: user.id },
     });
@@ -214,50 +239,22 @@ export const forgotPasswordService = async (email: string) => {
     }
     const token = generateAccessToken({ id: user.id, email: user.email });
     const resetLink = `http://localhost:3000/reset-password?token=${token}`;
-    const htmlTemplate = `
-  <div style="margin:0; padding:0; background:linear-gradient(135deg,#f6f9fc 0%,#eef1f5 100%); font-family:'Segoe UI', Roboto, Arial, sans-serif;">
-    <div style="max-width:600px; margin:40px auto; background:white; border-radius:16px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.08);">
-      
-      <!-- Header -->
-      <div style="background:linear-gradient(90deg,#CFC0AE,#BDB0A7); padding:30px 20px; text-align:center;">
-        <h1 style="color:#fff; margin:0; font-size:26px;">Dental Lab</h1>
-        <p style="color:#e0f7ff; font-size:14px; margin-top:8px;">Secure Password Reset</p>
-      </div>
-
-      <!-- Body -->
-      <div style="padding:40px 30px; color:#333;">
+    const htmlTemplate = buildEmailTemplate({
+      title: "Secure Password Reset",
+      body: `
         <p style="font-size:16px;">Hello <strong>${user.fullName || "User"}</strong>,</p>
         <p style="font-size:15px; line-height:1.6; color:#555;">
           We received a request to reset your password. To proceed, please click the button below.  
           This link will expire in <strong>15 minutes</strong> for security reasons.
         </p>
-
-        <div style="text-align:center; margin:40px 0;">
-          <a href="${resetLink}" 
-             style="background:#BDB0A7; color:white; padding:14px 32px; font-size:16px; border-radius:8px; text-decoration:none; font-weight:600; transition:all 0.3s ease; display:inline-block;">
-            Reset My Password
-          </a>
-        </div>
-
         <p style="font-size:14px; color:#777;">
           If you didn’t request this, please ignore this email or contact our support if you have concerns.
         </p>
-
-        <hr style="border:none; border-top:1px solid #eee; margin:40px 0 20px;">
-        <p style="font-size:13px; color:#aaa; text-align:center; line-height:1.5;">
-          Need help? <a href="mailto:support@dentallab.com" style="color:#BDB0A7; text-decoration:none;">Contact support</a><br>
-          This is an automated message, please do not reply.
-        </p>
-      </div>
-
-      <!-- Footer -->
-      <div style="background:#f1f5f9; text-align:center; padding:15px;">
-        <img src="https://cdn-icons-png.flaticon.com/512/3094/3094855.png" alt="Dental Lab Logo" width="40" style="opacity:0.8; margin-bottom:6px;">
-        <p style="font-size:12px; color:#777; margin:0;">&copy; ${new Date().getFullYear()} Dental Lab. All rights reserved.</p>
-      </div>
-    </div>
-  </div>
-      `;
+      `,
+      ctaText: "Reset My Password",
+      ctaUrl: resetLink,
+      showButton: true,
+    });
     const result = await sendStyledEmail(
       user.email,
       "Reset your password",
@@ -279,7 +276,10 @@ export const forgotPasswordService = async (email: string) => {
   }
 };
 
-export const resetPasswordService = async (token: string, newPassword: string) => {
+export const resetPasswordService = async (
+  token: string,
+  newPassword: string
+) => {
   try {
     const tokenExist = await prisma.security_Token.findUnique({
       where: { token: token },
@@ -292,10 +292,14 @@ export const resetPasswordService = async (token: string, newPassword: string) =
       throw new Error("Invalid Token");
     }
     if (tokenExist) {
-      await prisma.user.update({ where: { id: tokenExist!.userId } ,data:{password:hashedPassword, updatedAt:new Date()}});
-      await prisma.security_Token.deleteMany({where:{userId:tokenExist!.userId}})
+      await prisma.user.update({
+        where: { id: tokenExist!.userId },
+        data: { password: hashedPassword, updatedAt: new Date() },
+      });
+      await prisma.security_Token.deleteMany({
+        where: { userId: tokenExist!.userId },
+      });
     }
-
   } catch (error: any) {
     logger.error(`[forgot Password Service  Error]: ${error.message}`);
     throw error;

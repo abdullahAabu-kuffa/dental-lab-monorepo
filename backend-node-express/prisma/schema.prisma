@@ -23,7 +23,6 @@ model User {
   clinicName     String
   clinicAddress  String
   role           Role             @default(CLIENT)
-  isVerified     Boolean          @default(false)
   isActive       Boolean          @default(false)
   sessions       Session[]
   Security_Token Security_Token[]
