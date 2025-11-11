@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import {
   Bell,
   DollarSign,
-  House,
   Info,
   Mail,
   Settings,
@@ -14,11 +13,12 @@ import {
   Users,
   Menu,
   XIcon,
-  ListOrdered
+  ListOrdered,
+  LayoutDashboard
 } from "lucide-react";
 
 const ICONS = {
-  House,
+  LayoutDashboard,
   DollarSign,
   Settings,
   ShoppingBag,
@@ -26,11 +26,11 @@ const ICONS = {
   Mail,
   Bell,
   Info,
-  ListOrdered
+  ListOrdered,
 };
 
 const links = [
-  { name: "Home", to: "/", icon: "House" },
+  { name: "Dashboard", to: "/dashboard", icon: "LayoutDashboard" },
   { name: "Sales", to: "/dashboard/sales", icon: "DollarSign" },
   { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
   { name: "Products", to: "/dashboard/products", icon: "ShoppingBag" },
@@ -51,20 +51,17 @@ const Sidebar = () => {
       <motion.div
         animate={{ width: isOpen ? 240 : 70 }}
         transition={{ duration: 0.01 }}
-        className="flex flex-col min-h-screen bg-gray-900 text-white transition-all duration-300"
+        className="flex flex-col min-h-screen bg-gray-900 text-white shadow-lg transition-all duration-300"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          {isOpen && <h1 className="text-xl font-bold">Dashboard</h1>}
-          <motion.button
+          {isOpen && <h1 className="text-xl font-bold">Admin Panel</h1>}
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 text-gray-300 hover:text-white"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             {isOpen ? <XIcon size={20} /> : <Menu size={20} />}
-          </motion.button>
+          </button>
         </div>
 
         {/* Links */}
@@ -79,7 +76,7 @@ const Sidebar = () => {
                 href={link.to}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "bg-gradient-to-r from-[#a07916] via-[#E4B441] to-[#a07916]"
+                    ? "bg-gradient-to-r from-[#a07916] via-[#E4B441] to-[#a07916] shadow-[0_0_10px_#E4B44180]"
                     : "text-gray-300 hover:bg-gray-800 hover:text-white"
                 }`}
               >

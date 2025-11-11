@@ -10,6 +10,7 @@ import EventsSection from "./src/components/organisms/landing/EventsSection/Even
 import ContactSection from "./src/components/organisms/landing/ContactSection/ContactSection";
 import Footer from "./src/components/organisms/Footer/Footer";
 
+
 export default function Home() {
   return (
     <main>
