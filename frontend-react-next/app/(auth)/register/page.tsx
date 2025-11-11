@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
 	registerSchema,
 	type RegisterInput,
@@ -195,13 +196,16 @@ export default function RegisterPage() {
 					</div>
 					{/* ---------------------------------- */}
 
-					<button
+					<motion.button
 						type="submit"
 						className="w-full rounded-md px-3 py-2 border bg-black text-white disabled:opacity-60"
 						disabled={submitting}
+						whileHover={{ scale: 1.02 }}
+						whileTap={{ scale: 0.98 }}
+						transition={{ type: "spring", stiffness: 400, damping: 17 }}
 					>
 						{submitting ? "Creating account..." : "Create account"}
-					</button>
+					</motion.button>
 				</form>
 
 				<p className="text-sm text-gray-600">

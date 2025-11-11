@@ -8,8 +8,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-poppins);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +23,82 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins),'Playfair Display', Helvetica, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hero Heading - Serif Font (Playfair Display) */
+.hero-heading {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+/* Hero Subtitle - Sans-serif (Poppins) */
+.hero-subtitle {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+}
+
+/* Remove default scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4B441;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD700;
+}
+
+/* Arabic Font Support */
+.font-arabic {
+  font-family: var(--font-noto-arabic), 'Noto Sans Arabic', sans-serif;
+}
+
+.font-english {
+  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .ltr-content {
+  direction: ltr;
+}
+
+/* Arabic text styling */
+.arabic-text {
+  font-family: var(--font-noto-arabic), 'Noto Sans Arabic', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Language-specific font weights for Arabic */
+[dir="rtl"] .font-bold {
+  font-weight: 600; /* Slightly lighter bold for Arabic */
+}
+
+/* Font family utilities */
+.font-poppins {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.font-playfair {
+  font-family: var(--font-playfair), serif;
 }
