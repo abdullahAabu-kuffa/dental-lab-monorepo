@@ -177,7 +177,12 @@ export const resetPassword = async (
   try{
     const {token,newPassword} = req.body;
     const result = await resetPasswordService(token,newPassword)
-    return res.status(200).json({ message: "reset Password successful" });
+    return res.status(200).json(
+      successResponse(
+        { passwordReset: true },
+        "Password reset successfully"
+      )
+    );
   }
   catch (err: any) {
     logger.error(`forget password errror: ${err.message}`);
