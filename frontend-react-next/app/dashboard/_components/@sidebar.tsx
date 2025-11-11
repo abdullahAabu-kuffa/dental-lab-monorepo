@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import {
   Bell,
   DollarSign,
-  House,
   Info,
   Mail,
   Settings,
@@ -14,11 +13,12 @@ import {
   Users,
   Menu,
   XIcon,
-  ListOrdered
+  ListOrdered,
+  LayoutDashboard
 } from "lucide-react";
 
 const ICONS = {
-  House,
+  LayoutDashboard,
   DollarSign,
   Settings,
   ShoppingBag,
@@ -26,11 +26,11 @@ const ICONS = {
   Mail,
   Bell,
   Info,
-  ListOrdered
+  ListOrdered,
 };
 
 const links = [
-  { name: "Home", to: "/", icon: "House" },
+  { name: "Dashboard", to: "/dashboard", icon: "LayoutDashboard" },
   { name: "Sales", to: "/dashboard/sales", icon: "DollarSign" },
   { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
   { name: "Products", to: "/dashboard/products", icon: "ShoppingBag" },
@@ -55,7 +55,7 @@ const Sidebar = () => {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          {isOpen && <h1 className="text-xl font-bold">Dashboard</h1>}
+          {isOpen && <h1 className="text-xl font-bold">Admin Panel</h1>}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 text-gray-300 hover:text-white"
