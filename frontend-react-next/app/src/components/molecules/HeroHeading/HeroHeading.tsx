@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
-import { typography, colors } from '../../../../design-system/variables';
+import {  colors } from '../../../../design-system/colors';
+import { typography } from '../../../../design-system/typography';
 
 export default function HeroHeading() {
   return (

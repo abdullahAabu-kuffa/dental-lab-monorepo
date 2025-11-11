@@ -6,7 +6,7 @@ import HeroSubtitle from '../../molecules/HeroSubtitle/HeroSubtitle';
 import HeroCTAButtons from '../../molecules/HeroCTAButtons/HeroCTAButtons';
 import ScrollIndicator from '../../atoms/ScrollIndicator/ScrollIndicator';
 import MedicalBackground from '../../atoms/MedicalBackground/MedicalBackground';
-import { gradients } from '../../../../design-system/variables';
+import { gradients } from '../../../../design-system/gradients';
 
 export default function HeroSec() {
   return (

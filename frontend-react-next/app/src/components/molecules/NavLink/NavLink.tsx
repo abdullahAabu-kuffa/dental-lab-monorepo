@@ -47,9 +47,9 @@ export default function NavLink({ href, icon: Icon, children }: NavLinkProps) {
         }}
         transition={{ duration: 0.5 }}
       >
-        <Icon 
-          className="w-5 h-5" 
-          style={{ 
+        <Icon
+          className="w-5 h-5"
+          style={{
             color: isHovered ? "#E4B441" : "currentColor",
             filter: isHovered ? "drop-shadow(0 0 8px rgba(228,180,65,0.6))" : "none"
           }}

@@ -1,0 +1,19 @@
+import React from 'react';
+import { Event } from '../../../types/components';
+import EventCard from '../../atoms/EventCard/EventCard';
+
+interface EventsGridProps {
+  events: Event[];
+}
+
+const EventsGrid: React.FC<EventsGridProps> = ({ events }) => {
+  return (
+    <div className="grid md:grid-cols-3 gap-10">
+      {events.map((event) => (
+        <EventCard key={event.id} event={event} />
+      ))}
+    </div>
+  );
+};
+
+export default EventsGrid;

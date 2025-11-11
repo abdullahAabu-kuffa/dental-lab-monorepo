@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Image from 'next/image';
-import { animations, hoverEffects, tapEffects } from '../../../../design-system/variables';
+import { animations, hoverEffects, tapEffects } from '../../../../design-system/animations';
 
 export default function Logo() {
   const [isHovered, setIsHovered] = useState(false);
@@ -25,7 +25,7 @@ export default function Logo() {
           y: isHovered ? -2 : 0,
         }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        style={{ 
+        style={{
           transformStyle: "preserve-3d",
           perspective: "1000px",
         }}

@@ -1,7 +1,8 @@
 'use client';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { motionVariants, gradients } from '../../../../design-system/variables';
+import { gradients } from '../../../../design-system/gradients';
+import { motionVariants } from '../../../../design-system/animations';
 
 interface HeroLogoProps {
   src: string;
@@ -28,7 +29,7 @@ export default function HeroLogo({
     >
       <div className="inline-block relative">
         
-        {/* Logo Animation - حركة ناعمة وبسيطة */}
+        {/* Logo Animation */}
         <motion.div
           animate={{ 
             y: [0, -8, 0],

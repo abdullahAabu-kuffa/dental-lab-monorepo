@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { animations, hoverEffects, tapEffects, componentStyles } from '../../../../design-system/variables';
+import { animations, hoverEffects, tapEffects, componentStyles } from '../../../../design-system';
 
 interface ButtonProps {
   children: React.ReactNode;

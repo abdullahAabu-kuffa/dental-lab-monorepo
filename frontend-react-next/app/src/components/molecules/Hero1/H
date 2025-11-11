@@ -1,0 +1,25 @@
+import { typography } from '../../../../design-system/typography';
+
+/*************  ✨ Windsurf Command 🌟  *************/
+/**
+ * A heading component for the hero section.
+ *
+ * @returns {JSX.Element} A heading element with the hero section title.
+ */
+export default function HeroHeading(): JSX.Element {
+export default function HeroHeading() {
+  return (
+    <h1
+      className={`${typography.hero} text-center mb-8 text-white`}
+      // The hero section title.
+    >
+      {"Egypt's First "} // The first part of the title.
+      <span className="text-[#E4B441]">Digital</span> // The second part of the title with the highlight color.
+      {" Dental Lab"} // The third part of the title.
+      {"Egypt's First "}
+      <span className="text-[#E4B441]">Digital</span>
+      {" Dental Lab"}
+    </h1>
+  );
+}
+/*******  44706f7a-6981-41ed-ab07-67f976001afb  *******/
