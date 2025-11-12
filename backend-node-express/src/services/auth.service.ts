@@ -237,7 +237,7 @@ export const forgotPasswordService = async (email: string) => {
     if (!user) {
       throw new Error("User not found");
     }
-    const token = generateAccessToken({ id: user.id, email: user.email });
+    const token =  generateAccessToken({ id: user.id, email: user.email });
     const resetLink = `http://localhost:3000/reset-password?token=${token}`;
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",
@@ -265,7 +265,7 @@ export const forgotPasswordService = async (email: string) => {
         userId: user.id,
         isUsed: false,
         token: token,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
       },
     });
 
@@ -284,9 +284,8 @@ export const resetPasswordService = async (
     const tokenExist = await prisma.security_Token.findUnique({
       where: { token: token },
     });
-    if (tokenExist!.expiresAt < new Date()) {
-      throw new Error("Token expired");
-    }
+    if (!tokenExist) throw new Error("Invalid Token");
+    if (tokenExist.expiresAt < new Date()) throw new Error("Token expired");
     const hashedPassword = await bcryptPassword(newPassword);
     if (!tokenExist) {
       throw new Error("Invalid Token");

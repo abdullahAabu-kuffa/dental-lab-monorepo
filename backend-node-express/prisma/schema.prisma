@@ -24,6 +24,7 @@ model User {
   clinicAddress  String
   role           Role             @default(CLIENT)
   isActive       Boolean          @default(false)
+  isVerified     Boolean          @default(false) 
   sessions       Session[]
   Security_Token Security_Token[]
   createdAt      DateTime         @default(now())
