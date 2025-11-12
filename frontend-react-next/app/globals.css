@@ -1,17 +1,19 @@
-@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-sans: var(--font-poppins);
+  --font-serif: var(--font-playfair);
+  --font-arabic: var(--font-noto-arabic);
+  --font-mono: 'Geist Mono', monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,8 +21,68 @@
   }
 }
 
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+.hero-heading {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+}
+
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4B441;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD700;
+}
+
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+.font-english {
+  font-family: var(--font-sans);
+}
+
+[dir="rtl"] {
+  direction: rtl;
+}
+[dir="rtl"] .ltr-content {
+  direction: ltr;
+}
+
+.arabic-text {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .font-bold {
+  font-weight: 600;
 }
