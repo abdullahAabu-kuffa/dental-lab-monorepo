@@ -1,14 +1,14 @@
 'use client';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { motionVariants, gradients } from '../../../../design-system/variables';
+import { motionVariants, gradients } from '../../../../design-system';
 
 interface HeroLogoProps {
   src: string;
   alt: string;
   width: number;
   height: number;
-  className: string;
+  className?: string;
   delay?: number;
 }
 
@@ -17,7 +17,7 @@ export default function HeroLogo({
   alt, 
   width, 
   height, 
-  className,
+  className = '',
   delay = 0
 }: HeroLogoProps) {
   
@@ -28,7 +28,7 @@ export default function HeroLogo({
     >
       <div className="inline-block relative">
         
-        {/* Logo Animation - حركة ناعمة وبسيطة */}
+        {/* Logo with Float Animation */}
         <motion.div
           animate={{ 
             y: [0, -8, 0],
@@ -50,18 +50,20 @@ export default function HeroLogo({
           />
         </motion.div>
 
-        {/* Underline */}
+        {/* Animated Underline */}
         <motion.div
-          className="mt-6 mx-auto"
+          className="mt-6 mx-auto h-0.5"
           style={{
             width: '70%',
-            height: '2px',
-            background: gradients.goldUnderline,
-            opacity: 0.6
+            backgroundImage: gradients.goldUnderline,
           }}
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 0.6 }}
-          transition={{ duration: 1.2, delay: delay + 0.6, ease: "easeOut" }}
+          transition={{ 
+            duration: 1.2, 
+            delay: delay + 0.6, 
+            ease: "easeOut" 
+          }}
         />
       </div>
     </motion.div>

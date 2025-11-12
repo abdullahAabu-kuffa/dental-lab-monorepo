@@ -1,4 +1,13 @@
 {
+ "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "types": ["node"]
+    },
+    "transpileOnly": false,
+    "files": true
+  },
+
   "compilerOptions": {
     "target": "es2024",
     "module": "commonjs",
@@ -15,7 +24,7 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    // "allowImportingTsExtensions": true
+    "typeRoots": ["./node_modules/@types", "./src/types"]
 
   },
   "include": ["server.ts", "app.ts", "src/**/*", "prisma/**/*"],

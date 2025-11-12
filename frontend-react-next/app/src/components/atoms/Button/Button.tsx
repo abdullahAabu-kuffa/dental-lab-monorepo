@@ -1,42 +1,50 @@
 'use client';
+
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { animations, hoverEffects, tapEffects, componentStyles } from '../../../../design-system/variables';
+import { componentStyles, animations, hoverEffects, tapEffects } from '../../../../design-system';
+
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'fullWidth'
+  | 'whiteBlackHover'
+  | 'yellowTextHoverBlack'
+  | 'whiteBgYellowTextHoverBlack'
+  | 'beigeSolid'
+  | 'beigeOutline'
+  | 'lightPrimary'
+  | 'lightSecondary';
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'outline' | 'solid';
+  variant?: ButtonVariant;
   onClick?: () => void;
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
-export default function Button({ children, variant = 'solid', onClick, className = '' }: ButtonProps) {
-  const [isPressed, setIsPressed] = useState(false);
-
-  const variantClass = variant === 'outline' 
-    ? componentStyles.button.outline 
-    : componentStyles.button.solid;
+export default function Button({
+  children,
+  variant = 'primary',
+  onClick,
+  className = '',
+  type = 'button',
+  disabled = false,
+}: ButtonProps) {
+  const buttonClass = componentStyles.buttons[variant];
 
   return (
     <motion.button
+      type={type}
       onClick={onClick}
-      className={`${componentStyles.button.base} ${variantClass} ${className}`}
-      whileHover={hoverEffects.liftShadow}
-      whileTap={tapEffects.rotate3D}
-      onTapStart={() => setIsPressed(true)}
-      onTapCancel={() => setIsPressed(false)}
-      transition={animations.spring.default}
+      disabled={disabled}
+      className={`${buttonClass} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      whileHover={disabled ? {} : hoverEffects.scaleSmall}
+      whileTap={disabled ? {} : tapEffects.scaleSmall}
+      transition={animations.spring}
     >
-      {/* Shine Effect */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-        animate={{ x: isPressed ? ["-100%", "200%"] : "-100%" }}
-        transition={{ duration: 0.6 }}
-      />
-      
-      <span className="relative z-10 flex items-center justify-center gap-2">
-        {children}
-      </span>
+      {children}
     </motion.button>
   );
 }
