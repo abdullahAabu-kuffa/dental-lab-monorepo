@@ -37,7 +37,7 @@ export default function MedicalBackground() {
       
 
       
-      {/* Medical Cross Pattern - أوضح شوية */}
+      {/* Medical Cross Pattern - */}
       <div className="absolute inset-0 opacity-[0.04]">
         <CrossIcon className="absolute top-20 left-16 w-32 h-32 text-white" />
         <CrossIcon className="absolute bottom-28 right-28 w-24 h-24 text-white" />
@@ -46,7 +46,7 @@ export default function MedicalBackground() {
         <CrossIcon className="absolute top-1/3 left-1/2 w-16 h-16 text-white" />
       </div>
       
-      {/* Dental/Medical Icons - طابع طبي */}
+      {/* Dental/Medical Icons -*/}
       <div className="absolute inset-0 opacity-[0.05]">
         <ToothIcon className="absolute top-1/4 right-20 w-20 h-20 text-[#E4B441] rotate-12" />
         <ToothIcon className="absolute bottom-1/3 left-24 w-16 h-16 text-[#E4B441] -rotate-12" />
@@ -54,10 +54,10 @@ export default function MedicalBackground() {
         <MedicalIcon className="absolute top-1/3 left-1/4 w-12 h-12 text-white -rotate-6" />
       </div>
       
-      {/* Enhanced Grid Lines - جريد أوضح */}
+      {/* Enhanced Grid Lines -*/}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
       
-      {/* Diagonal Medical Lines - خطوط قطرية طبية */}
+      {/* Diagonal Medical Lines */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#E4B441] to-transparent transform rotate-12 origin-top-left" />
         <div className="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#E4B441] to-transparent transform -rotate-12 origin-bottom-right" />
