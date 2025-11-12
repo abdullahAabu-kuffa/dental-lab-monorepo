@@ -27,9 +27,9 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           {event.description}
         </p>
         <div className="mt-6 flex justify-center">
-          <Button variant="solid" className="px-6 py-2">
-            Reserve Seat
-          </Button>
+        <Button variant="primary" className="px-6 py-2">
+  Reserve Seat
+</Button>
         </div>
       </div>
     </div>
