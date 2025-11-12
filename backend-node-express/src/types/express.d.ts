@@ -1,4 +1,7 @@
+/// <reference types="express" />
+
 //TODO: Custom Express types
+
 
 import * as express from 'express';
 
@@ -14,6 +17,8 @@ declare global {
     }
   }
 }
+export {};
+
 
 //how to use 
 // export function someMiddleware(req: Request, res: Response, next: NextFunction) {
