@@ -1,53 +1,42 @@
-"use client";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import {
-	animations,
-	hoverEffects,
-	tapEffects,
-	componentStyles,
-} from "../../../../design-system/variables";
+'use client';
+
+import { motion } from 'framer-motion';
+import { componentStyles } from '../../../../design-system';
 
 interface ButtonProps {
-	children: React.ReactNode;
-	variant?: "outline" | "solid";
-	onClick?: () => void;
-	className?: string;
+  children: React.ReactNode;
+  variant?: 
+    | 'primary'
+    | 'secondary'
+    | 'whiteBlackHover'
+    | 'yellowTextHoverBlack'
+    | 'whiteBgYellowTextHoverBlack'
+    | 'beigeSolid'
+    | 'beigeOutline';
+  onClick?: () => void;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function Button({
-	children,
-	variant = "solid",
-	onClick,
-	className = "",
+  children,
+  variant = 'primary',
+  onClick,
+  className = '',
+  style,
 }: ButtonProps) {
-	const [isPressed, setIsPressed] = useState(false);
+  const buttonClass = componentStyles.buttons[variant] || componentStyles.buttons.primary;
 
-	const variantClass =
-		variant === "outline"
-			? componentStyles.button.outline
-			: componentStyles.button.solid;
-
-	return (
-		<motion.button
-			onClick={onClick}
-			className={`${componentStyles.button.base} ${variantClass} ${className}`}
-			whileHover={hoverEffects.liftShadow}
-			whileTap={tapEffects.rotate3D}
-			onTapStart={() => setIsPressed(true)}
-			onTapCancel={() => setIsPressed(false)}
-			transition={animations.spring.default}
-		>
-			{/* Shine Effect */}
-			<motion.div
-				className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-				animate={{ x: isPressed ? ["-100%", "200%"] : "-100%" }}
-				transition={{ duration: 0.6 }}
-			/>
-
-			<span className="relative z-10 flex items-center justify-center gap-2">
-				{children}
-			</span>
-		</motion.button>
-	);
+  return (
+    <motion.button
+      onClick={onClick}
+      className={`${buttonClass} ${className}`}
+      style={style}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20, duration: 0.2 }}
+    >
+      {children}
+    </motion.button>
+  );
 }
