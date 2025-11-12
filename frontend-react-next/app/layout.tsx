@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Geist_Mono, Playfair_Display, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -10,8 +9,8 @@ const poppins = Poppins({
 });
 
 const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 const playfair = Playfair_Display({
@@ -27,17 +26,15 @@ const notoSansArabic = Noto_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
-
   title: "Egypt's First Digital Dental Lab",
   description: "Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
 };
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body
