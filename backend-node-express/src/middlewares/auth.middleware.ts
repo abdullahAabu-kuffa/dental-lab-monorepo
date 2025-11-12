@@ -10,6 +10,11 @@ import logger from "../utils/logger.util";
 /**
  * Middleware to verify JWT access token and attach user to request
  */
+interface DecodedToken {
+  id: number;
+  email: string;
+  role?: string;
+}
 export function verifyAccessToken(
   req: Request,
   res: Response,
@@ -28,13 +33,13 @@ export function verifyAccessToken(
 
     // Extract token and verify
     const token = authHeader.substring(7);
-    const decoded = Jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = Jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
 
     // Attach decoded user data to request
     req.user = {
-      id: parseInt((decoded as any).id),
-      email: (decoded as any).email,
-      role: (decoded as any).role || "CLIENT",
+      id: decoded.id,
+      email: decoded.email,
+      role: decoded.role || "CLIENT",
     };
 
     logger.info(`Token verified for user: ${req.user.email}`);
