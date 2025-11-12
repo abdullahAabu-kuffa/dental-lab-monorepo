@@ -2,19 +2,35 @@ import { StatItem } from '../types/components';
 
 export const STATS: StatItem[] = [
   {
-    number: '500+',
+    number: '800+',
     label: 'Happy Clients'
   },
   {
-    number: '2,500+',
+    number: '5,000+',
     label: 'Cases Completed'
   },
   {
-    number: '98%',
+    number: '99.2%',
     label: 'Success Rate'
   },
   {
-    number: '24hr',
+    number: '12hr',
     label: 'Avg Turnaround'
+  },
+  {
+    number: '15+',
+    label: 'Years Experience'
+  },
+  {
+    number: '25+',
+    label: 'Dental Materials'
+  },
+  {
+    number: '100%',
+    label: 'Quality Assurance'
+  },
+  {
+    number: '24/7',
+    label: 'Support Available'
   }
 ];

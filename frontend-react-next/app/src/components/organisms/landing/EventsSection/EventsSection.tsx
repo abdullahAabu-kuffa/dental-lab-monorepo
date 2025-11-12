@@ -1,6 +1,6 @@
-import EventsGrid from '../../../molecules/HeroSectionMolecules/EventsGrid/EventsGrid';
-import HeroHeading from '../../../molecules/HeroSectionMolecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSectionMolecules/HeroSubtitle/HeroSubtitle';
+import EventsGrid from '../../../molecules/EventsGrid/EventsGrid';
+import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
+import HeroSubtitle from '../../../molecules/HeroSubtitle/HeroSubtitle';
 import { EVENTS } from '../../../../config/events.data';
 import { typography, componentStyles } from '../../../../../design-system';
 
@@ -12,7 +12,7 @@ const EventsSection: React.FC = () => {
           <HeroHeading
             primaryText="Upcoming Events & "
             gradientText="Speakers"
-            gradientColors="linear-gradient(to right, #4A90E2, #357ABD, #2E5B8C)"
+            gradientColors="linear-gradient(to right, #D4AF37, #F4E4A6)"
           />
           <HeroSubtitle
             text="Meet industry leaders and innovators shaping the future of digital dentistry"

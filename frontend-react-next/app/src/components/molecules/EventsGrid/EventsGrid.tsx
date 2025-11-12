@@ -1,6 +1,6 @@
 import React from 'react';
-import { Event } from '../../../../types/components';
-import EventCard from '../../../atoms/EventCard/EventCard';
+import { Event } from '../../../types/components';
+import EventCard from '../../atoms/EventCard/EventCard';
 
 interface EventsGridProps {
   events: Event[];
@@ -9,8 +9,8 @@ interface EventsGridProps {
 const EventsGrid: React.FC<EventsGridProps> = ({ events }) => {
   return (
     <div className="grid md:grid-cols-3 gap-10">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+      {events.map((event, index) => (
+        <EventCard key={event.id} event={event} index={index} />
       ))}
     </div>
   );

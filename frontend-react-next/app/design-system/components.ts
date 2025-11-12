@@ -1,8 +1,8 @@
 export const componentStyles = {
   layout: {
-    containerDefault: 'max-w-7xl mx-auto px-6',
-    containerExtended: 'max-w-6xl mx-auto px-6',
-    spacingSection: 'py-24',
+    containerDefault: 'max-w-7xl mx-auto px-4 sm:px-6',
+    containerExtended: 'max-w-6xl mx-auto px-4 sm:px-6',
+    spacingSection: 'py-16 sm:py-24',
     relative: 'relative',
   },
   
@@ -16,88 +16,99 @@ export const componentStyles = {
   },
   
   buttons: {
-    // hover effects
     primary: `
-      inline-block px-8 py-4 rounded-lg
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg
       bg-gradient-to-r from-[#E4B441] to-[#D4A431] 
-      text-white font-bold 
+      text-white font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
       hover:from-[#FFD700] hover:to-[#E4B441]
       shadow-lg hover:shadow-xl 
-      transform hover:scale-105
-      font-inter
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
     
-    // hover effects
     secondary: `
-      inline-block px-8 py-4 rounded-lg
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg
       bg-gradient-to-r from-[#D4AF37] to-[#B8960A] 
-      text-white font-bold 
+      text-white font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
       hover:from-[#FFD700] hover:to-[#D4AF37]
-      shadow-lg hover:shadow-xl 
-      transform hover:scale-105
-      font-inter
+      shadow-lg hover:shadow-xl
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
     
-    // hover effects
     fullWidth: `
-      w-full px-8 py-4 rounded-lg
+      w-full px-6 sm:px-8 py-3 sm:py-4 rounded-lg
       bg-gradient-to-r from-[#E4B441] to-[#D4A431] 
-      text-white font-bold 
+      text-white font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
       hover:from-[#FFD700] hover:to-[#E4B441]
-      shadow-lg hover:shadow-xl 
-      transform hover:scale-110
-      font-inter
+      shadow-lg hover:shadow-xl
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
 
-    // hover effects
     whiteBlackHover: `
-      inline-block px-8 py-4 rounded-lg border border-black
-      bg-white text-black font-bold
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
+      border border-black bg-white text-black font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
       hover:bg-black hover:text-white
       shadow-lg hover:shadow-xl
-      transform hover:scale-105
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
     
-    // hover effects -scale
     yellowTextHoverBlack: `
-      inline-block px-8 py-4 rounded-lg bg-yellow-500 border border-yellow-500
-      text-black font-bold
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
+      bg-yellow-500 border border-yellow-500
+      text-black font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
       hover:bg-yellow-600 hover:text-white
       shadow-lg hover:shadow-xl
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
     
-    // borderhover effects - scale
     whiteBgYellowTextHoverBlack: `
-      inline-block px-8 py-4 rounded-lg bg-white border-2 border-yellow-500
-      text-yellow-500 font-bold
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
+      bg-white border-2 border-yellow-500
+      text-yellow-500 font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
       hover:bg-yellow-500 hover:text-white
       shadow-lg hover:shadow-xl
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
 
-    // Beige hover effects 
     beigeSolid: `
-      inline-block px-8 py-4 rounded-lg
-      bg-[#cabeb2] text-[#1c1715] font-bold 
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg
+      bg-[#CABEB2] text-[#1C1715] font-bold text-sm sm:text-base
       transition-all duration-200 ease-out
-      hover:bg-[#b5a594] hover:text-black
-      shadow-lg hover:shadow-xl 
-      transform hover:scale-105
+      hover:bg-[#B5A594] hover:text-black
+      shadow-lg hover:shadow-xl
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     `,
     
-    // Beige Outline  
     beigeOutline: `
-      inline-block px-8 py-4 rounded-lg border border-[#cabeb2] bg-transparent
-      text-[#1c1715] font-semibold
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
+      border border-[#CABEB2] bg-transparent
+      text-[#1C1715] font-semibold text-sm sm:text-base
       transition-all duration-200 ease-out
-      hover:bg-[#e9e4df] hover:border-[#b5a594] hover:text-black
+      hover:bg-[#E9E4DF] hover:border-[#B5A594] hover:text-black
       shadow-lg hover:shadow-xl
-      transform hover:scale-105
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+    `,
+      lightPrimary: `
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl
+      bg-[#D4C4B0] text-gray-800 font-bold text-sm sm:text-base
+      transition-all duration-200 ease-out
+      hover:bg-[#C4B4A0] hover:shadow-lg
+      shadow-md
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
+    
+    lightSecondary: `
+      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl
+      bg-transparent border-2 border-gray-400 text-gray-700 font-semibold text-sm sm:text-base
+      transition-all duration-200 ease-out
+      hover:bg-gray-100 hover:border-gray-500 hover:shadow-lg
+      shadow-sm
+      disabled:opacity-50 disabled:cursor-not-allowed
     `,
   },
 } as const;

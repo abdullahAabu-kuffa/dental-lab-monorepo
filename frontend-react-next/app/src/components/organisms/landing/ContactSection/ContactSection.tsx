@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 import Button from '../../../atoms/Button/Button';
-import HeroHeading from '../../../molecules/HeroSectionMolecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSectionMolecules/HeroSubtitle/HeroSubtitle';
+import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
+import HeroSubtitle from '../../../molecules/HeroSubtitle/HeroSubtitle';
 import { CONTACT_INFO } from '../../../../config/contact.data';
 import { getIcon } from '../../../../utils/iconMap';
 import { componentStyles } from '../../../../../design-system';
@@ -16,7 +16,7 @@ const ContactSection: React.FC = () => {
             <HeroHeading
               primaryText=""
               gradientText="Get In Touch"
-              gradientColors="linear-gradient(to right, #4A90E2, #357ABD, #2E5B8C)"
+              gradientColors="linear-gradient(to right, #FFD700, #E4B441, #C39321)"
             />
             
             <HeroSubtitle
@@ -87,7 +87,7 @@ const ContactSection: React.FC = () => {
                 ></textarea>
               </div>
               
-              <Button 
+              <Button
                 variant="primary"
                 onClick={() => {}}
                 className="w-full"

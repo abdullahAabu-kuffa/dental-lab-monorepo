@@ -1,49 +1,38 @@
+'use client';
+
 import React from 'react';
-import { Crown, Zap, Smile, Microscope } from 'lucide-react';
-import HeroHeading from '../../../molecules/HeroSectionMolecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSectionMolecules/HeroSubtitle/HeroSubtitle';
 import { SERVICES } from '../../../../config/services.data';
+import ServiceIcon from '../../../molecules/ServiceIcon/ServiceIcon';
 
-// Icon mapping
-const iconMap = {
-  Crown,
-  Zap,
-  Smile,
-  Microscope
-};
-
-const ServicesSection: React.FC = () => {
+export default function ServicesSection() {
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-24 bg-[#F5F5F5]">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <HeroHeading
-            primaryText="Our "
-            gradientText="Services"
-            gradientColors="linear-gradient(to right, #E4B441, #C9A961, #B8960A)"
-          />
-          <HeroSubtitle
-            text="Premium dental restorations crafted with precision and care"
-          />
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <h1  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#B8941F] to-[#D4AF37] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+            Our Services
+          </h1>
+          <p className="text-xl text-black leading-relaxed font-sans">
+            Premium dental restorations crafted with precision and care
+          </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Services Grid - 4 cards in one row */}
+        <div className="grid grid-cols-4 gap-8">
           {SERVICES.map((service) => {
-            const IconComponent = iconMap[service.icon as keyof typeof iconMap];
             return (
-              <div
-                key={service.id}
-                className="group bg-gray-100 rounded-2xl p-8 hover:shadow-xl hover:-translate-y-2 transition duration-300"
-              >
-                <div className="w-12 h-12 mb-6 text-yellow-600 group-hover:scale-110 transition">
-                  <IconComponent className="w-full h-full" />
-                </div>
+              <div key={service.id} className="bg-[#E8E8E8] rounded-2xl p-10 hover:shadow-xl hover:scale-105 hover:border-[#B8941F] transition-all duration-300 border-2 border-[#D4AF37]">
+                {/* Icon - Using ServiceIcon component */}
+                <ServiceIcon iconName={service.icon.name} className="mb-6" />
                 
-                <h3 className="text-xl font-bold mb-3 text-gray-900">
+                {/* Title */}
+                <h3 className="text-xl font-bold text-black text-center mb-3 font-sans">
                   {service.title}
                 </h3>
                 
-                <p className="text-gray-600 leading-relaxed">
+                {/* Description */}
+                <p className="text-[#4A4A4A] text-sm leading-relaxed text-center font-sans">
                   {service.description}
                 </p>
               </div>
@@ -53,6 +42,4 @@ const ServicesSection: React.FC = () => {
       </div>
     </section>
   );
-};
-
-export default ServicesSection;
+}

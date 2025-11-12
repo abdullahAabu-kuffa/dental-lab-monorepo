@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import EducationalResourceCard from '../../../atoms/EducationalResourceCard/EducationalResourceCard';
+import EducationalResourceCard from '../../../atoms/EducationalResourceCard';
 import Button from '../../../atoms/Button/Button';
-import HeroHeading from '../../../molecules/HeroSectionMolecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSectionMolecules/HeroSubtitle/HeroSubtitle';
+import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
+import HeroSubtitle from '../../../molecules/HeroSubtitle/HeroSubtitle';
 import { EDUCATIONAL_RESOURCES } from '../../../../config/educational-resources.data';
 import { typography, componentStyles } from '../../../../../design-system';
 

@@ -1,34 +1,38 @@
 'use client';
-import React from 'react';
 import Button from '../../../atoms/Button/Button';
-import HeroHeading from '../../../molecules/HeroSectionMolecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSectionMolecules/HeroSubtitle/HeroSubtitle';
+import { componentStyles, gradients } from '../../../../../design-system';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-const ChooseMaterialSection: React.FC = () => {
+export default function ChooseMaterialSection() {
+  const router = useRouter();
+
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className={`${componentStyles.layout.spacingSection} bg-gradient-to-br from-gray-50 to-white`}>
+      <div className={componentStyles.layout.containerDefault}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Text Content - Left */}
-          <div className="text-left">
-            <HeroHeading
-              primaryText="Choose Your Material & "
-              gradientText="Track Your Order Online"
-              gradientColors="linear-gradient(to right, #8B4513, #D2691E, #A0522D)"
-              textColor="#374151"
-            />
+          <div className="text-left space-y-6">
+            <h2 className="text-4xl md:text-5xl font-black leading-tight text-gray-900" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Choose Your Material & <span className="bg-clip-text text-transparent" style={{ backgroundImage: gradients.gold }}>Track Your Order Online</span>
+            </h2>
             
-            <HeroSubtitle
-              text="Upload your ExoCAD file, select your preferred material, shade, and design options – and our lab will start manufacturing instantly. You can follow your order's progress online, step by step."
-              textColor="text-gray-700 text-xl max-w-2xl lg:mx-0 mb-6 leading-relaxed"
-            />
+            <p className="text-gray-600 text-lg md:text-xl max-w-2xl lg:mx-0 leading-relaxed font-sans">
+              Upload your <span className="font-bold text-gray-800">ExoCAD file</span>, select your preferred material, shade, and design options – and our lab will start manufacturing instantly. You can follow your order's progress online, step by step.
+            </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button variant="beigeSolid" onClick={() => window.location.href = '/get-started'}>
+              <Button
+                variant="lightPrimary"
+                onClick={() => router.push('/get-started')}
+              >
                 Get Started
               </Button>
-              <Button variant="beigeOutline" onClick={() => window.location.href = '/track-order'}>
+              <Button
+                variant="lightSecondary"
+                onClick={() => router.push('/track-order')}
+              >
                 Track Order
               </Button>
             </div>
@@ -37,11 +41,14 @@ const ChooseMaterialSection: React.FC = () => {
           {/* Image - Right */}
           <div className="relative">
             <div className="relative w-full max-w-md mx-auto lg:mx-0">
-              <div className="rounded-2xl overflow-hidden drop-shadow-lg">
-                <img
+              <div className="rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300">
+                <Image
                   src="/2920348.png"
                   alt="Dental Material Selection & Order Tracking"
+                  width={600}
+                  height={600}
                   className="w-full h-auto"
+                  priority
                 />
               </div>
             </div>
@@ -51,6 +58,4 @@ const ChooseMaterialSection: React.FC = () => {
       </div>
     </section>
   );
-};
-
-export default ChooseMaterialSection;
+}

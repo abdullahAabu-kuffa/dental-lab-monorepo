@@ -14,8 +14,5 @@ export const registerSchema = z.object(
         clinicName: z.string().min(3, "must be 3 char at least"),
         clinicAddress: z.string().min(3, "address can't be less than 3 chars")
     }
-
-
-
 )
 export type RegisterInput = z.infer<typeof registerSchema>;

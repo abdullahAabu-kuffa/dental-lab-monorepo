@@ -1,56 +1,47 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
-import { gradients } from '../../../../design-system/gradients';
+import { gradients } from '../../../../design-system';
 
 interface HeroTextProps {
   text: string;
   gradientText?: string;
   className?: string;
-  style?: React.CSSProperties;
   isGradient?: boolean;
   delay?: number;
 }
 
-const HeroText: React.FC<HeroTextProps> = ({
+export default function HeroText({
   text,
   gradientText,
   className = '',
-  style,
   isGradient = false,
   delay = 0
-}) => {
-  const textParts = gradientText 
-    ? text.split(gradientText)
-    : [text];
-  
+}: HeroTextProps) {
   const renderText = () => {
-    if (isGradient && gradientText) {
-      return (
-        <>
-          {textParts[0]}
-          <span 
-            style={{ 
-              background: gradients.goldText,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}
-          >
-            {gradientText}
-          </span>
-          {textParts[1]}
-        </>
-      );
-    }
-    return text;
+    if (!isGradient || !gradientText) return text;
+
+    const parts = text.split(gradientText);
+    
+    return (
+      <>
+        {parts[0]}
+        <span 
+          className="bg-clip-text text-transparent"
+          style={{ 
+            backgroundImage: gradients.goldText,
+          }}
+        >
+          {gradientText}
+        </span>
+        {parts[1]}
+      </>
+    );
   };
 
   return (
     <motion.p
       className={className}
-      style={style}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
@@ -62,6 +53,4 @@ const HeroText: React.FC<HeroTextProps> = ({
       {renderText()}
     </motion.p>
   );
-};
-
-export default HeroText;
+}

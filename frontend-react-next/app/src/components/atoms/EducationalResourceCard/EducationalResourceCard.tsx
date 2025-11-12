@@ -1,68 +1,68 @@
-import React from 'react';
-import { ExternalLink } from 'lucide-react';
-import { EducationalResource } from '../../../config/educational-resources.data';
+// import { ExternalLink } from 'lucide-react';
+// import { EducationalResource } from '../../../config/educational-resources.data';
 
-interface EducationalResourceCardProps {
-  resource: EducationalResource;
-}
+// interface EducationalResourceCardProps {
+//   resource: EducationalResource;
+// }
 
-const EducationalResourceCard: React.FC<EducationalResourceCardProps> = ({ resource }) => {
-  const getDifficultyColor = (difficulty: string) => {
-    const colors = {
-      'Beginner': 'bg-green-100 text-green-600',
-      'Intermediate': 'bg-yellow-100 text-yellow-600',
-      'Advanced': 'bg-red-100 text-red-600'
-    };
-    return colors[difficulty as keyof typeof colors] || 'bg-gray-100 text-gray-600';
-  };
+// const DIFFICULTY_COLORS = {
+//   Beginner: 'bg-green-100 text-green-600',
+//   Intermediate: 'bg-yellow-100 text-yellow-600',
+//   Advanced: 'bg-red-100 text-red-600',
+// } as const;
 
-  return (
-    <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition transform hover:-translate-y-2 border border-gray-200">
-      {/* Image */}
-      <div className="h-48 overflow-hidden">
-        <img 
-          src={resource.image} 
-          alt={resource.title}
-          className="w-full h-full object-cover hover:scale-110 transition duration-500"
-        />
-      </div>
+// export default function EducationalResourceCard({ resource }: EducationalResourceCardProps) {
+//   const difficultyColor = DIFFICULTY_COLORS[resource.difficulty as keyof typeof DIFFICULTY_COLORS] 
+//     || 'bg-gray-100 text-gray-600';
+
+//   return (
+//     <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200">
+//       {/* Image */}
+//       <div className="h-48 overflow-hidden">
+//         <img 
+//           src={resource.image} 
+//           alt={resource.title}
+//           className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+//           loading="lazy"
+//         />
+//       </div>
       
-      {/* Content */}
-      <div className="p-6">
-        {/* Category */}
-        <span className="px-3 py-1 bg-gray-100 text-xs font-semibold rounded-full text-gray-700">
-          {resource.category}
-        </span>
+//       {/* Content */}
+//       <div className="p-6">
+//         {/* Category Badge */}
+//         <span className="inline-block px-3 py-1 bg-gray-100 text-xs font-semibold rounded-full text-gray-700">
+//           {resource.category}
+//         </span>
         
-        {/* Title */}
-        <h3 className="text-xl font-bold mt-3 mb-2 text-gray-900">
-          {resource.title}
-        </h3>
+//         {/* Title */}
+//         <h3 className="text-xl font-bold mt-3 mb-2 text-gray-900 line-clamp-2">
+//           {resource.title}
+//         </h3>
         
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-4">
-          {resource.description}
-        </p>
+//         {/* Description */}
+//         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+//           {resource.description}
+//         </p>
         
-        {/* Meta Info */}
-        <div className="flex items-center gap-3 mb-4 text-xs text-gray-500">
-          <span>{resource.readTime}</span>
-          <span className={`px-2 py-1 rounded-full ${getDifficultyColor(resource.difficulty)}`}>
-            {resource.difficulty}
-          </span>
-        </div>
+//         {/* Meta Info */}
+//         <div className="flex items-center gap-3 mb-4 text-xs text-gray-500">
+//           <span>{resource.readTime}</span>
+//           <span className={`px-2 py-1 rounded-full font-medium ${difficultyColor}`}>
+//             {resource.difficulty}
+//           </span>
+//         </div>
         
-        {/* Read More Link */}
-        <a 
-          href={resource.readMoreLink}
-          className="text-[#E4B441] font-semibold text-sm hover:underline flex items-center gap-1 w-fit"
-        >
-          Read More
-          <ExternalLink className="w-3 h-3" />
-        </a>
-      </div>
-    </div>
-  );
-};
-
-export default EducationalResourceCard;
+//         {/* Read More Link */}
+//         <a 
+//           href={resource.readMoreLink}
+//           target="_blank"
+//           rel="noopener noreferrer"
+//           className="inline-flex items-center gap-1 text-[#E4B441] font-semibold text-sm hover:underline hover:gap-2 transition-all"
+//         >
+//           Read More
+//           <ExternalLink className="w-3 h-3" />
+//         </a>
+//       </div>
+//     </article>
+//   );
+// }
