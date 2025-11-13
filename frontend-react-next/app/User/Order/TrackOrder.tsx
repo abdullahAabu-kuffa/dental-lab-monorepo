@@ -44,9 +44,9 @@ const TrackOrder: React.FC<NewOrderStatsProps> = ({ stats }) => {
                 key={stat.id}
                 className="w-32 h-20 rounded-lg p-3 transform hover:-translate-y-1 transition-all duration-300 text-left bg-gray-50 border border-gray-100 flex flex-col justify-between cursor-pointer"
               >
-                {/* Icon Circle with Gradient */}
+                {/* Icon Circlet */}
                 <div className="relative group mx-auto">
-                  {/* Count Badge - Only show if count exists */}
+                  {/* Count Badge  */}
                   {stat.count && (
                     <div className={`absolute -top-1 -right-1 rounded-full w-4 h-4 flex items-center justify-center z-10 border-2 border-white ${
                       stat.id === 2
@@ -74,7 +74,7 @@ const TrackOrder: React.FC<NewOrderStatsProps> = ({ stats }) => {
           })}
         </div>
         
-        {/* Beautiful gradient divider line - Coffee colored gradient with fade edges */}
+        {/* line  */}
         <div className="w-full h-1 bg-gradient-to-r from-transparent via-amber-900 to-transparent rounded-full mt-3"></div>
       </div>
     </div>  

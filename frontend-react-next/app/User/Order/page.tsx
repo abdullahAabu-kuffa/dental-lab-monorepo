@@ -138,7 +138,7 @@ function OrdersPage() {
         className="ml-4 mb-5"
       >
         <h1 className="text-3xl font-bold text-slate-800">
-          Welcome Doctor
+          My order
         </h1>
       </motion.div>
 
