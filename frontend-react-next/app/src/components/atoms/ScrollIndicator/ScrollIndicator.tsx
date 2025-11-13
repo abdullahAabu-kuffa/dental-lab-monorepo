@@ -1,27 +1,42 @@
 'use client';
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function ScrollIndicator() {
+  const [isBottom, setIsBottom] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      setIsBottom(window.scrollY > doc.scrollHeight - window.innerHeight - 200);
+    };
+    
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <motion.div 
-      className="absolute bottom-12 left-1/2 -translate-x-1/2"
-      animate={{
-        y: [0, 15, 0],
-      }}
-      transition={{
-        duration: 1.5,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    >
-      <motion.div
-        className="text-[#E4B441] cursor-pointer"
-        whileHover={{ scale: 1.2 }}
-        whileTap={{ scale: 0.9 }}
+    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
+      <div
+        className="text-[#D4AF37] transition-colors pointer-events-none"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          cursor: 'default'
+        }}
       >
-        <ChevronDown className="w-12 h-12" strokeWidth={3} />
-      </motion.div>
-    </motion.div>
+        <motion.div
+          animate={{ y: [0, 15, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          {isBottom ? <ChevronUp className="w-12 h-12" /> : <ChevronDown className="w-12 h-12" />}
+        </motion.div>
+      </div>
+    </div>
   );
 }

@@ -13,6 +13,8 @@ import animationData from "@/assets/lotties/teeth.json";
 
 import PendingPage from "./pending";
 
+//import Button from "@/app/src/components/atoms/Button/Button";
+
 export default function RegisterPage() {
 	const router = useRouter();
 	const [form, setForm] = useState<RegisterInput>({

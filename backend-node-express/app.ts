@@ -7,6 +7,7 @@ import cors from "cors";
 import compression from "compression";
 import helmet from "helmet";
 import authRoutes from "./src/routes/auth.routes";
+import uploadRoutes from "./src/routes/upload.routes";
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
 
@@ -18,7 +19,7 @@ setupSwagger(app);
 // TODO: Security middleware
 app.use(helmet());
 app.use(cors());
- 
+
 // TODO: Body parser
 app.use(express.json({ limit: "150mb" }));
 app.use(express.urlencoded({ limit: "150mb", extended: true }));
@@ -33,6 +34,8 @@ app.get("/health", (req, res) => {
 });
 // TODO: API routes
 app.use("/api/auth", authRoutes);
+
+app.use('/api/upload', uploadRoutes); 
 
 // TODO: 404 handler
 app.use((req, res) => {

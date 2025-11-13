@@ -8,7 +8,8 @@ import { generateAccessToken, generateRefreshToken } from "../utils/token.util";
 import { prisma } from "../lib/prisma";
 import logger from "../utils/logger.util";
 import jwt from "jsonwebtoken";
-import { logout } from "../controllers/auth.controller";
+import { sendStyledEmail } from "../utils/email";
+import { buildEmailTemplate } from "../utils/emailTemplate";
 
 interface RegisterInput {
   fullName: string;
@@ -50,7 +51,6 @@ export const registerUser = async (input: RegisterInput) => {
         phoneNumber,
         clinicName,
         clinicAddress,
-        isVerified: true, // temporary till we implement email verification
         isActive: false,
       },
       select: {
@@ -61,11 +61,42 @@ export const registerUser = async (input: RegisterInput) => {
         clinicName: true,
         clinicAddress: true,
         role: true,
-        isVerified: true,
         isActive: true,
         createdAt: true,
       },
     });
+
+    const htmlTemplate = buildEmailTemplate({
+      title: "Registration Successful",
+      body: `
+      <p style="font-size:16px;">Hello <strong>${fullName}</strong>,</p>
+      <p style="font-size:15px; line-height:1.6; color:#555;">
+        Thank you for registering with <strong>Avante Dental Solutions</strong>!
+        Your account is now created and is pending admin approval.
+      </p>
+      <div style="background:#e7f3ff; border-left:4px solid #BDB0A7; padding:20px; margin:25px 0; border-radius:6px;">
+        <p style="margin:0 0 12px 0; font-size:15px; color:#333;"><strong>Registration Details:</strong></p>
+        <p style="margin:8px 0; font-size:14px; color:#555;">Email: <strong>${email}</strong></p>
+        <p style="margin:8px 0; font-size:14px; color:#555;">Clinic: <strong>${clinicName}</strong></p>
+      </div>
+      <div style="background:#fffbea; border-left:4px solid #ffc107; padding:20px; margin:25px 0; border-radius:6px;">
+        <p style="margin:0 0 12px 0; font-size:15px; color:#333;"><strong>Next Steps:</strong></p>
+        <p style="font-size:14px; line-height:1.6; color:#555; margin:8px 0;">
+          Our team will review your registration and activate your account soon.<br>
+          You will receive a notification when your account is active.
+        </p>
+      </div>
+      <p style="font-size:14px; color:#777;">
+        For questions, please contact our support team.
+      </p>
+    `,
+      showButton: false,
+    });
+    await sendStyledEmail(
+      email,
+      "Welcome to Avante Dental Solutions - Registration Received",
+      htmlTemplate
+    );
 
     logger.info(`New user registered: ${email} (awaiting admin approval)`);
     return user;
@@ -76,89 +107,200 @@ export const registerUser = async (input: RegisterInput) => {
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { email } });
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const isPasswordValid = await verifyPassword(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
+    }
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-  const isPasswordValid = await verifyPassword(password, user.password);
-  if (!isPasswordValid) {
-    throw new Error("Invalid password");
-  }
-  if (!user.isVerified) {
-    throw new Error("Please check your email to verify your account.");
-  }
+    const allSessions = await prisma.session.findMany({
+      where: { userId: user.id },
+    });
+    if (allSessions.length > 2) {
+      const sessionsToDelete = [...allSessions]
+        .sort((a, b) => a.expiresAt.getTime() - b.expiresAt.getTime())
+        .slice(0, allSessions.length - 2);
 
-  const accessToken = generateAccessToken({ id: user.id, email: user.email });
-  const refreshToken = generateRefreshToken({ id: user.id, email: user.email });
-  const session = await prisma.session.create({
-    data: {
-      userId: user.id,
+      await prisma.session.deleteMany({
+        where: { id: { in: sessionsToDelete.map((s) => s.id) } },
+      });
+    }
+
+    const accessToken = generateAccessToken({ id: user.id, email: user.email });
+    const refreshToken = generateRefreshToken({
+      id: user.id,
+      email: user.email,
+    });
+    const session = await prisma.session.create({
+      data: {
+        userId: user.id,
+        refreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return {
+      id: user.id,
+      accessToken,
       refreshToken,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    },
-  });
-
-  return {
-    id: user.id,
-    accessToken,
-    refreshToken,
-    email: user.email,
-    name: user.fullName,
-    session,
-  };
+      email: user.email,
+      name: user.fullName,
+      session,
+    };
+  } catch (error: any) {
+    logger.error(`[Login Error]: ${error.message}`);
+    throw error;
+  }
 };
 
 export const refreshTokenService = async (
   tokenFromCookie: string
 ): Promise<RefreshTokenResult> => {
-  if (!tokenFromCookie) throw new Error("No Refresh Token");
-
-  let payload: any;
   try {
-    payload = jwt.verify(tokenFromCookie, process.env.JWT_REFRESH_SECRET!);
-  } catch {
-    throw new Error("Invalid or tampered refresh token");
+    if (!tokenFromCookie) throw new Error("No Refresh Token");
+
+    let payload: any;
+    try {
+      payload = jwt.verify(tokenFromCookie, process.env.JWT_REFRESH_SECRET!);
+    } catch {
+      throw new Error("Invalid or tampered refresh token");
+    }
+    const session = await prisma.session.findUnique({
+      where: { refreshToken: tokenFromCookie },
+    });
+
+    if (!session) throw new Error("Invalid refresh token");
+
+    if (new Date() > session.expiresAt) {
+      await prisma.session.delete({ where: { id: session.id } });
+      throw new Error("Refresh token expired");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+    });
+
+    if (!user) {
+      await prisma.session.delete({ where: { id: session.id } });
+      throw new Error("User not found");
+    }
+    const allSessions = await prisma.session.findMany({
+      where: { userId: user.id },
+    });
+
+    if (allSessions.length > 3) {
+      const sessionsToDelete = [...allSessions]
+        .sort((a, b) => a.expiresAt.getTime() - b.expiresAt.getTime())
+        .slice(0, allSessions.length - 3);
+
+      await prisma.session.deleteMany({
+        where: { id: { in: sessionsToDelete.map((s) => s.id) } },
+      });
+    }
+    // if (!user || !user.isActive) {
+    //   await prisma.session.delete({ where: { id: session.id } });
+    //   throw new Error("Account disabled or deleted");
+    // }
+    const newAccessToken = generateAccessToken({
+      id: user.id,
+      email: user.email,
+    });
+    const newRefreshToken = generateRefreshToken({
+      id: user.id,
+      email: user.email,
+    });
+
+    await prisma.session.update({
+      where: { id: session.id },
+      data: {
+        refreshToken: newRefreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    return { newAccessToken, newRefreshToken };
+  } catch (error: any) {
+    logger.error(`[Refresh Token Error]: ${error.message}`);
+    throw error;
   }
-  const session = await prisma.session.findUnique({
-    where: { refreshToken: tokenFromCookie },
-  });
-
-  if (!session) throw new Error("Invalid refresh token");
-
-  if (new Date() > session.expiresAt) {
-    await prisma.session.delete({ where: { id: session.id } });
-    throw new Error("Refresh token expired");
-  }
-
-  const user = await prisma.user.findUnique({where: { id: session.userId }});
-
-  if (!user?.isVerified)
-    throw new Error("Please verify your email before login.");
-  const allSessions = await prisma.session.findMany({where: { userId: user.id }});
-
-  if (allSessions.length > 3) {
-    const sessionsToDelete = [...allSessions]
-      .sort((a, b) => a.expiresAt.getTime() - b.expiresAt.getTime())
-      .slice(0, allSessions.length - 3);
-
-    await prisma.session.deleteMany({where: { id: { in: sessionsToDelete.map((s) => s.id) } }});
-  }
-  // if (!user || !user.isActive) {
-  //   await prisma.session.delete({ where: { id: session.id } });
-  //   throw new Error("Account disabled or deleted");
-  // }
-  const newAccessToken = generateAccessToken({id: user.id,email: user.email,});
-  const newRefreshToken = generateRefreshToken({id: user.id,email: user.email});
-
-  await prisma.session.update({
-    where: { id: session.id },
-    data: {
-      refreshToken: newRefreshToken,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    },
-  });
-
-  return { newAccessToken, newRefreshToken };
 };
 
+// forgotPassword service
+
+export const forgotPasswordService = async (email: string) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const token =  generateAccessToken({ id: user.id, email: user.email });
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    const htmlTemplate = buildEmailTemplate({
+      title: "Secure Password Reset",
+      body: `
+        <p style="font-size:16px;">Hello <strong>${user.fullName || "User"}</strong>,</p>
+        <p style="font-size:15px; line-height:1.6; color:#555;">
+          We received a request to reset your password. To proceed, please click the button below.  
+          This link will expire in <strong>15 minutes</strong> for security reasons.
+        </p>
+        <p style="font-size:14px; color:#777;">
+          If you didn’t request this, please ignore this email or contact our support if you have concerns.
+        </p>
+      `,
+      ctaText: "Reset My Password",
+      ctaUrl: resetLink,
+      showButton: true,
+    });
+    const result = await sendStyledEmail(
+      user.email,
+      "Reset your password",
+      htmlTemplate
+    );
+    const secToken = await prisma.security_Token.create({
+      data: {
+        userId: user.id,
+        isUsed: false,
+        token: token,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      },
+    });
+
+    return { emailSent: result, tokenId: secToken.id };
+  } catch (error: any) {
+    logger.error(`[forgot Password Service  Error]: ${error.message}`);
+    throw error;
+  }
+};
+
+export const resetPasswordService = async (
+  token: string,
+  newPassword: string
+) => {
+  try {
+    const tokenExist = await prisma.security_Token.findUnique({
+      where: { token: token },
+    });
+    if (!tokenExist) throw new Error("Invalid Token");
+    if (tokenExist.expiresAt < new Date()) throw new Error("Token expired");
+    const hashedPassword = await bcryptPassword(newPassword);
+    if (!tokenExist) {
+      throw new Error("Invalid Token");
+    }
+    if (tokenExist) {
+      await prisma.user.update({
+        where: { id: tokenExist!.userId },
+        data: { password: hashedPassword, updatedAt: new Date() },
+      });
+      await prisma.security_Token.deleteMany({
+        where: { userId: tokenExist!.userId },
+      });
+    }
+  } catch (error: any) {
+    logger.error(`[forgot Password Service  Error]: ${error.message}`);
+    throw error;
+  }
+};

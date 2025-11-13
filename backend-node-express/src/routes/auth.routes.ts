@@ -3,7 +3,7 @@
 // Usage: Mount at /api/auth in app.ts
 // Responsibility: Define POST /register, /login, /logout, /refresh endpoints
 import { Router } from "express";
-import { register, login, refreshToken, logout } from "../controllers/auth.controller";
+import { register, login, refreshToken, logout, forgotPassword, resetPassword } from "../controllers/auth.controller";
 import { validate } from "../middlewares/validation.middleware";
 import { loginSchema, registerSchema } from "../validators/user.validator";
 import { throttleLogin } from "../middlewares/rate-limit.middleware";
@@ -238,5 +238,8 @@ router.post("/refreshToken", refreshToken);
  *         description: Internal server error
  */
 router.post("/logout", logout);
+
+router.post('/forgot-password' , forgotPassword)
+router.post('/reset-password' , resetPassword)
 
 export default router;

@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import {
-	typography,
-	gradients,
-	motionVariants,
-} from "@/app/design-system/variables";
+import { typography, gradients, motionVariants } from "@/app/design-system/";
 
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
@@ -105,7 +101,7 @@ export default function LoginPage() {
 
 	return (
 		<div
-			className=" flex items-center justify-center bg-black overflow-hidden px-4 mt-18"
+			className="min-h-screen flex items-center justify-center bg-black overflow-hidden px-4"
 			style={{ background: gradients.darkBg }}
 		>
 			{/* Full width animation at top */}
@@ -117,7 +113,7 @@ export default function LoginPage() {
 				{...motionVariants.fadeInUp(0.2)}
 			>
 				<h1
-					className={`${typography.hero} text-transparent bg-clip-text text-center mb-6`}
+					className={`${typography.cardDescription} text-transparent bg-clip-text text-center mb-6`}
 					style={{ backgroundImage: gradients.goldText }}
 				>
 					Welcome Back
@@ -164,7 +160,7 @@ export default function LoginPage() {
 
 					<Button
 						type="submit"
-						variant="solid"
+						variant="primary"
 						className="w-full"
 						disabled={loading || !isFormValid}
 					>
