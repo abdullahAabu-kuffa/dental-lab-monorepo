@@ -19,7 +19,7 @@ export default function ChooseMaterialSection() {
             </h2>
             
             <p className="text-gray-600 text-lg md:text-xl max-w-2xl lg:mx-0 leading-relaxed font-sans">
-              Upload your <span className="font-bold text-gray-800">ExoCAD file</span>, select your preferred material, shade, and design options – and our lab will start manufacturing instantly. You can follow your order's progress online, step by step.
+              Upload your <span className="font-bold text-gray-800">ExoCAD file</span>, select your preferred material, shade, and design options &ndash; and our lab will start manufacturing instantly. You can follow your order's progress online, step by step.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -40,7 +40,7 @@ export default function ChooseMaterialSection() {
 
           {/* Image - Right */}
           <div className="relative">
-            <div className="relative w-full max-w-md mx-auto lg:mx-0">
+            <div className="relative w-full max-w-md mx-auto lg:mx-0 lg:ml-16">
               <div className="rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300">
                 <Image
                   src="/2920348.png"
