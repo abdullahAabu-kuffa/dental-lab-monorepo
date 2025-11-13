@@ -1,21 +1,21 @@
-import React from "react";
-import { Users,ShoppingCart,Clock,DollarSign } from "lucide-react";
-import StatsCard from "./_components/@statecard";
-import Link from "next/link";
-import OrdersTable from "./_components/@orderstable";
+import {  PersonStandingIcon, Users } from "lucide-react";
+import StatsCard from "../_components/@statecard";
+import { MdDone } from "react-icons/md";
+import { FcCancel } from "react-icons/fc";
+import UsersTable from "../_components/@userstable";
 
-const dashboard = () => {
+const users = () => {
   return (
     <div className="bg-[F5F7FA]">
       <div className="p-6">
-        <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+        <h1 className="text-3xl font-bold">Users Registration Managements</h1>
         <p className="text-gray-600">
-          Monitor system performance and key metrics
+         Review and approve or reject new user registrations
         </p>
         <div>
           
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mx-6">
-              <Link href="/dashboard/users">
+         
                 <StatsCard
                   title="Total Users"
                   value={2847}
@@ -24,30 +24,28 @@ const dashboard = () => {
                   fromColor="from-blue-500"
                   toColor="to-blue-600"
                 />
-              </Link>
-              <Link href="/dashboard/orders">
+
               <StatsCard
-                title="Total Orders"
+                title="Approved Today"
                 value={156}
-                growth="+8% this month"
-                icon={<ShoppingCart size={24} />}
+                growth="+8 from yesterday"
+                icon={<MdDone size={24} />}
                 fromColor="from-green-500"
                 toColor="to-green-600"
               />
-              </Link>
               <StatsCard
-                title="Pending Approvals"
+                title="Rejected Today"
                 value={23}
-                growth="Requires attention"
-                icon={<Clock size={24} />}
+                growth="Same as yesterday"
+                icon={<FcCancel size={24} />}
                 fromColor="from-red-500"
                 toColor="to-red-600"
               />
               <StatsCard
-                title="Total Revenue"
+                title="Pending Registrations"
                 value={48562}
-                growth="+15% this month"
-                icon={<DollarSign size={24} />}
+                growth="Awaiting review"
+                icon={<PersonStandingIcon size={24} />}
                 fromColor="from-yellow-500"
                 toColor="to-yellow-600"
               />
@@ -55,11 +53,11 @@ const dashboard = () => {
           </div>
       </div>
       <div className="mt-5 mx-6">
-        {/* Additional dashboard content can go here */}
-        <OrdersTable/>
+        {/* Additional users content can go here */}
+        <UsersTable/>
       </div>
     </div>
   );
 };
 
-export default dashboard;
+export default users;

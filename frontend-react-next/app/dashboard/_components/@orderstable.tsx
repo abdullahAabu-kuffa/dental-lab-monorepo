@@ -84,7 +84,7 @@ const OrdersTable = () => {
       </div>
 
       {/* Filter Buttons */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap justify-end gap-2 mb-4">
         {filters.map((f) => (
           <button
             key={f}
@@ -117,7 +117,7 @@ const OrdersTable = () => {
             {filteredOrders.map((order, idx) => (
               <tr
                 key={order.id}
-                className={`border-t border-gray-100 ${
+                className={`border-t border-gray-100 hover:bg-gray-200 ${
                   idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
               >
