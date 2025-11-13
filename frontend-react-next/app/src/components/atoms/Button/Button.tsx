@@ -13,6 +13,8 @@ interface ButtonProps {
 	variant?: "outline" | "solid";
 	onClick?: () => void;
 	className?: string;
+	type?: string;
+	disabled?: boolean;
 }
 
 export default function Button({
@@ -20,6 +22,8 @@ export default function Button({
 	variant = "solid",
 	onClick,
 	className = "",
+	type = "",
+	disabled = false,
 }: ButtonProps) {
 	const [isPressed, setIsPressed] = useState(false);
 

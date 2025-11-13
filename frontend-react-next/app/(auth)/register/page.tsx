@@ -11,6 +11,8 @@ import Lottie from "lottie-react";
 
 import animationData from "@/assets/lotties/teeth.json";
 
+import PendingPage from "./pending";
+
 export default function RegisterPage() {
 	const router = useRouter();
 	const [form, setForm] = useState<RegisterInput>({
@@ -24,10 +26,11 @@ export default function RegisterPage() {
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [submitting, setSubmitting] = useState(false);
 	const [generalError, setGeneralError] = useState<string | null>(null);
+	const [submitted, setSubmitted] = useState(false);
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
-		setForm((prev) => ({ ...prev, [name]: value }));
+		setForm((prev) => ({ ...prev, [name as keyof RegisterInput]: value }));
 	}
 
 	async function handleSubmit(e: React.FormEvent) {
@@ -59,25 +62,28 @@ export default function RegisterPage() {
 				const message =
 					typeof data?.error === "string" ? data.error : "Registration failed";
 				setGeneralError(message);
+				setForm((p) => ({ ...p, password: "" }));
 				setSubmitting(false);
 				return;
 			}
+			// Show the Pending component inside the same page
+			setSubmitted(true);
+			setSubmitting(false);
 			// success → redirect to pending page
-			router.push("/auth/pending");
+			//router.push("/auth/pending");
 		} catch {
 			setGeneralError("Network error. Please try again.");
 			setSubmitting(false);
 		}
 	}
-
+	if (submitted) {
+		return <PendingPage />;
+	}
 	return (
 		<main className=" flex items-center justify-center p-4 sm:p-6 bg-gray-50/50 overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/50 -z-10"></div>
 
-			{/* Outer container controls the overall size and prevents outer scrolling */}
-			{/* Using 90% height for context, but the non-scrollable fix should work regardless */}
 			<div className="w-full max-w-5xl h-[90%] grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
-				{/* FORM CONTAINER: overflow-y-auto class REMOVED. Space reduced aggressively. */}
 				<div className="p-4 sm:p-6 space-y-3 overflow-hidden flex flex-col justify-between">
 					<div className="flex-shrink-0 space-y-2">
 						<h1 className="text-3xl font-extrabold text-gray-900">
@@ -97,7 +103,6 @@ export default function RegisterPage() {
 						)}
 					</div>
 
-					{/* Form content area - must now fit without scrolling */}
 					<form
 						onSubmit={handleSubmit}
 						className="space-y-2 flex-grow overflow-y-auto pr-2"
