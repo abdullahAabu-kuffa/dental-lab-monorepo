@@ -121,8 +121,8 @@ const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, onClose }: M
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4, duration: 0.3 }}
                 >
-                  <Button variant="outline" className="w-full" onClick={handleNavClick}>Login</Button>
-                  <Button variant="solid" className="w-full" onClick={handleNavClick}>Get Started</Button>
+                  <Button variant="beigeOutline" className="w-full" onClick={handleNavClick}>Login</Button>
+                  <Button variant="beigeSolid" className="w-full" onClick={handleNavClick}>Get Started</Button>
                 </motion.div>
               </div>
             </motion.div>

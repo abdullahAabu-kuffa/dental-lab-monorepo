@@ -1,19 +1,20 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
+import { Smile, Sparkles, CheckCircle } from 'lucide-react';
 import StatCard from '../../../atoms/StatCard/StatCard';
 import Button from '../../../atoms/Button/Button';
 import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
+import DentalBackground from '../../../atoms/MedicalBackground/MedicalBackgroundLight';
 
-import { STATS } from '../../../../config/stats.data';
+import { STATS } from '../../../../config/OurAchievements';
 
 
 const StatsSection: React.FC = () => {
   return (
-    <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-24 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37]/5 to-transparent"></div>
-      <div className="absolute top-10 left-10 w-72 h-72 bg-[#D4AF37]/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl"></div>
+    <section className="py-20 bg-[#1a1a1a] relative overflow-hidden">
+      {/* Background Components */}
+      <DentalBackground />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Section Title */}
@@ -23,8 +24,10 @@ const StatsSection: React.FC = () => {
             gradientText="Achievements"
             gradientColors="linear-gradient(to right, #FFD700, #E4B441, #C39321)"
           />
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto flex items-center justify-center gap-2">
+            <Smile className="w-5 h-5 text-[#D4AF37]" />
             Numbers that reflect our dedication and success in digital dentistry.
+            <Sparkles className="w-5 h-5 text-[#D4AF37]" />
           </p>
         </div>
 
@@ -37,12 +40,16 @@ const StatsSection: React.FC = () => {
 
         {/* CTA Section */}
         <div className="text-center">
-          <p className="text-white text-2xl font-semibold mb-6">
+          <p className="text-white text-2xl font-semibold mb-6 flex items-center justify-center gap-3">
+            <CheckCircle className="w-8 h-8 text-[#D4AF37]" />
             Ready to Go Digital?
+            <Smile className="w-8 h-8 text-[#D4AF37]" />
           </p>
-          <Button variant="primary" onClick={() => window.location.href = '/dashboard'}>
-            Start Your Digital Journey
-          </Button>
+          <Link href="/dashboard">
+            <Button variant="primary">
+              Start Your Digital Journey
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

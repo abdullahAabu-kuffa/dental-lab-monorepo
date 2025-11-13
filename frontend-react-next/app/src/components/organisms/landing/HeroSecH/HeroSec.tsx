@@ -1,9 +1,9 @@
 'use client';
 
-import HeroLogo from '../../../components/molecules/HeroLogo/HeroLogo';
-import HeroCTAButtons from '../../../components/molecules/HeroCTAButtons/HeroCTAButtons';
-import ScrollIndicator from '../../atoms/ScrollIndicator/ScrollIndicator';
-import MedicalBackground from '../../atoms/MedicalBackground/MedicalBackground';
+import HeroLogo from '../../../../components/molecules/HeroLogo/HeroLogo';
+import HeroCTAButtons from '../../../../components/molecules/HeroCTAButtons/HeroCTAButtons';
+import ScrollIndicator from '../../../atoms/ScrollIndicator/ScrollIndicator';
+import MedicalBackground from '../../../atoms/MedicalBackground/MedicalBackground';
 
 export default function HeroSec() {
   return (

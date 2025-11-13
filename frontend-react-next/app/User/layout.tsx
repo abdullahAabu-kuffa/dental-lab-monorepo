@@ -1,23 +1,18 @@
-import Footer from "../src/components/organisms/Footer";
-import Navbar from "../src/components/organisms/Navbar/Navbar";
+import Navbar from '../src/components/organisms/Navbar/Navbar';
+import Footer from '../src/components/organisms/Footer/Footer';
 
-
-const layout = ({ children }: { children: React.ReactNode }) => {
+export default function UserLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div>
-      <div className="flex h-screen overflow-hidden">
-        <div className="flex flex-col flex-1 overflow-auto">
-          <div className=" w-full">
-                      <main>
-                          <Navbar />
-                          {children}
-                          <Footer/>
-                      </main>
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      <Navbar />
+      <main className="min-h-screen">
+        {children}
+      </main>
+      <Footer />
+    </>
   );
-};
-
-export default layout;
+}
