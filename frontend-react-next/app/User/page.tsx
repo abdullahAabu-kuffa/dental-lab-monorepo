@@ -1,5 +1,5 @@
 export default function UserPage() {
   return (
-<h1>hello</h1 >
-  );  
+    <h1>User</h1>
+  );
 }

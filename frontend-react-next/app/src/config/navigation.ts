@@ -1,11 +1,10 @@
 export const NAV_LINKS = [
   { name: 'Home', href: '/' },
   { name: 'Orders', href: '/User/Order' },
-  { name: 'How It Works', href: '/how-it-works' },
-  { name: 'Technology', href: '/technology' },
-  { name: 'Videos', href: '/videos' },
-  { name: 'Events', href: '/events' },
-  { name: 'Contact', href: '/contact' },
+  { name: 'Services', href: '#services' },
+  { name: 'Process', href: '#process' },
+  { name: 'Events', href: '#events' },
+  { name: 'Contact', href: '#contact' },
 ] as const;
 
 export const NAVBAR_CONFIG = {
@@ -20,12 +19,12 @@ export const NAVBAR_CONFIG = {
   authButtons: {
     login: {
       text: 'Login',
-      href: '/auth/register',
+      href: '/login',
       variant: 'border'
     },
     register: {
       text: 'Register',
-      href: '/auth/register',
+      href: '/register',
       variant: 'solid'
     }
   }

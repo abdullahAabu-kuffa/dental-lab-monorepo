@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { motionVariants } from '../../design-system';
-import type { Order } from './types';
+import { motionVariants } from '../../../design-system';
+import type { Order } from '../types';
 
 interface OrdersTableProps {
   orders: Order[];
