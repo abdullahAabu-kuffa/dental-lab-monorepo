@@ -14,7 +14,7 @@ import {
   Menu,
   XIcon,
   ListOrdered,
-  LayoutDashboard
+  LayoutDashboard,
 } from "lucide-react";
 
 const ICONS = {
@@ -43,7 +43,7 @@ const links = [
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex">
@@ -51,7 +51,9 @@ const Sidebar = () => {
       <motion.div
         animate={{ width: isOpen ? 240 : 70 }}
         transition={{ duration: 0.01 }}
-        className="flex flex-col min-h-screen bg-gray-900 text-white shadow-lg transition-all duration-300"
+        className={`flex flex-col min-h-screen bg-gray-900 text-white shadow-lg transition-all duration-300 ${
+          isOpen ? "z-50" : ""
+        }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
