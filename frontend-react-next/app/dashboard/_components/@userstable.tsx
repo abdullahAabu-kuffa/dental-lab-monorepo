@@ -85,7 +85,6 @@ const users: User[] = [
   },
 ];
 
-
 const statusColors = {
   Approved: "bg-green-100 text-green-700",
   Pending: "bg-yellow-100 text-yellow-700",
@@ -100,14 +99,16 @@ const UsersTable = () => {
   const [filter, setFilter] = useState("All");
 
   const filteredOrders = users.filter((user) => {
-    const matchSearch = user.fullName.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = user.fullName
+      .toLowerCase()
+      .includes(search.toLowerCase());
     const matchFilter = filter === "All" || user.status === filter;
     return matchSearch && matchFilter;
   });
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm mx-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4">All Your Users</h2>
+      <h2 className="text-lg font-semibold mb-4">All Users</h2>
 
       {/* Search */}
       <div className="relative mb-4">
@@ -174,31 +175,37 @@ const UsersTable = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3">{order.date}</td>
-                 <td className="px-4 py-3 flex gap-1 text-center">
-                    {order.status == 'Pending' &&(
-                     <><button className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 ${statusColors['Approved']}`}>
-                                <div className="flex items-center gap-1">
-                                    <MdDone size={16} />
-                                    <span>Approve</span>
-                                </div>
-                            </button><button className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 ${statusColors['Rejected']}`}>
-                                    <div className="flex items-center gap-1">
-                                        <FcCancel size={16} />
-                                        <span>Reject</span>
-                                    </div>
-                                </button></>
-                       )}
-                   <button className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}>
-                     <div className="flex items-center gap-1">
-                        <View size={16} />
-                        <span>Details</span>
-                     </div>
+                <td className="px-4 py-3 flex gap-1 text-center">
+                  {order.status == "Pending" && (
+                    <>
+                      <button
+                        className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 ${statusColors["Approved"]}`}
+                      >
+                        <div className="flex items-center gap-1">
+                          <MdDone size={16} />
+                          <span>Approve</span>
+                        </div>
+                      </button>
+                      <button
+                        className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 ${statusColors["Rejected"]}`}
+                      >
+                        <div className="flex items-center gap-1">
+                          <FcCancel size={16} />
+                          <span>Reject</span>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}
+                  >
+                    <div className="flex items-center gap-1">
+                      <View size={16} />
+                      <span>Details</span>
+                    </div>
                   </button>
-                 </td>
-                <td className="px-4 py-3">
-
-                 
                 </td>
+                <td className="px-4 py-3"></td>
               </tr>
             ))}
           </tbody>

@@ -56,7 +56,7 @@ const dashboard = () => {
       </div>
       <div className="mt-5 mx-6">
         {/* Additional dashboard content can go here */}
-        <OrdersTable/>
+        <OrdersTable overview={true} />
       </div>
     </div>
   );

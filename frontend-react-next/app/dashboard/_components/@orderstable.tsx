@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Search } from "lucide-react";
+import { View } from "lucide-react";
+import { FcCancel } from "react-icons/fc";
+import { MdDone } from "react-icons/md";
 
 interface Order {
   id: string;
@@ -57,7 +60,7 @@ const statusColors = {
 
 const filters = ["All", "Pending", "In Progress", "Completed", "Rejected"];
 
-const OrdersTable = () => {
+const OrdersTable = ({overview}:{overview?:boolean}) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
@@ -69,7 +72,7 @@ const OrdersTable = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm mx-6">
-      <h2 className="text-lg font-semibold mb-4">All Your Orders</h2>
+      <h2 className="text-lg font-semibold mb-4">All Orders</h2>
 
       {/* Search */}
       <div className="relative mb-4">
@@ -136,41 +139,40 @@ const OrdersTable = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3">{order.price}</td>
-                <td className="px-4 py-3">
-                  <button className="text-blue-600 hover:underline">
-                    View Details
+                <td className="px-4 py-3 flex gap-1 text-center">
+                  {!overview && order.status === "Pending" && (
+                    <>
+                      <button
+                        className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 ${statusColors["Completed"]}`}
+                      >
+                        <div className="flex items-center gap-1">
+                          <MdDone size={16} />
+                          <span>Approve</span>
+                        </div>
+                      </button>
+                      <button
+                        className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 ${statusColors["Rejected"]}`}
+                      >
+                        <div className="flex items-center gap-1">
+                          <FcCancel size={16} />
+                          <span>Reject</span>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}
+                  >
+                    <div className="flex items-center gap-1">
+                      <View size={16} />
+                      <span>Details</span>
+                    </div>
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
-        <p>Showing 1 to 5 of 124 results</p>
-        <div className="flex items-center gap-1">
-          <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-            ‹
-          </button>
-          <button className="px-3 py-1 border rounded-md bg-blue-50 text-blue-700">
-            1
-          </button>
-          <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-            2
-          </button>
-          <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-            3
-          </button>
-          <span className="px-2">...</span>
-          <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-            25
-          </button>
-          <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
-            ›
-          </button>
-        </div>
       </div>
     </div>
   );
