@@ -10,8 +10,10 @@
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.2.0",
+		"axios": "^1.13.2",
 		"framer-motion": "^12.23.24",
 		"framer-motion-3d": "^12.4.13",
+		"lightningcss": "^1.30.2",
 		"lottie": "^0.0.1",
 		"lottie-react": "^2.4.1",
 		"lucide-react": "^0.553.0",
