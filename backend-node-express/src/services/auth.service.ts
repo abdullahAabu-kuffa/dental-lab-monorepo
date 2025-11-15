@@ -286,6 +286,7 @@ export const resetPasswordService = async (
     });
     if (!tokenExist) throw new Error("Invalid Token");
     if (tokenExist.expiresAt < new Date()) throw new Error("Token expired");
+    
     const hashedPassword = await bcryptPassword(newPassword);
     if (!tokenExist) {
       throw new Error("Invalid Token");

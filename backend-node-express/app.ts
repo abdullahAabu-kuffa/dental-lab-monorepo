@@ -7,7 +7,10 @@ import cors from "cors";
 import compression from "compression";
 import helmet from "helmet";
 import authRoutes from "./src/routes/auth.routes";
+import userRoutes from "./src/routes/user.routes";
+import orderRoutes from "./src/routes/order.routes";
 import uploadRoutes from "./src/routes/upload.routes";
+import downloadRoutes from "./src/routes/download.routes";
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
 
@@ -35,7 +38,12 @@ app.get("/health", (req, res) => {
 // TODO: API routes
 app.use("/api/auth", authRoutes);
 
-app.use('/api/upload', uploadRoutes); 
+app.use('/api/upload', uploadRoutes);
+app.use('/api/download', downloadRoutes);
+
+
+app.use('/api/orders', orderRoutes)
+app.use('/api/users', userRoutes)
 
 // TODO: 404 handler
 app.use((req, res) => {

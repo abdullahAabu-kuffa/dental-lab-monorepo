@@ -24,11 +24,15 @@ model User {
   clinicAddress  String
   role           Role             @default(CLIENT)
   isActive       Boolean          @default(false)
-  isVerified     Boolean          @default(false) 
+  isVerified     Boolean          @default(false)
   sessions       Session[]
   Security_Token Security_Token[]
+  orders         Order[]          @relation("UserOrders")
+  approvedOrders Order[]          @relation("ApprovedOrders")
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  invoices       Invoice[]
+  auditLogs      AuditLog[]
 }
 
 enum Role {
@@ -58,3 +62,93 @@ model Security_Token {
 
   @@index([userId])
 }
+
+model Order {
+  id             Int             @id @default(autoincrement())
+  userId         Int
+  user           User            @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  fileId         Int             @unique
+  file           File            @relation(fields: [fileId], references: [id])
+  status         ProcessStatus   @default(PENDING)
+  invoiceId      Int?
+  invoice        Invoice?        @relation("InvoiceOrders", fields: [invoiceId], references: [id])
+  options        Json
+  totalPrice     Int
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  approvedBy     Int?
+  approvedByUser User?           @relation("ApprovedOrders", fields: [approvedBy], references: [id])
+  rejectReasons  String?
+  orderTrackings OrderTracking[]
+}
+
+model OrderTracking {
+  id        Int           @id @default(autoincrement())
+  orderId   Int
+  order     Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  process   String
+  status    ProcessStatus @default(PENDING)
+  startDate DateTime?
+  endDate   DateTime?
+  note      String?
+  createdAt DateTime      @default(now())
+}
+
+enum ProcessStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Invoice {
+  id         Int           @id @default(autoincrement())
+  clientId   Int
+  client     User          @relation(fields: [clientId], references: [id])
+  orders     Order[]       @relation("InvoiceOrders")
+  totalPrice Int
+  status     PaymentStatus @default(PENDING)
+  dueDate    DateTime
+  paidAt     DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIAL
+}
+
+model File {
+  id            Int           @id @default(autoincrement())
+  orderId       Int           @unique
+  order         Order?        @relation
+  origenalName  String
+  filePath      String
+  fileSize      Int
+  fileType      String
+  storageStatus StorageStatus @default(STAGING)
+  updatedAt     DateTime      @updatedAt
+  approvedAt    DateTime?
+  deletedAt     DateTime?
+}
+
+enum StorageStatus {
+  STAGING
+  APPROVED
+  REJECTED
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  model     String
+  recordId  Int
+  oldData   Json?
+  newData   Json?
+  createdAt DateTime @default(now())
+}
+
