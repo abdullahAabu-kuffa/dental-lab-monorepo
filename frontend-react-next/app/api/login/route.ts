@@ -30,17 +30,22 @@ export async function POST(req: Request) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
             signal: controller.signal,
+            credentials: "include",// so cookies are sent/stored
         })
         clearTimeout(timeout)
         const contentType = upstream.headers.get("content-type") || "";
         const isJson = contentType.includes("application/json");
         const ResData = isJson ? await upstream.json() : await upstream.text();
 
+        const headers = new Headers(upstream.headers);
+        // Make sure content-type is set correctly
+    headers.set(
+      "Content-Type",
+      isJson ? "application/json" : "text/plain; charset=utf-8"
+    );
         return new NextResponse(isJson ? JSON.stringify(ResData) : String(ResData), {
             status: upstream.status,
-            headers: {
-                "Content-Type": isJson ? "application/json" : "text/plain; charset=utf-8",
-            },
+            headers
         });
 
 
