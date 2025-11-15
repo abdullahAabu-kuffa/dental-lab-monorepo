@@ -24,7 +24,7 @@ const upload = multer({
 
 /**
  * @swagger
- * /api/v1/upload:
+ * /api/upload:
  *   post:
  *     summary: Upload file to cloud storage
  *     tags: [Upload]
