@@ -3,12 +3,27 @@
 // Usage: Called from user routes
 // Responsibility: Implement getProfile, updateProfile, listUsers, approveUser methods
 import { date } from "joi";
-import { approveUserService, deleteUserServices, getAllUsersService, rejectedUserService } from "../services/user.service";
+import { approveUserService, deleteUserServices, getAllUsersService, getUserDataService, rejectedUserService } from "../services/user.service";
 import logger from "../utils/logger.util";
 import { errorResponse, successResponse } from "../utils/response.util";
 import { NextFunction, Request, Response } from "express";
 interface AuthRequest extends Request {
   user?: { id: number; email: string; role: string };
+}
+
+
+export async function getUserData(req: AuthRequest, res: Response) {
+    try {
+        const user = await getUserDataService(req.user!.id);
+        return res
+        .status(200)
+        .json(successResponse({
+          user
+        }, "Fetched all users successfully"));
+    } catch (error: any) {
+        logger.error(`Registration controller error: ${error.message}`);
+        return res.status(400).json(errorResponse(error.message, 400));
+    }
 }
 export async function getAllUsers(req: AuthRequest, res: Response) {
     try {

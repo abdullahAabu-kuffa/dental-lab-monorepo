@@ -10,10 +10,80 @@ import {
   createNewUser,
   changeUserStatus,
   deleteUser,
+  getUserData,
 } from "../controllers/user.controller";
 
 const router = Router();
-
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         email:
+ *           type: string
+ *           format: email
+ *         role:
+ *           type: string
+ *           enum: [CLIENT, ADMIN, OWNER]
+ *         isVerified:
+ *           type: boolean
+ *         isActive:
+ *           type: boolean
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *         invoices:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Invoice'
+ *         orders:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Order'
+ *
+ *     Invoice:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         total:
+ *           type: number
+ *         status:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *
+ *     Order:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         status:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *
+ *     Pagination:
+ *       type: object
+ *       properties:
+ *         page:
+ *           type: integer
+ *         limit:
+ *           type: integer
+ *         total:
+ *           type: integer
+ *         totalPages:
+ *           type: integer
+ */
 /**
  * @swagger
  * /users:
@@ -29,18 +99,61 @@ const router = Router();
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Page number
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 20
- *         description: Number of users per page
  *     responses:
  *       200:
- *         description: Successfully fetched users
+ *         description: List of users with pagination info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/User'
+ *                     pagination:
+ *                       $ref: '#/components/schemas/Pagination'
  */
 
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: Get current authenticated user with full profile
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile with orders & invoices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ */
 /**
  * @swagger
  * /users:
@@ -56,10 +169,7 @@ const router = Router();
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
- *               - password
- *               - role
+ *             required: [email, password, role]
  *             properties:
  *               email:
  *                 type: string
@@ -73,7 +183,6 @@ const router = Router();
  *       201:
  *         description: User created successfully
  */
-
 /**
  * @swagger
  * /users/{id}/status:
@@ -97,9 +206,12 @@ const router = Router();
  *           enum: [approve, reject]
  *     responses:
  *       200:
- *         description: User status updated successfully
+ *         description: User status updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  */
-
 /**
  * @swagger
  * /users/{id}:
@@ -120,13 +232,15 @@ const router = Router();
  *         description: User deleted successfully
  */
 
-// create new Order
+// get all user
 router.get("/", verifyAccessToken, getAllUsers);
-// get all orders
+// get user data
+router.get("/me", verifyAccessToken, getUserData);
+// create User
 router.post("/", verifyAccessToken, requireAdmin, createNewUser);
-// get user order
+// update status
 router.put("/:id/status", verifyAccessToken, changeUserStatus);
-// update user order
+// delete user
 router.delete("/:id", verifyAccessToken, deleteUser);
 
 export default router;

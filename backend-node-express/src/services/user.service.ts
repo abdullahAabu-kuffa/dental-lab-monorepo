@@ -37,9 +37,8 @@ export const approveUserService = async (userId: number) => {
     throw error;
   }
 };
-export const rejectedUserService = async (req: any) => {
+export const rejectedUserService = async (userId: number) => {
   try {
-    const userId = req.id;
     const updatedUser = await prisma.user.update({
       where: {  id: userId  },
       data: {isVerified:false,isActive:false},
@@ -56,6 +55,18 @@ export const deleteUserServices = async (userId:number)=> {
       where: {  id: userId },
     });
     return deleteUser;
+  } catch (error: any) {
+    logger.error(`[rejectUserService  Error]: ${error.message}`);
+    throw error;
+  }
+}
+export const getUserDataService = async (id:number)=> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {  id: id },
+      include:{invoices:true,orders:true}
+    });
+    return user;
   } catch (error: any) {
     logger.error(`[rejectUserService  Error]: ${error.message}`);
     throw error;
