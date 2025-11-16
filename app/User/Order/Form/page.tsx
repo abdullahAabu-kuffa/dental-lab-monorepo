@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, FileText } from 'lucide-react';
 import OrderForm from '../components/OrderForm';
 import PaymentSummary from '../components/PaymentSummary';
-import { PageContainer } from '../../../User/components/PageContainerProps';
 import { NEW_ORDER_FORM_FIELDS } from '../../../src/config/UserData/formFieldsData';
 
 export default function NewOrderFormPage() {
@@ -90,56 +89,51 @@ export default function NewOrderFormPage() {
   const { selectedServices, totalAmount } = calculateSelectedServices();
 
   return (
-    <PageContainer
-      showSidebar={true}
-      onNewOrder={() => router.push('/User/Order/Form')}
-    >
-      <div className="flex gap-8 max-w-7xl ml-[30px] p-12">
-        {/* Form Section */}
-        <div className="flex-1 max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-[#E4B441] to-[#D4A431] rounded-full flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">New Dental Order</h1>
-                  <p className="text-gray-600">Fill out all sections below to create your order</p>
-                </div>
+    <div className="flex gap-8 max-w-7xl ml-[30px] p-12">
+      {/* Form Section */}
+      <div className="flex-1 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-[#E4B441] to-[#D4A431] rounded-full flex items-center justify-center">
+                <FileText className="w-6 h-6 text-white" />
               </div>
-
-              <button
-                onClick={() => router.push('/User/Order')}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Orders
-              </button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">New Dental Order</h1>
+                <p className="text-gray-600">Fill out all sections below to create your order</p>
+              </div>
             </div>
-          </motion.div>
 
-          <OrderForm 
-            onSubmit={handleSubmit} 
-            isSubmitting={isSubmitting}
-            onFormDataChange={handleFormDataChange}
-            onContinueToUpload={handleContinueToUpload}
-          />
-        </div>
+            <button
+              onClick={() => router.push('/User/Order')}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Orders
+            </button>
+          </div>
+        </motion.div>
 
-        {/* Payment Summary Section */}
-        <div className="w-96 flex-shrink-0">
-          <PaymentSummary 
-            selectedServices={selectedServices}
-            totalAmount={totalAmount}
-            onPayNow={handlePayNow}
-          />
-        </div>
+        <OrderForm 
+          onSubmit={handleSubmit} 
+          isSubmitting={isSubmitting}
+          onFormDataChange={handleFormDataChange}
+          onContinueToUpload={handleContinueToUpload}
+        />
       </div>
-    </PageContainer>
+
+      {/* Payment Summary Section */}
+      <div className="w-96 flex-shrink-0">
+        <PaymentSummary 
+          selectedServices={selectedServices}
+          totalAmount={totalAmount}
+          onPayNow={handlePayNow}
+        />
+      </div>
+    </div>
   );
 }

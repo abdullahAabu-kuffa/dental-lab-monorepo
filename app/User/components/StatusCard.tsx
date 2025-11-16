@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { ORDER_COLORS, CARD_STYLES, TEXT_STYLES } from '../../design-system/orderStyles';
-import { STATUS_ICONS } from '../../src/utils/orderIcons';
+import { ICON_MAP } from '../../src/utils/UnifiedIcons';
 
 interface StatusBadgeProps {
   status: 'In Progress' | 'Completed' | 'Pending Approval' | 'Rejected';
@@ -11,10 +11,10 @@ interface StatusBadgeProps {
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const statusMap = {
-    'In Progress': { ...ORDER_COLORS.inProgress, icon: STATUS_ICONS.inProgress },
-    'Completed': { ...ORDER_COLORS.completed, icon: STATUS_ICONS.completed },
-    'Pending Approval': { ...ORDER_COLORS.pending, icon: STATUS_ICONS.pending },
-    'Rejected': { ...ORDER_COLORS.rejected, icon: STATUS_ICONS.rejected }
+    'In Progress': { ...ORDER_COLORS.inProgress, icon: ICON_MAP.inProgress },
+    'Completed': { ...ORDER_COLORS.completed, icon: ICON_MAP.completed },
+    'Pending Approval': { ...ORDER_COLORS.pending, icon: ICON_MAP.pending },
+    'Rejected': { ...ORDER_COLORS.rejected, icon: ICON_MAP.rejected }
   };
 
   const config = statusMap[status];

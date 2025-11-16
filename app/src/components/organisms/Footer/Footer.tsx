@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { QUICK_LINKS, SERVICES_LINKS, CONTACT_INFO } from '../../../config/LandingData/contact.data';
-import { getIcon } from '../../../utils/iconMap';
+import { getIcon } from '../../../utils/UnifiedIcons';
 
 const Footer: React.FC = () => {
   return (

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Upload } from 'lucide-react';
-import { NEW_ORDER_FORM_FIELDS, FORM_SECTIONS, SECTION_DESCRIPTIONS } from '../../../src/config/UserData/formFieldsData';
+import { FORM_SECTIONS, SECTION_DESCRIPTIONS } from '../../../src/config/UserData/formFieldsData';
 import { FormField } from '../../../src/types';
 
 interface OrderFormProps {

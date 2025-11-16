@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { PROCESS_ICONS } from '../../src/utils/orderIcons';
+import { ICON_MAP } from '../../src/utils/UnifiedIcons';
 import { ORDER_COLORS } from '../../design-system/orderStyles';
 
 interface ProcessStep {
@@ -20,10 +20,10 @@ interface ProcessTimelineProps {
 
 export const ProcessTimeline: React.FC<ProcessTimelineProps> = ({ steps }) => {
   const iconMap = {
-    'Order Received': PROCESS_ICONS.orderReceived,
-    'Design Review': PROCESS_ICONS.designReview,
-    'Manufacturing': PROCESS_ICONS.manufacturing,
-    'Quality Check': PROCESS_ICONS.qualityCheck
+    'Order Received': ICON_MAP.orderReceived,
+    'Design Review': ICON_MAP.designReview,
+    'Manufacturing': ICON_MAP.manufacturing,
+    'Quality Check': ICON_MAP.qualityCheck
   };
 
   const getStepColors = (status: string) => {

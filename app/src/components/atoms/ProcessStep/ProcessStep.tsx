@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { ProcessStep as ProcessStepType } from '../../../utils/IconManufacturing';
+import type { ProcessStep as ProcessStepType } from '../../../types';
 
 interface ProcessStepProps { // Define the props for the ProcessStep component
   step: ProcessStepType;

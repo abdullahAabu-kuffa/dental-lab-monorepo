@@ -3,9 +3,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { motionVariants, componentStyles, welcomePageAnimations } from '../../design-system';
-import { User, Crown } from '../../src/utils/UserIcons';
-import { USER_PROCESS_STEPS } from '../../src/utils/UserProcessSteps';
-import { PageContainer } from '../../User/components/PageContainerProps';
+import { User, Crown } from '../../src/utils/UnifiedIcons';
+import { USER_PROCESS_STEPS } from '../../src/config/UserData/UserProcessSteps';
 import { WelcomePageProps } from '../../src/types';
 
 const PROCESS_STEPS = USER_PROCESS_STEPS;
@@ -35,11 +34,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
     onViewOrders?.();
   };
   return (
-    <PageContainer
-      onNewOrder={handleNewOrder}       // Navigate to form page
-      onTrackOrder={onTrackOrder}
-      onShowOrdersTable={onShowOrdersTable}
-    >
+    <>
       {/* Main Content Area */}
       <motion.div
         {...welcomePageAnimations.mainContainer}
@@ -156,7 +151,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
           </p>
         </motion.div>
       </motion.div>
-    </PageContainer>
+    </>
   );
 };
 export default WelcomePage; // Export component for use elsewhere

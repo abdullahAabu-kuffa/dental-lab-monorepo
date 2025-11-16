@@ -3,7 +3,7 @@ import ProcessStep from '../../../atoms/ProcessStep/ProcessStep';
 import Button from '../../../atoms/Button/Button';
 import { HeroHeading } from '../../../../../design-system';
 import { HeroSubtitle } from '../../../../../design-system';
-import { MANUFACTURING_STEPS } from '../../../../utils/IconManufacturing';
+import { MANUFACTURING_STEPS } from '../../../../config/manufacturing-process.data';
 import { componentStyles, gradients } from '../../../../../design-system';
 
 export default function ManufacturingProcessSection() {
