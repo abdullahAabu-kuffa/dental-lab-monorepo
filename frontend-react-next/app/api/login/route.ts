@@ -30,6 +30,7 @@ export async function POST(req: Request) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
             signal: controller.signal,
+            credentials: "include"
         })
         clearTimeout(timeout)
         const contentType = upstream.headers.get("content-type") || "";

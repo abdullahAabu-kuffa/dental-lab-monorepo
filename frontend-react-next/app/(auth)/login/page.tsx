@@ -127,6 +127,8 @@ export default function LoginPage() {
 							placeholder="Email"
 							value={formData.email}
 							onChange={handleChange}
+							autoComplete="mail"
+							autoFocus
 							className="w-full p-3 rounded-xl bg-[#151515] text-white border border-[#E4B441]/40 focus:outline-none focus:border-[#E4B441]"
 						/>
 						{validationErrors.email && (
@@ -142,6 +144,7 @@ export default function LoginPage() {
 							name="password"
 							placeholder="Password"
 							value={formData.password}
+							autoComplete="password"
 							onChange={handleChange}
 							className="w-full p-3 rounded-xl bg-[#151515] text-white border border-[#E4B441]/40 focus:outline-none focus:border-[#E4B441]"
 						/>
