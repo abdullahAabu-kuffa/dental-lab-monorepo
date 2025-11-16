@@ -4,12 +4,13 @@ import { Search } from "lucide-react";
 import { View } from "lucide-react";
 import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
+import OrderModal from "./@ordermodal";
 
 interface Order {
   id: string;
   type: string;
   date: string;
-  status: "Pending" | "In Progress" | "Completed" | "Rejected";
+  status: "Pending" | "In Progress" | "Completed";
   price: string;
 }
 
@@ -46,7 +47,7 @@ const orders: Order[] = [
     id: "#DDL-0120",
     type: "Denture Repair",
     date: "2024-07-18",
-    status: "Rejected",
+    status: "Completed",
     price: "950 EGP",
   },
 ];
@@ -58,11 +59,12 @@ const statusColors = {
   Rejected: "bg-red-100 text-red-700",
 };
 
-const filters = ["All", "Pending", "In Progress", "Completed", "Rejected"];
+const filters = ["All", "Pending", "In Progress", "Completed"];
 
-const OrdersTable = ({overview}:{overview?:boolean}) => {
+const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const filteredOrders = orders.filter((order) => {
     const matchSearch = order.id.toLowerCase().includes(search.toLowerCase());
@@ -161,6 +163,7 @@ const OrdersTable = ({overview}:{overview?:boolean}) => {
                     </>
                   )}
                   <button
+                    onClick={() => setSelectedOrder(order)}
                     className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}
                   >
                     <div className="flex items-center gap-1">
@@ -174,6 +177,11 @@ const OrdersTable = ({overview}:{overview?:boolean}) => {
           </tbody>
         </table>
       </div>
+
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <OrderModal selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} />
+      )}
     </div>
   );
 };
