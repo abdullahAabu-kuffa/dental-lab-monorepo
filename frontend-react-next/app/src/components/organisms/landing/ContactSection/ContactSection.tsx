@@ -1,26 +1,27 @@
 'use client';
 import React from 'react';
 import Button from '../../../atoms/Button/Button';
-import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSubtitle/HeroSubtitle';
-import { CONTACT_INFO } from '../../../../config/contact.data';
-import { getIcon } from '../../../../utils/iconMap';
+import { HeroHeading } from '../../../../../design-system';
+import { HeroSubtitle } from '../../../../../design-system';
+import { CONTACT_INFO } from '../../../../config/LandingData/contact.data';
+import { getIcon } from '../../../../utils/UnifiedIcons';
 import { componentStyles } from '../../../../../design-system';
 
 const ContactSection: React.FC = () => {
   return (
-    <section id="contact" className={`${componentStyles.layout.spacingSection} ${componentStyles.background.sectionWhite}`}>
+    <section id="contact" className={`${componentStyles.layout.spacingSection} bg-white`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16">
           <div>
             <HeroHeading
               primaryText=""
               gradientText="Get In Touch"
-              gradientColors="linear-gradient(to right, #FFD700, #E4B441, #C39321)"
+              variant="black"
             />
             
             <HeroSubtitle
               text="Have questions? We are here to help you transform your dental practice with digital innovation."
+              variant="black"
             />
             
             <div className="space-y-6 mt-8">
