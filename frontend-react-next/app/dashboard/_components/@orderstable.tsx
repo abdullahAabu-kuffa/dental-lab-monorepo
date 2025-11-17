@@ -10,7 +10,7 @@ interface Order {
   id: string;
   type: string;
   date: string;
-  status: "Pending" | "In Progress" | "Completed";
+  status: "Pending" | "In Progress" | "Completed"| "Rejected";
   price: string;
 }
 
@@ -47,7 +47,7 @@ const orders: Order[] = [
     id: "#DDL-0120",
     type: "Denture Repair",
     date: "2024-07-18",
-    status: "Completed",
+    status: "Rejected",
     price: "950 EGP",
   },
 ];
@@ -59,7 +59,7 @@ const statusColors = {
   Rejected: "bg-red-100 text-red-700",
 };
 
-const filters = ["All", "Pending", "In Progress", "Completed"];
+const filters = ["All", "Pending", "In Progress", "Completed" , "Rejected"];
 
 const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const [search, setSearch] = useState("");

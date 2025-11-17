@@ -6,6 +6,16 @@ export default function AccountPage() {
   const [isThemeOn, setIsThemeOn] = useState(false);
   const handleThemeChange = () => setIsThemeOn(!isThemeOn);
   const handleEmailChange = () => setIsEmailOn(!isEmailOn);
+  const [profileImage, setProfileImage] = useState(
+    "https://cdn.vectorstock.com/i/1000v/29/52/faceless-male-avatar-in-hoodie-vector-56412952.avif"
+  );
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+    }
+  };
   const [info, setInfo] = useState({
     fullName: "",
     email: "",
@@ -16,15 +26,37 @@ export default function AccountPage() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [passwordErrors, setPasswordErrors] = useState({
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const handlePasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPasswordErrors({
+      password: !info.password
+        ? "Password is required"
+        : info.password.length < 6
+        ? "Password must be at least 6 characters"
+        : "",
+      newPassword: !info.newPassword
+        ? "New Password is required"
+        : info.newPassword.length < 6
+        ? "Password must be at least 6 characters"
+        : "",
+      confirmPassword: !info.confirmPassword
+        ? "Confirm Password is required"
+        : info.newPassword !== info.confirmPassword
+        ? "Passwords do not match"
+        : "",
+    });
+  };
   const [basicErrors, setBasicErrors] = useState({
     fullName: "",
     email: "",
     phoneNumber: "",
     city: "",
     professionalLicenseNumber: "",
-    password: "",
-    newPassword: "",
-    confirmPassword: "",
   });
   const handleBasicSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,37 +68,26 @@ export default function AccountPage() {
         : "",
       email: !info.email
         ? "Email is required"
-        : /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(info.email)
+        : !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(info.email)
         ? "please enter a valid email"
         : "",
       phoneNumber: !info.phoneNumber
         ? "Phone Number is required"
         : info.phoneNumber.length < 11
         ? "please enter a valid phone number"
-        : /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(info.phoneNumber)
+        : !/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.test(info.phoneNumber)
         ? "please enter a valid phone number"
         : "",
       city: !info.city ? "City is required" : "",
       professionalLicenseNumber: !info.professionalLicenseNumber
         ? "Professional License Number is required"
         : "",
-      password: !info.password
-        ? "Password is required"
-        : info.password.length < 6
-        ? "Password must be at least 6 characters"
-        : "",
-      newPassword: !info.newPassword
-        ? "New Password is required"
-        : info.newPassword.length < 6
-        ? "New Password must be at least 6 characters"
-        : "",
-      confirmPassword: !info.confirmPassword
-        ? "Confirm Password is required"
-        : info.confirmPassword !== info.newPassword
-        ? "Passwords do not match"
-        : "",
     });
   };
+  const errorStyle =
+    "border-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500";
+  const successStyle =
+    "border-[#6B7280] focus:border-blue-500 focus:ring-blue-500 hover:border-[#6B7280]";
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-5xl mx-auto space-y-10">
@@ -90,7 +111,13 @@ export default function AccountPage() {
             <div className="flex flex-col gap-6 items-start">
               {/* Avatar */}
               <div className="flex items-center space-y-2">
-                <div className="w-30 h-30 rounded-full bg-gray-200 border-4 border-blue-600"></div>
+                <div className="w-30 h-30 rounded-full bg-gray-200 border-4 border-blue-600">
+                  <img
+                    src={profileImage}
+                    alt="avatar"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </div>
                 <div className="flex flex-col items-start ml-4 space-y-2">
                   <p className="text-sm font-medium">Dr. Ahmed Hassan</p>
                   <span className="text-xs text-gray-500">Prosthodontist</span>
@@ -105,6 +132,7 @@ export default function AccountPage() {
                     id="photo"
                     type="file"
                     accept="image/*"
+                    onChange={handlePhotoChange}
                   />
                 </div>
               </div>
@@ -120,11 +148,7 @@ export default function AccountPage() {
                     type="text"
                     placeholder="Dr. Ahmed Hassan"
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
-  ${
-    basicErrors.fullName
-      ? "border-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500"
-      : "border-[#6B7280] focus:border-blue-500 focus:ring-blue-500 hover:border-[#6B7280]"
-  }
+  ${basicErrors.fullName ? errorStyle : successStyle}
 `}
                     //   defaultValue="Dr. Ahmed Hassan"
 
@@ -149,7 +173,9 @@ export default function AccountPage() {
                   <input
                     type="text"
                     placeholder="ahmed.hassan@dentalclinic.com"
-                    className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${basicErrors.email ? errorStyle : successStyle}
+`}
                     //   defaultValue="ahmed.hassan@dentalclinic.com"
                     value={info.email}
                     onChange={(e) =>
@@ -172,7 +198,9 @@ export default function AccountPage() {
                   <input
                     type="text"
                     placeholder="+1 234 567 8900"
-                    className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${basicErrors.phoneNumber ? errorStyle : successStyle}
+`}
                     //   defaultValue="+1 234 567 8900"
                     value={info.phoneNumber}
                     onChange={(e) => {
@@ -195,7 +223,9 @@ export default function AccountPage() {
                   <input
                     type="text"
                     placeholder="Chicago"
-                    className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${basicErrors.city ? errorStyle : successStyle}
+`}
                     //   defaultValue="Chicago"
                     value={info.city}
                     onChange={(e) => {
@@ -218,7 +248,9 @@ export default function AccountPage() {
                   <input
                     type="text"
                     placeholder="EN12345678"
-                    className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${basicErrors.professionalLicenseNumber ? errorStyle : successStyle}
+`}
                     //   defaultValue="EN12345678"
                     value={info.professionalLicenseNumber}
                     onChange={(e) => {
@@ -252,60 +284,86 @@ export default function AccountPage() {
             {/* Change Password */}
             <div className="space-y-3 flex flex-col">
               <h3 className="font-medium">Change Password</h3>
-              <div className="flex flex-col space-y-1">
-                <label htmlFor="password" className="text-stone-400">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="**********"
-                  className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  value={info.password}
-                  onChange={(e) => {
-                    setInfo({
-                      ...info,
-                      password: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex flex-col space-y-1">
-                <label htmlFor="password" className="text-stone-400">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="**********"
-                  className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  value={info.newPassword}
-                  onChange={(e) => {
-                    setInfo({
-                      ...info,
-                      newPassword: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex flex-col space-y-1">
-                <label htmlFor="password" className="text-stone-400">
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="**********"
-                  className="w-full px-4 py-2 text-gray-700 bg-white border border-[#6B7280] rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  value={info.confirmPassword}
-                  onChange={(e) => {
-                    setInfo({
-                      ...info,
-                      confirmPassword: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md w-full">
-                Change Password
-              </button>
+              <form onSubmit={handlePasswordSubmit}>
+                <div className="flex flex-col space-y-1">
+                  <label htmlFor="password" className="text-stone-400">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="**********"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${passwordErrors.password ? errorStyle : successStyle}
+`}
+                    value={info.password}
+                    onChange={(e) => {
+                      setInfo({
+                        ...info,
+                        password: e.target.value,
+                      });
+                    }}
+                  />
+                  {passwordErrors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {passwordErrors.password}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <label htmlFor="password" className="text-stone-400">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="**********"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${passwordErrors.newPassword ? errorStyle : successStyle}
+`}
+                    value={info.newPassword}
+                    onChange={(e) => {
+                      setInfo({
+                        ...info,
+                        newPassword: e.target.value,
+                      });
+                    }}
+                  />
+                  {passwordErrors.newPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {passwordErrors.newPassword}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <label htmlFor="password" className="text-stone-400">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="**********"
+                    className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
+  ${passwordErrors.confirmPassword ? errorStyle : successStyle}
+`}
+                    value={info.confirmPassword}
+                    onChange={(e) => {
+                      setInfo({
+                        ...info,
+                        confirmPassword: e.target.value,
+                      });
+                    }}
+                  />
+                  {passwordErrors.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {passwordErrors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-md w-full"
+                >
+                  Change Password
+                </button>
+              </form>
             </div>
 
             {/* Notifications */}

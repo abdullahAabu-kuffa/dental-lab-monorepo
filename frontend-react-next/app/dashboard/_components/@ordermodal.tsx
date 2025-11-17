@@ -4,7 +4,7 @@ interface Order {
   id: string;
   type: string;
   date: string;
-  status: "Pending" | "In Progress" | "Completed";
+  status: "Pending" | "In Progress" | "Completed" | "Rejected";
   price: string;
 }
 
@@ -17,6 +17,7 @@ const OrderModal = ({ selectedOrder, setSelectedOrder }: OrderModalProps) => {
     Pending: "bg-yellow-100 text-yellow-800",
     "In Progress": "bg-blue-100 text-blue-800",
     Completed: "bg-green-100 text-green-800",
+    Rejected: "bg-red-100 text-red-800",
   };
 
   return (
