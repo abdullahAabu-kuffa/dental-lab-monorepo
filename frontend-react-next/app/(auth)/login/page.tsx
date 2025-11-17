@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import { typography, gradients, motionVariants } from "@/app/design-system/";
+import { motionVariants } from "@/app/design-system/";
 
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
@@ -67,7 +67,6 @@ export default function LoginPage() {
 		setErrorMessage("");
 
 		try {
-			// Final validation before submit
 			const result = loginSchema.safeParse(formData);
 			if (!result.success) {
 				setErrorMessage("Please correct the highlighted fields.");
@@ -100,26 +99,21 @@ export default function LoginPage() {
 	};
 
 	return (
-		<div
-			className="min-h-screen flex items-center justify-center bg-black overflow-hidden px-4"
-			style={{ background: gradients.darkBg }}
-		>
-			{/* Full width animation at top */}
-
+		<div className="min-h-[90] flex flex-col lg:flex-row items-center justify-center bg-[#FDFBF7] p-8">
 			<GoldenGlow isActive={glowActive} intensity="medium" />
 
 			<motion.div
-				className="w-full max-w-lg bg-[#141414] backdrop-blur-md p-8 rounded-3xl shadow-lg  relative z-10"
-				{...motionVariants.fadeInUp(0.2)}
+				className="w-full max-w-md bg-white p-12 rounded-2xl shadow-xl relative z-10 mx-auto lg:mx-4"
+				//{...motionVariants.fadeInUp(0.2)}
 			>
-				<h1
-					className={`${typography.cardDescription} text-transparent bg-clip-text text-center mb-6`}
-					style={{ backgroundImage: gradients.goldText }}
-				>
+				<h1 className="text-3xl font-bold text-gray-900 text-left mb-2">
 					Welcome Back
 				</h1>
+				<p className="text-gray-600 mb-8 text-left">
+					Start your journey with us. Fill in the details to get started.
+				</p>
 
-				<form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+				<form onSubmit={handleSubmit} className="flex flex-col space-y-6">
 					<div>
 						<input
 							type="email"
@@ -127,10 +121,12 @@ export default function LoginPage() {
 							placeholder="Email"
 							value={formData.email}
 							onChange={handleChange}
-							className="w-full p-3 rounded-xl bg-[#151515] text-white border border-[#E4B441]/40 focus:outline-none focus:border-[#E4B441]"
+							autoComplete="mail"
+							autoFocus
+							className="w-full p-3 rounded-xl bg-white text-gray-800 border border-gray-300 placeholder-gray-500 focus:outline-none focus:border-[#E4B441] focus:ring-1 focus:ring-[#E4B441]"
 						/>
 						{validationErrors.email && (
-							<p className="text-red-400 text-sm mt-1">
+							<p className="text-red-600 text-sm mt-1">
 								{validationErrors.email}
 							</p>
 						)}
@@ -142,18 +138,19 @@ export default function LoginPage() {
 							name="password"
 							placeholder="Password"
 							value={formData.password}
+							autoComplete="password"
 							onChange={handleChange}
-							className="w-full p-3 rounded-xl bg-[#151515] text-white border border-[#E4B441]/40 focus:outline-none focus:border-[#E4B441]"
+							className="w-full p-3 rounded-xl bg-white text-gray-800 border border-gray-300 placeholder-gray-500 focus:outline-none focus:border-[#E4B441] focus:ring-1 focus:ring-[#E4B441]"
 						/>
 						{validationErrors.password && (
-							<p className="text-red-400 text-sm mt-1">
+							<p className="text-red-600 text-sm mt-1">
 								{validationErrors.password}
 							</p>
 						)}
 					</div>
 
 					<div className="flex justify-end">
-						<a href="#" className="text-[#E4B441] text-sm hover:underline">
+						<a href="#" className="text-[#886D2D] text-sm hover:underline">
 							Forgot password?
 						</a>
 					</div>
@@ -168,15 +165,26 @@ export default function LoginPage() {
 					</Button>
 				</form>
 
-				{/* API error message */}
 				{errorMessage && (
-					<p className="text-red-400 text-center mt-4 text-sm">
+					<p className="text-red-600 text-center mt-4 text-sm">
 						{errorMessage}
 					</p>
 				)}
 			</motion.div>
-			<div className="w-full max-w-md  mb-4">
-				<Lottie animationData={animationData} loop autoplay />
+
+			<div className="w-full max-w-md h-[400px] lg:h-[650px] bg-[#F9F5EE] p-12 rounded-2xl flex flex-col justify-center items-center text-center mx-auto lg:mx-4 mt-8 lg:mt-0">
+				<div className="w-full max-w-xs mb-4">
+					<Lottie animationData={animationData} loop autoplay />
+				</div>
+
+				<h2 className="text-xl font-bold text-[#886D2D] mt-4 mb-3">
+					Your Security is Our Priority
+				</h2>
+				<p className="text-sm text-gray-700">
+					By logging in, you acknowledge that **manual verification** is
+					required for security and compliance purposes. We l notify you once
+					your account is activated.
+				</p>
 			</div>
 		</div>
 	);

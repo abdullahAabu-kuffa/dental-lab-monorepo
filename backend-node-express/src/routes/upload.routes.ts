@@ -2,6 +2,8 @@ import { Router } from 'express';
 import multer from 'multer';
 import { uploadFile } from '../controllers/upload.controller';
 import { verifyAccessToken } from '../middlewares/auth.middleware';
+import { fileTypeFromBuffer, fileTypeFromStream } from 'file-type';
+import logger from '../utils/logger.util';
 
 const router = Router();
 
@@ -11,14 +13,15 @@ const upload = multer({
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB limit
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: async (req, file, cb) => {
     // Accept images only
     const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
       cb(new Error('Invalid file type. Only images allowed.'));
-    }
+   }
+   logger.info(`File uploaded: ${file.originalname}`);
   },
 });
 

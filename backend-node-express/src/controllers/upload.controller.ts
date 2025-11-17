@@ -4,6 +4,7 @@ import { successResponse, errorResponse } from '../utils/response.util';
 import logger from '../utils/logger.util';
 import crypto from 'crypto';
 import path from 'path';
+import { fileTypeFromBuffer } from 'file-type';
 
 /**
  * Upload file
@@ -13,6 +14,8 @@ export async function uploadFile(req: Request, res: Response) {
     if (!req.file) {
       return res.status(400).json(errorResponse('No file provided', 400));
     }
+    console.log("file type:", await fileTypeFromBuffer(req.file.buffer));
+
 
     // Generate unique filename
     const fileExtension = path.extname(req.file.originalname);
