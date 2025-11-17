@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import SwitchButton from "../_components/@switchBtn";
+import { Upload } from "lucide-react";
 export default function AccountPage() {
   const [isEmailOn, setIsEmailOn] = useState(false);
   const [isThemeOn, setIsThemeOn] = useState(false);
@@ -85,7 +86,7 @@ export default function AccountPage() {
     });
   };
   const errorStyle =
-    "border-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500";
+    "!border-red-500 focus:!border-red-500 hover:!border-red-500 focus:!ring-red-500";
   const successStyle =
     "border-[#6B7280] focus:border-blue-500 focus:ring-blue-500 hover:border-[#6B7280]";
   return (
@@ -123,9 +124,9 @@ export default function AccountPage() {
                   <span className="text-xs text-gray-500">Prosthodontist</span>
                   <label
                     htmlFor="photo"
-                    className="text-sm text-white bg-blue-600 px-3 py-1 rounded-md"
+                    className="text-sm text-black bg-[#e3e7e8] hover:bg-[#bfc4c5] px-3 py-2 rounded-md flex border-3 border-[#CDD8EA]"
                   >
-                    Update Your Photo
+                    <Upload size={15} className="mx-1 mt-1" /> Change Photo
                   </label>
                   <input
                     className="hidden"
@@ -201,7 +202,6 @@ export default function AccountPage() {
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
   ${basicErrors.phoneNumber ? errorStyle : successStyle}
 `}
-                    //   defaultValue="+1 234 567 8900"
                     value={info.phoneNumber}
                     onChange={(e) => {
                       setInfo({
@@ -226,7 +226,6 @@ export default function AccountPage() {
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
   ${basicErrors.city ? errorStyle : successStyle}
 `}
-                    //   defaultValue="Chicago"
                     value={info.city}
                     onChange={(e) => {
                       setInfo({
@@ -251,7 +250,6 @@ export default function AccountPage() {
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
   ${basicErrors.professionalLicenseNumber ? errorStyle : successStyle}
 `}
-                    //   defaultValue="EN12345678"
                     value={info.professionalLicenseNumber}
                     onChange={(e) => {
                       setInfo({

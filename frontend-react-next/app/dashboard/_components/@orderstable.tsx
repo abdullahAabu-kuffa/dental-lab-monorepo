@@ -16,35 +16,35 @@ interface Order {
 
 const orders: Order[] = [
   {
-    id: "#DDL-0124",
+    id: "DDL-0124",
     type: "Zirconia Crown",
     date: "2024-07-22",
     status: "Completed",
     price: "2,500 EGP",
   },
   {
-    id: "#DDL-0123",
+    id: "DDL-0123",
     type: "PFM Bridge",
     date: "2024-07-21",
     status: "Pending",
     price: "1,800 EGP",
   },
   {
-    id: "#DDL-0122",
+    id: "DDL-0122",
     type: "E-max Veneers",
     date: "2024-07-20",
     status: "In Progress",
     price: "4,200 EGP",
   },
   {
-    id: "#DDL-0121",
+    id: "DDL-0121",
     type: "Clear Aligners",
     date: "2024-07-19",
     status: "Completed",
     price: "3,100 EGP",
   },
   {
-    id: "#DDL-0120",
+    id: "DDL-0120",
     type: "Denture Repair",
     date: "2024-07-18",
     status: "Rejected",

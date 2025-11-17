@@ -1,5 +1,5 @@
 import React from "react";
-
+import Link from "next/link";
 interface Order {
   id: string;
   type: string;
@@ -150,9 +150,13 @@ const OrderModal = ({ selectedOrder, setSelectedOrder }: OrderModalProps) => {
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                Download Invoice
-              </button>
+              <Link
+                href={`/dashboard/${selectedOrder?.id}`}
+                onClick={() => setSelectedOrder(null)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                More Details
+              </Link>
             </div>
           </div>
         </div>
