@@ -1,116 +1,159 @@
+// Component styles and reusable design patterns
 export const componentStyles = {
-  layout: {
-    containerDefault: 'max-w-7xl mx-auto px-4 sm:px-6',
-    containerExtended: 'max-w-6xl mx-auto px-4 sm:px-6',
-    spacingSection: 'py-16 sm:py-24',
-    relative: 'relative',
-  },
-  
-  background: {
-    sectionDark: 'bg-gradient-to-br from-[#1C1C1C] to-[#2A2A2A] text-white',
-    sectionWhite: 'bg-white',
-  },
-  
-  text: {
-    textLight: 'text-gray-400',
-  },
-  
+  // Button variants
   buttons: {
-    primary: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg
-      bg-gradient-to-r from-[#E4B441] to-[#D4A431] 
-      text-white font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:from-[#FFD700] hover:to-[#E4B441]
-      shadow-lg hover:shadow-xl 
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-    
-    secondary: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg
-      bg-gradient-to-r from-[#D4AF37] to-[#B8960A] 
-      text-white font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:from-[#FFD700] hover:to-[#D4AF37]
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-    
-    fullWidth: `
-      w-full px-6 sm:px-8 py-3 sm:py-4 rounded-lg
-      bg-gradient-to-r from-[#E4B441] to-[#D4A431] 
-      text-white font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:from-[#FFD700] hover:to-[#E4B441]
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-
-    whiteBlackHover: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
-      border border-black bg-white text-black font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-black hover:text-white
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-    
-    yellowTextHoverBlack: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
-      bg-yellow-500 border border-yellow-500
-      text-black font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-yellow-600 hover:text-white
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-    
-    whiteBgYellowTextHoverBlack: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
-      bg-white border-2 border-yellow-500
-      text-yellow-500 font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-yellow-500 hover:text-white
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-
-    beigeSolid: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg
-      bg-[#CABEB2] text-[#1C1715] font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-[#B5A594] hover:text-black
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-    
-    beigeOutline: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-lg 
-      border border-[#CABEB2] bg-transparent
-      text-[#1C1715] font-semibold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-[#E9E4DF] hover:border-[#B5A594] hover:text-black
-      shadow-lg hover:shadow-xl
-      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-    `,
-      lightPrimary: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl
-      bg-[#D4C4B0] text-gray-800 font-bold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-[#C4B4A0] hover:shadow-lg
-      shadow-md
-      disabled:opacity-50 disabled:cursor-not-allowed
-    `,
-    
-    lightSecondary: `
-      inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl
-      bg-transparent border-2 border-gray-400 text-gray-700 font-semibold text-sm sm:text-base
-      transition-all duration-200 ease-out
-      hover:bg-gray-100 hover:border-gray-500 hover:shadow-lg
-      shadow-sm
-      disabled:opacity-50 disabled:cursor-not-allowed
-    `,
+    primary: {
+      backgroundColor: 'gold.DEFAULT',
+      color: 'text.white',
+      padding: '12px 24px',
+      borderRadius: '8px',
+      fontWeight: '500',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      transition: 'all 0.2s ease-in-out',
+      _hover: {
+        backgroundColor: 'gold.dark',
+        transform: 'translateY(-1px)'
+      },
+      _active: {
+        transform: 'translateY(0)'
+      }
+    },
+    secondary: {
+      backgroundColor: 'transparent',
+      color: 'gold.DEFAULT',
+      border: '2px solid gold.DEFAULT',
+      padding: '10px 22px',
+      borderRadius: '8px',
+      fontWeight: '500',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      transition: 'all 0.2s ease-in-out',
+      _hover: {
+        backgroundColor: 'gold.DEFAULT',
+        color: 'text.white'
+      }
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      color: 'text.gray.600',
+      padding: '8px 16px',
+      borderRadius: '6px',
+      fontWeight: '400',
+      transition: 'all 0.2s ease-in-out',
+      _hover: {
+        backgroundColor: 'beige.light',
+        color: 'text.black'
+      }
+    }
   },
+
+  // Card variants
+  cards: {
+    default: {
+      backgroundColor: 'white',
+      borderRadius: '12px',
+      padding: '24px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+      border: '1px solid',
+      borderColor: 'beige.DEFAULT',
+      transition: 'all 0.2s ease-in-out',
+      _hover: {
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+        transform: 'translateY(-2px)'
+      }
+    },
+    elevated: {
+      backgroundColor: 'white',
+      borderRadius: '16px',
+      padding: '32px',
+      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+      border: 'none',
+      transition: 'all 0.3s ease-in-out',
+      _hover: {
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
+        transform: 'translateY(-4px)'
+      }
+    },
+    dark: {
+      backgroundColor: 'background.darker',
+      borderRadius: '12px',
+      padding: '24px',
+      color: 'text.white',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+      border: '1px solid',
+      borderColor: 'gold.dark',
+      transition: 'all 0.2s ease-in-out',
+      _hover: {
+        boxShadow: '0 8px 25px rgba(228, 180, 65, 0.2)',
+        borderColor: 'gold.DEFAULT'
+      }
+    }
+  },
+
+  // Input variants
+  inputs: {
+    default: {
+      backgroundColor: 'white',
+      border: '2px solid',
+      borderColor: 'beige.DEFAULT',
+      borderRadius: '8px',
+      padding: '12px 16px',
+      fontSize: 'base',
+      color: 'text.black',
+      transition: 'all 0.2s ease-in-out',
+      _focus: {
+        borderColor: 'gold.DEFAULT',
+        outline: 'none',
+        boxShadow: '0 0 0 3px rgba(228, 180, 65, 0.1)'
+      }
+    },
+    dark: {
+      backgroundColor: 'background.darker',
+      border: '2px solid',
+      borderColor: 'text.gray.600',
+      borderRadius: '8px',
+      padding: '12px 16px',
+      fontSize: 'base',
+      color: 'text.white',
+      transition: 'all 0.2s ease-in-out',
+      _focus: {
+        borderColor: 'gold.DEFAULT',
+        outline: 'none',
+        boxShadow: '0 0 0 3px rgba(228, 180, 65, 0.2)'
+      }
+    }
+  },
+
+  // Container layouts
+  containers: {
+    section: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '0 24px'
+    },
+    narrow: {
+      maxWidth: '800px',
+      margin: '0 auto',
+      padding: '0 24px'
+    },
+    wide: {
+      maxWidth: '1400px',
+      margin: '0 auto',
+      padding: '0 24px'
+    }
+  },
+
+  // Spacing system
+  spacing: {
+    xs: '4px',
+    sm: '8px',
+    md: '16px',
+    lg: '24px',
+    xl: '32px',
+    '2xl': '48px',
+    '3xl': '64px'
+  }
 } as const;
 
 export type ComponentStyles = typeof componentStyles;
