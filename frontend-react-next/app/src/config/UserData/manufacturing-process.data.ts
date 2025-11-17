@@ -1,14 +1,14 @@
 import { ProcessStep } from '../../types';
-import { 
-  Upload, 
-  FileText, 
-  Settings, 
-  Eye, 
-  CheckCircle, 
-  Truck, 
+import {
+  Upload,
+  FileText,
+  Settings,
+  Eye,
+  CheckCircle,
+  Truck,
   Clock,
-  Award 
-} from 'lucide-react';
+  Award
+} from '../../utils/UnifiedIcons';
 
 export const MANUFACTURING_STEPS: ProcessStep[] = [
   {

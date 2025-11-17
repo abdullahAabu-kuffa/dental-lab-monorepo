@@ -118,28 +118,7 @@ export const DropList: React.FC<SidebarIconsProps> = ({
       </AnimatePresence>
 
       {/* Action Buttons */}
-      <div className="flex flex-col gap-4 mt-2 relative">
-        {/* Track Order Button */}
-        <motion.button
-          onClick={onTrackOrder}
-          className="relative group flex flex-col items-center"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.1 }}
-        >
-          <div
-            className="relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center border border-white/20 overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)' }}
-          >
-            <Search className="w-6 h-6 text-white relative z-10" strokeWidth={2} />
-          </div>
-
-          <div className="mt-1">
-            <span className="bg-white/90 text-gray-700 text-xs font-medium px-3 py-1 rounded-full shadow-sm border border-gray-200">
-              Track Order
-            </span>
-          </div>
-        </motion.button>
+      
 
         {/* New Order Button */}
         <motion.button
@@ -162,7 +141,6 @@ export const DropList: React.FC<SidebarIconsProps> = ({
             </span>
           </div>
         </motion.button>
-      </div>
     </motion.div>
   );
 };

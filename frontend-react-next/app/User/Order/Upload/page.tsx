@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, CheckCircle, FileText } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, FileText } from '../../../src/utils/UnifiedIcons';
 
 export default function UploadPage() {
   const router = useRouter();

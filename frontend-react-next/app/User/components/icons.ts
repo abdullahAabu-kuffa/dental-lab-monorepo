@@ -1,4 +1,4 @@
-// Consolidated icons for Order components
+// Consolidated icons for Order components - Now re-exporting from UnifiedIcons
 export {
   User,
   Crown,
@@ -14,7 +14,7 @@ export {
   FileText,
   Calendar,
   AlertCircle
-} from 'lucide-react';
+} from '../../src/utils/UnifiedIcons';
 
 // Re-export LucideIcon type for consistency
 export type { LucideIcon } from 'lucide-react';

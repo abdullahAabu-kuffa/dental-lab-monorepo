@@ -2,16 +2,17 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Search, Plus, Package } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Search, Plus, Package } from '../../../src/utils/UnifiedIcons';
 import OrderCard from '../components/OrderCard';
+import { OrderProgress } from '../components/OrderProgress';
 import { SAMPLE_ORDERS } from '../../../src/config/UserData/ordersData';
 import { Order } from '../../../src/types';
 
 export default function OrdersListPage() {
   const [orders] = useState<Order[]>(SAMPLE_ORDERS);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const filteredOrders = orders.filter(order =>
     order.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -20,8 +21,10 @@ export default function OrdersListPage() {
   );
 
   const handleViewDetails = (orderId: string) => {
-    setSelectedOrder(orderId);
-    console.log('Viewing details for order:', orderId);
+    const order = orders.find(o => o.id === orderId);
+    if (order) {
+      setSelectedOrder(order);
+    }
   };
 
   const handleBackToWelcome = () => {
@@ -34,7 +37,7 @@ export default function OrdersListPage() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4"
+        className="mb-8"
       >
         <div className="flex items-center gap-4">
           <button
@@ -68,13 +71,15 @@ export default function OrdersListPage() {
         </div>
       </motion.div>
 
-      {/* Stacked Orders List */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="space-y-2 max-w-2xl"
-      >
+      {/* Two Column Layout: Orders List + Tracking Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Orders List Column */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-2"
+        >
         {filteredOrders.length > 0 ? (
           filteredOrders.map((order, index) => (
             <motion.div
@@ -101,21 +106,63 @@ export default function OrdersListPage() {
             </p>
           </div>
         )}
-      </motion.div>
-
-      {/* Load More Button */}
-      {filteredOrders.length > 0 && filteredOrders.length >= 10 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-center mt-8"
-        >
-          <button className="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
-            Load More Orders
-          </button>
+          {/* Load More Button */}
+          {filteredOrders.length > 0 && filteredOrders.length >= 10 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-center mt-8"
+            >
+              <button className="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
+                Load More Orders
+              </button>
+            </motion.div>
+          )}
         </motion.div>
-      )}
+
+        {/* Tracking Panel Column */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="lg:sticky lg:top-6 lg:self-start"
+        >
+          <AnimatePresence mode="wait">
+            {selectedOrder ? (
+              <motion.div
+                key={selectedOrder.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <OrderProgress
+                  order={selectedOrder}
+                  showPercentage={true}
+                  showTimeline={true}
+                  size="md"
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="bg-white rounded-xl shadow-lg border-2 border-dashed border-gray-300 p-12 text-center"
+              >
+                <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                  Select an Order
+                </h3>
+                <p className="text-gray-500">
+                  Click on any order card to view its tracking details and progress timeline
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
     </div>
   );
 }

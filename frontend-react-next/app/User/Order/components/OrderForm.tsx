@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload } from 'lucide-react';
+import { Upload } from '../../../src/utils/UnifiedIcons';
 import { FORM_SECTIONS, SECTION_DESCRIPTIONS } from '../../../src/config/UserData/formFieldsData';
 import { FormField } from '../../../src/types';
 

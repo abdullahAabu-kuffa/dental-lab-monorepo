@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, DollarSign } from 'lucide-react';
+import { ShoppingCart, DollarSign } from '../../../src/utils/UnifiedIcons';
 
 interface PaymentSummaryProps {
   selectedServices: Array<{ label: string; price: number }>;
