@@ -67,8 +67,8 @@ model Order {
   id             Int             @id @default(autoincrement())
   userId         Int
   user           User            @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
-  fileId         Int             @unique
-  file           File            @relation(fields: [fileId], references: [id])
+  fileId         Int?             @unique
+  file           File?            @relation(fields: [fileId], references: [id])
   status         ProcessStatus   @default(PENDING)
   invoiceId      Int?
   invoice        Invoice?        @relation("InvoiceOrders", fields: [invoiceId], references: [id])
@@ -122,7 +122,7 @@ enum PaymentStatus {
 
 model File {
   id            Int           @id @default(autoincrement())
-  orderId       Int           @unique
+  orderId       Int?           
   order         Order?        @relation
   origenalName  String
   filePath      String
