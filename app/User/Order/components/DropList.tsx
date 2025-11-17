@@ -37,10 +37,10 @@ export const DropList: React.FC<SidebarIconsProps> = ({
 
   return (
     <motion.div
-      style={{ top: "calc(8rem + 20px)" }}
+      style={{ top: "calc(8rem + 10px)" }}
       className="fixed left-4 z-50 flex flex-col items-center gap-6"
     >
-      {/* cart icon */}
+      {/* All Orders Button */}
       <motion.div
         onClick={toggleDropdown}
         className="relative group cursor-pointer flex flex-col items-center"
@@ -66,7 +66,9 @@ export const DropList: React.FC<SidebarIconsProps> = ({
         )}
 
         <div className="mt-1">
-          
+          <span className="bg-white/90 text-gray-700 text-xs font-medium px-3 py-1 rounded-full shadow-sm border border-gray-200">
+            All Orders
+          </span>
         </div>
       </motion.div>
 
@@ -80,33 +82,29 @@ export const DropList: React.FC<SidebarIconsProps> = ({
             transition={{ duration: 0.15 }}
             className="flex flex-col gap-4 mt-2"
           >
-            {STATUS_ITEMS.map((item) => {
-              // Use totalOrders for "all-orders", otherwise use item.count
-              const displayCount = item.id === "all-orders" ? totalOrders : item.count;
-              
-              return (
-                <motion.button
-                  key={item.id}
-                  onClick={() => handleStatusClick(item.id)}
-                  className="relative group flex flex-col items-center"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.1 }}
+            {STATUS_ITEMS.map((item) => (
+              <motion.button
+                key={item.id}
+                onClick={() => handleStatusClick(item.id)}
+                className="relative group flex flex-col items-center"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.1 }}
+              >
+                <div
+                  className="relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center border border-white/20 overflow-hidden"
+                  style={{ background: `linear-gradient(135deg, ${item.gradient[0]} 0%, ${item.gradient[1]} 100%)` }}
                 >
-                  <div
-                    className="relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center border border-white/20 overflow-hidden"
-                    style={{ background: `linear-gradient(135deg, ${item.gradient[0]} 0%, ${item.gradient[1]} 100%)` }}
-                  >
-                    <item.Icon className="w-6 h-6 text-white relative z-10" strokeWidth={2} />
-                  </div>
+                  <item.Icon className="w-6 h-6 text-white relative z-10" strokeWidth={2} />
+                </div>
 
-                  {displayCount > 0 && (
-                    <motion.div
-                      className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-br from-rose-500 to-pink-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md border border-white"
-                    >
-                      {displayCount}
-                    </motion.div>
-                  )}
+                {item.count > 0 && (
+                  <motion.div
+                    className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-br from-rose-500 to-pink-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md border border-white"
+                  >
+                    {item.count}
+                  </motion.div>
+                )}
 
                 <div className="mt-1">
                   <span className="bg-white/90 text-gray-700 text-xs font-medium px-3 py-1 rounded-full shadow-sm border border-gray-200">
@@ -114,8 +112,7 @@ export const DropList: React.FC<SidebarIconsProps> = ({
                   </span>
                 </div>
               </motion.button>
-              );
-            })}
+            ))}
           </motion.div>
         )}
       </AnimatePresence>

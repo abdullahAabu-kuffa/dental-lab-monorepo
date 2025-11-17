@@ -1,16 +1,17 @@
+// app/User/Order/orders-list/page.tsx
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Search, Plus, Package } from 'lucide-react';
 import OrderCard from '../components/OrderCard';
-import OrderProcess from '../ProcessOrders/processOrders';
-import { SAMPLE_ORDERS, UnifiedOrder } from '../../../src/config/UserData/unifiedOrders';
+import { SAMPLE_ORDERS } from '../../../src/config/UserData/ordersData';
+import { Order } from '../../../src/types';
 
 export default function OrdersListPage() {
-  const [orders] = useState<UnifiedOrder[]>(SAMPLE_ORDERS);
+  const [orders] = useState<Order[]>(SAMPLE_ORDERS);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
 
   const filteredOrders = orders.filter(order =>
     order.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -19,98 +20,102 @@ export default function OrdersListPage() {
   );
 
   const handleViewDetails = (orderId: string) => {
-    const order = orders.find(o => o.id === orderId);
-    if (order) setSelectedOrder(order);
+    setSelectedOrder(orderId);
+    console.log('Viewing details for order:', orderId);
+  };
+
+  const handleBackToWelcome = () => {
+    window.history.back();
   };
 
   return (
-    <div className="h-screen bg-white flex flex-col overflow-hidden">
-      <div className="flex flex-1 overflow-hidden">
-        
-        {/* Left Column - Orders List */}
-        <div className="w-[400px] flex-shrink-0 bg-white overflow-hidden">
-          <div className="p-12 h-full">
-
-            {/* Search Bar */}
-            <div className="relative mb-8" >
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search orders..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
-              />
-            </div>
-
-            <div className="space-y-4 overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
-              {filteredOrders.length > 0 ? (
-                filteredOrders.map((order) => (
-                  <OrderCard
-                    key={order.id}
-                    order={order}
-                    onViewDetails={handleViewDetails}
-                    isSelected={selectedOrder?.id === order.id}
-                  />
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <h3 className="text-sm font-semibold text-gray-700 mb-1">No orders found</h3>
-                  <p className="text-gray-500 text-xs mb-4">
-                    {searchTerm ? 'Try adjusting your search' : 'Create your first order'}
-                  </p>
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm('')}
-                      className="bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition-colors text-xs"
-                    >
-                      Clear Search
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+    <div className="p-6">
+      {/* Header with Search */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4"
+      >
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleBackToWelcome}
+            className="p-2 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow"
+          >
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          </button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">My Orders</h1>
+            <p className="text-gray-600 mt-1">Manage and track all your dental orders</p>
           </div>
         </div>
 
-        {/* Right Column - Order Process */}
-        <div className="flex-1 bg-white overflow-hidden ml-[45px] flex items-center justify-center p-6">
-          <AnimatePresence mode="wait">
-            {selectedOrder ? (
-              <motion.div
-                key="order-details"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-              >
-                <OrderProcess order={selectedOrder} />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="no-selection"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="text-center max-w-md">
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Package className="w-12 h-12 text-blue-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                    Select an Order
-                  </h3>
-                  <p className="text-gray-600">
-                    Click on any order card from the left to view its progress details and manufacturing status
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* Search and New Order */}
+        <div className="flex items-center gap-4 mt-4 sm:mt-0">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search orders..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-64 pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <button className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 font-medium flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            New Order
+          </button>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Stacked Orders List */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="space-y-2 max-w-2xl"
+      >
+        {filteredOrders.length > 0 ? (
+          filteredOrders.map((order, index) => (
+            <motion.div
+              key={order.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 * index }}
+            >
+              <OrderCard
+                order={order}
+                onViewDetails={handleViewDetails}
+              />
+            </motion.div>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-600 mb-2">No orders found</h3>
+            <p className="text-gray-500">
+              {searchTerm
+                ? 'Try adjusting your search criteria'
+                : 'Start by creating your first order'
+              }
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Load More Button */}
+      {filteredOrders.length > 0 && filteredOrders.length >= 10 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-center mt-8"
+        >
+          <button className="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
+            Load More Orders
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 }
