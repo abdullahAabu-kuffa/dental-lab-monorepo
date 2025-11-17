@@ -154,4 +154,4 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
     </>
   );
 };
-export default WelcomePage; // Export component for use elsewhere
+export default WelcomePage;

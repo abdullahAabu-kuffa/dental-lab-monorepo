@@ -82,3 +82,5 @@ export {
 // Type definitions
 export type IconName = keyof typeof ICON_MAP;
 export type LucideIconName = 'User' | 'Crown' | 'Settings' | 'CheckCircle' | 'Clock' | 'Package' | 'Upload' | 'Eye' | 'Phone' | 'FileText' | 'Calendar' | 'AlertCircle' | 'Home' | 'UserPlus' | 'Activity' | 'Check' | 'X' | 'Zap' | 'ArrowLeft' | 'Truck' | 'Microscope' | 'CreditCard' | 'TrendingUp' | 'Workflow' | 'List';
+
+
