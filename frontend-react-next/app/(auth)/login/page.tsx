@@ -104,7 +104,7 @@ export default function LoginPage() {
 
 			<motion.div
 				className="w-full max-w-md bg-white p-12 rounded-2xl shadow-xl relative z-10 mx-auto lg:mx-4"
-				{...motionVariants.fadeInUp(0.2)}
+				//{...motionVariants.fadeInUp(0.2)}
 			>
 				<h1 className="text-3xl font-bold text-gray-900 text-left mb-2">
 					Welcome Back
