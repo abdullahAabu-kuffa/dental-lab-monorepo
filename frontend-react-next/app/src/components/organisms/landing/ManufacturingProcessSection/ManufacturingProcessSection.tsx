@@ -1,10 +1,8 @@
 'use client';
 import ProcessStep from '../../../atoms/ProcessStep/ProcessStep';
 import Button from '../../../atoms/Button/Button';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
-import { MANUFACTURING_STEPS } from '../../../../config/UserData/manufacturing-process.data';
-import { componentStyles, gradients } from '../../../../../design-system';
+import { HeroHeading , HeroSubtitle, componentStyles, gradients  } from '../../../../../design-system';
+import { USER_PROCESS_STEPS } from '../../../../config/UserData/UserProcessSteps';
 
 export default function ManufacturingProcessSection() {
   return (
@@ -34,9 +32,14 @@ export default function ManufacturingProcessSection() {
           />
 
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4 md:gap-6 relative z-10">
-            {MANUFACTURING_STEPS.map((step) => (
+            {USER_PROCESS_STEPS.map((step) => (
               <div key={step.id} className="flex flex-col items-center">
-                <ProcessStep step={step} />
+                <ProcessStep step={{
+                  id: step.id.toString(),
+                  title: step.title,
+                  icon: step.icon,
+                  status: step.completed ? 'completed' : 'pending'
+                }} />
               </div>
             ))}
           </div>

@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Search, Plus, Package } from '../../../src/utils/UnifiedIcons';
+import { ArrowLeft, Search, Plus, Package } from 'lucide-react';
 import OrderCard from '../components/OrderCard';
 import { OrderProgress } from '../components/OrderProgress';
 import { SAMPLE_ORDERS } from '../../../src/config/UserData/ordersData';

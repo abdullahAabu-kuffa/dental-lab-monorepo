@@ -1,11 +1,9 @@
 'use client';
 
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
+import { HeroHeading ,HeroSubtitle } from '../../../../../design-system';
 import { WORKFLOW_CARDS } from '../../../../config/LandingData/workflow.config';
 
 export default function WorkflowSection() {
-
   return (
     <section className="py-20 bg-[#1a1a1a]">
       <div className="container mx-auto px-4">

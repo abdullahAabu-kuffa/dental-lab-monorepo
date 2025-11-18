@@ -10,20 +10,34 @@ import { LEGACY_NAV_ITEMS as NAV_ITEMS } from '../../../../config/LandingData/na
 
 interface MobileMenuProps {
   navItems?: typeof NAV_ITEMS;
+  isOpen?: boolean;
   onClose?: () => void;
 }
 
-const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, onClose }: MobileMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
+const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, isOpen: controlledIsOpen, onClose }: MobileMenuProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  // Use controlled state if provided, otherwise use internal state
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
-    if (onClose && !isOpen) onClose();
+    if (controlledIsOpen !== undefined) {
+      // Controlled mode - parent manages state
+      if (onClose) onClose();
+    } else {
+      // Uncontrolled mode - component manages state
+      setInternalIsOpen(!internalIsOpen);
+    }
   };
 
   const closeMenu = () => {
-    setIsOpen(false);
-    if (onClose) onClose();
+    if (controlledIsOpen !== undefined) {
+      // Controlled mode - parent manages state
+      if (onClose) onClose();
+    } else {
+      // Uncontrolled mode - component manages state
+      setInternalIsOpen(false);
+    }
   };
 
   const handleNavClick = () => {

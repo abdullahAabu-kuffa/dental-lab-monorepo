@@ -4,6 +4,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Order } from '../../../src/types';
+import { ORDER_COLORS } from '../../../design-system/orderStyles';
 
 interface OrderCardProps {
   order: Order;
@@ -11,42 +12,23 @@ interface OrderCardProps {
 }
 
 export const OrderCard: React.FC<OrderCardProps> = ({ order, onViewDetails }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return 'border-green-200 bg-green-50';
-      case 'In Progress':
-        return 'border-blue-200 bg-blue-50';
-      case 'Pending':
-        return 'border-yellow-200 bg-yellow-50';
-      case 'Cancelled':
-        return 'border-red-200 bg-red-50';
-      default:
-        return 'border-gray-200 bg-gray-50';
-    }
+  // Map statuses to design system colors
+  const statusMap = {
+    'Completed': ORDER_COLORS.completed,
+    'In Progress': ORDER_COLORS.inProgress,
+    'Pending': ORDER_COLORS.pending,
+    'Cancelled': ORDER_COLORS.rejected
   };
 
-  const getStatusColorClasses = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-green-100 text-green-600';
-      case 'In Progress':
-        return 'bg-blue-100 text-blue-600';
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-600';
-      case 'Cancelled':
-        return 'bg-red-100 text-red-600';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
-  };
+  const statusColor = statusMap[order.status as keyof typeof statusMap] || ORDER_COLORS.pending;
+  const cardColorClass = order.status === 'Cancelled' ? 'border-gray-200 bg-gray-50' : 'border-gray-200 bg-white';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
-      className={`bg-white rounded-lg shadow-lg border-2 ${getStatusColor(order.status)} p-2 cursor-pointer transition-all duration-300 hover:shadow-xl w-full max-w-sm`}
+      className={`bg-white rounded-lg shadow-lg border-2 ${cardColorClass} p-2 cursor-pointer transition-all duration-300 hover:shadow-xl w-full max-w-sm`}
       onClick={() => onViewDetails?.(order.id)}
     >
       {/* Header - Compact */}
@@ -76,7 +58,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onViewDetails }) =>
           <p className="text-xs font-medium text-gray-800 truncate">{order.material}</p>
         </div>
         
-        <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(order.status)}`}>
+        <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColor.light} ${statusColor.darkText}`}>
           <span>{order.status}</span>
         </div>
       </div>

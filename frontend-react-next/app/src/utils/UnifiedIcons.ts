@@ -1,6 +1,5 @@
-// =============================================================================
+
 // UNIFIED ICONS SYSTEM - Single Source of Truth for All Icons
-// =============================================================================
 
 // Lucide React Icons - All available icons
 import {
@@ -47,9 +46,9 @@ import {
   FaDocker, FaAws, FaDatabase, FaServer, FaCloud, FaNetworkWired, FaShieldAlt
 } from 'react-icons/fa';
 
-// =============================================================================
+
 // ICON MAPS - Categorized for Easy Access
-// =============================================================================
+
 
 export const ICON_MAP = {
   // Status Icons
@@ -244,9 +243,9 @@ export const LEGACY_MAPPINGS = {
   ICON_MAP: ALL_ICONS
 } as const;
 
-// =============================================================================
+
 // HELPER FUNCTIONS
-// =============================================================================
+
 
 /**
  * Get icon component by name from any category
@@ -282,60 +281,10 @@ export const hasIcon = (iconName: string, category?: string) => {
   return iconName in ALL_ICONS;
 };
 
-// =============================================================================
-// MANUFACTURING STEPS DATA
-// =============================================================================
 
-export const MANUFACTURING_STEPS = [
-  {
-    id: "file-uploaded",
-    title: "File Uploaded",
-    icon: Upload,
-    status: "completed",
-  },
-  {
-    id: "3d-design",
-    title: "3D Design", 
-    icon: Box,
-    status: "completed",
-  },
-  {
-    id: "material-selection",
-    title: "Material Selection",
-    icon: Layers,
-    status: "completed",
-  },
-  {
-    id: "3d-printing",
-    title: "3D Printing",
-    icon: PrinterIcon,
-    status: "active",
-  },
-  {
-    id: "post-processing",
-    title: "Post Processing",
-    icon: Wrench,
-    status: "pending",
-  },
-  {
-    id: "quality-check",
-    title: "Quality Check",
-    icon: Microscope,
-    status: "pending",
-  },
-  {
-    id: "packaging",
-    title: "Packaging",
-    icon: Package,
-    status: "pending",
-  },
-  {
-    id: "delivery",
-    title: "Delivery",
-    icon: Truck,
-    status: "pending",
-  },
-] as const;
+// MANUFACTURING STEPS DATA
+// NOTE: Manufacturing steps data has been consolidated into UserProcessSteps.ts
+// This helps maintain better separation of concerns between icon definitions and business logic
 
 // Sidebar icon configurations
 export const SIDEBAR_ICONS = [
@@ -351,9 +300,9 @@ export const SIDEBAR_ICONS = [
   { id: 'track', Icon: Search, label: 'Track Order', category: 'action', gradient: 'from-blue-500 to-cyan-500' }
 ] as const;
 
-// =============================================================================
+
 // EXPORTS
-// =============================================================================
+
 
 // Export everything for easy access
 export {

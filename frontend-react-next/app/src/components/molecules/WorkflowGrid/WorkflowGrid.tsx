@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import WorkflowCard from '../../atoms/WorkflowCard/WorkflowCard';
-import type { WorkflowStep } from '../../../types/components';
+import type { WorkflowStep } from '../../../types/index';
 import { getIcon } from '../../../utils/iconMap';
 
 interface WorkflowGridProps {

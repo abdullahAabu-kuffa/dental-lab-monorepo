@@ -9,7 +9,7 @@ import {
   getProgressSteps, 
   getStepStatusColor, 
   formatDate 
-} from '../../../src/utils/orderProgressUtils';
+} from '../../../src/config/UserData/orderProgressData';
 
 export const OrderProgress: React.FC<OrderProgressProps> = ({
   order,
@@ -25,7 +25,7 @@ export const OrderProgress: React.FC<OrderProgressProps> = ({
   const currentSize = SIZE_CLASSES[size];
 
   return (
-    <div className={`bg-white rounded-xl shadow-lg ${currentSize.container} ${className}`}>
+    <div className={`bg-white rounded-xl shadow-lg p-6 ${className}`}>
       {/* Header */}
       <div className={`flex items-center justify-between mb-6 ${currentSize.spacing}`}>
         <div>
@@ -94,58 +94,57 @@ export const OrderProgress: React.FC<OrderProgressProps> = ({
         </motion.div>
       )}
 
-      {/* Timeline Steps */}
+      {/* Timeline Steps Horizontal */}
       {showTimeline && (
-        <div className={currentSize.spacing}>
+        <div className="overflow-x-auto">
           <h4 className={`font-semibold text-gray-900 ${currentSize.title} mb-4`}>
             Order Timeline
           </h4>
-          
-          <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300"></div>
-            
+
+          <div className="flex gap-12 min-w-max">
             {steps.map((step, index) => {
               const colors = getStepStatusColor(step.status);
               const Icon = step.icon;
-              
+
               return (
                 <motion.div
                   key={step.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="relative flex items-start gap-4 mb-6 last:mb-0"
+                  className="flex flex-col items-center w-auto px-4"
                 >
-                  <div className={`relative z-10 ${currentSize.icon} rounded-full ${colors.bg} ${colors.border} border-2 flex items-center justify-center shadow-sm`}>
+                  <div
+                    className={`relative z-10 ${currentSize.icon} rounded-full ${colors.bg} ${colors.border} border-2 flex items-center justify-center shadow-sm`}
+                  >
                     <Icon className={`w-1/2 h-1/2 ${colors.icon}`} />
                   </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <h5 className={`font-medium text-gray-900 ${currentSize.text}`}>
-                        {step.name}
-                      </h5>
-                      {step.status === 'completed' && (
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                      )}
-                      {step.status === 'active' && (
-                        <Clock className="w-4 h-4 text-blue-500 animate-pulse" />
-                      )}
-                    </div>
-                    
-                    <p className={`text-gray-600 ${currentSize.text} mb-2`}>
-                      {step.description}
-                    </p>
-                    
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      {step.timestamp && (
-                        <span>Completed: {formatDate(step.timestamp)}</span>
-                      )}
-                      {step.estimatedCompletion && !step.timestamp && (
-                        <span>Est. completion: {formatDate(step.estimatedCompletion)}</span>
-                      )}
-                    </div>
-                  </div>
+
+                  <h5 className={`font-medium text-gray-900 mt-2 ${currentSize.text} text-center`}>
+                    {step.name}
+                  </h5>
+
+                  <p className={`text-gray-600 mt-1 ${currentSize.text} text-center`}>
+                    {step.description}
+                  </p>
+
+                  {step.status === 'completed' && (
+                    <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
+                  )}
+                  {step.status === 'active' && (
+                    <Clock className="w-4 h-4 text-blue-500 animate-pulse mt-1" />
+                  )}
+
+                  {step.timestamp && (
+                    <span className="text-xs text-gray-500 mt-1">
+                      Completed: {formatDate(step.timestamp)}
+                    </span>
+                  )}
+                  {step.estimatedCompletion && !step.timestamp && (
+                    <span className="text-xs text-gray-500 mt-1">
+                      Est. completion: {formatDate(step.estimatedCompletion)}
+                    </span>
+                  )}
                 </motion.div>
               );
             })}
