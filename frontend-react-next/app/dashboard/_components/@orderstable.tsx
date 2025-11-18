@@ -67,7 +67,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const filteredOrders = orders.filter((order) => {
-    const matchSearch = order.id.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = order.type.toLowerCase().includes(search.toLowerCase());
     const matchFilter = filter === "All" || order.status === filter;
     return matchSearch && matchFilter;
   });
@@ -81,7 +81,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
         <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
         <input
           type="text"
-          placeholder="Search by Order ID..."
+          placeholder="Search by Order Type..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
