@@ -1,5 +1,5 @@
 import { FormField } from '../../types';
-import { User, Crown, Zap, Settings, CheckCircle } from 'lucide-react';
+import { User, Crown, Zap, Settings, CheckCircle } from '../../utils/UnifiedIcons';
 
 // FormField interface is now imported from the consolidated types file
 

@@ -1,97 +1,107 @@
 // OrderCard component for displaying individual order information
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Order } from '../../../src/types';
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  Package,
+  Calendar,
+  DollarSign,
+  Clock,
+  Eye,
+  User,
+} from "lucide-react";
+import { Order } from "../../../src/types";
 
 interface OrderCardProps {
   order: Order;
-  onViewDetails?: (orderId: string) => void;
+  onViewDetails: (order: Order) => void;
+  isSelected?: boolean;
 }
 
-export const OrderCard: React.FC<OrderCardProps> = ({ order, onViewDetails }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return 'border-green-200 bg-green-50';
-      case 'In Progress':
-        return 'border-blue-200 bg-blue-50';
-      case 'Pending':
-        return 'border-yellow-200 bg-yellow-50';
-      case 'Cancelled':
-        return 'border-red-200 bg-red-50';
-      default:
-        return 'border-gray-200 bg-gray-50';
-    }
+const OrderCard: React.FC<OrderCardProps> = ({
+  order,
+  onViewDetails,
+  isSelected = false,
+}) => {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
-  const getStatusColorClasses = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-green-100 text-green-600';
-      case 'In Progress':
-        return 'bg-blue-100 text-blue-600';
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-600';
-      case 'Cancelled':
-        return 'bg-red-100 text-red-600';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
+  const getStatusColor = (status: string) => {
+    const statusLower = status.toLowerCase();
+    if (statusLower.includes("pending")) return "text-yellow-600 bg-yellow-50 border-yellow-200";
+    if (statusLower.includes("progress")) return "text-blue-600 bg-blue-50 border-blue-200";
+    if (statusLower.includes("complete")) return "text-green-600 bg-green-50 border-green-200";
+    if (statusLower.includes("cancelled")) return "text-red-600 bg-red-50 border-red-200";
+    return "text-gray-600 bg-gray-50 border-gray-200";
+  };
+
+  const getUrgencyColor = (urgency: string) => {
+    const urgencyLower = urgency.toLowerCase();
+    if (urgencyLower === "high") return "text-red-600 bg-red-50";
+    if (urgencyLower === "medium") return "text-yellow-600 bg-yellow-50";
+    if (urgencyLower === "low") return "text-green-600 bg-green-50";
+    return "text-gray-600 bg-gray-50";
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      className={`bg-white rounded-lg shadow-lg border-2 ${getStatusColor(order.status)} p-2 cursor-pointer transition-all duration-300 hover:shadow-xl w-full max-w-sm`}
-      onClick={() => onViewDetails?.(order.id)}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      className={`
+        bg-white rounded-lg shadow-md border p-5 cursor-pointer transition-all duration-200 max-w-xs
+        ${isSelected
+          ? "border-blue-500 shadow-lg ring-2 ring-blue-200"
+          : "border-gray-200 hover:border-gray-300 hover:shadow-lg"
+        }
+      `}
+      onClick={() => onViewDetails(order)}
     >
-      {/* Header - Compact */}
-      <div className="flex justify-between items-start mb-1">
-        <div>
-          <h3 className="text-xs font-bold text-gray-800 truncate">{order.patientName}</h3>
-          <div className="text-xs text-gray-600">
-            <span>{order.orderType}</span>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2 flex-1 min-w-0">
+          <div className="p-1 bg-blue-50 rounded-lg flex-shrink-0">
+            <Package className="w-4 h-4 text-blue-600" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-gray-900 text-sm truncate">
+              Order #{order.id}
+            </h3>
+            <div className="flex items-center text-xs text-gray-500 truncate">
+              <User className="w-3 h-3 mr-0.5 flex-shrink-0" />
+              <span className="truncate text-xs">{order.patientName}</span>
+            </div>
           </div>
         </div>
-        
-        <div className="text-right flex-shrink-0 ml-4">
-          <div className="text-xs text-gray-600">
-            <span>{new Date(order.date).toLocaleDateString()}</span>
+        <div className="text-right ml-1 flex-shrink-0">
+          <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
+            {order.status}
           </div>
-          
-          <div className="text-xs">
-            <span className="font-semibold text-green-600">${order.totalAmount}</span>
+          <div className={`mt-0.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${getUrgencyColor(order.urgency)}`}>
+            {order.urgency}
           </div>
         </div>
       </div>
 
-      {/* Material and Status */}
-      <div className="flex justify-between items-center border-t border-gray-200 pt-1">
-        <div>
-          <p className="text-xs text-gray-600 mb-0.5">Material:</p>
-          <p className="text-xs font-medium text-gray-800 truncate">{order.material}</p>
+      {/* Order Details */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-xs gap-1">
+          <div className="flex items-center text-gray-600 min-w-0">
+            <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
+            <span className="truncate text-xs">{formatDate(order.date)}</span>
+          </div>
+          <div className="flex items-center text-gray-600 flex-shrink-0">
+            <DollarSign className="w-3 h-3 mr-0.5" />
+            <span className="font-semibold text-green-600 text-xs">
+              {order.totalAmount.toFixed(2)}
+            </span>
+          </div>
         </div>
-        
-        <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(order.status)}`}>
-          <span>{order.status}</span>
-        </div>
-      </div>
-
-      {/* View Details Button - Very Compact */}
-      <div className="mt-1 pt-1 border-t border-gray-200">
-        <button
-          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-1 px-3 rounded-md hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 font-medium text-xs"
-          onClick={(e) => {
-            e.stopPropagation();
-            onViewDetails?.(order.id);
-          }}
-        >
-          Details
-        </button>
       </div>
     </motion.div>
   );

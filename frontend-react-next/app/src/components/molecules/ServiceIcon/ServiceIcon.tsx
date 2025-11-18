@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Crown, Smile, Microscope, Zap } from 'lucide-react';
+import { Crown, Smile, Microscope, Zap } from '../../../utils/UnifiedIcons';
 
 interface ServiceIconProps {
   iconName: string;

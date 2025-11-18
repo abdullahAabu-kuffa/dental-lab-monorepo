@@ -1,11 +1,9 @@
 'use client';
 import React from 'react';
 import Button from '../../../atoms/Button/Button';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
+import { HeroHeading , HeroSubtitle ,componentStyles } from '../../../../../design-system';
 import { CONTACT_INFO } from '../../../../config/LandingData/contact.data';
 import { getIcon } from '../../../../utils/UnifiedIcons';
-import { componentStyles } from '../../../../../design-system';
 
 const ContactSection: React.FC = () => {
   return (

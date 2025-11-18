@@ -1,5 +1,5 @@
 // User process steps data
-import { Crown, Upload, Settings, Eye, FileText, Truck, CheckCircle, Clock } from 'lucide-react';
+import { Crown, Upload, Settings, Eye, FileText, Truck, CheckCircle, Clock } from '../../utils/UnifiedIcons';
 
 export const USER_PROCESS_STEPS = [
   {

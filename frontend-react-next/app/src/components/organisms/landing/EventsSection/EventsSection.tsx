@@ -1,8 +1,6 @@
 import EventsGrid from '../../../molecules/EventsGrid/EventsGrid';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
+import { HeroHeading , HeroSubtitle ,componentStyles} from '../../../../../design-system';
 import { EVENTS } from '../../../../config/LandingData/events.data';
-import { typography, componentStyles } from '../../../../../design-system';
 
 const EventsSection: React.FC = () => {
   return (

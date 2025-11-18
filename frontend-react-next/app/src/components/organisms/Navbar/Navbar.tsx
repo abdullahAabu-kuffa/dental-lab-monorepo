@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from '../../../utils/UnifiedIcons';
 import { NAVBAR_CONFIG } from '../../../config/LandingData/navigation';
-import NavMobileMenu from '../../molecules/NavMobileMenu';
+import NavMobileMenu from '../../molecules/NavMolcules/MobileMenu/MobileMenu';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Settings, AlertTriangle, XCircle, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Settings, AlertTriangle, XCircle, ShoppingBag } from '../../utils/UnifiedIcons';
 
 export interface StatusItem {
   id: string;
