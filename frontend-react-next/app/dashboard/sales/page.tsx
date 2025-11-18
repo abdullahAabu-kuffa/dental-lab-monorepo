@@ -1,9 +1,19 @@
-import React from 'react'
+"use client";
 
-const page = () => {
-  return (
-    <div className='text-9xl'>Sales</div>
-  )
+import React from "react";
+
+function doSubmit() {
+	fetch("127.0.0.1:3001/api/auth/refreshToken", {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
 }
 
-export default page
+const page = () => {
+	return <div onClick={doSubmit}>hello world</div>;
+};
+
+export default page;

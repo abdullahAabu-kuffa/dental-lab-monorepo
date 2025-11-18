@@ -1,9 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSubtitle/HeroSubtitle';
-import { WORKFLOW_CARDS } from '../../../../config/workflow.config';
+import { HeroHeading } from '../../../../../design-system';
+import { HeroSubtitle } from '../../../../../design-system';
+import { WORKFLOW_CARDS } from '../../../../config/LandingData/workflow.config';
 
 export default function WorkflowSection() {
 
@@ -14,21 +13,16 @@ export default function WorkflowSection() {
           <HeroHeading
             primaryText=""
             gradientText="Our Seamless Digital Workflow"
-            gradientColors="linear-gradient(135deg, #D4AF37 0%, #F4E4A6 50%, #C9A961 100%)"
+            variant="white"
           />
           <HeroSubtitle
             text="A seamless digital workflow from scan to delivery"
+            variant="white"
           />
         </div>
 
         {/* Workflow Cards Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mt-20"
-        >
+        <div className="mt-20">
           <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 max-w-7xl mx-auto">
             {/* Connecting Lines */}
             <div className="hidden lg:block absolute top-16 left-0 right-0 h-[2px] z-0">
@@ -38,12 +32,8 @@ export default function WorkflowSection() {
             {WORKFLOW_CARDS.map((card, index) => {
               const IconComponent = card.iconComponent;
               return (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2, duration: 0.6 }}
-                  viewport={{ once: true }}
                   className="relative z-10"
                 >
                   {/* Icon Circle */}
@@ -72,11 +62,11 @@ export default function WorkflowSection() {
                       />
                     </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

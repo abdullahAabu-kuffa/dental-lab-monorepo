@@ -1,23 +1,28 @@
 'use client';
 import ProcessStep from '../../../atoms/ProcessStep/ProcessStep';
 import Button from '../../../atoms/Button/Button';
-import { MANUFACTURING_STEPS } from '../../../../config/manufacturing-process.data';
+import { HeroHeading } from '../../../../../design-system';
+import { HeroSubtitle } from '../../../../../design-system';
+import { MANUFACTURING_STEPS } from '../../../../config/UserData/manufacturing-process.data';
 import { componentStyles, gradients } from '../../../../../design-system';
 
 export default function ManufacturingProcessSection() {
   return (
     <section className={`${componentStyles.layout.spacingSection} bg-gradient-to-br from-gray-50 via-white to-gray-100`}>
       <div className={`${componentStyles.layout.containerDefault} text-center`}>
-        
+
         {/* Header */}
         <div className="mb-16 space-y-6">
-          <h2 className="text-4xl md:text-6xl font-black leading-tight font-serif text-gray-900">
-            Digital <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, #D4AF37, #E4B441, #FFD700)' }}>Manufacturing Process</span>
-          </h2>
-          
-          <p className="text-gray-700 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-sans">
-            Follow your dental case from upload to delivery — every stage, visible in real-time.
-          </p>
+          <HeroHeading
+            primaryText="Digital "
+            gradientText="Manufacturing Process"
+            variant="black"
+          />
+
+          <HeroSubtitle
+            text="Follow your dental case from upload to delivery — every stage, visible in real-time."
+            variant="black"
+          />
         </div>
 
         {/* Timeline */}
