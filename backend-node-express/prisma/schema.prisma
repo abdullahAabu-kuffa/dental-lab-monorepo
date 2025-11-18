@@ -33,6 +33,7 @@ model User {
   updatedAt      DateTime         @updatedAt
   invoices       Invoice[]
   auditLogs      AuditLog[]
+  notifications     Notification[]
 }
 
 enum Role {
@@ -152,3 +153,49 @@ model AuditLog {
   createdAt DateTime @default(now())
 }
 
+model Notification {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  
+  // Notification metadata
+  type        NotificationType
+  title       String
+  message     String
+  
+  // Flexible data storage for different notification types
+  data        Json?    @default("{}")
+  
+  // Status tracking
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+  emailSent   Boolean  @default(false)
+  emailSentAt DateTime?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Indexes for query performance
+  @@index([userId, createdAt])
+  @@index([userId, isRead])
+}
+
+enum NotificationType {
+  WELCOME
+  ACCOUNT_ACTIVATED
+  PASSWORD_RESET
+  UPLOAD_SUCCESS
+  UPLOAD_FAILED
+  APPROVAL_PENDING
+  APPROVED
+  REJECTED
+  FILE_APPROVED
+  FILE_REJECTED
+  ORDER_CREATED
+  ORDER_UPDATED
+  ORDER_CANCELLED
+  INFO
+  WARNING
+  ERROR
+}
