@@ -1,10 +1,10 @@
 "use client";
-
 import { useState } from "react";
 import axios from "axios";
 import Lottie from "lottie-react";
 import Button from "@/app/src/components/atoms/Button/Button";
 import animationData from "@/assets/lotties/teeth.json";
+
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");

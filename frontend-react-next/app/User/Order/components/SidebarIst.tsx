@@ -13,6 +13,7 @@ import {
   Search,
 } from "lucide-react";
 import { STATUS_ITEMS } from '../../../src/config/UserData/statusData';
+import { useRouter } from "next/navigation";
 
 interface SidebarIconsProps {
   onNewOrder?: () => void;
@@ -31,7 +32,7 @@ export const SidebarIcons: React.FC<SidebarIconsProps> = ({
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
   const totalOrders = useMemo(() => STATUS_ITEMS.reduce((sum, item) => sum + item.count, 0), []);
-
+  const router = useRouter();
   const toggleDropdown = useCallback(() => setIsDropdownOpen(prev => !prev), []);
   const closeDropdown = useCallback(() => {
     setIsDropdownOpen(false);
@@ -41,6 +42,9 @@ export const SidebarIcons: React.FC<SidebarIconsProps> = ({
     onShowStatusOrders?.(statusId);
     closeDropdown();
   }, [onShowStatusOrders, closeDropdown]);
+    const handleNewOrder = () => {
+    router.push("/app/User/Order/Form");
+  };
 
   return (
     <>
@@ -162,7 +166,7 @@ export const SidebarIcons: React.FC<SidebarIconsProps> = ({
             </div>
 
             {/* Capsule Text */}
-            <div className="mt-1">
+            <div onClick={handleNewOrder} className="mt-1">
               <span className="bg-white/90 text-gray-700 text-xs font-medium px-3 py-1 rounded-full shadow-sm border border-gray-200">
                 New Order
               </span>
