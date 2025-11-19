@@ -17,6 +17,18 @@ export interface Order {
   attachments?: FileAttachment[];
   createdAt: Date;
   updatedAt: Date;
+  // Shipping and tracking information
+  lab?: string;
+  shippingCarrier?: string;
+  trackingNumber?: string;
+  // Manufacturing stages
+  stages?: {
+    orderPlaced?: { completed: boolean; completedAt?: string };
+    digitalDesign?: { completed: boolean; completedAt?: string };
+    manufacturing?: { completed: boolean; completedAt?: string };
+    qualityControl?: { completed: boolean; completedAt?: string };
+    shipped?: { completed: boolean; completedAt?: string };
+  };
 }
 
 export interface OrderStats {

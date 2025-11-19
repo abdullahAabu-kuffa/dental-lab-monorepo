@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload } from '../../../src/utils/UnifiedIcons';
-import { FORM_SECTIONS, SECTION_DESCRIPTIONS } from '../../../src/config/UserData/formFieldsData';
-import { FormField } from '../../../src/types';
+import { Upload } from '../../../../src/utils/UnifiedIcons';
+import { FORM_SECTIONS, SECTION_DESCRIPTIONS } from '../../../../src/config/UserData/formFieldsData';
+import { FormField } from '../../../../src/types';
 
 interface OrderFormProps {
   onSubmit: (formData: FormData) => void;
