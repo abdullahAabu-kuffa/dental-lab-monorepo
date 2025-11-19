@@ -12,10 +12,10 @@ const ConfirmModal: React.FC<ConfirmApproveModalProps> = ({
     message = "Are you sure you want to approve this request?",
 }) => {
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-40 flex items-center justify-center">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black bg-opacity-30"
+                className="fixed inset-0 backdrop-blur bg-opacity-30"
                 onClick={onCancel}
                 aria-hidden="true"
             />
@@ -24,7 +24,7 @@ const ConfirmModal: React.FC<ConfirmApproveModalProps> = ({
             <div className="relative bg-white rounded-lg shadow-xl max-w-sm w-full z-10 border border-gray-200">
                 {/* Header */}
                 <div className="px-6 pt-6 pb-2 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-800">Confirm Approval</h2>
+                    <h2 className="text-lg font-semibold text-gray-800">Confirm Action</h2>
                 </div>
 
                 {/* Message */}

@@ -1,30 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { Search, View } from "lucide-react";
 import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
 import OrderModal from "./@ordermodal";
-import { useQuery } from "@tanstack/react-query";
 import Spinner from "./@spinner";
+import { ApiOrder, Order } from "../interfaces/orders";
+import { useGetAllOrders } from "../services/hookes/get_all_orders";
+import { useChangeOrderStatus } from "../services/hookes/change_order_status";
+import ConfirmModal from "./@confirmmodel";
 
-interface Order {
-  id: string;
-  approvedBy: string;
-  createdAt: string;
-  type: string;
-  date: string;
-  options: [];
-  status: "Pending" | "In Progress" | "Completed" | "Rejected";
-  price: string;
-  user: {
-    clinicAddress: string;
-    clinicName: string;
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-    role: string;
-  };
-}
+const ACTION_MAP: Record<string, "COMPLETED" | "CANCELLED"> = {
+  approve: "COMPLETED",
+  reject: "CANCELLED",
+};  
 
 const statusColors = {
   Completed: "bg-green-100 text-green-700",
@@ -33,42 +22,23 @@ const statusColors = {
   Rejected: "bg-red-100 text-red-700",
 };
 
-const filters = ["All", "Pending", "In Progress", "Completed", "Rejected"];
+const filters = ["All", "Pending", "In Progress", "Completed", "CANCELLED"];
 
 const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [pages, setPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { mutate } = useChangeOrderStatus();
+  const [showModal, setShowModal] = useState(false);
+  const [orderId, setOrderId] = useState(0);
+  const [action, setAction] = useState("");
 
   const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
   const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
-
-  // Fetch API data
-  const { data, isLoading, error, isError } = useQuery({
-    queryKey: ["orders", currentPage],
-    queryFn: async () => {
-      const res = await fetch(
-        `http://localhost:3001/api/orders?page=${currentPage}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1NjM2NjQsImV4cCI6MTc2MzY1MDA2NH0.Iuu_f9jLfxGS05CYPbEmnLb-xTuDwiwsleaDWUXGyUU`,
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to fetch orders");
-
-      const json = await res.json();
-      setPages(json.data.totalPages);
-      console.log(json.data);
-      return json;
-    },
-  });
-
+  const { data, isLoading, error, isError } = useGetAllOrders(currentPage);
+  const pages = data?.data?.totalPages || 1;
   if (isLoading) {
     return (
       <div className="flex justify-center">
@@ -85,26 +55,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
     );
   }
 
-  const apiOrders = data?.data.orders ?? [];
-
-  type ApiOrder = {
-    id: string;
-    approvedBy: string;
-    createdAt: string;
-    type: string;
-    date: string;
-    options: [];
-    status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED";
-    totalPrice: string;
-    user: {
-      clinicAddress: string;
-      clinicName: string;
-      fullName: string;
-      email: string;
-      phoneNumber: string;
-      role: string;
-    };
-  };
+  const apiOrders = data.data.orders ?? [];
 
   const mappedOrders: Order[] = (apiOrders as ApiOrder[]).map((o) => ({
     id: String(o.id),
@@ -126,7 +77,9 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
   }));
 
   const filteredOrders = mappedOrders.filter((order) => {
-    const matchSearch = order.type.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = order.user.fullName
+      .toLowerCase()
+      .includes(search.toLowerCase());
     const matchFilter = filter === "All" || order.status === filter;
     return matchSearch && matchFilter;
   });
@@ -204,14 +157,28 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
                 <td className="px-4 py-3 flex gap-1 text-center">
                   {!overview && order.status === "Pending" && (
                     <>
-                      <button className="px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 bg-green-100 text-green-700">
+                      <button
+                        onClick={() => {
+                          setAction("approve");
+                          setOrderId(Number(order.id));
+                          setShowModal(true);
+                        }}
+                        className="px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 bg-green-100 text-green-700"
+                      >
                         <div className="flex items-center gap-1">
                           <MdDone size={16} />
                           <span>Approve</span>
                         </div>
                       </button>
 
-                      <button className="px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 bg-red-100 text-red-700">
+                      <button
+                        onClick={() => {
+                          setAction("reject");
+                          setOrderId(Number(order.id));
+                          setShowModal(true);
+                        }}
+                        className="px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 bg-red-100 text-red-700"
+                      >
                         <div className="flex items-center gap-1">
                           <FcCancel size={16} />
                           <span>Reject</span>
@@ -236,23 +203,23 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
         </table>
 
         {/* Pagination */}
-        <div className="flex items-center justify-end gap-2 mr-2 mb-4">
+        <div className="flex items-center justify-end gap-2 mt-4 mr-2 mb-4">
           <button
             onClick={goPrevious}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40"
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40 border-yellow-200 border-2"
           >
             Previous
           </button>
 
-          <span className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700">
+          <span className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-yellow-200 hover:text-white">
             {currentPage}
           </span>
 
           <button
             onClick={goNext}
             disabled={currentPage === pages}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40"
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40 border-yellow-200 border-2"
           >
             Next
           </button>
@@ -264,6 +231,22 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
         <OrderModal
           selectedOrder={selectedOrder}
           setSelectedOrder={setSelectedOrder}
+        />
+      )}
+
+      {showModal && (
+        <ConfirmModal
+          message="Are you Sure?"
+          onConfirm={() =>
+            mutate(
+              {
+                orderId,
+                action: ACTION_MAP[action],
+              },
+              { onSuccess: () => setShowModal(false) }
+            )
+          }
+          onCancel={() => setShowModal(false)}
         />
       )}
     </div>

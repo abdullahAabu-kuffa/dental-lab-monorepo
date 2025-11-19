@@ -12,15 +12,18 @@ import { Pagination as PaginationUsers } from "../_components/@pagination";
 import Loading from "../_components/@loading";
 import ErrorMessage, { getUserFriendlyError } from "../_components/@displayerrors";
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiam9obmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc2MzU2NDgxMCwiZXhwIjoxNzYzNTY1NzEwfQ.jZGeaYDhmYEmbbYBkejKBYb6X3juEMQEv3b508WPiUk';
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1NjM2NjQsImV4cCI6MTc2MzY1MDA2NH0.Iuu_f9jLfxGS05CYPbEmnLb-xTuDwiwsleaDWUXGyUU";
 const fetchUsers = async (page: number, limit: number): Promise<FetchUsersResponse> => {
-  const response = await axios.get<FetchUsersResponse>(`http://192.168.11.174:3001/api/users`, {
-    params: { page, limit },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-
-  });
+  const response = await axios.get<FetchUsersResponse>(
+    `http://192.168.1.12:3001/api/users`,
+    {
+      params: { page, limit },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
