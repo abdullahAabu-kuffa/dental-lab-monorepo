@@ -11,6 +11,8 @@ import userRoutes from "./src/routes/user.routes";
 import orderRoutes from "./src/routes/order.routes";
 import uploadRoutes from "./src/routes/upload.routes";
 import downloadRoutes from "./src/routes/download.routes";
+import notificationRoutes from "./src/routes/notification.routes";
+import notificationTestRoutes from "./src/routes/notification-test.routes";
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
 
@@ -21,14 +23,26 @@ setupSwagger(app);
 
 // TODO: Security middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({credentials: true}));
 
 // TODO: Body parser
 app.use(express.json({ limit: "150mb" }));
 app.use(express.urlencoded({ limit: "150mb", extended: true }));
 app.use(cookieParser());
 // TODO: Compression
-app.use(compression());
+// app.use(compression());
+
+const shouldCompress = (req: express.Request, res: express.Response) => {
+  // Don’t compress SSE
+  if (res.getHeader("Content-Type") === "text/event-stream") {
+    return false;
+  }
+
+  // Fall back to standard filter
+  return compression.filter(req, res);
+};
+
+app.use(compression({ filter: shouldCompress }));
 
 // TODO: Health check endpoint
 
@@ -44,6 +58,9 @@ app.use('/api/download', downloadRoutes);
 
 app.use('/api/orders', orderRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/notifications-test', notificationTestRoutes);
+app.use('/api/notifications', notificationRoutes);
+
 
 // TODO: 404 handler
 app.use((req, res) => {

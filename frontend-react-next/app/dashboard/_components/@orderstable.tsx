@@ -4,46 +4,47 @@ import { Search } from "lucide-react";
 import { View } from "lucide-react";
 import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
+import OrderModal from "./@ordermodal";
 
 interface Order {
   id: string;
   type: string;
   date: string;
-  status: "Pending" | "In Progress" | "Completed" | "Rejected";
+  status: "Pending" | "In Progress" | "Completed"| "Rejected";
   price: string;
 }
 
 const orders: Order[] = [
   {
-    id: "#DDL-0124",
+    id: "DDL-0124",
     type: "Zirconia Crown",
     date: "2024-07-22",
     status: "Completed",
     price: "2,500 EGP",
   },
   {
-    id: "#DDL-0123",
+    id: "DDL-0123",
     type: "PFM Bridge",
     date: "2024-07-21",
     status: "Pending",
     price: "1,800 EGP",
   },
   {
-    id: "#DDL-0122",
+    id: "DDL-0122",
     type: "E-max Veneers",
     date: "2024-07-20",
     status: "In Progress",
     price: "4,200 EGP",
   },
   {
-    id: "#DDL-0121",
+    id: "DDL-0121",
     type: "Clear Aligners",
     date: "2024-07-19",
     status: "Completed",
     price: "3,100 EGP",
   },
   {
-    id: "#DDL-0120",
+    id: "DDL-0120",
     type: "Denture Repair",
     date: "2024-07-18",
     status: "Rejected",
@@ -58,14 +59,15 @@ const statusColors = {
   Rejected: "bg-red-100 text-red-700",
 };
 
-const filters = ["All", "Pending", "In Progress", "Completed", "Rejected"];
+const filters = ["All", "Pending", "In Progress", "Completed" , "Rejected"];
 
-const OrdersTable = ({overview}:{overview?:boolean}) => {
+const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const filteredOrders = orders.filter((order) => {
-    const matchSearch = order.id.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = order.type.toLowerCase().includes(search.toLowerCase());
     const matchFilter = filter === "All" || order.status === filter;
     return matchSearch && matchFilter;
   });
@@ -79,7 +81,7 @@ const OrdersTable = ({overview}:{overview?:boolean}) => {
         <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
         <input
           type="text"
-          placeholder="Search by Order ID..."
+          placeholder="Search by Order Type..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
@@ -161,6 +163,7 @@ const OrdersTable = ({overview}:{overview?:boolean}) => {
                     </>
                   )}
                   <button
+                    onClick={() => setSelectedOrder(order)}
                     className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}
                   >
                     <div className="flex items-center gap-1">
@@ -174,6 +177,11 @@ const OrdersTable = ({overview}:{overview?:boolean}) => {
           </tbody>
         </table>
       </div>
+
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <OrderModal selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} />
+      )}
     </div>
   );
 };

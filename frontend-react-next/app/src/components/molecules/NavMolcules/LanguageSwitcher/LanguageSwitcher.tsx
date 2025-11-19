@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../../../contexts/LanguageContext';
-import { Globe } from 'lucide-react';
+import { Globe } from '../../../../utils/UnifiedIcons';
 
 const LanguageSwitcher = () => {
   const { language, setLanguage, t } = useLanguage();

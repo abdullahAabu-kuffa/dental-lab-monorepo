@@ -10,13 +10,8 @@ import {
 
 type ButtonVariant =
 	| "primary"
-	| "secondary"
-	| "fullWidth"
 	| "whiteBlackHover"
-	| "yellowTextHoverBlack"
-	| "whiteBgYellowTextHoverBlack"
-	| "beigeSolid"
-	| "beigeOutline"
+	| "serviceCard"
 	| "lightPrimary"
 	| "lightSecondary";
 

@@ -1,37 +1,38 @@
 'use client';
 
 import React from 'react';
-import { Crown, Zap, Smile, Microscope } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Crown, Smile, Microscope, Zap } from '../../../utils/UnifiedIcons';
 
 interface ServiceIconProps {
-  iconName: 'crown' | 'tooth' | 'smile' | 'microscope';
-  size?: number;
+  iconName: string;
   className?: string;
 }
 
-const iconMap = {
-  crown: Crown,
-  tooth: Zap,
-  smile: Smile,
-  microscope: Microscope
-};
-
-export default function ServiceIcon({ 
-  iconName, 
-  size = 52, 
-  className = "" 
-}: ServiceIconProps) {
-  const IconComponent: LucideIcon = iconMap[iconName];
+const ServiceIcon: React.FC<ServiceIconProps> = ({ iconName, className = '' }) => {
+  const iconNameLower = iconName.toLowerCase();
   
+  const renderIcon = () => {
+    switch (iconNameLower) {
+      case 'crown':
+        return <Crown className="w-8 h-8 text-white" />;
+      case 'smile':
+        return <Smile className="w-8 h-8 text-white" />;
+      case 'microscope':
+        return <Microscope className="w-8 h-8 text-white" />;
+      case 'zap':
+        return <Zap className="w-8 h-8 text-white" />;
+      default:
+        return <Crown className="w-8 h-8 text-white" />;
+    }
+  };
+
   return (
     <div className={`flex justify-center ${className}`}>
-      <IconComponent
-        size={size}
-        color="#D4AF37"
-        strokeWidth={2}
-        fill="none"
-      />
+      <div className="w-16 h-16 bg-[#D4AF37] rounded-full flex items-center justify-center">
+        {renderIcon()}
+      </div>
     </div>
   );
-}
+};
+
+export default ServiceIcon;
