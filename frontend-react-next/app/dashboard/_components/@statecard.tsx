@@ -3,7 +3,7 @@ import { FC, ReactNode } from "react";
 import { motion } from "framer-motion";
 interface StatsCardProps {
   title: string;
-  value: string | number;
+  value?: string | number;
   growth?: string;
   icon?: ReactNode;
   fromColor?: string;

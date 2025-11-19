@@ -5,39 +5,30 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Bell,
-  DollarSign,
-  Info,
-  Mail,
   Settings,
-  ShoppingBag,
   Users,
   Menu,
   XIcon,
   ListOrdered,
   LayoutDashboard,
+  CalendarDaysIcon
 } from "lucide-react";
 
 const ICONS = {
   LayoutDashboard,
-  DollarSign,
   Settings,
-  ShoppingBag,
   Users,
-  Mail,
+  CalendarDaysIcon,
   Bell,
-  Info,
   ListOrdered,
 };
 
 const links = [
   { name: "Dashboard", to: "/dashboard", icon: "LayoutDashboard" },
-  { name: "Sales", to: "/dashboard/sales", icon: "DollarSign" },
-  { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
-  { name: "Products", to: "/dashboard/products", icon: "ShoppingBag" },
   { name: "Users", to: "/dashboard/users", icon: "Users" },
-  { name: "Messages", to: "/dashboard/messages", icon: "Mail" },
+  { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
+  { name: "Events", to: "/dashboard/events", icon: "CalendarDaysIcon" },
   { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
-  { name: "About", to: "/dashboard/about", icon: "Info" },
   { name: "Settings", to: "/dashboard/settings", icon: "Settings" },
 ];
 
