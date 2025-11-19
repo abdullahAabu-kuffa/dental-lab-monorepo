@@ -2,7 +2,6 @@ import { PersonStandingIcon, Users } from "lucide-react";
 import StatsCard from "../_components/@statecard";
 import { MdDone } from "react-icons/md";
 import { FcCancel } from "react-icons/fc";
-import UsersTable from "../_components/@userstable";
 import OrdersTable from "../_components/@orderstable";
 
 const orders = () => {

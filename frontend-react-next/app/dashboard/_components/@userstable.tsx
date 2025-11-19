@@ -1,110 +1,44 @@
 "use client";
 import React, { useState } from "react";
 import { Search, View } from "lucide-react";
-import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
+import { User } from "../interfaces/users";
+import UserDetails from "./@userdetails";
+import ConfirmModal from "./@confirmmodel";
+import { useChangeUserStatus } from "../services/hookes/change_user_status";
 
-interface User {
-  fullName: string;
-  email: string;
-  clinicName: string;
-  date: string;
-  status: "Pending" | "Approved" | "Rejected";
-}
-
-const users: User[] = [
-  {
-    fullName: "Dr. John Doe",
-    email: "john@example.com",
-    clinicName: "Smile Dental Clinic",
-    date: "2024-07-22",
-    status: "Approved",
-  },
-  {
-    fullName: "Dr. Sarah Ali",
-    email: "sarah@example.com",
-    clinicName: "Elite Dental Care",
-    date: "2024-07-21",
-    status: "Pending",
-  },
-  {
-    fullName: "Dr. Ahmed Hassan",
-    email: "ahmed@example.com",
-    clinicName: "Bright Smile Center",
-    date: "2024-07-20",
-    status: "Rejected",
-  },
-  {
-    fullName: "Dr. Fatima Youssef",
-    email: "fatima@example.com",
-    clinicName: "Pearl Dental Studio",
-    date: "2024-07-19",
-    status: "Approved",
-  },
-  {
-    fullName: "Dr. Omar Khaled",
-    email: "omar@example.com",
-    clinicName: "Advanced Dental Clinic",
-    date: "2024-07-18",
-    status: "Pending",
-  },
-  {
-    fullName: "Dr. Lina Mostafa",
-    email: "lina@example.com",
-    clinicName: "Perfect Smile Dentistry",
-    date: "2024-07-17",
-    status: "Rejected",
-  },
-  {
-    fullName: "Dr. Karim Nasser",
-    email: "karim@example.com",
-    clinicName: "White Pearl Dental Center",
-    date: "2024-07-16",
-    status: "Approved",
-  },
-  {
-    fullName: "Dr. Hala Samir",
-    email: "hala@example.com",
-    clinicName: "Gentle Touch Dental",
-    date: "2024-07-15",
-    status: "Pending",
-  },
-  {
-    fullName: "Dr. Tamer Adel",
-    email: "tamer@example.com",
-    clinicName: "BrightCare Dental Clinic",
-    date: "2024-07-14",
-    status: "Rejected",
-  },
-  {
-    fullName: "Dr. Nour El-Din",
-    email: "nour@example.com",
-    clinicName: "Happy Teeth Dental Center",
-    date: "2024-07-13",
-    status: "Approved",
-  },
-];
 
 const statusColors = {
   Approved: "bg-green-100 text-green-700",
   Pending: "bg-yellow-100 text-yellow-700",
-  "In Progress": "bg-blue-100 text-blue-700",
-  Rejected: "bg-red-100 text-red-700",
+  // Rejected: "bg-red-100 text-red-700",
 };
 
-const filters = ["All", "Pending", "Approved", "Rejected"];
+const filters = ["All", "Pending", "Approved"];
 
-const UsersTable = () => {
+interface UsersTableProps {
+  users: User[];
+}
+
+
+const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
+  const { mutate, isPending, isSuccess, isError, error } = useChangeUserStatus ();
+  const [userId, setUserId] = useState(1);
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showModal, setShowModal] = useState(false);  
 
-  const filteredOrders = users.filter((user) => {
-    const matchSearch = user.fullName
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchFilter = filter === "All" || user.status === filter;
-    return matchSearch && matchFilter;
-  });
+  const filteredusers = Array.isArray(users)
+    ? users.filter((user) => {
+      const matchSearch = user.fullName
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const matchFilter = filter === 'All' || filter === (user.isActive ? 'Approved' : "Pending");
+      return matchSearch && matchFilter;
+    }) : [];
+
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm mx-6 mb-6">
@@ -128,11 +62,10 @@ const UsersTable = () => {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-              filter === f
-                ? "bg-blue-100 text-blue-700"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${filter === f
+              ? "bg-blue-100 text-blue-700"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
           >
             {f}
           </button>
@@ -146,6 +79,7 @@ const UsersTable = () => {
             <tr>
               <th className="text-left px-4 py-3">Full Name</th>
               <th className="text-left px-4 py-3">Email</th>
+              <th className="text-left px-4 py-3">Role</th>
               <th className="text-left px-4 py-3">Clinic Name</th>
               <th className="text-left px-4 py-3">Status</th>
               <th className="text-left px-4 py-3">Registration Date</th>
@@ -153,32 +87,31 @@ const UsersTable = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((order, idx) => (
+            {Array.isArray(filteredusers) ? filteredusers.map((user, idx) => (
               <tr
-                key={order.email}
-                className={`border-t border-gray-100 hover:bg-gray-200 ${
-                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                }`}
+                key={idx}
+                className={`border-t border-gray-100 hover:bg-gray-200 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  }`}
               >
                 <td className="px-4 py-3 font-semibold text-gray-800">
-                  {order.fullName}
+                  {user.fullName}
                 </td>
-                <td className="px-4 py-3">{order.email}</td>
-                <td className="px-4 py-3 text-gray-600">{order.clinicName}</td>
+                <td className="px-4 py-3">{user.email}</td>
+                <td className="px-4 py-3 text-gray-600">{user.role}</td>
+                <td className="px-4 py-3 text-gray-600">{user.clinicName}</td>
                 <td className="px-4 py-3">
                   <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      statusColors[order.status]
-                    }`}
+                    className={`px-2 py-1 text-xs font-medium rounded-full ${user.isActive ? statusColors["Approved"] : statusColors["Pending"]}`}
                   >
-                    {order.status}
+                    {user.isActive ? "Approved" : "Pending"}
                   </span>
                 </td>
-                <td className="px-4 py-3">{order.date}</td>
+                <td className="px-4 py-3">{user.createdAt}</td>
                 <td className="px-4 py-3 flex gap-1 text-center">
-                  {order.status == "Pending" && (
+                  {!user.isActive && (
                     <>
                       <button
+                        onClick={() => { setUserId(user.id); setShowModal(true); }}
                         className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 ${statusColors["Approved"]}`}
                       >
                         <div className="flex items-center gap-1">
@@ -186,17 +119,19 @@ const UsersTable = () => {
                           <span>Approve</span>
                         </div>
                       </button>
-                      <button
+                      {/* <button
                         className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 ${statusColors["Rejected"]}`}
                       >
                         <div className="flex items-center gap-1">
                           <FcCancel size={16} />
                           <span>Reject</span>
                         </div>
-                      </button>
+                      </button> */}
                     </>
                   )}
                   <button
+                    onClick={() => setSelectedUser(user)}
+
                     className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}
                   >
                     <div className="flex items-center gap-1">
@@ -207,10 +142,26 @@ const UsersTable = () => {
                 </td>
                 <td className="px-4 py-3"></td>
               </tr>
-            ))}
+            )) : (
+              <tr>
+                <td rowSpan={6}>No users available</td>
+              </tr>
+
+            )}
+            {selectedUser && (
+              <UserDetails user={selectedUser} onClose={() => setSelectedUser(null)} />
+            )}
+            {showModal && (
+              <ConfirmModal
+                onConfirm={() => mutate({userId: userId, action: "approve" })}
+                onCancel={() => setShowModal(false)}
+                message="Do you want to approve this user?"
+              />
+            )}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

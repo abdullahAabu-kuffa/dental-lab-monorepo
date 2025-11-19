@@ -35,7 +35,7 @@ export async function getAllUsers(req: AuthRequest, res: Response) {
             pagination: {
                 limit
                 ,total
-                , totalPages
+                ,totalPages
                 ,page
             }
             
