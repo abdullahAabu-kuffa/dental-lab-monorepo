@@ -16,16 +16,20 @@ import {
 
 import { Order } from '../../../src/types';
 import { useRouter } from 'next/navigation';
+import { useOrders } from './quere';
 
 export default function OrdersListPage() {
   const router = useRouter();
 
-  const [orders] = useState<Order[]>(SAMPLE_ORDERS);
+  // const [orders] = useState<Order[]>(SAMPLE_ORDERS);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(SAMPLE_ORDERS);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
-
+  const {data } = useOrders();
+  const orders = data?.data?.orders;
+  console.log(orders&&orders);
+  
   const getSelectedPaymentInfo = () => {
     if (!selectedOrder) return { items: [], total: 0 };
 
@@ -34,7 +38,7 @@ export default function OrdersListPage() {
       price: selectedOrder.totalAmount
     }];
 
-    return { items, total: selectedOrder.totalAmount };
+    return { items, total: selectedOrder?.totalPrice };
   };
 
   const { items: paymentItems, total: paymentTotal } = getSelectedPaymentInfo();
@@ -59,12 +63,13 @@ export default function OrdersListPage() {
         setShowDetails(true);
       }
     }
+    console.log(filtered);
   };
+
 
   const handlePayNow = () => {
     router.push('/User/Order/Form');
   };
-
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 relative">
       <div className="relative w-full p-6 space-y-6">
@@ -130,7 +135,7 @@ export default function OrdersListPage() {
 
           {/* Orders List */}
           <div className="w-1/4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
-            {filteredOrders.map((order, index) => (
+            {orders?.map((order, index) => (
               <motion.div
                 key={order.id}
                 initial={{ opacity: 0, x: -30 }}

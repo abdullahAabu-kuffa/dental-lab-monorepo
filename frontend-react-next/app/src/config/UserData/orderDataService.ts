@@ -529,13 +529,13 @@ export const filterOrdersByStatus = (orders: Order[], status: string): Order[] =
   
   // Handle special cases for status matching
   switch (status) {
-    case "completed":
+    case "COMPLETED":
       return orders.filter(order => order.status === 'Completed');
-    case "in-progress":
+    case "IN_PROGRESS":
       return orders.filter(order => order.status === 'In Progress');
-    case "pending":
+    case "PENDING":
       return orders.filter(order => order.status === 'Pending');
-    case "cancelled":
+    case "CANCELLED":
       return orders.filter(order => order.status === 'Cancelled');
     default:
       return orders.filter(order => 

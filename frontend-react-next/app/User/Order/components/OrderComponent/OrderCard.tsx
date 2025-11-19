@@ -6,6 +6,7 @@ import { Order } from "../../../../src/types";
 import { CARD_STYLES, TEXT_STYLES } from "../../../../design-system/orderStyles";
 
 import { getOrderStatusConfig } from "../../../../src/config/UserData/orderDataService";
+import { formatDate } from "@/app/src/utils/formatDate";
 
 interface OrderCardProps {
   order: Order;
@@ -57,8 +58,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({
 
       {/* Row 2: Patient Name + Due Date */}
       <div className="flex justify-between items-center mt-1 text-xs text-gray-700 font-medium">
-        <div className="truncate">{order.patientName}</div>
-        <div className="whitespace-nowrap">{order.date}</div>
+        <div className="truncate">{order.options?.patientName}</div>
+        <div className="whitespace-nowrap">{formatDate(order? .createdAt)}</div>
       </div>
     </motion.div>
   );

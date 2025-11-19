@@ -42,7 +42,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 
   return (
     <>
-     <DropList />
+     {/* <DropList /> */}
       {/* Main Content Area */}
       <motion.div
         {...welcomePageAnimations.mainContainer}
