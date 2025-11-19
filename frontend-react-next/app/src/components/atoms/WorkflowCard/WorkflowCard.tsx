@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { WorkflowStep } from '../../../types/components';
+import type { WorkflowStep } from '../../../types/index';
 import { typography } from '../../../../design-system/typography';
 
 interface WorkflowCardProps {

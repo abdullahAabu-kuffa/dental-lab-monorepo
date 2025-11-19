@@ -1,121 +1,203 @@
-// app/User/Order/orders-list/page.tsx
 "use client";
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Search, Plus, Package } from 'lucide-react';
-import OrderCard from '../components/OrderCard';
-import { SAMPLE_ORDERS } from '../../../src/config/UserData/ordersData';
+
+import { OrderCard } from '../components/OrderComponent/OrderCard';
+import { OrderDetailsSidebar } from '../components/OrderComponent/OrderProgress';
+import { StatusIcons } from '../components/OrderComponent/CatHead';
+
+import PaymentSummary from "../components/FormComponent/PaymentSummary";
+
+import {
+  SAMPLE_ORDERS,
+  filterOrdersByStatus
+} from '../../../src/config/UserData/orderDataService';
+
 import { Order } from '../../../src/types';
+import { useRouter } from 'next/navigation';
 
 export default function OrdersListPage() {
+  const router = useRouter();
+
   const [orders] = useState<Order[]>(SAMPLE_ORDERS);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>(SAMPLE_ORDERS);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<string>("all-orders");
 
-  const filteredOrders = orders.filter(order =>
-    order.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.orderType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const getSelectedPaymentInfo = () => {
+    if (!selectedOrder) return { items: [], total: 0 };
 
-  const handleViewDetails = (orderId: string) => {
-    setSelectedOrder(orderId);
-    console.log('Viewing details for order:', orderId);
+    const items = [{
+      label: `${selectedOrder.orderType} - ${selectedOrder.material}`,
+      price: selectedOrder.totalAmount
+    }];
+
+    return { items, total: selectedOrder.totalAmount };
   };
 
-  const handleBackToWelcome = () => {
-    window.history.back();
+  const { items: paymentItems, total: paymentTotal } = getSelectedPaymentInfo();
+
+  const handleDetailsClick = (order: Order) => {
+    setSelectedOrder(order);
+    setShowDetails(true);
+  };
+
+  const handleShowStatusOrders = (status: string) => {
+    setActiveFilter(status);
+
+    const filtered = filterOrdersByStatus(orders, status);
+    setFilteredOrders(filtered);
+
+    if (filtered.length === 0) {
+      setSelectedOrder(null);
+      setShowDetails(false);
+    } else {
+      if (!selectedOrder || !filtered.find(o => o.id === selectedOrder.id)) {
+        setSelectedOrder(filtered[0]);
+        setShowDetails(true);
+      }
+    }
+  };
+
+  const handlePayNow = () => {
+    router.push('/User/Order/Form');
   };
 
   return (
-    <div className="p-6">
-      {/* Header with Search */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4"
-      >
-        <div className="flex items-center gap-4">
-          <button
-            onClick={handleBackToWelcome}
-            className="p-2 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">My Orders</h1>
-            <p className="text-gray-600 mt-1">Manage and track all your dental orders</p>
-          </div>
-        </div>
-
-        {/* Search and New Order */}
-        <div className="flex items-center gap-4 mt-4 sm:mt-0">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search orders..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <button className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 font-medium flex items-center gap-2">
-            <Plus className="w-5 h-5" />
-            New Order
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Stacked Orders List */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="space-y-2 max-w-2xl"
-      >
-        {filteredOrders.length > 0 ? (
-          filteredOrders.map((order, index) => (
-            <motion.div
-              key={order.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 * index }}
-            >
-              <OrderCard
-                order={order}
-                onViewDetails={handleViewDetails}
-              />
-            </motion.div>
-          ))
-        ) : (
-          <div className="text-center py-12">
-            <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-600 mb-2">No orders found</h3>
-            <p className="text-gray-500">
-              {searchTerm
-                ? 'Try adjusting your search criteria'
-                : 'Start by creating your first order'
-              }
-            </p>
-          </div>
-        )}
-      </motion.div>
-
-      {/* Load More Button */}
-      {filteredOrders.length > 0 && filteredOrders.length >= 10 && (
+    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 relative">
+      <div className="relative w-full p-6 space-y-6">
+        
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-center mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-sm border border-white/20"
         >
-          <button className="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
-            Load More Orders
-          </button>
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
+              <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">
+                My Orders ({filteredOrders.length})
+              </h1>
+
+              <StatusIcons
+                onNewOrder={() => router.push('/User/Order/Form')}
+                onShowStatusOrders={handleShowStatusOrders}
+                orders={orders}
+              />
+            </div>
+
+            <div className="w-full lg:w-auto lg:min-w-80">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 1114 0 7 7 0 01-14 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search orders..."
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  onChange={(e) => {
+                    const searchTerm = e.target.value;
+                    // Filter orders based on search term
+                    const filtered = orders.filter(order =>
+                      order.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      order.orderType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      order.material.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                    setFilteredOrders(filtered);
+                    
+                    // Reset selected order if it doesn't match the new filter
+                    if (selectedOrder && !filtered.find(o => o.id === selectedOrder.id)) {
+                      setSelectedOrder(null);
+                      setShowDetails(false);
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+          </div>
         </motion.div>
-      )}
+
+        {/* Main Layout */}
+        <div className="flex gap-6 w-full">
+
+          {/* Orders List */}
+          <div className="w-1/4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+            {filteredOrders.map((order, index) => (
+              <motion.div
+                key={order.id}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  delay: 0.05 * index,
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20
+                }}
+              >
+                <OrderCard
+                  order={order}
+                  isSelected={selectedOrder?.id === order.id}
+                  onClick={() => handleDetailsClick(order)}
+                />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Order Details */}
+          <div className="flex-1 min-w-0">
+            {selectedOrder ? (
+              <OrderDetailsSidebar order={selectedOrder} />
+            ) : (
+              <div className="p-12 text-center opacity-70">Select an order...</div>
+            )}
+          </div>
+
+          {/* Payment Summary — Fixed Size + Sticky */}
+          <div
+            className="
+              w-[320px]
+              xl:w-[350px]
+              flex-shrink-0
+              relative
+            "
+          >
+            <div
+              className="
+                sticky top-28
+                bg-white
+                rounded-2xl
+                shadow-md
+                border border-gray-200
+                p-5
+              "
+            >
+              {selectedOrder ? (
+                <PaymentSummary
+                  title="Order Payment"
+                  subtitle="Services included"
+                  selectedItems={paymentItems}
+                  totalAmount={paymentTotal}
+                  buttonLabel="Pay Now"
+                  onAction={handlePayNow}
+                />
+              ) : (
+                <div className="bg-white rounded-xl p-6 shadow text-center opacity-70">
+                  No order selected
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 }

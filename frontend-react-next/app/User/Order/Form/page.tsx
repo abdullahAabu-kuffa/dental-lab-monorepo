@@ -1,38 +1,19 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText } from 'lucide-react';
-import OrderForm from '../components/OrderForm';
-import PaymentSummary from '../components/PaymentSummary';
-import { NEW_ORDER_FORM_FIELDS } from '../../../src/config/UserData/formFieldsData';
+import { ShoppingCart } from 'lucide-react';
+import OrderForm from '../components/FormComponent/OrderForm';
+import PaymentSummary from '../components/FormComponent/PaymentSummary';
+import { useNavigation,  animations } from '../../../src/utils/pageUtils';
+import { calculateSelectedServices } from '../../../src/utils/pricingService';
 
-export default function NewOrderFormPage() {
-  const router = useRouter();
+export default function NewOrderPage() {
+  const { navigateToUpload } = useNavigation();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [formData, setFormData] = useState<Record<string, unknown>>({});
-
-  const calculateSelectedServices = () => {
-    const selectedServices: Array<{ label: string; price: number }> = [];
-    let total = 0;
-
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value === true) {
-        const field = NEW_ORDER_FORM_FIELDS.find(f => f.id === key && f.price);
-        if (field) {
-          selectedServices.push({
-            label: field.label,
-            price: field.price!
-          });
-          total += field.price!;
-        }
-      }
-    });
-
-    return { selectedServices, totalAmount: total };
-  };
 
   const handleFormDataChange = (newFormData: Record<string, unknown>) => {
     setFormData(newFormData);
@@ -40,99 +21,70 @@ export default function NewOrderFormPage() {
 
   const handlePayNow = async () => {
     setIsProcessingPayment(true);
+
     try {
-      const orderData: Record<string, unknown> = {
+      const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+
+      // Create order data
+      const orderData = {
         ...formData,
         paymentStatus: 'paid',
-        paymentAmount: calculateSelectedServices().totalAmount,
-        paymentDate: new Date().toISOString()
+        paymentAmount: totalAmount,
+        paymentDate: new Date().toISOString(),
       };
 
-      console.log('Processing payment for order:', orderData);
+      console.log("Processing payment:", orderData);
 
+      // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      router.push('/User/Order/Upload');
-    } catch (error) {
-      console.error('Payment failed:', error);
+      // Navigate to upload page after successful payment
+      navigateToUpload();
+    } catch (err) {
+      console.error("Payment Error:", err);
     } finally {
       setIsProcessingPayment(false);
     }
   };
 
-  const handleContinueToUpload = () => {
-    router.push('/User/Order/Upload');
-  };
-
-  const handleSubmit = async (formData: FormData) => {
-    setIsSubmitting(true);
-
-    try {
-      const orderData: Record<string, unknown> = {};
-      for (const [key, value] of formData.entries()) {
-        orderData[key] = value;
-      }
-
-      console.log('Order data:', orderData);
-
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      router.push('/User/Order/Upload');
-
-    } catch (error) {
-      console.error('Error saving order:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const { selectedServices, totalAmount } = calculateSelectedServices();
+  const { selectedServices, totalAmount } = calculateSelectedServices(formData);
 
   return (
-    <div className="flex gap-8 max-w-7xl ml-[30px] p-12">
-      {/* Form Section */}
-      <div className="flex-1 max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-6">
+      <div className="max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          {...animations.fadeInUp}
+          className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-6 mb-6"
         >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-[#E4B441] to-[#D4A431] rounded-full flex items-center justify-center">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">New Dental Order</h1>
-                <p className="text-gray-600">Fill out all sections below to create your order</p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => router.push('/User/Order')}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Orders
-            </button>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Order</h1>
+          <p className="text-gray-600">Fill in the details to create a new dental order</p>
         </motion.div>
 
-        <OrderForm 
-          onSubmit={handleSubmit} 
-          isSubmitting={isSubmitting}
-          onFormDataChange={handleFormDataChange}
-          onContinueToUpload={handleContinueToUpload}
-        />
-      </div>
+        <div className="flex gap-6">
+          {/* Form */}
+          <div className="flex-1 min-w-0">
+            <OrderForm
+              onSubmit={() => {}}
+              isSubmitting={isSubmitting}
+              onFormDataChange={handleFormDataChange}
+              onContinueToUpload={() => navigateToUpload()}
+            />
+          </div>
 
-      {/* Payment Summary Section */}
-      <div className="w-96 flex-shrink-0">
-        <PaymentSummary 
-          selectedServices={selectedServices}
-          totalAmount={totalAmount}
-          onPayNow={handlePayNow}
-        />
+          {/* Payment Summary */}
+          <div className="w-80 sm:w-96 flex-shrink-0">
+            <PaymentSummary
+              title="Order Summary"
+              subtitle="Selected services"
+              icon={<ShoppingCart className="w-5 h-5 text-white" />}
+              selectedItems={selectedServices}
+              totalAmount={totalAmount}
+              buttonLabel="Pay Now"
+              onAction={handlePayNow}
+              disabled={isProcessingPayment}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

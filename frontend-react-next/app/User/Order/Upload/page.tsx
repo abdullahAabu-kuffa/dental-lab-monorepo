@@ -1,18 +1,17 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, CheckCircle, FileText } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, FileText } from '../../../src/utils/UnifiedIcons';
+import { useNavigation, commonStyles, animations } from '../../../src/utils/pageUtils';
 
 export default function UploadPage() {
-  const router = useRouter();
+  const { navigateToForm, navigateToHome } = useNavigation();
 
   return (
-    <div className="max-w-4xl ml-[30px] p-12">
+    <div className="w-full p-12 max-w-7xl mx-auto px-4 sm:px-6">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        {...animations.fadeInUp}
         className="mb-8"
       >
         <div className="flex items-center justify-between mb-6">
@@ -27,10 +26,10 @@ export default function UploadPage() {
           </div>
           
           <button
-            onClick={() => router.push('/User/Order/Form')}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all"
+            onClick={() => navigateToForm()}
+            className={commonStyles.button.outline}
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Form
           </button>
         </div>
@@ -38,10 +37,9 @@ export default function UploadPage() {
 
       {/* File Upload Section */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        {...animations.fadeInUp}
         transition={{ delay: 0.1 }}
-        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
+        className={commonStyles.card}
       >
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center">
@@ -64,10 +62,9 @@ export default function UploadPage() {
 
       {/* Notes Section */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        {...animations.fadeInUp}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
+        className={commonStyles.card}
       >
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
@@ -88,21 +85,20 @@ export default function UploadPage() {
 
       {/* Action Buttons */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        {...animations.fadeInUp}
         transition={{ delay: 0.3 }}
         className="flex justify-center gap-4"
       >
         <button
-          onClick={() => router.push('/User/Order/Form')}
-          className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all"
+          onClick={() => navigateToForm()}
+          className={commonStyles.button.secondary}
         >
           Back to Form
         </button>
         
         <button
-          onClick={() => router.push('/User/Order')}
-          className="px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg"
+          onClick={() => navigateToHome()}
+          className={commonStyles.button.primary}
         >
           <div className="flex items-center gap-2">
             <CheckCircle className="w-5 h-5" />

@@ -1,5 +1,5 @@
 // Services configuration
-import { Crown, Zap, Smile, Microscope } from 'lucide-react';
+import { Crown, Zap, Smile, Microscope } from '../../utils/UnifiedIcons';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {

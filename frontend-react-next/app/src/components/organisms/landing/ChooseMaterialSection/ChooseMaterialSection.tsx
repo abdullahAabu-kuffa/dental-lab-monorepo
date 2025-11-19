@@ -1,11 +1,8 @@
 'use client';
 import Button from '../../../atoms/Button/Button';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
-import { componentStyles} from '../../../../../design-system';
+import { HeroHeading,HeroSubtitle ,componentStyles } from '../../../../../design-system';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 export default function ChooseMaterialSection() {
   const router = useRouter();
 

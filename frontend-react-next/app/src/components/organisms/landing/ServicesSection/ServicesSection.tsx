@@ -3,8 +3,7 @@
 import React from 'react';
 import { SERVICES } from '../../../../config/LandingData/services.data';
 import ServiceIcon from '../../../molecules/ServiceIcon/ServiceIcon';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
+import { HeroHeading ,HeroSubtitle } from '../../../../../design-system';
 
 export default function ServicesSection() {
   return (

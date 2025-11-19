@@ -1,13 +1,8 @@
-
-
 // Consolidated type definitions for the entire application
-
 
 import { LucideIcon } from 'lucide-react';
 
-
 // ORDER MANAGEMENT TYPES
-
 
 export interface Order {
   id: string;
@@ -22,6 +17,18 @@ export interface Order {
   attachments?: FileAttachment[];
   createdAt: Date;
   updatedAt: Date;
+  // Shipping and tracking information
+  lab?: string;
+  shippingCarrier?: string;
+  trackingNumber?: string;
+  // Manufacturing stages
+  stages?: {
+    orderPlaced?: { completed: boolean; completedAt?: string };
+    digitalDesign?: { completed: boolean; completedAt?: string };
+    manufacturing?: { completed: boolean; completedAt?: string };
+    qualityControl?: { completed: boolean; completedAt?: string };
+    shipped?: { completed: boolean; completedAt?: string };
+  };
 }
 
 export interface OrderStats {
@@ -80,9 +87,34 @@ export interface OrderFormData {
   notes?: string;
 }
 
+// ORDER PROGRESS TYPES (NEW)
+
+export interface OrderProgressProps {
+  order: Order;
+  showPercentage?: boolean;
+  showTimeline?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+export interface ProgressStep {
+  id: string;
+  name: string;
+  description: string;
+  status: 'completed' | 'active' | 'pending' | 'rejected';
+  icon: React.ComponentType<{ className?: string }>;
+  timestamp?: Date;
+  estimatedCompletion?: Date;
+}
+
+export interface StepColors {
+  bg: string;
+  icon: string;
+  border: string;
+  text: string;
+}
 
 // COMPONENT PROPS TYPES
-
 
 export interface StatsSectionProps {
   title?: string;
@@ -110,9 +142,7 @@ export interface CTASectionProps {
   secondaryButtonText?: string;
 }
 
-
 // DATA TYPES
-
 
 export interface StatItem {
   number: string;
@@ -165,9 +195,7 @@ export interface ManufacturingProcessStep {
   image: string;
 }
 
-
 // PROCESS & WORKFLOW TYPES
-
 
 export interface ProcessStep {
   id: string;
@@ -184,7 +212,6 @@ export interface WorkflowCard {
   iconComponent: React.ComponentType<{ size?: number; color?: string }>;
 }
 
-
 // FORM FIELD TYPES
 
 export interface FormField {
@@ -194,9 +221,7 @@ export interface FormField {
   required?: boolean;
 }
 
-
 // COMPONENT-SPECIFIC TYPES
-
 
 export interface PageContainerProps {
   children: React.ReactNode;
@@ -216,7 +241,6 @@ export interface WelcomePageProps {
 }
 
 // RE-EXPORT TYPES FROM DESIGN SYSTEM
-
 
 // Design system types
 export type Typography = import('../../design-system/typography').Typography;
