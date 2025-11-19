@@ -1,11 +1,10 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { Smile, CheckCircle } from 'lucide-react';
+import { Smile, CheckCircle } from '../../../../utils/UnifiedIcons';
 import StatCard from '../../../atoms/StatCard/StatCard';
 import Button from '../../../atoms/Button/Button';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
+import { HeroHeading ,HeroSubtitle } from '../../../../../design-system';
 import DentalBackground from '../../../atoms/MedicalBackground/MedicalBackgroundLight';
 
 import { STATS } from '../../../../config/LandingData/OurAchievements';

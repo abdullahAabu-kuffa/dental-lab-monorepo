@@ -11,3 +11,18 @@ export type {
 export type {
   WelcomePageProps
 } from '../../src/types';
+
+// OrderDetails component props
+export interface OrderDetailsPanelProps {
+  order: {
+    id: string;
+    patientName: string;
+    date: string;
+    totalAmount: number;
+    status: string;
+    urgency: string;
+    orderType: string;
+    material: string;
+    notes?: string;
+  };
+}

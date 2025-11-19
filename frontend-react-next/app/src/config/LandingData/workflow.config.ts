@@ -1,5 +1,5 @@
 // Workflow configuration
-import { Upload, CreditCard, TrendingUp, Truck } from 'lucide-react';
+import { Upload, CreditCard, TrendingUp, Truck } from '../../utils/UnifiedIcons';
 import { WorkflowCard } from '../../types';
 
 // WorkflowCard interface is now imported from the consolidated types file

@@ -2,10 +2,8 @@
 import React from 'react';
 import EducationalResourceCard from '../../../atoms/EducationalResourceCard/EducationalResourceCard';
 import Button from '../../../atoms/Button/Button';
-import { HeroHeading } from '../../../../../design-system';
-import { HeroSubtitle } from '../../../../../design-system';
+import { HeroHeading ,componentStyles ,HeroSubtitle} from '../../../../../design-system';
 import { EDUCATIONAL_RESOURCES } from '../../../../config/LandingData/educational-resources.data';
-import { componentStyles } from '../../../../../design-system';
 
 const EducationalResourcesSection: React.FC = () => {
   return (

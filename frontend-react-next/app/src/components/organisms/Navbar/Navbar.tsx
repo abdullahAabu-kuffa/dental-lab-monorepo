@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-import NavMobileMenu from "../../molecules/NavMobileMenu";
+
 import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
 import { logoutRequest } from "../../../services/auth";
 import { useAuth } from "@/app/src/hooks/useAuth";
+import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

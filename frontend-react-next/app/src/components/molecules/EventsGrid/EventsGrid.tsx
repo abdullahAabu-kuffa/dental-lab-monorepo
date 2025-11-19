@@ -1,5 +1,5 @@
 import React from 'react';
-import { Event } from '../../../types/components';
+import { Event } from '../../../types/index';
 import EventCard from '../../atoms/EventCard/EventCard';
 
 interface EventsGridProps {
