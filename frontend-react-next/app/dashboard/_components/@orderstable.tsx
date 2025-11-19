@@ -1,56 +1,30 @@
 "use client";
 import React, { useState } from "react";
-import { Search } from "lucide-react";
-import { View } from "lucide-react";
+import { Search, View } from "lucide-react";
 import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
 import OrderModal from "./@ordermodal";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "./@spinner";
 
 interface Order {
   id: string;
+  approvedBy: string;
+  createdAt: string;
   type: string;
   date: string;
-  status: "Pending" | "In Progress" | "Completed"| "Rejected";
+  options: [];
+  status: "Pending" | "In Progress" | "Completed" | "Rejected";
   price: string;
+  user: {
+    clinicAddress: string;
+    clinicName: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    role: string;
+  };
 }
-
-const orders: Order[] = [
-  {
-    id: "DDL-0124",
-    type: "Zirconia Crown",
-    date: "2024-07-22",
-    status: "Completed",
-    price: "2,500 EGP",
-  },
-  {
-    id: "DDL-0123",
-    type: "PFM Bridge",
-    date: "2024-07-21",
-    status: "Pending",
-    price: "1,800 EGP",
-  },
-  {
-    id: "DDL-0122",
-    type: "E-max Veneers",
-    date: "2024-07-20",
-    status: "In Progress",
-    price: "4,200 EGP",
-  },
-  {
-    id: "DDL-0121",
-    type: "Clear Aligners",
-    date: "2024-07-19",
-    status: "Completed",
-    price: "3,100 EGP",
-  },
-  {
-    id: "DDL-0120",
-    type: "Denture Repair",
-    date: "2024-07-18",
-    status: "Rejected",
-    price: "950 EGP",
-  },
-];
 
 const statusColors = {
   Completed: "bg-green-100 text-green-700",
@@ -59,14 +33,99 @@ const statusColors = {
   Rejected: "bg-red-100 text-red-700",
 };
 
-const filters = ["All", "Pending", "In Progress", "Completed" , "Rejected"];
+const filters = ["All", "Pending", "In Progress", "Completed", "Rejected"];
 
 const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [pages, setPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredOrders = orders.filter((order) => {
+  const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
+  const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+
+  // Fetch API data
+  const { data, isLoading, error, isError } = useQuery({
+    queryKey: ["orders", currentPage],
+    queryFn: async () => {
+      const res = await fetch(
+        `http://localhost:3001/api/orders?page=${currentPage}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1NjM2NjQsImV4cCI6MTc2MzY1MDA2NH0.Iuu_f9jLfxGS05CYPbEmnLb-xTuDwiwsleaDWUXGyUU`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch orders");
+
+      const json = await res.json();
+      setPages(json.data.totalPages);
+      console.log(json.data);
+      return json;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <h1 className="text-red-500 flex justify-center align-middle">
+        {(error as Error).message}
+      </h1>
+    );
+  }
+
+  const apiOrders = data?.data.orders ?? [];
+
+  type ApiOrder = {
+    id: string;
+    approvedBy: string;
+    createdAt: string;
+    type: string;
+    date: string;
+    options: [];
+    status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED";
+    totalPrice: string;
+    user: {
+      clinicAddress: string;
+      clinicName: string;
+      fullName: string;
+      email: string;
+      phoneNumber: string;
+      role: string;
+    };
+  };
+
+  const mappedOrders: Order[] = (apiOrders as ApiOrder[]).map((o) => ({
+    id: String(o.id),
+    type: o.type ?? "Unknown",
+    date: o.createdAt.split("T")[0],
+    status:
+      o.status === "PENDING"
+        ? "Pending"
+        : o.status === "IN_PROGRESS"
+        ? "In Progress"
+        : o.status === "COMPLETED"
+        ? "Completed"
+        : "Rejected",
+    price: `${o.totalPrice} EGP`,
+    approvedBy: o.approvedBy,
+    createdAt: o.createdAt,
+    options: o.options,
+    user: o.user,
+  }));
+
+  const filteredOrders = mappedOrders.filter((order) => {
     const matchSearch = order.type.toLowerCase().includes(search.toLowerCase());
     const matchFilter = filter === "All" || order.status === filter;
     return matchSearch && matchFilter;
@@ -111,7 +170,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
           <thead className="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
             <tr>
               <th className="text-left px-4 py-3">Order ID</th>
-              <th className="text-left px-4 py-3">Type</th>
+              <th className="text-left px-4 py-3">Customer</th>
               <th className="text-left px-4 py-3">Date Submitted</th>
               <th className="text-left px-4 py-3">Status</th>
               <th className="text-left px-4 py-3">Total Price</th>
@@ -129,7 +188,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
                 <td className="px-4 py-3 font-semibold text-gray-800">
                   {order.id}
                 </td>
-                <td className="px-4 py-3">{order.type}</td>
+                <td className="px-4 py-3">{order.user.fullName}</td>
                 <td className="px-4 py-3 text-gray-600">{order.date}</td>
                 <td className="px-4 py-3">
                   <span
@@ -141,20 +200,18 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
                   </span>
                 </td>
                 <td className="px-4 py-3">{order.price}</td>
+
                 <td className="px-4 py-3 flex gap-1 text-center">
                   {!overview && order.status === "Pending" && (
                     <>
-                      <button
-                        className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 ${statusColors["Completed"]}`}
-                      >
+                      <button className="px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 bg-green-100 text-green-700">
                         <div className="flex items-center gap-1">
                           <MdDone size={16} />
                           <span>Approve</span>
                         </div>
                       </button>
-                      <button
-                        className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 ${statusColors["Rejected"]}`}
-                      >
+
+                      <button className="px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 bg-red-100 text-red-700">
                         <div className="flex items-center gap-1">
                           <FcCancel size={16} />
                           <span>Reject</span>
@@ -162,9 +219,10 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
                       </button>
                     </>
                   )}
+
                   <button
                     onClick={() => setSelectedOrder(order)}
-                    className={`px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300`}
+                    className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300"
                   >
                     <div className="flex items-center gap-1">
                       <View size={16} />
@@ -176,11 +234,37 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-end gap-2 mr-2 mb-4">
+          <button
+            onClick={goPrevious}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40"
+          >
+            Previous
+          </button>
+
+          <span className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700">
+            {currentPage}
+          </span>
+
+          <button
+            onClick={goNext}
+            disabled={currentPage === pages}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
-      {/* Order Details Modal */}
+      {/* Modal */}
       {selectedOrder && (
-        <OrderModal selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} />
+        <OrderModal
+          selectedOrder={selectedOrder}
+          setSelectedOrder={setSelectedOrder}
+        />
       )}
     </div>
   );
