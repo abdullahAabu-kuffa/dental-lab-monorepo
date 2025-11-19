@@ -1,13 +1,16 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { motionVariants, componentStyles, welcomePageAnimations } from '../../design-system';
 import { User, Crown } from '../../src/utils/UnifiedIcons';
-import { USER_PROCESS_STEPS } from '../../src/config/UserData/UserProcessSteps';
+import { USER_PROCESS_STEPS } from '../../src/config/UserData/orderDataService';
 import { WelcomePageProps } from '../../src/types';
 
+import { DropList } from '../../User/Order/components/DropList';
+import { useNavigation, animations } from '../../src/utils/pageUtils';
+
 const PROCESS_STEPS = USER_PROCESS_STEPS;
+
 const WelcomePage: React.FC<WelcomePageProps> = ({
   onStartOrder,
   onViewOrders,
@@ -15,30 +18,35 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   onTrackOrder,
   onShowOrdersTable
 }) => {
-  const router = useRouter();
+  const { navigateToForm, navigateToOrdersList } = useNavigation();
   const doctorName = "Dr. Ahmed Hassan";
+
   // Handle New Order - navigate to form page
   const handleNewOrder = () => {
-    router.push('/User/Order/Form');
+    navigateToForm();
     onNewOrder?.();
   };
+
   // Handle Start Order (main button)
   const handleStartOrder = () => {
-    router.push('/User/Order/Form');
+    navigateToForm();
     onStartOrder?.();
   };
+
   const handleViewOrders = () => {
     // Navigate to orders list page
-    router.push('/User/Order/orders-list');
+    navigateToOrdersList();
     // Call the original onViewOrders if provided
     onViewOrders?.();
   };
+
   return (
     <>
+     <DropList />
       {/* Main Content Area */}
       <motion.div
         {...welcomePageAnimations.mainContainer}
-        className="flex-1 max-w-4xl mx-auto"
+        className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6"
       >
         {/* Hero Section */}
         <motion.div
@@ -154,4 +162,5 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
     </>
   );
 };
+
 export default WelcomePage; // Export component for use elsewhere
