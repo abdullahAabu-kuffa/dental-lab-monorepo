@@ -1,9 +1,5 @@
 import { FormField } from '../../types';
 import { User, Crown, Zap, Settings, CheckCircle } from '../../utils/UnifiedIcons';
-
-// FormField interface is now imported from the consolidated types file
-
-// Form fields with pricing data
 export const NEW_ORDER_FORM_FIELDS: (FormField & { price?: number })[] = [
   // Basic Information
   {
