@@ -1,71 +1,109 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Logo from '../../molecules/NavMolcules/Logo/Logo';
-import NavLink from '../../molecules/NavMolcules/NavLink/NavLink';
-import Button from '../../atoms/Button/Button';
-import MobileMenu from '../../molecules/NavMolcules/MobileMenu/MobileMenu';
-import { NAV_ITEMS } from '../../../config/navigation';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Menu, X } from '../../../utils/UnifiedIcons';
+import { NAVBAR_CONFIG } from '../../../config/LandingData/navigation';
+import NavMobileMenu from '../../molecules/NavMolcules/MobileMenu/MobileMenu';
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <motion.nav
-      className="sticky top-0 z-50 relative"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-    >
-      {/* Glassmorphism Background */}
-      <motion.div
-        className="absolute inset-0 backdrop-blur-xl bg-white/80 border-b border-white/20"
-        animate={{
-          backdropFilter: scrolled ? "blur(20px)" : "blur(10px)",
-          backgroundColor: scrolled ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.8)",
-        }}
-        transition={{ duration: 0.3 }}
-      />
+    <>
+      {/* Navbar */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-gradient-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl'
+            : 'bg-gradient-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo Section */}
+            <div className="flex-shrink-0">
+              <Link href="/" className="flex items-center gap-3">
+                <img
+                  src={NAVBAR_CONFIG.logo.src}
+                  alt={NAVBAR_CONFIG.logo.alt}
+                  className={`${NAVBAR_CONFIG.logo.width} ${NAVBAR_CONFIG.logo.height} filter brightness-110 contrast-125`}
+                  style={{ filter: 'brightness(1.1) contrast(1.25) drop-shadow(0 0 1px rgba(212, 175, 55, 0.3))' }}
+                />
+              </Link>
+            </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex items-center justify-between h-24">
-          
-          {/* Logo */}
-          <Logo />
-          
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            {NAV_ITEMS.map((item, index) => (
-              <motion.div
-                key={item.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
+              {NAVBAR_CONFIG.links.map((link, index) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    className={`font-semibold text-base transition-all duration-200 relative group ${
+                      isActive
+                        ? 'text-[#FFD700] border-b-2 border-[#E4B441]'
+                        : 'text-[#CABEB2] hover:text-[#FFD700]'
+                    }`}
+                  >
+                    {link.name}
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${
+                      isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Auth Buttons */}
+            <div className="hidden md:flex items-center gap-3">
+              <Link
+                href={NAVBAR_CONFIG.authButtons.login.href}
+                className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
               >
-                <NavLink href={item.href} icon={item.icon}>
-                  {item.label}
-                </NavLink>
-              </motion.div>
-            ))}
+                {NAVBAR_CONFIG.authButtons.login.text}
+              </Link>
+              <Link
+                href={NAVBAR_CONFIG.authButtons.register.href}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
+              >
+                {NAVBAR_CONFIG.authButtons.register.text}
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
-          
-         
-          {/* Mobile Menu */}
-          <MobileMenu />
         </div>
-      </div>
+
+        {/* Mobile Menu */}
+        <NavMobileMenu 
+          isOpen={isMobileMenuOpen} 
+          onClose={() => setIsMobileMenuOpen(false)} 
+        />
+      </nav>
       
-      {/* Underline */}
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#a07916] via-[#E4B441] to-[#a07916] shadow-[0_0_10px_#E4B44180]" />
-    </motion.nav>
+      {/* Spacer for fixed navbar */}
+      <div className="h-20"></div>
+    </>
   );
-}
+};
+
+export default Navbar;

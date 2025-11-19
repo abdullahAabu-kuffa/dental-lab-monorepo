@@ -2,27 +2,42 @@
 
 import { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, LucideIcon } from 'lucide-react';
+import { Menu, X, getIcon } from '../../../../utils/UnifiedIcons';
+import type { LucideIcon } from 'lucide-react';
 import NavLink from '../NavLink/NavLink';
 import Button from '../../../atoms/Button/Button';
-import { NAV_ITEMS } from '../../../../config/navigation';
+import { LEGACY_NAV_ITEMS as NAV_ITEMS } from '../../../../config/LandingData/navigation';
 
 interface MobileMenuProps {
   navItems?: typeof NAV_ITEMS;
+  isOpen?: boolean;
   onClose?: () => void;
 }
 
-const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, onClose }: MobileMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
+const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, isOpen: controlledIsOpen, onClose }: MobileMenuProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  // Use controlled state if provided, otherwise use internal state
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
-    if (onClose && !isOpen) onClose();
+    if (controlledIsOpen !== undefined) {
+      // Controlled mode - parent manages state
+      if (onClose) onClose();
+    } else {
+      // Uncontrolled mode - component manages state
+      setInternalIsOpen(!internalIsOpen);
+    }
   };
 
   const closeMenu = () => {
-    setIsOpen(false);
-    if (onClose) onClose();
+    if (controlledIsOpen !== undefined) {
+      // Controlled mode - parent manages state
+      if (onClose) onClose();
+    } else {
+      // Uncontrolled mode - component manages state
+      setInternalIsOpen(false);
+    }
   };
 
   const handleNavClick = () => {
@@ -96,21 +111,24 @@ const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, onClose }: M
                 {/* Menu Items */}
                 <div className="flex-1 overflow-y-auto p-6">
                   <div className="space-y-2">
-                    {navItems.map((item, index) => (
-                      <motion.div
-                        key={item.href}
-                        initial={{ x: 50, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: 50, opacity: 0 }}
-                        transition={{ delay: index * 0.05, duration: 0.3 }}
-                      >
-                        <div className="transform hover:translate-x-[-4px] transition-transform duration-200" onClick={handleNavClick}>
-                          <NavLink href={item.href} icon={item.icon}>
-                            {item.label}
-                          </NavLink>
-                        </div>
-                      </motion.div>
-                    ))}
+                    {navItems.map((item, index) => {
+                      const IconComponent = getIcon(item.icon) as LucideIcon;
+                      return (
+                        <motion.div
+                          key={item.href}
+                          initial={{ x: 50, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          exit={{ x: 50, opacity: 0 }}
+                          transition={{ delay: index * 0.05, duration: 0.3 }}
+                        >
+                          <div className="transform hover:translate-x-[-4px] transition-transform duration-200" onClick={handleNavClick}>
+                            <NavLink href={item.href} icon={IconComponent}>
+                              {item.label}
+                            </NavLink>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
                 
@@ -121,8 +139,8 @@ const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, onClose }: M
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4, duration: 0.3 }}
                 >
-                  <Button variant="outline" className="w-full" onClick={handleNavClick}>Login</Button>
-                  <Button variant="solid" className="w-full" onClick={handleNavClick}>Get Started</Button>
+                  <Button variant="whiteBlackHover" className="w-full" onClick={handleNavClick}>Login</Button>
+                  <Button variant="primary" className="w-full" onClick={handleNavClick}>Get Started</Button>
                 </motion.div>
               </div>
             </motion.div>

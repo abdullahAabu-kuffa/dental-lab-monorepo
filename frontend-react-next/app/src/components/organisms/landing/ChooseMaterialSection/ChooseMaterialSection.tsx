@@ -1,9 +1,8 @@
 'use client';
 import Button from '../../../atoms/Button/Button';
-import { componentStyles, gradients } from '../../../../../design-system';
+import { HeroHeading,HeroSubtitle ,componentStyles } from '../../../../../design-system';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 export default function ChooseMaterialSection() {
   const router = useRouter();
 
@@ -14,13 +13,17 @@ export default function ChooseMaterialSection() {
           
           {/* Text Content - Left */}
           <div className="text-left space-y-6">
-            <h2 className="text-4xl md:text-5xl font-black leading-tight text-gray-900" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Choose Your Material & <span className="bg-clip-text text-transparent" style={{ backgroundImage: gradients.gold }}>Track Your Order Online</span>
-            </h2>
+            <HeroHeading
+              primaryText="Choose Your Material & "
+              gradientText="Track Your Order Online"
+              variant="black"
+            />
             
-            <p className="text-gray-600 text-lg md:text-xl max-w-2xl lg:mx-0 leading-relaxed font-sans">
-              Upload your <span className="font-bold text-gray-800">ExoCAD file</span>, select your preferred material, shade, and design options – and our lab will start manufacturing instantly. You can follow your order's progress online, step by step.
-            </p>
+            <HeroSubtitle
+              text="Upload your ExoCAD file, select your preferred material, shade, and design options &ndash; and our lab will start manufacturing instantly. You can follow your order's progress online, step by step."
+              variant="black"
+              highlightText="ExoCAD"
+            />
 
             <div className="flex flex-wrap gap-4">
               <Button
@@ -40,7 +43,7 @@ export default function ChooseMaterialSection() {
 
           {/* Image - Right */}
           <div className="relative">
-            <div className="relative w-full max-w-md mx-auto lg:mx-0">
+            <div className="relative w-full max-w-md mx-auto lg:mx-0 lg:ml-16">
               <div className="rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300">
                 <Image
                   src="/2920348.png"

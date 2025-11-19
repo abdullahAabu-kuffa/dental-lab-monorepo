@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface NavLinkProps {
   href: string;
@@ -16,62 +16,37 @@ export default function NavLink({ href, icon: Icon, children }: NavLinkProps) {
   return (
     <motion.a
       href={href}
-      className="relative flex items-center gap-2 text-gray-800 font-medium group px-2 py-1"
+      className="relative flex items-center gap-2 text-gray-800 font-medium group px-2 py-2"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      whileHover={{ 
-        scale: 1.05,
-        z: 50,
-      }}
-      whileTap={{ scale: 0.95 }}
-      style={{ transformStyle: "preserve-3d" }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {/* 3D Background Card */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-[#E4B441]/10 to-[#C39321]/10 rounded-lg -z-10"
-        animate={{
-          scaleY: isHovered ? 1 : 0,
-          opacity: isHovered ? 1 : 0,
-        }}
-        transition={{ duration: 0.2 }}
-        style={{
-          transformOrigin: "top",
+      {/* Icon*/}
+      <Icon 
+        className="w-5 h-5 transition-colors duration-300" 
+        style={{ 
+          color: isHovered ? "#d4a037ff" : "currentColor",
         }}
       />
-
-      {/* Icon with 3D Rotation */}
-      <motion.div
-        animate={{
-          rotateY: isHovered ? 360 : 0,
-          scale: isHovered ? 1.2 : 1,
-        }}
-        transition={{ duration: 0.5 }}
-      >
-        <Icon
-          className="w-5 h-5"
-          style={{
-            color: isHovered ? "#E4B441" : "currentColor",
-            filter: isHovered ? "drop-shadow(0 0 8px rgba(228,180,65,0.6))" : "none"
-          }}
-        />
-      </motion.div>
 
       {/* Text */}
       <motion.span
         animate={{
-          color: isHovered ? "#E4B441" : "#1f2937",
+          color: isHovered ? "#000000" : "#1f2937",
         }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.3 }}
       >
         {children}
       </motion.span>
 
-      {/* Animated Underline */}
+      {/* Animated Underline*/}
       <motion.div
-        className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#E4B441] to-[#C39321]"
-        initial={{ width: 0 }}
-        animate={{ width: isHovered ? "100%" : 0 }}
-        transition={{ duration: 0.3 }}
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#D4AF37] to-[#a07916]"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: isHovered ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        style={{ transformOrigin: "left" }}
       />
     </motion.a>
   );

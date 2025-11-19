@@ -1,25 +1,24 @@
 'use client';
 import React from 'react';
-import EducationalResourceCard from '../../../atoms/EducationalResourceCard';
+import EducationalResourceCard from '../../../atoms/EducationalResourceCard/EducationalResourceCard';
 import Button from '../../../atoms/Button/Button';
-import HeroHeading from '../../../molecules/HeroHeading/HeroHeading';
-import HeroSubtitle from '../../../molecules/HeroSubtitle/HeroSubtitle';
-import { EDUCATIONAL_RESOURCES } from '../../../../config/educational-resources.data';
-import { typography, componentStyles } from '../../../../../design-system';
+import { HeroHeading ,componentStyles ,HeroSubtitle} from '../../../../../design-system';
+import { EDUCATIONAL_RESOURCES } from '../../../../config/LandingData/educational-resources.data';
 
 const EducationalResourcesSection: React.FC = () => {
   return (
-    <section className={`${componentStyles.background.sectionWhite} ${componentStyles.layout.spacingSection}`}>
+    <section className={`bg-white ${componentStyles.layout.spacingSection}`}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
           <HeroHeading
             primaryText=""
             gradientText="Educational Resources"
-            gradientColors="linear-gradient(to right, #4A90E2, #357ABD, #2E5B8C)"
+            variant="black"
           />
           <HeroSubtitle
             text="Stay ahead with our comprehensive guides and learning materials"
+            variant="black"
           />
         </div>
         
@@ -45,3 +44,4 @@ const EducationalResourcesSection: React.FC = () => {
 };
 
 export default EducationalResourcesSection;
+
