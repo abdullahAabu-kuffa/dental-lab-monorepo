@@ -122,7 +122,13 @@ const OrderModal = ({ selectedOrder, setSelectedOrder }: OrderModalProps) => {
             </button>
 
             <Link
-              href={`/dashboard/${selectedOrder.id}`}
+              href={
+                {
+                  pathname: `/dashboard/${selectedOrder.id}`, query: {
+                    // i want to pass the whole order object to the page
+                    order: JSON.stringify(selectedOrder)
+                }}
+              }
               onClick={() => setSelectedOrder(null)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >

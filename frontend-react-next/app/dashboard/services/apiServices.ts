@@ -1,7 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL = 'http://192.168.1.12:3001/api';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1NjM2NjQsImV4cCI6MTc2MzY1MDA2NH0.Iuu_f9jLfxGS05CYPbEmnLb-xTuDwiwsleaDWUXGyUU';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM2NzI4MjksImV4cCI6MTc2Mzc1OTIyOX0.MTPIqsoF7CDPGikFURnxZpbvQCpwim8yltSue8WzoNU';
 
 export const changeUserStatus = async (userId: number, action: "approve" | "reject") => {
     const res = await axios.put(`/admin/users/${userId}/status?action=${action}`, {

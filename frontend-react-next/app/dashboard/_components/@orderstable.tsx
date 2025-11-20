@@ -4,11 +4,12 @@ import { Search, View } from "lucide-react";
 import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
 import OrderModal from "./@ordermodal";
-import Spinner from "./@spinner";
 import { ApiOrder, Order } from "../interfaces/orders";
 import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
+import { Pagination } from "./@pagination";
+import Loading from "./@loading";
 
 const ACTION_MAP: Record<string, "COMPLETED" | "CANCELLED"> = {
   approve: "COMPLETED",
@@ -39,10 +40,11 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
   const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const { data, isLoading, error, isError } = useGetAllOrders(currentPage);
   const pages = data?.data?.totalPages || 1;
+  const apiOrders = data?.data?.orders ?? [];
   if (isLoading) {
     return (
       <div className="flex justify-center">
-        <Spinner />
+        <Loading/>
       </div>
     );
   }
@@ -55,7 +57,6 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
     );
   }
 
-  const apiOrders = data.data.orders ?? [];
 
   const mappedOrders: Order[] = (apiOrders as ApiOrder[]).map((o) => ({
     id: String(o.id),
@@ -77,7 +78,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
   }));
 
   const filteredOrders = mappedOrders.filter((order) => {
-    const matchSearch = order.user.fullName
+    const matchSearch = order?.user?.fullName
       .toLowerCase()
       .includes(search.toLowerCase());
     const matchFilter = filter === "All" || order.status === filter;
@@ -93,7 +94,7 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
         <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
         <input
           type="text"
-          placeholder="Search by Order Type..."
+          placeholder="Search by Customer Name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
@@ -209,27 +210,12 @@ const OrdersTable = ({ overview }: { overview?: boolean }) => {
         </table>
 
         {/* Pagination */}
-        <div className="flex items-center justify-end gap-2 mt-4 mr-2 mb-4">
-          <button
-            onClick={goPrevious}
-            disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40 border-yellow-200 border-2"
-          >
-            Previous
-          </button>
-
-          <span className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-yellow-200 hover:text-white">
-            {currentPage}
-          </span>
-
-          <button
-            onClick={goNext}
-            disabled={currentPage === pages}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-40 border-yellow-200 border-2"
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          page={currentPage}
+          totalPages={pages}
+          onPrevious={goPrevious}
+          onNext={goNext}
+        />
       </div>
 
       {/* Modal */}

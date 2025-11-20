@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SwitchButton from "../_components/@switchBtn";
 import { Upload } from "lucide-react";
 import { useGetProfileInfo } from "../services/hookes/get_profile_info";
+import Loading from "../_components/@loading";
 export default function AccountPage() {
   const [isEmailOn, setIsEmailOn] = useState(false);
   const [isThemeOn, setIsThemeOn] = useState(false);
@@ -11,8 +12,13 @@ export default function AccountPage() {
   const [profileImage, setProfileImage] = useState(
     "https://cdn.vectorstock.com/i/1000v/29/52/faceless-male-avatar-in-hoodie-vector-56412952.avif"
   );
-  const { data } = useGetProfileInfo();
-  console.log(data.data.user);
+  const { data, isLoading, isError } = useGetProfileInfo();
+    useEffect(() => {
+      if (data) {
+        if (data?.data?.user?.role !== "ADMIN") window.location.href = "/User";
+      }
+    }, [data]);
+  // console.log(data.data.user);
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -20,13 +26,13 @@ export default function AccountPage() {
       setProfileImage(imageUrl);
     }
   };
-  const user = data.data.user;
+  
   const [info, setInfo] = useState({
-    fullName: user.fullName,
-    email: user.email,
-    phoneNumber: user.phoneNumber,
-    city: user.clinicAddress,
-    professionalLicenseNumber: user.clinicName,
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    city: "",
+    clinicName: "",
     password: "",
     newPassword: "",
     confirmPassword: "",
@@ -61,7 +67,7 @@ export default function AccountPage() {
     email: "",
     phoneNumber: "",
     city: "",
-    professionalLicenseNumber: "",
+    clinicName: "",
   });
   const handleBasicSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,7 +90,7 @@ export default function AccountPage() {
         ? "please enter a valid phone number"
         : "",
       city: !info.city ? "City is required" : "",
-      professionalLicenseNumber: !info.professionalLicenseNumber
+      clinicName: !info.clinicName
         ? "Professional License Number is required"
         : "",
     });
@@ -93,13 +99,39 @@ export default function AccountPage() {
     "!border-red-500 focus:!border-red-500 hover:!border-red-500 focus:!ring-red-500";
   const successStyle =
     "border-[#6B7280] focus:border-blue-500 focus:ring-blue-500 hover:border-[#6B7280]";
+  if (!isLoading && data?.data?.user) {
+    const user = data.data.user;
+    if (info.fullName === "" && user.fullName) {
+      setInfo({
+        fullName: user.fullName ?? "",
+        email: user.email ?? "",
+        phoneNumber: user.phoneNumber ?? "",
+        city: user.clinicAddress ?? "",
+        clinicName: user.clinicName ?? "",
+        password: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    }
+
+  }
+   if (isLoading) {
+     return <div>
+        <div className="flex items-center justify-center py-10">
+            <Loading/>
+        </div>
+     </div>;
+   }
+   if (isError || !data?.data?.user) {
+     return <div>Error loading profile</div>;
+   }
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-5xl mx-auto space-y-10">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-blue-700">
-            My Home - Manage Your Account Details
+            Manage Your Account Details
           </h1>
           <p className="text-gray-600 text-sm">
             Update, delete, change your password and manage preferences.
@@ -124,8 +156,8 @@ export default function AccountPage() {
                   />
                 </div>
                 <div className="flex flex-col items-start ml-4 space-y-2">
-                  <p className="text-sm font-medium">{user.fullName}</p>
-                  <span className="text-xs text-gray-500">{user.email}</span>
+                  <p className="text-sm font-medium">{info?.fullName}</p>
+                  <span className="text-xs text-gray-500">{info?.email}</span>
                   <label
                     htmlFor="photo"
                     className="text-sm text-black bg-[#e3e7e8] hover:bg-[#bfc4c5] px-3 py-2 rounded-md flex border-3 border-[#CDD8EA]"
@@ -222,7 +254,7 @@ export default function AccountPage() {
                 </div>
                 <div className="flex flex-col space-y-1">
                   <label htmlFor="city" className="text-stone-400">
-                    City
+                    Address
                   </label>
                   <input
                     type="text"
@@ -246,25 +278,25 @@ export default function AccountPage() {
                 </div>
                 <div className="flex flex-col space-y-1">
                   <label htmlFor="license" className="text-stone-400">
-                    Professional License Number
+                    Clinic Name
                   </label>
                   <input
                     type="text"
                     placeholder="EN12345678"
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm 
-  ${basicErrors.professionalLicenseNumber ? errorStyle : successStyle}
+  ${basicErrors.clinicName ? errorStyle : successStyle}
 `}
-                    value={info.professionalLicenseNumber}
+                    value={info.clinicName}
                     onChange={(e) => {
                       setInfo({
                         ...info,
-                        professionalLicenseNumber: e.target.value,
+                        clinicName: e.target.value,
                       });
                     }}
                   />
-                  {basicErrors.professionalLicenseNumber && (
+                  {basicErrors.clinicName && (
                     <p className="text-red-500 text-xs mt-1">
-                      {basicErrors.professionalLicenseNumber}
+                      {basicErrors.clinicName}
                     </p>
                   )}
                 </div>

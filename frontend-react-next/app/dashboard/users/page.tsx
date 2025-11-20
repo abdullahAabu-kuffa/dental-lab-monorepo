@@ -5,15 +5,16 @@ import StatsCard from "../_components/@statecard";
 import { MdDone } from "react-icons/md";
 import UsersTable from "../_components/@userstable";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FetchUsersResponse, Pagination, User } from "../interfaces/users";
 import { Pagination as PaginationUsers } from "../_components/@pagination";
 import Loading from "../_components/@loading";
 import ErrorMessage, { getUserFriendlyError } from "../_components/@displayerrors";
+import { useGetProfileInfo } from "../services/hookes/get_profile_info";
 
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1NjM2NjQsImV4cCI6MTc2MzY1MDA2NH0.Iuu_f9jLfxGS05CYPbEmnLb-xTuDwiwsleaDWUXGyUU";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM2NjU4NTUsImV4cCI6MTc2Mzc1MjI1NX0.J6Cl01QDIl7R4n24Uw3WcYG-o1W0OxaPVDWTr9gx_B0";
 const fetchUsers = async (page: number, limit: number): Promise<FetchUsersResponse> => {
   const response = await axios.get<FetchUsersResponse>(
     `http://192.168.1.12:3001/api/users`,
@@ -28,6 +29,13 @@ const fetchUsers = async (page: number, limit: number): Promise<FetchUsersRespon
 };
 
 const usersList = () => {
+  // check if the user is not authorized
+  const { data: me } = useGetProfileInfo();
+    useEffect(() => {
+      if (me) {
+        if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
+      }
+    }, [me]);
   const [page, setPage] = useState(1);
   const limit = 10;
 
