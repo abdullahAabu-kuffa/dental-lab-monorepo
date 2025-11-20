@@ -38,7 +38,7 @@ async function refreshAccessToken() {
 }
 
 export async function apiFetch(path: string, options: ApiOption = {}) {
-    const url = `${API_URL}${path}`;
+    const url = `http://localhost:3001${path}`;
     const token = getToken();
 
     const res = await fetch(url, {

@@ -17,6 +17,7 @@ import {
 import { Order } from '../../../src/types';
 import { useRouter } from 'next/navigation';
 import { useOrders } from './quere';
+import toast from 'react-hot-toast';
 
 export default function OrdersListPage() {
   const router = useRouter();

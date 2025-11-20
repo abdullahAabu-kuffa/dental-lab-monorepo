@@ -2,11 +2,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 const Token = process.env.TOKEN;
 export async function fetchOrders() {
+    const Token = localStorage.getItem("accessToken");
   const res = await fetch("http://localhost:3001/api/orders", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1Njk2NTYsImV4cCI6MTc2MzU3Njg1Nn0.06xX9ZKe7kc7fTSu9UhGGJfLFYLrVgix7eEozGP3XYg`
+      "Authorization": `Bearer ${Token}`
     },
   });
   if (!res.ok) {
