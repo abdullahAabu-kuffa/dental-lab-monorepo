@@ -6,13 +6,11 @@ import { PlusCircle } from "lucide-react";
 import { calculateStatusCounts, SAMPLE_ORDERS } from "../../../../src/config/UserData/orderDataService";
 import { Order } from "../../../../src/types";
 import { componentStyles } from "../../../../design-system/components";
-
 interface StatusIconsProps {
   onNewOrder?: () => void;
   onShowStatusOrders?: (status: string) => void;
   orders?: Order[]; // Allow passing orders to calculate dynamic counts
 }
-
 export const StatusIcons: React.FC<StatusIconsProps> = ({
   onNewOrder,
   onShowStatusOrders,
@@ -20,12 +18,9 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
 }) => {
   // Calculate dynamic status counts based on actual orders
   const statusItemsWithCounts = calculateStatusCounts(orders);
-
   return (
     <motion.div className={componentStyles.statusIcons.container}>
-     
-
-      {/* Status Icons with Dynamic Counts - Enhanced Circular */}
+     {/* Status Icons with Dynamic Counts - Enhanced Circular */}
       {statusItemsWithCounts.map((item) => (
         <motion.button
           key={item.id}

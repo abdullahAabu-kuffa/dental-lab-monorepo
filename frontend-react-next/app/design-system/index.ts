@@ -13,8 +13,6 @@ export {
 export { gradients } from './gradients';
 export { colors } from './colors';
 
-
-
 export { HeroSubtitle } from './components/HeroSubtitle';
 export { HeroHeading } from './components/HeroHeading';
 export { default as ScrollAnimation, StaggeredAnimation } from './components/ScrollAnimation';

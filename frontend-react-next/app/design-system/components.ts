@@ -120,6 +120,16 @@ export const componentStyles = {
       hover:scale-105
       backdrop-blur-sm
     `,
+
+    // Event Button - Purple styling
+    eventButton: `
+      relative w-12 h-12 rounded-full flex items-center justify-center
+      border-2 border-white/30 overflow-visible group cursor-pointer
+      bg-gradient-to-br from-purple-500 to-purple-600
+      transition-all duration-200 ease-out
+      hover:scale-105
+      backdrop-blur-sm
+    `,
     
     counterBadge: `
       absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-rose-500 to-pink-600
