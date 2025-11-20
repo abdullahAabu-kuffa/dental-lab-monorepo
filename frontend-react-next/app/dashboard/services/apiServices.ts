@@ -2,7 +2,7 @@ import axios from "axios";
 import { FetchUsersResponse } from "../interfaces/users";
 import { getToken } from "@/app/src/lib/apiClient";
 
-axios.defaults.baseURL = 'http://192.168.11.174:3001/api';
+axios.defaults.baseURL = 'http://localhost:3001/api';
 const token = getToken() || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM2NzI4MjksImV4cCI6MTc2Mzc1OTIyOX0.MTPIqsoF7CDPGikFURnxZpbvQCpwim8yltSue8WzoNU";
 console.log(token);
 
