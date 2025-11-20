@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     let data: unknown;
     try {
         data = await req.json();
+        console.log("login data = ", data)
     } catch {
         return NextResponse.json(
             { error: "invalid JSON body" },
