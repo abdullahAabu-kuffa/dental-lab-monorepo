@@ -5,45 +5,36 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Bell,
-  DollarSign,
-  Info,
-  Mail,
   Settings,
-  ShoppingBag,
   Users,
   Menu,
   XIcon,
   ListOrdered,
-  LayoutDashboard
+  LayoutDashboard,
+  CalendarDaysIcon
 } from "lucide-react";
 
 const ICONS = {
   LayoutDashboard,
-  DollarSign,
   Settings,
-  ShoppingBag,
   Users,
-  Mail,
+  CalendarDaysIcon,
   Bell,
-  Info,
   ListOrdered,
 };
 
 const links = [
   { name: "Dashboard", to: "/dashboard", icon: "LayoutDashboard" },
-  { name: "Sales", to: "/dashboard/sales", icon: "DollarSign" },
-  { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
-  { name: "Products", to: "/dashboard/products", icon: "ShoppingBag" },
   { name: "Users", to: "/dashboard/users", icon: "Users" },
-  { name: "Messages", to: "/dashboard/messages", icon: "Mail" },
+  { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
+  { name: "Events", to: "/dashboard/events", icon: "CalendarDaysIcon" },
   { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
-  { name: "About", to: "/dashboard/about", icon: "Info" },
   { name: "Settings", to: "/dashboard/settings", icon: "Settings" },
 ];
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex">
@@ -51,7 +42,9 @@ const Sidebar = () => {
       <motion.div
         animate={{ width: isOpen ? 240 : 70 }}
         transition={{ duration: 0.01 }}
-        className="flex flex-col min-h-screen bg-gray-900 text-white shadow-lg transition-all duration-300"
+        className={`flex flex-col min-h-screen bg-gray-900 text-white shadow-lg transition-all duration-300 ${
+          isOpen ? "z-50" : ""
+        }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
@@ -76,7 +69,7 @@ const Sidebar = () => {
                 href={link.to}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "bg-gradient-to-r from-[#a07916] via-[#E4B441] to-[#a07916] shadow-[0_0_10px_#E4B44180]"
+                    ? "bg-linear-to-r from-[#a07916] via-[#E4B441] to-[#a07916] shadow-[0_0_10px_#E4B44180]"
                     : "text-gray-300 hover:bg-gray-800 hover:text-white"
                 }`}
               >
