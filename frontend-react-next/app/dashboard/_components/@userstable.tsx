@@ -6,6 +6,7 @@ import { User } from "../interfaces/users";
 import UserDetails from "./@userdetails";
 import ConfirmModal from "./@confirmmodel";
 import { useChangeUserStatus } from "../services/hookes/change_user_status";
+import ErrorMessage from "./@displayerrors";
 
 
 const statusColors = {
@@ -22,13 +23,13 @@ interface UsersTableProps {
 
 
 const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
-  const { mutate, isPending, isSuccess, isError, error } = useChangeUserStatus ();
+  const { mutate, isPending, isSuccess, isError, error } = useChangeUserStatus();
   const [userId, setUserId] = useState(1);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [showModal, setShowModal] = useState(false);  
+  const [showModal, setShowModal] = useState(false);
 
   const filteredusers = Array.isArray(users)
     ? users.filter((user) => {
@@ -39,7 +40,28 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
       return matchSearch && matchFilter;
     }) : [];
 
+  const handleApproveUser = () => {
+    mutate({ userId, action: "approve" }, {
+      onSuccess: () => {
+        setShowModal(false); // Close modal on success
 
+      },
+      onError: (error) => {
+        <ErrorMessage message={error.message} />
+      },
+    });
+  };
+  const getModalMessage = () => {
+    if (isPending) {
+      return "Approving user... Please wait.";
+    } else if (isSuccess) {
+      return "User has been successfully approved!";
+    } else if (isError) {
+      return `Error: ${error?.message || "Something went wrong!"}`;
+    } else {
+      return "Do you want to approve this user?";
+    }
+  };
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm mx-6 mb-6">
       <h2 className="text-lg font-semibold mb-4">All Users</h2>
@@ -77,6 +99,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
         <table className="min-w-full text-sm">
           <thead className="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
             <tr>
+              <th className="text-left px-4 py-3">Id</th>
               <th className="text-left px-4 py-3">Full Name</th>
               <th className="text-left px-4 py-3">Email</th>
               <th className="text-left px-4 py-3">Role</th>
@@ -93,6 +116,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                 className={`border-t border-gray-100 hover:bg-gray-200 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   }`}
               >
+                <td className="px-4 py-3 text-gray-600">{user.id}</td>
                 <td className="px-4 py-3 font-semibold text-gray-800">
                   {user.fullName}
                 </td>
@@ -106,7 +130,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                     {user.isActive ? "Approved" : "Pending"}
                   </span>
                 </td>
-                <td className="px-4 py-3">{user.createdAt}</td>
+                <td className="px-4 py-3">{(new Date(user.createdAt)).toLocaleDateString()}</td>
                 <td className="px-4 py-3 flex gap-1 text-center">
                   {!user.isActive && (
                     <>
@@ -148,18 +172,19 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
               </tr>
 
             )}
-            {selectedUser && (
-              <UserDetails user={selectedUser} onClose={() => setSelectedUser(null)} />
-            )}
-            {showModal && (
-              <ConfirmModal
-                onConfirm={() => mutate({userId: userId, action: "approve" })}
-                onCancel={() => setShowModal(false)}
-                message="Do you want to approve this user?"
-              />
-            )}
           </tbody>
         </table>
+        {selectedUser && (
+          <UserDetails user={selectedUser} onClose={() => setSelectedUser(null)} />
+        )}
+        {showModal && (
+          <ConfirmModal
+            onConfirm={handleApproveUser}
+            onCancel={() => setShowModal(false)}
+            message={getModalMessage()}
+            isLoading={isPending} // Optionally, pass a loading state to disable the confirm button
+          />
+        )}
       </div>
 
     </div>

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import { motionVariants } from "@/app/design-system/";
 import { apiFetch } from "@/app/src/lib/apiClient";
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
@@ -106,7 +105,7 @@ export default function LoginPage() {
 
 			switch (role) {
 				case "ADMIN":
-					router.push("/dashboard/admin");
+					router.push("/dashboard");
 					break;
 				case "CLIENT":
 					router.push("/");
