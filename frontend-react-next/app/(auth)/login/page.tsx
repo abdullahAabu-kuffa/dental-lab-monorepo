@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import { motionVariants } from "@/app/design-system/";
-
+import { apiFetch } from "@/app/src/lib/apiClient";
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
 
@@ -88,8 +87,30 @@ export default function LoginPage() {
 				setGlowActive(false);
 				return;
 			}
+			const data = await res.json();
+			localStorage.setItem("accessToken", data.data.accessToken);
+			const meRes = await apiFetch("/api/users/me", {
+				headers: {
+					Authorization: `Bearer ${data.data.accessToken}`,
+				},
+			});
 
-			router.push("/dashboard");
+			if (!meRes.ok) {
+				setErrorMessage("Failed to fetch user info");
+				return;
+			}
+
+			const meData = await meRes.json();
+			const role = meData?.data?.user?.role;
+
+			switch (role) {
+				case "ADMIN":
+					router.push("/dashboard");
+					break;
+				case "CLIENT":
+					router.push("/");
+					break;
+			}
 		} catch {
 			setErrorMessage("Something went wrong. Try again.");
 		} finally {

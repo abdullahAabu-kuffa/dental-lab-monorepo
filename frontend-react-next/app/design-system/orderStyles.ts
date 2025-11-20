@@ -4,9 +4,9 @@
 export const ORDER_COLORS = {
   // Status colors
   completed: {
-    bg: 'bg-green-500',
+    bg: 'bg-green-800',
     text: 'text-white',
-    border: 'border-green-500',
+    border: 'border-green-800',
     light: 'bg-green-100',
     darkText: 'text-green-700'
   },
@@ -54,7 +54,7 @@ export const CARD_STYLES = {
   base: 'rounded-xl p-4 transition-all',
   hover: 'hover:shadow-md cursor-pointer',
   selected: 'border-2 border-blue-500 shadow-lg',
-  unselected: 'border-2 border-transparent'
+  unselected: 'shadow-sm'
 } as const;
 
 // Typography styles
