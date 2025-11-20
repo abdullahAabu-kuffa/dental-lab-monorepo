@@ -44,3 +44,16 @@ export const changeOrderStatus = async (orderId: number, action: "PENDING" | "IN
    const json = await res.json();
    return json;
 };
+
+// get me info
+export const getMe = async () => {
+  const res = await fetch(`http://localhost:3001/api/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const json = await res.json();
+  return json;
+};

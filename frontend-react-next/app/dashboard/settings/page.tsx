@@ -2,6 +2,7 @@
 import { useState } from "react";
 import SwitchButton from "../_components/@switchBtn";
 import { Upload } from "lucide-react";
+import { useGetProfileInfo } from "../services/hookes/get_profile_info";
 export default function AccountPage() {
   const [isEmailOn, setIsEmailOn] = useState(false);
   const [isThemeOn, setIsThemeOn] = useState(false);
@@ -10,6 +11,8 @@ export default function AccountPage() {
   const [profileImage, setProfileImage] = useState(
     "https://cdn.vectorstock.com/i/1000v/29/52/faceless-male-avatar-in-hoodie-vector-56412952.avif"
   );
+  const { data } = useGetProfileInfo();
+  console.log(data.data.user);
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -17,12 +20,13 @@ export default function AccountPage() {
       setProfileImage(imageUrl);
     }
   };
+  const user = data.data.user;
   const [info, setInfo] = useState({
-    fullName: "",
-    email: "",
-    phoneNumber: "",
-    city: "",
-    professionalLicenseNumber: "",
+    fullName: user.fullName,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    city: user.clinicAddress,
+    professionalLicenseNumber: user.clinicName,
     password: "",
     newPassword: "",
     confirmPassword: "",
@@ -120,8 +124,8 @@ export default function AccountPage() {
                   />
                 </div>
                 <div className="flex flex-col items-start ml-4 space-y-2">
-                  <p className="text-sm font-medium">Dr. Ahmed Hassan</p>
-                  <span className="text-xs text-gray-500">Prosthodontist</span>
+                  <p className="text-sm font-medium">{user.fullName}</p>
+                  <span className="text-xs text-gray-500">{user.email}</span>
                   <label
                     htmlFor="photo"
                     className="text-sm text-black bg-[#e3e7e8] hover:bg-[#bfc4c5] px-3 py-2 rounded-md flex border-3 border-[#CDD8EA]"
