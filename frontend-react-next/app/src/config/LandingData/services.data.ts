@@ -3,6 +3,7 @@ import { Crown, Zap, Smile, Microscope } from '../../utils/UnifiedIcons';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
+  iconType: string;
   id: string;
   title: string;
   description: string;
@@ -26,7 +27,8 @@ export const SERVICES: Service[] = [
       'Custom design',
       'Precision fit',
       'Natural aesthetics'
-    ]
+    ],
+    iconType: ''
   },
   {
     id: '2',
@@ -40,7 +42,8 @@ export const SERVICES: Service[] = [
       'Advanced materials',
       'Perfect integration',
       'Long-lasting results'
-    ]
+    ],
+    iconType: ''
   },
   {
     id: '3',
@@ -54,7 +57,8 @@ export const SERVICES: Service[] = [
       'Minimal preparation',
       'Stunning results',
       'Durable materials'
-    ]
+    ],
+    iconType: ''
   },
   {
     id: '4',
@@ -68,6 +72,7 @@ export const SERVICES: Service[] = [
       '3D precision',
       'Predictable results',
       'Advanced technology'
-    ]
+    ],
+    iconType: ''
   }
 ];
