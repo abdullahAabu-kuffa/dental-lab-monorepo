@@ -7,7 +7,7 @@ import {
   Search,
   Package,
 } from "lucide-react";
-import { STATUS_ITEMS } from '../../../src/config/UserData/statusData';
+import { STATUS_ITEMS } from '../../../src/config/UserData/orderDataService';
 
 interface SidebarIconsProps {
   onNewOrder?: () => void;

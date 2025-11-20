@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+const HostIP = process.env.auth_local_ip;
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
     const refreshToken = req.cookies.get("refreshToken")?.value;
 
     if (!refreshToken) {
+        try {
+            fetch(`${HostIP}/users/me`)
+        } catch {
+
+        }
         return NextResponse.redirect(new URL("/", req.url));
     }
 

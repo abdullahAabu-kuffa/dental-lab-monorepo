@@ -2,7 +2,7 @@
 import ProcessStep from '../../../atoms/ProcessStep/ProcessStep';
 import Button from '../../../atoms/Button/Button';
 import { HeroHeading , HeroSubtitle, componentStyles, gradients  } from '../../../../../design-system';
-import { USER_PROCESS_STEPS } from '../../../../config/UserData/UserProcessSteps';
+import { USER_PROCESS_STEPS } from '../../../../config/UserData/orderDataService';
 
 export default function ManufacturingProcessSection() {
   return (
