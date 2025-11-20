@@ -5,6 +5,7 @@ import { Smile, CheckCircle } from '../../../../utils/UnifiedIcons';
 import StatCard from '../../../atoms/StatCard/StatCard';
 import Button from '../../../atoms/Button/Button';
 import { HeroHeading ,HeroSubtitle } from '../../../../../design-system';
+import ScrollAnimation from '../../../../../design-system/components/ScrollAnimation';
 import DentalBackground from '../../../atoms/MedicalBackground/MedicalBackgroundLight';
 
 import { STATS } from '../../../../config/LandingData/OurAchievements';
@@ -18,7 +19,10 @@ const StatsSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Section Title */}
-        <div className="text-center mb-20">
+        <ScrollAnimation
+          animation="fadeInFromLeft"
+          className="text-center mb-20"
+        >
           <HeroHeading
             primaryText="Our "
             gradientText="Achievements"
@@ -28,17 +32,27 @@ const StatsSection: React.FC = () => {
             text="Numbers that reflect our dedication and success in digital dentistry."
             variant="white"
           />
-        </div>
+        </ScrollAnimation>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center mb-16">
           {STATS.map((stat, index) => (
-            <StatCard key={index} stat={stat} index={index} />
+            <ScrollAnimation
+              key={index}
+              animation="scaleAndFadeIn"
+              delay={0.3 + (index * 0.1)}
+            >
+              <StatCard stat={stat} index={index} />
+            </ScrollAnimation>
           ))}
         </div>
 
         {/* CTA Section */}
-        <div className="text-center">
+        <ScrollAnimation
+          animation="fadeInFromBottom"
+          delay={0.6}
+          className="text-center"
+        >
           <p className="text-white text-2xl font-semibold mb-6 flex items-center justify-center gap-3">
             <CheckCircle className="w-8 h-8 text-[#D4AF37]" />
             Ready to Go Digital?
@@ -49,7 +63,7 @@ const StatsSection: React.FC = () => {
               Start Your Digital Journey
             </Button>
           </Link>
-        </div>
+        </ScrollAnimation>
       </div>
     </section>
   );

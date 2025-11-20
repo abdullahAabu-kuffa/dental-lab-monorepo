@@ -1,5 +1,5 @@
 // Services configuration
-import { Crown, Zap, Smile, Microscope } from '../../utils/UnifiedIcons';
+import { Crown, Activity, Smile, Microscope } from '../../utils/UnifiedIcons';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
@@ -36,7 +36,7 @@ export const SERVICES: Service[] = [
     description: 'Custom abutments and crowns designed for optimal implant integration',
     icon: {
       name: 'tooth',
-      component: Zap
+      component: Activity
     },
     features: [
       'Advanced materials',

@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Image from 'next/image';
-import { animations, hoverEffects, tapEffects } from '../../../../../design-system/animations';
+import { animations, hoverEffects, tapEffects } from '../../../../../design-system';
 
 export default function Logo() {
   const [isHovered, setIsHovered] = useState(false);
@@ -15,7 +15,7 @@ export default function Logo() {
       onHoverEnd={() => setIsHovered(false)}
       whileHover={hoverEffects.scaleSmall}
       whileTap={tapEffects.scaleSmall}
-      transition={animations.spring.default}
+      transition={animations.spring}
     >
       {/* Logo Image with Smooth 3D Effect */}
       <motion.div
