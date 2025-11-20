@@ -9,7 +9,6 @@ export const useChangeUserStatus  = () => {
             changeUserStatus(userId, action),
 
         onSuccess: () => {
-            // refresh user list
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
     });

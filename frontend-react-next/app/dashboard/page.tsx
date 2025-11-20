@@ -1,10 +1,18 @@
-import React from "react";
-import { Users,ShoppingCart,Clock,DollarSign } from "lucide-react";
+"use client";
+import React, { useEffect } from "react";
+import { Users, ShoppingCart, Clock, DollarSign } from "lucide-react";
 import StatsCard from "./_components/@statecard";
 import Link from "next/link";
 import OrdersTable from "./_components/@orderstable";
+import { useGetProfileInfo } from "./services/hookes/get_profile_info";
 
-const dashboard = () => {
+const Dashboard = () => {
+  const { data: me } = useGetProfileInfo();
+  useEffect(() => {
+    if (me) {
+      if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
+    }
+  }, [me]);
   return (
     <div className="bg-[F5F7FA]">
       <div className="p-6">
@@ -13,46 +21,45 @@ const dashboard = () => {
           Monitor system performance and key metrics
         </p>
         <div>
-          
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mx-6">
-              <Link href="/dashboard/users">
-                <StatsCard
-                  title="Total Users"
-                  value={2847}
-                  growth="+12% this month"
-                  icon={<Users size={24} />}
-                  fromColor="from-blue-500"
-                  toColor="to-blue-600"
-                />
-              </Link>
-              <Link href="/dashboard/orders">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mx-6">
+            <Link href="/dashboard/users">
+              <StatsCard
+                title="Total Users"
+                value={2847}
+                growth="+12% this month"
+                icon={<Users size={24} />}
+                fromColor="from-blue-500"
+                toColor="to-blue-600"
+              />
+            </Link>
+            <Link href="/dashboard/orders">
               <StatsCard
                 title="Total Orders"
-                value={156}
+                value={2847}
                 growth="+8% this month"
                 icon={<ShoppingCart size={24} />}
                 fromColor="from-green-500"
                 toColor="to-green-600"
               />
-              </Link>
-              <StatsCard
-                title="Pending Approvals"
-                value={23}
-                growth="Requires attention"
-                icon={<Clock size={24} />}
-                fromColor="from-red-500"
-                toColor="to-red-600"
-              />
-              <StatsCard
-                title="Total Revenue"
-                value={48562}
-                growth="+15% this month"
-                icon={<DollarSign size={24} />}
-                fromColor="from-yellow-500"
-                toColor="to-yellow-600"
-              />
-            </div>
+            </Link>
+            <StatsCard
+              title="Pending Approvals"
+              value={23}
+              growth="Requires attention"
+              icon={<Clock size={24} />}
+              fromColor="from-red-500"
+              toColor="to-red-600"
+            />
+            <StatsCard
+              title="Total Revenue"
+              value={48562}
+              growth="+15% this month"
+              icon={<DollarSign size={24} />}
+              fromColor="from-yellow-500"
+              toColor="to-yellow-600"
+            />
           </div>
+        </div>
       </div>
       <div className="mt-5 mx-6">
         <OrdersTable overview={true} />
@@ -61,4 +68,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;

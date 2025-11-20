@@ -1,18 +1,10 @@
 import axios from "axios";
+import { FetchUsersResponse } from "../interfaces/users";
+import { getToken } from "@/app/src/lib/apiClient";
 
-axios.defaults.baseURL = 'http://192.168.1.12:3001/api';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM1NjM2NjQsImV4cCI6MTc2MzY1MDA2NH0.Iuu_f9jLfxGS05CYPbEmnLb-xTuDwiwsleaDWUXGyUU';
-
-export const changeUserStatus = async (userId: number, action: "approve" | "reject") => {
-    const res = await axios.put(`/admin/users/${userId}/status?action=${action}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    console.log(res.data);
-    return res.data;
-};
-
+axios.defaults.baseURL = 'http://localhost:3001/api';
+const token = getToken() || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM2NzI4MjksImV4cCI6MTc2Mzc1OTIyOX0.MTPIqsoF7CDPGikFURnxZpbvQCpwim8yltSue8WzoNU";
+console.log(token);
 
 // this fuction fetches all orders
 export const getAllOrders = async ( { page }: { page: number}) => {
@@ -56,4 +48,33 @@ export const getMe = async () => {
   });
   const json = await res.json();
   return json;
+}
+
+export const changeUserStatus = async (userId: number, action: "approve" | "reject") => {
+  const res = await axios.put(
+    `/users/${userId}/status`,
+    {}, // empty body
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        action,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+
+export const fetchUsers = async (page: number, limit: number): Promise<FetchUsersResponse> => {
+  const response = await axios.get<FetchUsersResponse>(`/users`, {
+    params: { page, limit },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+  });
+  return response.data;
 };
