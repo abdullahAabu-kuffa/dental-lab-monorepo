@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 interface PaymentSummaryProps {
   title?: string;
@@ -39,17 +38,9 @@ export default function PaymentSummary({
       transition={{ delay: 0.2 }}
       className="bg-white rounded-xl shadow-lg border border-gray-200 p-6"
     >
-      {/* Logo at the top */}
-      <div className="flex justify-center mb-6">
-        <Image
-          src="/avante-logo-black.png"
-          alt="Avanté Logo"
-          width={180}
-          height={60}
-          className="h-auto w-auto object-contain"
-          priority
-        />
-      </div>
+   
+     
+      
 
       {/* Header */}
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">

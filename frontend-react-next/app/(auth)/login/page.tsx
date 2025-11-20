@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import { motionVariants } from "@/app/design-system/";
+import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import { apiFetch } from "@/app/src/lib/apiClient";
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
@@ -124,9 +123,10 @@ export default function LoginPage() {
 		<div className="min-h-[90] flex flex-col lg:flex-row items-center justify-center bg-[#FDFBF7] p-8">
 			<GoldenGlow isActive={glowActive} intensity="medium" />
 
-			<motion.div
+			<ScrollAnimation 
+				animation="fadeInFromLeft"
+				delay={0.2}
 				className="w-full max-w-md bg-white p-12 rounded-2xl shadow-xl relative z-10 mx-auto lg:mx-4"
-				//{...motionVariants.fadeInUp(0.2)}
 			>
 				<h1 className="text-3xl font-bold text-gray-900 text-left mb-2">
 					Welcome Back
@@ -192,9 +192,13 @@ export default function LoginPage() {
 						{errorMessage}
 					</p>
 				)}
-			</motion.div>
+			</ScrollAnimation>
 
-			<div className="w-full max-w-md h-[400px] lg:h-[650px] bg-[#F9F5EE] p-12 rounded-2xl flex flex-col justify-center items-center text-center mx-auto lg:mx-4 mt-8 lg:mt-0">
+			<ScrollAnimation 
+				animation="fadeInFromRight"
+				delay={0.4}
+				className="w-full max-w-md h-[400px] lg:h-[650px] bg-[#F9F5EE] p-12 rounded-2xl flex flex-col justify-center items-center text-center mx-auto lg:mx-4 mt-8 lg:mt-0"
+			>
 				<div className="w-full max-w-xs mb-4">
 					<Lottie animationData={animationData} loop autoplay />
 				</div>
@@ -207,7 +211,7 @@ export default function LoginPage() {
 					required for security and compliance purposes. We l notify you once
 					your account is activated.
 				</p>
-			</div>
+			</ScrollAnimation>
 		</div>
 	);
 }

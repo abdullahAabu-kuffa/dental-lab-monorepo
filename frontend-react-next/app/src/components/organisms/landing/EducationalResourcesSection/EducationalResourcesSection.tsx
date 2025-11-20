@@ -3,6 +3,7 @@ import React from 'react';
 import EducationalResourceCard from '../../../atoms/EducationalResourceCard/EducationalResourceCard';
 import Button from '../../../atoms/Button/Button';
 import { HeroHeading ,componentStyles ,HeroSubtitle} from '../../../../../design-system';
+import ScrollAnimation, { StaggeredAnimation } from '../../../../../design-system/components/ScrollAnimation';
 import { EDUCATIONAL_RESOURCES } from '../../../../config/LandingData/educational-resources.data';
 
 const EducationalResourcesSection: React.FC = () => {
@@ -10,7 +11,10 @@ const EducationalResourcesSection: React.FC = () => {
     <section className={`bg-white ${componentStyles.layout.spacingSection}`}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <ScrollAnimation
+          animation="fadeInFromLeft"
+          className="text-center mb-16"
+        >
           <HeroHeading
             primaryText=""
             gradientText="Educational Resources"
@@ -20,28 +24,38 @@ const EducationalResourcesSection: React.FC = () => {
             text="Stay ahead with our comprehensive guides and learning materials"
             variant="black"
           />
-        </div>
+        </ScrollAnimation>
         
         {/* Resources Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {EDUCATIONAL_RESOURCES.map((resource) => (
-            <EducationalResourceCard
+        <ScrollAnimation 
+          animation="fadeInFromBottom"
+          delay={0.2}
+          className="grid md:grid-cols-3 gap-8 mb-12"
+        >
+          {EDUCATIONAL_RESOURCES.map((resource, index) => (
+            <ScrollAnimation
               key={resource.id}
-              resource={resource}
-            />
+              animation="scaleAndFadeIn"
+              delay={0.3 + (index * 0.1)}
+            >
+              <EducationalResourceCard resource={resource} />
+            </ScrollAnimation>
           ))}
-        </div>
+        </ScrollAnimation>
         
         {/* View All Resources Button */}
-        <div className="text-center">
+        <ScrollAnimation
+          animation="fadeInFromBottom"
+          delay={0.6}
+          className="text-center"
+        >
           <Button variant="primary" onClick={() => window.location.href = '/resources'}>
             View All Resources
           </Button>
-        </div>
+        </ScrollAnimation>
       </div>
     </section>
   );
 };
 
 export default EducationalResourcesSection;
-

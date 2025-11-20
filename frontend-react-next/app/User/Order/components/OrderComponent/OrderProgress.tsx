@@ -3,14 +3,8 @@
 import React from "react";
 import { Order } from "../../../../src/types";
 import { ORDER_COLORS, CARD_STYLES, TEXT_STYLES } from "../../../../design-system/orderStyles";
-
 import { LucideIcon } from "lucide-react";
-import {
-  getOrderStatusConfig,
-  getProgressPercentage,
-  getOrderStages
-} from "../../../../src/config/UserData/orderDataService";
-
+import {  getOrderStatusConfig, getProgressPercentage,   getOrderStages} from "../../../../src/config/UserData/orderDataService";
 
 interface OrderDetailsSidebarProps {
   order: Order;

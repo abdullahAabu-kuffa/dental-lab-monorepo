@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Lottie from "lottie-react";
+import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import Button from "@/app/src/components/atoms/Button/Button";
 import animationData from "@/assets/lotties/teeth.json";
 
@@ -51,7 +52,11 @@ export default function ResetPasswordPage() {
 
       <div className="w-full max-w-5xl h-[90%] grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
         {/* FORM SECTION */}
-        <div className="p-6 flex flex-col justify-center items-center space-y-6">
+        <ScrollAnimation 
+          animation="fadeInFromLeft"
+          delay={0.2}
+          className="p-6 flex flex-col justify-center items-center space-y-6"
+        >
           <div className="flex-shrink-0 space-y-2 text-center w-full max-w-md">
             <h1 className="text-3xl font-extrabold text-gray-900">
               Reset Your <span className="text-[#d8a832]">Password</span>
@@ -109,10 +114,14 @@ export default function ResetPasswordPage() {
               <p>For assistance, contact our <a href="/support" className="text-yellow-500 underline">Support Team</a>.</p>
             </div>
           </form>
-        </div>
+        </ScrollAnimation>
 
         {/* ANIMATION & INFO ASIDE */}
-        <div className="hidden md:flex flex-col justify-center items-center p-8 bg-[#d8a832]/10 border-l border-[#d8a832]/20">
+        <ScrollAnimation 
+          animation="fadeInFromRight"
+          delay={0.4}
+          className="hidden md:flex flex-col justify-center items-center p-8 bg-[#d8a832]/10 border-l border-[#d8a832]/20"
+        >
           <div className="w-full max-w-xs mb-6 p-4 bg-white/80 rounded-3xl shadow-xl">
             <Lottie animationData={animationData} loop autoplay className="w-full h-auto" aria-hidden />
           </div>
@@ -128,8 +137,9 @@ export default function ResetPasswordPage() {
           <div className="mt-4 text-xs text-center text-[#d8a832]">
             Need help? Contact support.
           </div>
-        </div>
+        </ScrollAnimation>
       </div>
     </main>
   );
 }
+

@@ -93,50 +93,50 @@ export const componentStyles = {
     container: 'flex items-center gap-2 flex-wrap',
     
     statusButton: `
-      relative w-12 h-12 rounded-full shadow-lg flex items-center justify-center
+      relative w-12 h-12 rounded-full flex items-center justify-center
       border-2 border-white/30 overflow-visible group cursor-pointer
       transition-all duration-200 ease-out
-      hover:shadow-xl hover:scale-105
+      hover:scale-105
       backdrop-blur-sm bg-white/10
     `,
     
     statusButtonActive: 'scale-110 ring-2 ring-white/50',
     
     newOrderButton: `
-      relative w-12 h-12 rounded-full shadow-lg flex items-center justify-center
+      relative w-12 h-12 rounded-full flex items-center justify-center
       border-2 border-white/30 overflow-visible group cursor-pointer
       bg-gradient-to-br from-emerald-400 to-emerald-600
       transition-all duration-200 ease-out
-      hover:shadow-xl hover:scale-105
+      hover:scale-105
       backdrop-blur-sm
     `,
     
     // All Orders Button - Special styling
     allOrdersButton: `
-      relative w-12 h-12 rounded-full shadow-lg flex items-center justify-center
+      relative w-12 h-12 rounded-full flex items-center justify-center
       border-2 border-white/30 overflow-visible group cursor-pointer
       bg-gradient-to-br from-red-400 to-red-600
       transition-all duration-200 ease-out
-      hover:shadow-xl hover:scale-105
+      hover:scale-105
       backdrop-blur-sm
     `,
     
     counterBadge: `
       absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-rose-500 to-pink-600
       text-white text-xs font-bold rounded-full flex items-center justify-center
-      shadow-lg border-2 border-white z-20 ring-1 ring-white/50
+      border-2 border-white z-20 ring-1 ring-white/50
     `,
     
     tooltip: `
       absolute left-1/2 -translate-x-1/2 top-full mt-2 opacity-0 group-hover:opacity-100
       transition-all duration-200 pointer-events-none whitespace-nowrap z-50
-      bg-gray-900 text-white text-xs font-medium px-2 py-1 rounded shadow-xl
+      bg-gray-900 text-white text-xs font-medium px-2 py-1 rounded
       border border-gray-700
     `,
     
     // Icon styling within buttons
     icon: `
-      w-5 h-5 text-white relative z-10 drop-shadow-sm
+      w-5 h-5 text-white relative z-10
     `,
   },
 } as const;
