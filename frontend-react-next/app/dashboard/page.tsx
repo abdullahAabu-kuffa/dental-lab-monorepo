@@ -5,6 +5,9 @@ import StatsCard from "./_components/@statecard";
 import Link from "next/link";
 import OrdersTable from "./_components/@orderstable";
 import { useGetProfileInfo } from "./services/hookes/get_profile_info";
+import { useUsers } from "./services/hookes/fetch_all_users";
+import { Pagination } from "./interfaces/users";
+import { useGetAllOrders } from "./services/hookes/get_all_orders";
 
 const Dashboard = () => {
   const { data: me } = useGetProfileInfo();
@@ -13,6 +16,16 @@ const Dashboard = () => {
       if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
     }
   }, [me]);
+
+  const { data: usersData } = useUsers(0, 0);
+  const pagination: Pagination | undefined = usersData?.data?.pagination;
+  const total = pagination?.total || 0;
+
+  const { data: ordersData } = useGetAllOrders(1);
+  const ordersTotal = ordersData?.data?.orders.length || 0;
+  const pendingNumberOrders = ordersData?.data?.orders.filter((order: { status: string; }) => order.status === "PENDING").length || 0;
+  const totalRevenue = ordersData?.data?.orders.reduce((acc: number, order: { totalPrice: number; }) => acc + order.totalPrice, 0) || 0;
+
   return (
     <div className="bg-[F5F7FA]">
       <div className="p-6">
@@ -25,7 +38,7 @@ const Dashboard = () => {
             <Link href="/dashboard/users">
               <StatsCard
                 title="Total Users"
-                value={2847}
+                value={total}
                 growth="+12% this month"
                 icon={<Users size={24} />}
                 fromColor="from-blue-500"
@@ -35,7 +48,7 @@ const Dashboard = () => {
             <Link href="/dashboard/orders">
               <StatsCard
                 title="Total Orders"
-                value={2847}
+                value={ordersTotal}
                 growth="+8% this month"
                 icon={<ShoppingCart size={24} />}
                 fromColor="from-green-500"
@@ -44,7 +57,7 @@ const Dashboard = () => {
             </Link>
             <StatsCard
               title="Pending Approvals"
-              value={23}
+              value={pendingNumberOrders}
               growth="Requires attention"
               icon={<Clock size={24} />}
               fromColor="from-red-500"
@@ -52,7 +65,7 @@ const Dashboard = () => {
             />
             <StatsCard
               title="Total Revenue"
-              value={48562}
+              value={totalRevenue}
               growth="+15% this month"
               icon={<DollarSign size={24} />}
               fromColor="from-yellow-500"
