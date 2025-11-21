@@ -1,203 +1,90 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Order } from "../../../../src/types";
-import { ORDER_COLORS, CARD_STYLES, TEXT_STYLES } from "../../../../design-system/orderStyles";
-
-import { LucideIcon } from "lucide-react";
-import {
-  getOrderStatusConfig,
-  getProgressPercentage,
-  getOrderStages
-} from "../../../../src/config/UserData/orderDataService";
-
-
-interface OrderDetailsSidebarProps {
+import { getOrderStages } from "../../../../src/config/UserData/orderDataService";
+import { getProgressStepColors } from "../../../../design-system/orderStyles";
+import { DetailsOrder } from "./DetailsOrder";
+interface OrderProgressProps {
   order: Order;
 }
-
-interface ManufacturingStep {
-  label: string;
-  icon: LucideIcon;
-  status: "completed" | "active" | "pending";
-  date: string;
-}
-
-export const OrderDetailsSidebar: React.FC<OrderDetailsSidebarProps> = ({ order }) => {
-  const statusConfig = getOrderStatusConfig(order.status);
-  const progressPercentage = getProgressPercentage(order.status);
-
-  const stageData = getOrderStages(order);
-
-  const steps: ManufacturingStep[] = stageData.map((step) => ({
-    label: step.label,
-    icon: step.icon,
-    status: step.status as "completed" | "active" | "pending",
-    date: step.date,
-  }));
-
+export const OrderProgress: React.FC<OrderProgressProps> = ({ order }) => {
+  // Get progress steps from config based on order stages
+  const progressSteps = getOrderStages(order);
+  const FirstIcon = progressSteps[0].icon;
   return (
-    <div className="max-w-6xl mx-auto space-y-4">
-      
-      {/* ❇ Header Card (Simple Clean Style) */}
-      <div
-        className={`
-          ${CARD_STYLES.base}
-          bg-white
-          shadow-sm
-          border border-gray-200
-          p-4 rounded-xl
-        `}
-      >
-        <div className="flex justify-between items-start">
-          <div>
-            <p className="text-gray-500 text-sm font-medium">Order #{order.id}</p>
-            <h1 className="text-gray-900 mt-0.5 text-sm font-bold">
-              {order.patientName} - {order.orderType}
-            </h1>
-          </div>
-
-          <div className="text-right">
-            <p className="text-gray-500 text-xs">Created: {new Date(order.createdAt).toLocaleDateString()}</p>
-            <p className="text-gray-500 text-xs mt-0.5">Due: {order.date}</p>
-
-            <div
-              className={`
-                inline-flex items-center gap-1 px-2 py-0.5 rounded-full mt-1
-                ${statusConfig.color.light} ${statusConfig.color.darkText}
-                text-xs font-semibold
-              `}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-              {statusConfig.label}
+    <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-white/50 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+        {/* Case Progress */}
+        <div className="lg:col-span-1">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl">
+              <FirstIcon className="w-5 h-5 text-white" />
             </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              Case Progress
+            </h3>
           </div>
-        </div>
-      </div>
+          <div className="flex flex-col space-y-1">
+            {progressSteps.map((step, index) => {
+              const colors = getProgressStepColors(step.status);
+              const StepIcon = step.icon;
 
-      {/* ❇ Manufacturing Process (Modern Minimal Timeline) */}
-      <div
-        className={`
-          ${CARD_STYLES.base}
-          bg-white
-          shadow-sm
-          border border-gray-200
-          p-4 rounded-xl
-        `}
-      >
-        <h3 className="text-gray-900 mb-4 text-lg font-bold">Manufacturing Process</h3>
-
-        <div className="flex items-start relative">
-          {steps.map((step, index) => (
-            <React.Fragment key={step.label}>
-              <div className="flex flex-col items-center flex-1 relative">
-                {/* Circle */}
-                <div
-                  className={`
-                    w-10 h-10 rounded-full flex items-center justify-center relative z-10
-                    ${step.status === "completed"
-                      ? "bg-green-500 text-white"
-                      : step.status === "active"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-500"
-                    }
-                  `}
-                >
-                  {React.createElement(step.icon, {
-                    className: "w-4 h-4",
-                  })}
+              return (
+                <div key={step.key} className="flex items-start relative">
+                  <div className="flex flex-col items-center mr-4">
+                    <motion.div
+                      className={`
+                        rounded-full w-12 h-12 flex items-center justify-center z-10 shrink-0
+                        ${colors.bg}
+                        ${colors.ring}
+                        ${colors.iconColor}
+                      `}
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        delay: index * 0.15,
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 15
+                      }}
+                    >
+                      <StepIcon className="w-6 h-6" />
+                    </motion.div>
+                    {index < progressSteps.length - 1 && (
+                      <motion.div
+                        className={`
+                          w-0.5 h-16 mt-2 rounded-full
+                          ${step.status === 'completed' ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}
+                        `}
+                        initial={{ height: 0 }}
+                        animate={{ height: 64 }}
+                        transition={{ delay: index * 0.15 + 0.2, duration: 0.3 }}
+                      />
+                    )}
+                  </div>
+                  <motion.div
+                    className="pt-2 pb-6 flex-1"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.15 + 0.1 }}
+                  >
+                    <p className={`text-base font-bold mb-1 ${colors.text}`}>
+                      {step.label}
+                    </p>
+                    <p className={`text-sm font-medium ${colors.textSecondary}`}>
+                      {step.date}
+                    </p>
+                  </motion.div>
                 </div>
-
-                <p
-                  className={`
-                    mt-2 text-xs font-semibold text-center
-                    ${step.status === "completed"
-                      ? "text-green-700"
-                      : step.status === "active"
-                      ? "text-blue-700"
-                      : "text-gray-500"
-                    }
-                  `}
-                >
-                  {step.label}
-                </p>
-
-                <p className="text-xs text-center text-gray-400">{step.date}</p>
-              </div>
-
-              {/* Line */}
-              {index < steps.length - 1 && (
-                <div
-                  className={`
-                    flex-1 h-0.5 mt-5 mx-1 rounded-full
-                    ${step.status === "completed"
-                      ? "bg-green-400"
-                      : step.status === "active"
-                      ? "bg-blue-400"
-                      : "bg-gray-300"
-                    }
-                  `}
-                />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-
-      {/* ❇ Order Details */}
-      <div className="grid grid-cols-3 gap-4">
-        <div
-          className={`
-            col-span-2
-            ${CARD_STYLES.base}
-            bg-white
-            shadow-sm
-            border border-gray-200
-            p-4 rounded-xl
-          `}
-        >
-          <h3 className="text-gray-900 mb-4 text-lg font-bold">Order Details</h3>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <p className="text-gray-500 text-xs font-medium">Associated Lab</p>
-              <p className="text-gray-900 text-sm font-semibold">{order.lab || "Precision Dental Labs"}</p>
-            </div>
-
-            <div className="space-y-1">
-              <p className="text-gray-500 text-xs font-medium">Shipping Carrier</p>
-              <p className="text-gray-900 text-sm font-semibold">
-                {order.shippingCarrier || "Not assigned"}
-              </p>
-            </div>
-
-            <div className="space-y-1">
-              <p className="text-gray-500 text-xs font-medium">Tracking Number</p>
-              <p className="text-gray-900 text-sm font-semibold">{order.trackingNumber || "---"}</p>
-            </div>
-
-            <div className="col-span-2 space-y-1">
-              <p className="text-gray-500 text-xs font-medium">Internal Notes</p>
-              <p className="text-gray-700 bg-gray-100 p-2 rounded-lg border border-gray-200 text-sm">
-                {order.notes || "No special notes."}
-              </p>
-            </div>
+              );
+            })}
           </div>
         </div>
-
-        {/* Actions */}
-        <div
-          className={`
-            col-span-1
-            ${CARD_STYLES.base}
-            bg-white
-            shadow-sm
-            border border-gray-200
-            p-4 rounded-xl
-          `}
-        >
-          <h3 className="text-gray-900 mb-4 text-lg font-bold">Actions</h3>
-          <div className="flex-1"></div>
+        {/* Order Details */}
+        <div className="lg:col-span-2">
+          <DetailsOrder order={order} />
         </div>
       </div>
     </div>

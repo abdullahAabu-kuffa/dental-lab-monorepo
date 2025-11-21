@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Provider from "./provider";
+import { LoadingProvider } from "./src/contexts/LoadingContext";
+import GlobalLoader from "./src/components/GlobalLoader";
 
 
 const playfair = Playfair_Display({
@@ -25,7 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${playfair.variable} antialiased`}>
-        <Provider>{children}</Provider>
+        <Provider>
+          <LoadingProvider>
+            <GlobalLoader />
+          {children}
+          </LoadingProvider>
+        </Provider>
       </body>
     </html>
   );

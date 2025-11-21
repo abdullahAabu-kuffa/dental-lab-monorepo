@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Upload } from "../../../../src/utils/UnifiedIcons";
 import {
@@ -11,6 +11,7 @@ import { FormField } from "../../../../src/types";
 import { useCreateOrder } from "../../Form/quere";
 import { useOrders } from "../../orders-list/quere";
 import toast from "react-hot-toast";
+import { useNavigationGuard } from "@/app/src/hooks/useNavigationGuard";
 
 interface OrderFormProps {
   onSubmit: (formData: FormData) => void;
@@ -35,7 +36,6 @@ export default function OrderForm({
     }
   };
   const { mutate, mutateAsync, isLoading, error, data } = useCreateOrder();
-  console.log({ mutate, mutateAsync, isLoading, error, data });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const data = new FormData();
@@ -51,6 +51,9 @@ export default function OrderForm({
     }
   };
 
+
+  const [orderLocked, setOrderLocked] = useState(true);
+  useNavigationGuard(orderLocked);
   const renderField = (field: FormField & { price?: number }) => {
     const isText = field.type === "text";
     return (
@@ -164,7 +167,7 @@ export default function OrderForm({
                 options: formData, 
                 totalPrice: 1500, 
               });
-              
+              setOrderLocked(false);
               handleContinueClick()
             }}
             disabled={isSubmitting}

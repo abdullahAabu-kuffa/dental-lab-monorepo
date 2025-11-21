@@ -1,13 +1,17 @@
 'use client';
 
 import { HeroHeading ,HeroSubtitle } from '../../../../../design-system';
+import ScrollAnimation from '../../../../../design-system/components/ScrollAnimation';
 import { WORKFLOW_CARDS } from '../../../../config/LandingData/workflow.config';
 
 export default function WorkflowSection() {
   return (
     <section className="py-20 bg-[#1a1a1a]">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <ScrollAnimation
+          animation="fadeInFromLeft"
+          className="text-center mb-16"
+        >
           <HeroHeading
             primaryText=""
             gradientText="Our Seamless Digital Workflow"
@@ -17,7 +21,7 @@ export default function WorkflowSection() {
             text="A seamless digital workflow from scan to delivery"
             variant="white"
           />
-        </div>
+        </ScrollAnimation>
 
         {/* Workflow Cards Section */}
         <div className="mt-20">
@@ -30,8 +34,10 @@ export default function WorkflowSection() {
             {WORKFLOW_CARDS.map((card, index) => {
               const IconComponent = card.iconComponent;
               return (
-                <div
+                <ScrollAnimation
                   key={index}
+                  animation="fadeInFromBottom"
+                  delay={0.2 + (index * 0.15)}
                   className="relative z-10"
                 >
                   {/* Icon Circle */}
@@ -60,7 +66,7 @@ export default function WorkflowSection() {
                       />
                     </div>
                   </div>
-                </div>
+                </ScrollAnimation>
               );
             })}
           </div>

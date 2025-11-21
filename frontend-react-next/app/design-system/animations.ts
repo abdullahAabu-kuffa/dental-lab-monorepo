@@ -1,20 +1,67 @@
-// KEEP ONLY what's actually used in the application
+
+// CONSOLIDATED ANIMATION SYSTEM
+
+
+// Basic animation configurations
 export const animations = {
   spring: { type: "spring" as const, stiffness: 400, damping: 10 },
 };
 
+// Hover effects
 export const hoverEffects = {
   scaleSmall: { scale: 1.02 },
   scaleMedium: { scale: 1.05 },
   scaleLarge: { scale: 1.1 },
 };
 
+// Tap effects
 export const tapEffects = {
   scaleSmall: { scale: 0.97 },
   scaleMedium: { scale: 0.95 },
 };
 
-// ONLY the motion variants that are actually used
+
+// SCROLL ANIMATION PATTERNS
+// Used with ScrollAnimation component
+
+export const scrollAnimations = {
+  fadeInFromLeft: {
+    initial: { opacity: 0, x: -50 },
+    animate: { opacity: 1, x: 0 },
+  },
+  fadeInFromRight: {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+  },
+  fadeInFromBottom: {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+  },
+  fadeInFromTop: {
+    initial: { opacity: 0, y: -30 },
+    animate: { opacity: 1, y: 0 },
+  },
+  scaleAndFadeIn: {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { opacity: 1, scale: 1 },
+  },
+  complexEntrance: {
+    initial: { opacity: 0, x: 50, scale: 0.8 },
+    animate: { opacity: 1, x: 0, scale: 1 },
+  },
+  fadeInUp: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+  },
+};
+
+// Viewport configuration for scroll animations
+export const viewport = { once: true, amount: 0.3 };
+
+
+// MOTION VARIANTS
+// Reusable motion variants with parameters
+
 export const motionVariants = {
   fadeInUp: (delay = 0) => ({
     initial: { opacity: 0, y: 20 },
@@ -35,7 +82,20 @@ export const motionVariants = {
       ease: "easeOut"
     }
   }),
+  staggerContainer: {
+    initial: { opacity: 0 },
+    animate: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
 } as const;
+
+
+// PAGE-SPECIFIC ANIMATIONS
+
 
 // Welcome Page Animation Constants
 export const welcomePageAnimations = {
@@ -112,4 +172,9 @@ export const welcomePageAnimations = {
   }
 } as const;
 
+
+// TYPE EXPORTS
+
 export type AnimationConfig = typeof animations;
+export type ScrollAnimationType = keyof typeof scrollAnimations;
+export type MotionVariantType = keyof typeof motionVariants;

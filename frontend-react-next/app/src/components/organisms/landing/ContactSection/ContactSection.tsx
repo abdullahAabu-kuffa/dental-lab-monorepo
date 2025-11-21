@@ -1,13 +1,10 @@
-"use client";
+'use client';
 import React from "react";
 import Button from "../../../atoms/Button/Button";
 import { CONTACT_INFO } from "../../../../config/LandingData/contact.data";
 import { getIcon } from "../../../../utils/UnifiedIcons";
-import {
-	HeroHeading,
-	HeroSubtitle,
-	componentStyles,
-} from "../../../../../design-system";
+import { HeroHeading, HeroSubtitle, componentStyles } from "../../../../../design-system";
+import ScrollAnimation from '../../../../../design-system/components/ScrollAnimation';
 
 const ContactSection: React.FC = () => {
 	return (
@@ -17,7 +14,7 @@ const ContactSection: React.FC = () => {
 		>
 			<div className="max-w-7xl mx-auto px-6">
 				<div className="grid lg:grid-cols-2 gap-16">
-					<div>
+					<ScrollAnimation variant="fadeInFromLeft">
 						<HeroHeading
 							primaryText=""
 							gradientText="Get In Touch"
@@ -31,13 +28,16 @@ const ContactSection: React.FC = () => {
 
 						<div className="space-y-6 mt-8">
 							{CONTACT_INFO.map((info, index) => {
-								const IconComponent = getIcon(info.icon);
+								const IconComponent = getIcon(info.icon, info.icon === 'map' ? 'environment' : 'social');
 								return (
-									<div key={index} className="flex items-center gap-4">
-										<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center">
-											<div className="text-[#D4AF37] text-xl">
-												<IconComponent className="w-5 h-5" />
-											</div>
+									<ScrollAnimation 
+										key={index}
+										variant="fadeInFromLeft"
+										delay={0.2 + (index * 0.1)}
+										className="flex items-center gap-4"
+									>
+										<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
+											<IconComponent className="w-6 h-6 text-[#D4AF37]" />
 										</div>
 										<div>
 											<div className="font-semibold text-gray-900">
@@ -56,13 +56,13 @@ const ContactSection: React.FC = () => {
 												<div className="text-gray-600">{info.value}</div>
 											)}
 										</div>
-									</div>
+									</ScrollAnimation>
 								);
 							})}
 						</div>
-					</div>
+					</ScrollAnimation>
 
-					<div className="bg-gray-50 rounded-2xl p-8">
+					<ScrollAnimation variant="fadeInFromRight" delay={0.2} className="bg-gray-50 rounded-2xl p-8">
 						<form className="space-y-6">
 							<div>
 								<label className="block text-sm font-semibold mb-2 text-gray-900">
@@ -112,7 +112,7 @@ const ContactSection: React.FC = () => {
 								Send Message
 							</Button>
 						</form>
-					</div>
+					</ScrollAnimation>
 				</div>
 			</div>
 		</section>

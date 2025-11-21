@@ -6,12 +6,12 @@ export default function UserOrderLayout({
   children: React.ReactNode;
 }) {
   return (
+
     <div className="w-full">
       <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: "80px", 
             background: "#333",
             color: "#fff",
           },
@@ -19,5 +19,6 @@ export default function UserOrderLayout({
       />
       {children}
     </div>
+
   );
 }

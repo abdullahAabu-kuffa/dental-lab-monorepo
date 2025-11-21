@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Lottie from "lottie-react";
+import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import Button from "@/app/src/components/atoms/Button/Button";
 import animationData from "@/assets/lotties/teeth.json";
 
@@ -43,13 +44,17 @@ export default function ForgotPasswordPage() {
 
       <div className="w-full max-w-5xl h-[90%] grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
         {/* FORM SECTION */}
-        <div className="p-6 flex flex-col justify-center items-center space-y-6">
+        <ScrollAnimation 
+          animation="fadeInFromLeft"
+          delay={0.2}
+          className="p-6 flex flex-col justify-center items-center space-y-6"
+        >
           <div className="flex-shrink-0 space-y-2 text-center w-full max-w-md">
             <h1 className="text-3xl font-extrabold text-gray-900">
               Forgot Your <span className="text-[#d8a832]">Password?</span>
             </h1>
             <p className="text-sm text-gray-600">
-              Enter your email below and we’ll send a secure link to reset your password.
+              Enter your email below and we&apos;ll send a secure link to reset your password.
             </p>
 
             {error && (
@@ -91,10 +96,14 @@ export default function ForgotPasswordPage() {
               <p>We take your account security seriously. Never share your password with anyone.</p>
             </div>
           </form>
-        </div>
+        </ScrollAnimation>
 
         {/* ANIMATION & INFO ASIDE */}
-        <div className="hidden md:flex flex-col justify-center items-center p-8 bg-[#d8a832]/10 border-l border-[#d8a832]/20">
+        <ScrollAnimation 
+          animation="fadeInFromRight"
+          delay={0.4}
+          className="hidden md:flex flex-col justify-center items-center p-8 bg-[#d8a832]/10 border-l border-[#d8a832]/20"
+        >
           <div className="w-full max-w-xs mb-6 p-4 bg-white/80 rounded-3xl shadow-xl">
             <Lottie animationData={animationData} loop autoplay className="w-full h-auto" aria-hidden />
           </div>
@@ -104,13 +113,13 @@ export default function ForgotPasswordPage() {
           </h3>
 
           <p className="text-sm text-center text-gray-700 max-w-sm">
-            We’ll send a secure link to your email. Make sure your inbox is accessible and check spam folders if necessary.
+            We&apos;ll send a secure link to your email. Make sure your inbox is accessible and check spam folders if necessary.
           </p>
 
           <div className="mt-4 text-xs text-center text-[#d8a832]">
             Need help? Contact support.
           </div>
-        </div>
+        </ScrollAnimation>
       </div>
     </main>
   );
