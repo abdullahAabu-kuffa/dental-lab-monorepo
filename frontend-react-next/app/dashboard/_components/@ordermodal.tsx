@@ -7,29 +7,13 @@ interface OrderModalProps {
 }
 
 const statusColors = {
-  Pending: "bg-yellow-100 text-yellow-800",
+  PENDING: "bg-yellow-100 text-yellow-800",
   "In Progress": "bg-blue-100 text-blue-800",
-  Completed: "bg-green-100 text-green-800",
-  Rejected: "bg-red-100 text-red-800",
+  COMPLETED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
+  CANCELLED: "bg-gray-100 text-gray-800",
+  "IN_PROGRESS": "bg-blue-100 text-blue-800",
 };
-
-// const renderOptionValue = (value: unknown): string => {
-//   if (value === null || value === undefined) return "—";
-//   if (typeof value === "boolean") return value ? "Yes" : "No";
-//   if (typeof value === "number" || typeof value === "string")
-//     return String(value);
-//   if (Array.isArray(value)) {
-//     return value.map((v) => renderOptionValue(v)).join(", ");
-//   }
-//   if (typeof value === "object") {
-//     // for nested objects, render each key on its own line
-//     return Object.entries(value as Record<string, unknown>)
-//       .map(([k, v]) => `${k}: ${renderOptionValue(v)}`)
-//       .join("\n");
-//   }
-//   return String(value);
-// };
-
 const OrderModal = ({ selectedOrder, setSelectedOrder }: OrderModalProps) => {
 
   return (
