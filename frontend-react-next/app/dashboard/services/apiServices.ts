@@ -78,3 +78,12 @@ export const fetchUsers = async (page: number, limit: number): Promise<FetchUser
   });
   return response.data;
 };
+
+export const deleteUser = async (userId: number) => {
+  const response = await axios.delete(`/users/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}

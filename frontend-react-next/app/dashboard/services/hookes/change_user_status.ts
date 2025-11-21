@@ -11,5 +11,8 @@ export const useChangeUserStatus  = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
+        onError: (error) => {
+            console.error("Error changing user status:", error);
+        }
     });
 };
