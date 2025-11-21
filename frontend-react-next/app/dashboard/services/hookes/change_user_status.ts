@@ -9,8 +9,10 @@ export const useChangeUserStatus  = () => {
             changeUserStatus(userId, action),
 
         onSuccess: () => {
-            // refresh user list
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
+        onError: (error) => {
+            console.error("Error changing user status:", error);
+        }
     });
 };

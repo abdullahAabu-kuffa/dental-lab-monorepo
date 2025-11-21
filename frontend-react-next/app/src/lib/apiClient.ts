@@ -5,12 +5,17 @@ type ApiOption = RequestInit & {
     retryOn401?: boolean;
 };
 
-function getToken() {
-    return localStorage.getItem("accessToken");
+export function getToken() {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('accessToken');
+    }
+    return null;
 }
 
-function setToken(token: string) {
-    localStorage.setItem("accessToken", token);
+export function setToken(token: string) {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('accessToken', token);
+    }
 }
 
 async function refreshAccessToken() {
@@ -40,7 +45,7 @@ async function refreshAccessToken() {
 export async function apiFetch(path: string, options: ApiOption = {}) {
     const url = `http://localhost:3001${path}`;
     const token = getToken();
-
+    console.log("apiFetch called with URL: ", API_URL);
     const res = await fetch(url, {
         method: options.method || "GET",
         headers: {

@@ -105,7 +105,7 @@ export default function LoginPage() {
 
 			switch (role) {
 				case "ADMIN":
-					router.push("/dashboard/admin");
+					router.push("/dashboard");
 					break;
 				case "CLIENT":
 					router.push("/");
