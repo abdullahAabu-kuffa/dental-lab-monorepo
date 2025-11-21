@@ -20,10 +20,14 @@ const app = express();
 app.use(morgan("dev"));
 setupSwagger(app);
 
-
 // TODO: Security middleware
 app.use(helmet());
-app.use(cors({credentials: true}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // TODO: Body parser
 app.use(express.json({ limit: "150mb" }));
@@ -52,15 +56,13 @@ app.get("/health", (req, res) => {
 // TODO: API routes
 app.use("/api/auth", authRoutes);
 
-app.use('/api/upload', uploadRoutes);
-app.use('/api/download', downloadRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/download", downloadRoutes);
 
-
-app.use('/api/orders', orderRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/notifications-test', notificationTestRoutes);
-app.use('/api/notifications', notificationRoutes);
-
+app.use("/api/orders", orderRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/notifications-test", notificationTestRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // TODO: 404 handler
 app.use((req, res) => {

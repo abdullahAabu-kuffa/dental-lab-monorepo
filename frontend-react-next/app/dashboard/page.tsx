@@ -27,18 +27,18 @@ const Dashboard = () => {
   const pages = data?.data?.totalPages || 1;
   const { data: users } = useUsers(currentPage, 10);
   console.log(users);
-  if (isLoading) return <Loading />
-  if (isError) return <ErrorMessage message={error.message} />
-  console.log(data)
+  if (isLoading) return <Loading />;
+  if (isError) return <ErrorMessage message={error.message} />;
+  console.log(data);
   const totalOrders = data?.data?.totalOrders || 0;
   const totalUsers = users?.data?.pagination?.total || 0;
-   const usersList: User[] = Array.isArray(users?.data?.data?.users)
-     ? users.data.data.users
-     : [];
+  const usersList: User[] = Array.isArray(users?.data?.data?.users)
+    ? users.data.data.users
+    : [];
 
-   const pendingUsersNumber = usersList.filter((user) => !user.isActive).length;
+  const pendingUsersNumber = usersList.filter((user) => !user.isActive).length;
 
-  console.log(data?.data?.data?.orders)
+  console.log(data?.data?.data?.orders);
   return (
     <div className="bg-[F5F7FA]">
       <div className="p-6">
@@ -95,7 +95,12 @@ const Dashboard = () => {
       </div>
       <div className="mt-5 mx-6">
         <OrdersTable overview={true} currentPage={currentPage} />
-        <Pagination onNext={goNext} onPrevious={goPrevious} page={currentPage} totalPages={pages} />
+        <Pagination
+          onNext={goNext}
+          onPrevious={goPrevious}
+          page={currentPage}
+          totalPages={pages}
+        />
       </div>
     </div>
   );

@@ -1,12 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Search, View } from "lucide-react";
-import { MdDone } from "react-icons/md";
 import { User } from "../interfaces/users";
 import UserDetails from "./@userdetails";
-import ConfirmModal from "./@confirmmodel";
-import { useChangeUserStatus } from "../services/hookes/change_user_status";
-import ErrorMessage from "./@displayerrors";
 
 
 const statusColors = {
@@ -23,13 +19,10 @@ interface UsersTableProps {
 
 
 const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
-  const { mutate, isPending, isSuccess, isError, error } = useChangeUserStatus();
-  const [userId, setUserId] = useState(1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const [showModal, setShowModal] = useState(false);
 
   const filteredusers = Array.isArray(users)
     ? users.filter((user) => {
@@ -40,28 +33,6 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
       return matchSearch && matchFilter;
     }) : [];
 
-  const handleApproveUser = () => {
-    mutate({ userId, action: "approve" }, {
-      onSuccess: () => {
-        setShowModal(false); // Close modal on success
-
-      },
-      onError: (error) => {
-        <ErrorMessage message={error.message} />
-      },
-    });
-  };
-  const getModalMessage = () => {
-    if (isPending) {
-      return "Approving user... Please wait.";
-    } else if (isSuccess) {
-      return "User has been successfully approved!";
-    } else if (isError) {
-      return `Error: ${error?.message || "Something went wrong!"}`;
-    } else {
-      return "Do you want to approve this user?";
-    }
-  };
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm mx-6 mb-6">
       <h2 className="text-lg font-semibold mb-4">All Users</h2>
@@ -134,7 +105,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                 <td className="px-4 py-3 flex gap-1 text-center">
                   {!user.isActive && (
                     <>
-                      <button
+                      {/* <button
                         onClick={() => { setUserId(user.id); setShowModal(true); }}
                         className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 ${statusColors["Approved"]}`}
                       >
@@ -142,7 +113,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                           <MdDone size={16} />
                           <span>Approve</span>
                         </div>
-                      </button>
+                      </button> */}
                       {/* <button
                         className={`px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 ${statusColors["Rejected"]}`}
                       >
@@ -177,14 +148,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
         {selectedUser && (
           <UserDetails user={selectedUser} onClose={() => setSelectedUser(null)} />
         )}
-        {showModal && (
-          <ConfirmModal
-            onConfirm={handleApproveUser}
-            onCancel={() => setShowModal(false)}
-            message={getModalMessage()}
-            isLoading={isPending} // Optionally, pass a loading state to disable the confirm button
-          />
-        )}
+       
       </div>
 
     </div>

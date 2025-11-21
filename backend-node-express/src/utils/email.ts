@@ -1,21 +1,30 @@
 import nodemailer from "nodemailer";
 
-export const sendStyledEmail = async (to: string,subject: string,htmlContent: string) => {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-        },
-    });
+export const sendStyledEmail = async (
+  to: string,
+  subject: string,
+  htmlContent: string
+) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
 
-    const mailOptions = {
-        from: `"Avante Dental Solutions Support" <${process.env.GMAIL_USER}>`,
-        to: to,
-        subject:subject,
-        html: htmlContent,
-    };
+  const mailOptions = {
+    from: `"Avante Dental Solutions Support" <${process.env.GMAIL_USER}>`,
+    to: to,
+    subject: subject,
+    html: htmlContent,
+  };
 
-    const info = await transporter.sendMail(mailOptions);
-    return info;
+  const info = await transporter.sendMail(mailOptions);
+  return info;
 };
