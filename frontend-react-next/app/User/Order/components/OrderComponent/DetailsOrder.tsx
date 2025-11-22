@@ -41,7 +41,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Patient Name</label>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.patientName}</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.patientName}</p>
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Order Type</label>
@@ -56,7 +56,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</label>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.date}</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.date}</p>
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Urgency</label>
@@ -70,11 +70,11 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
             </div>
             <div className="group">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Material</label>
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.material}</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.material}</p>
             </div>
             <div className="group">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Notes</label>
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">{order.notes}</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">{order?.options?.notes}</p>
             </div>
           </div>
 
@@ -130,7 +130,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
           <div>
             <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">Total Amount</p>
             <p className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              ${order.totalAmount.toLocaleString()}
+              ${order.totalPrice}
             </p>
           </div>
           <motion.button

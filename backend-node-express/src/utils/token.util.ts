@@ -1,8 +1,11 @@
 import Jwt  from "jsonwebtoken";
 import logger from "./logger.util";
+import { Role } from "../../generated/prisma/enums";
+
 interface TokenPayload {
   id: number;
   email: string;
+  role: Role;
 }
 // logger.info("jwt secret",process.env.JWT_SECRET);
 export const generateAccessToken = (payload:TokenPayload) => {

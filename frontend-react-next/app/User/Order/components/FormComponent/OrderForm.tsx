@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Upload } from '../../../../src/utils/UnifiedIcons';
-import { FORM_SECTIONS, SECTION_DESCRIPTIONS } from '../../../../src/config/UserData/formFieldsData';
-import { FormField } from '../../../../src/types';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Upload } from "../../../../src/utils/UnifiedIcons";
+import {
+  FORM_SECTIONS,
+  SECTION_DESCRIPTIONS,
+} from "../../../../src/config/UserData/formFieldsData";
+import { FormField } from "../../../../src/types";
+import { useCreateOrder } from "../../Form/quere";
+import { useOrders } from "../../orders-list/quere";
+import toast from "react-hot-toast";
+import { useNavigationGuard } from "@/app/src/hooks/useNavigationGuard";
 
 interface OrderFormProps {
   onSubmit: (formData: FormData) => void;
@@ -13,7 +20,12 @@ interface OrderFormProps {
   onContinueToUpload?: () => void;
 }
 
-export default function OrderForm({ onSubmit, isSubmitting, onFormDataChange, onContinueToUpload }: OrderFormProps) {
+export default function OrderForm({
+  onSubmit,
+  isSubmitting,
+  onFormDataChange,
+  onContinueToUpload,
+}: OrderFormProps) {
   const [formData, setFormData] = useState<Record<string, unknown>>({});
 
   const handleChange = (fieldId: string, value: string | boolean) => {
@@ -23,11 +35,13 @@ export default function OrderForm({ onSubmit, isSubmitting, onFormDataChange, on
       onFormDataChange(newFormData);
     }
   };
-
+  const { mutate, mutateAsync, isLoading, error, data } = useCreateOrder();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => data.append(key, String(value)));
+    Object.entries(formData).forEach(([key, value]) =>
+      data.append(key, String(value))
+    );
     onSubmit(data);
   };
 
@@ -37,21 +51,29 @@ export default function OrderForm({ onSubmit, isSubmitting, onFormDataChange, on
     }
   };
 
+
+  const [orderLocked, setOrderLocked] = useState(true);
+  useNavigationGuard(orderLocked);
   const renderField = (field: FormField & { price?: number }) => {
-    const isText = field.type === 'text';
+    const isText = field.type === "text";
     return (
       <div
         key={field.id}
-        className={isText ? 'space-y-2' : 'flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors'}
+        className={
+          isText
+            ? "space-y-2"
+            : "flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+        }
       >
         {isText ? (
           <>
             <label className="block text-sm font-medium text-gray-700">
-              {field.label}{field.required && <span className="text-red-500 ml-1">*</span>}
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <input
               type="text"
-              value={formData[field.id] as string || ''}
+              value={(formData[field.id] as string) || ""}
               onChange={(e) => handleChange(field.id, e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E4B441] focus:border-[#E4B441]"
             />
@@ -62,11 +84,14 @@ export default function OrderForm({ onSubmit, isSubmitting, onFormDataChange, on
               <input
                 type="checkbox"
                 id={field.id}
-                checked={formData[field.id] as boolean || false}
+                checked={(formData[field.id] as boolean) || false}
                 onChange={(e) => handleChange(field.id, e.target.checked)}
                 className="w-4 h-4 text-[#E4B441] border-gray-300 rounded focus:ring-[#E4B441]"
               />
-              <label htmlFor={field.id} className="text-sm font-medium text-gray-700 cursor-pointer">
+              <label
+                htmlFor={field.id}
+                className="text-sm font-medium text-gray-700 cursor-pointer"
+              >
                 {field.label}
               </label>
             </div>
@@ -93,16 +118,28 @@ export default function OrderForm({ onSubmit, isSubmitting, onFormDataChange, on
             className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className={`w-10 h-10 bg-gradient-to-r ${section.color} rounded-full flex items-center justify-center flex-shrink-0`}>
+              <div
+                className={`w-10 h-10 bg-gradient-to-r ${section.color} rounded-full flex items-center justify-center flex-shrink-0`}
+              >
                 <section.icon className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-xl font-semibold text-gray-900">{section.title}</h2>
-                <p className="text-sm text-gray-500">{SECTION_DESCRIPTIONS[section.title]}</p>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {section.title}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  {SECTION_DESCRIPTIONS[section.title]}
+                </p>
               </div>
             </div>
-            
-            <div className={`grid ${section.fields.length === 2 ? 'grid-cols-1 md:grid-cols-2 gap-6' : 'grid-cols-1 md:grid-cols-2 gap-4'}`}>
+
+            <div
+              className={`grid ${
+                section.fields.length === 2
+                  ? "grid-cols-1 md:grid-cols-2 gap-6"
+                  : "grid-cols-1 md:grid-cols-2 gap-4"
+              }`}
+            >
               {section.fields.map(renderField)}
             </div>
           </motion.div>
@@ -115,16 +152,24 @@ export default function OrderForm({ onSubmit, isSubmitting, onFormDataChange, on
           className="flex justify-center gap-4 pt-4"
         >
           <button
-            type="submit"
+            type="button"
             disabled={isSubmitting}
+            onClick={() => toast.error('Successfully created!')}
             className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all disabled:opacity-50"
           >
             Save as Draft
           </button>
-          
+
           <button
             type="button"
-            onClick={handleContinueClick}
+            onClick={()=>{
+              mutate({
+                options: formData, 
+                totalPrice: 1500, 
+              });
+              setOrderLocked(false);
+              handleContinueClick()
+            }}
             disabled={isSubmitting}
             className="px-8 py-4 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
           >

@@ -1,16 +1,24 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, CheckCircle, FileText } from '../../../src/utils/UnifiedIcons';
-import { useNavigation, animations } from '../../../src/utils/pageUtils';
-import { useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
-import PaymentSummary from '../components/FormComponent/PaymentSummary';
-import { calculateSelectedServices } from '../../../src/utils/pricingService';
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  Upload,
+  CheckCircle,
+  FileText,
+} from "../../../src/utils/UnifiedIcons";
+import { useNavigation, animations } from "../../../src/utils/pageUtils";
+import { useState } from "react";
+import { ShoppingCart } from "lucide-react";
+import PaymentSummary from "../components/FormComponent/PaymentSummary";
+import { calculateSelectedServices } from "../../../src/utils/pricingService";
+import { useUploadFile } from "./quere";
 
 export default function UploadPage() {
   const { navigateToForm, navigateToHome } = useNavigation();
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState<Record<string, unknown>>({});
+   const { mutate ,data} = useUploadFile(); 
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
@@ -22,7 +30,7 @@ export default function UploadPage() {
       // Create order data
       const orderData = {
         ...formData,
-        paymentStatus: 'paid',
+        paymentStatus: "paid",
         paymentAmount: totalAmount,
         paymentDate: new Date().toISOString(),
       };
@@ -30,7 +38,7 @@ export default function UploadPage() {
       console.log("Processing payment:", orderData);
 
       // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Navigate to orders list after successful payment
       navigateToHome();
@@ -55,11 +63,15 @@ export default function UploadPage() {
                 <Upload className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Upload Files & Notes</h1>
-                <p className="text-gray-600">Upload documents and add special instructions</p>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Upload Files & Notes
+                </h1>
+                <p className="text-gray-600">
+                  Upload documents and add special instructions
+                </p>
               </div>
             </div>
-            
+
             <button
               onClick={() => navigateToForm()}
               className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all"
@@ -84,14 +96,45 @@ export default function UploadPage() {
                   <Upload className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">📎 Upload Files</h2>
-                  <p className="text-sm text-gray-500">Upload documents, X-rays, or photos</p>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    📎 Upload Files
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Upload documents, X-rays, or photos
+                  </p>
                 </div>
               </div>
-              
-              <div className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-[#E4B441] hover:bg-gray-50 transition-colors">
+
+              <div
+                className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-[#E4B441] hover:bg-gray-50 transition-colors"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const files = Array.from(e.dataTransfer.files).slice(0, 5);
+                  setUploadedFiles(files);
+                  console.log(uploadedFiles[0]);
+                  
+                }}
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.multiple = true;
+                  input.accept = "image/*,.pdf,.dcm,.dicom";
+                  input.onchange = (e) => {
+                    const files = Array.from(
+                      (e.target as HTMLInputElement).files || []
+                    ).slice(0, 5);
+                    setUploadedFiles(files);
+                  };
+                  input.click();
+                }}
+              >
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-600 mb-2">Drag and drop files here, or click to browse</p>
+                <p className="text-gray-600 mb-2">
+                  Drag and drop files here, or click to browse
+                </p>
                 <p className="text-sm text-gray-500">
                   Supported: image/*,.pdf,.dcm,.dicom (Max 5 files)
                 </p>
@@ -109,11 +152,15 @@ export default function UploadPage() {
                   <FileText className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">📝 Notes</h2>
-                  <p className="text-sm text-gray-500">Add any special instructions or notes</p>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    📝 Notes
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Add any special instructions or notes
+                  </p>
                 </div>
               </div>
-              
+
               <textarea
                 placeholder="Write your notes here..."
                 rows={6}
@@ -133,9 +180,13 @@ export default function UploadPage() {
               >
                 Back to Form
               </button>
-              
+
               <button
-                onClick={() => navigateToHome()}
+                onClick={() => {
+                  console.log(uploadedFiles[0]);
+                  mutate(uploadedFiles[0])
+                  navigateToHome()
+                }}
                 className="px-6 py-3 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg"
               >
                 <div className="flex items-center gap-2">
@@ -148,10 +199,7 @@ export default function UploadPage() {
 
           {/* Payment Summary */}
           <div className="w-80 sm:w-96 flex-shrink-0">
-            <motion.div
-              {...animations.fadeInUp}
-              transition={{ delay: 0.4 }}
-            >
+            <motion.div {...animations.fadeInUp} transition={{ delay: 0.4 }}>
               <PaymentSummary
                 title="Order Summary"
                 subtitle="Selected services"
