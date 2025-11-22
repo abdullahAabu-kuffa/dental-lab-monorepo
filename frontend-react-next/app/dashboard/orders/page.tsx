@@ -11,20 +11,19 @@ import { Order } from "../interfaces/orders";
 import { Pagination } from "../_components/@pagination";
 
 const Orders = () => {
-   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, isError, error } = useGetAllOrders(currentPage);
-  const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
-  const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
-  const pages = data?.data?.totalPages || 1;
   const { data: me } = useGetProfileInfo();
   useEffect(() => {
     if (me) {
       if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
     }
   }, [me]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data } = useGetAllOrders(currentPage);
+  const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
+  const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const pages = data?.data?.totalPages || 1;
   const totalOrders = data?.data?.totalOrders || 0;
   const list = data?.data?.orders ?? [];
-  console.log("from", list);
   const pendingOrders = list.filter((order: Order) => order.status === "PENDING").length;
   const completedOrders = list.filter((order: Order) => order.status === "COMPLETED").length;
   const rejectedOrders = list.filter((order: Order) => order.status === "CANCELLED").length;

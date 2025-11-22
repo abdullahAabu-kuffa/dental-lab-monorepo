@@ -20,17 +20,16 @@ export default function OrderDetails({
   const searchParams = useSearchParams();
   const orderQuery = searchParams.get("order");
   const [order, setOrder] = useState(orderQuery ? JSON.parse(orderQuery) : null);
-
   const { id } = use(params);
   const queryClient = useQueryClient();
 
   const updateStatus = useMutation({
-    mutationFn: async (newStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED") => {
+    mutationFn: async (newStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED") => {
       const res = await fetch(`http://localhost:3001/api/orders/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM2NjU4NTUsImV4cCI6MTc2Mzc1MjI1NX0.J6Cl01QDIl7R4n24Uw3WcYG-o1W0OxaPVDWTr9gx_B0`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM4MDk5ODMsImV4cCI6MTc2Mzg5NjM4M30.I6MUalfg3MHIv0T9eFCI3vDiT-GrTxmmjQS2tlRP3_o`,
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -41,33 +40,36 @@ export default function OrderDetails({
     onSuccess: (data) => {
       setOrder((prev: Order) => ({
         ...prev,
-        status: data.data.status, // or data.status depending on API response
+        status: data.data.status, 
       }));
       queryClient.invalidateQueries({ queryKey: ["order", id] });
     },
   });
-
   const mapBackendStatusToUI = (status: string) => {
     switch (status) {
       case "PENDING":
-        return "Received";
+        return "Pending";
       case "IN_PROGRESS":
         return "In Progress";
       case "COMPLETED":
         return "Completed";
+      case "CANCELLED":
+        return "REJECTED";
       default:
-        return "Received";
+        return "Pending";
     }
   };
 
   const mapUIStatusToBackend = (status: string) => {
     switch (status) {
-      case "Received":
+      case "Pending":
         return "PENDING";
       case "In Progress":
         return "IN_PROGRESS";
       case "Completed":
         return "COMPLETED";
+      case "REJECTED":
+        return "CANCELLED";
       default:
         return "PENDING";
     }
@@ -108,9 +110,10 @@ export default function OrderDetails({
                   updateStatus.mutate(mapUIStatusToBackend(e.target.value))
                 }
               >
-                <option>Received</option>
+                <option>Pending</option>
                 <option>In Progress</option>
                 <option>Completed</option>
+                <option>Cancelled</option>
               </select>
 
               {updateStatus.isPending && (
