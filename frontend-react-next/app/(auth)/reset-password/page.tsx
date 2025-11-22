@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Lottie from "lottie-react";
+import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import Button from "@/app/src/components/atoms/Button/Button";
 import animationData from "@/assets/lotties/teeth.json";
 import { apiFetch } from "@/app/src/lib/apiClient";
@@ -37,7 +38,7 @@ export default function ResetPasswordPage() {
 					token,
 					newPassword: password,
 				}),
-				retryOn401: false, // مفيش لوجين هنا فما فيش داعي للـ refresh
+				retryOn401: false, 
 			});
 
 			if (!res.ok) {
@@ -178,3 +179,4 @@ export default function ResetPasswordPage() {
 		</main>
 	);
 }
+

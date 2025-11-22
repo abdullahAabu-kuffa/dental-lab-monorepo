@@ -4,6 +4,7 @@ import { useState } from "react";
 import { apiFetch } from "@/app/src/lib/apiClient";
 
 import Lottie from "lottie-react";
+import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import Button from "@/app/src/components/atoms/Button/Button";
 import animationData from "@/assets/lotties/teeth.json";
 

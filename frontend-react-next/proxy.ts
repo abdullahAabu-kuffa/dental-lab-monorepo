@@ -13,7 +13,7 @@ export function proxy(req: NextRequest) {
 
     if (!refreshToken) {
         try {
-            fetch(`${HostIP}/users/me`)
+            fetch(`${HostIP}/api/users/me`)
         } catch {
 
         }

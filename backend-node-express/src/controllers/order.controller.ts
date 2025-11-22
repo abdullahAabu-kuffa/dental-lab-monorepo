@@ -63,6 +63,7 @@ export async function getUserOrder(req: Request, res: Response) {
 
 export async function updateUserOrder(req: Request, res: Response) {
   try {
+    console.log("USER FROM TOKEN:", req.user);
     const updatedOrder = await updateUserOrderService(req);
     return res.status(200).json(successResponse(updatedOrder, "Order updated successfully"));
   } catch (error: any) {

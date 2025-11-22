@@ -1,10 +1,19 @@
+"use client";
 import { PersonStandingIcon, Users } from "lucide-react";
 import StatsCard from "../_components/@statecard";
 import { MdDone } from "react-icons/md";
 import { FcCancel } from "react-icons/fc";
 import OrdersTable from "../_components/@orderstable";
+import { useGetProfileInfo } from "../services/hookes/get_profile_info";
+import { useEffect } from "react";
 
-const orders = () => {
+const Orders = () => {
+  const { data: me } = useGetProfileInfo();
+  useEffect(() => {
+    if (me) {
+      if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
+    }
+  }, [me]);
   return (
     <div className="bg-[F5F7FA]">
       <div className="p-6">
@@ -58,4 +67,4 @@ const orders = () => {
   );
 };
 
-export default orders;
+export default Orders;

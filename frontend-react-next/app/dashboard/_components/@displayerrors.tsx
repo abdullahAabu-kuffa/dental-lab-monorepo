@@ -9,7 +9,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
     return (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-6 max-w-md mx-auto">
             
-            <span className="block sm:inline">{message}</span>
+            <span className="block sm:inline">{getUserFriendlyError(message)}</span>
         </div>
     );
 
@@ -17,7 +17,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
 
 export default ErrorMessage;
 
-export const getUserFriendlyError = (error: unknown): string => {
+const getUserFriendlyError = (error: unknown): string => {
 
     if (error instanceof Error) {
         const msg = error.message.toLowerCase();

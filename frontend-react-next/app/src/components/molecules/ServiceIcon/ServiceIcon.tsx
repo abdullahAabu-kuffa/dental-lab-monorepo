@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Crown, Smile, Microscope, Zap } from '../../../utils/UnifiedIcons';
+import { Crown, Smile, Microscope, Zap, Activity } from '../../../utils/UnifiedIcons';
 
 interface ServiceIconProps {
   iconName: string;
@@ -15,14 +15,15 @@ const ServiceIcon: React.FC<ServiceIconProps> = ({ iconName, className = '' }) =
     switch (iconNameLower) {
       case 'crown':
         return <Crown className="w-8 h-8 text-white" />;
+      case 'tooth':
+        return <Activity className="w-8 h-8 text-white" />;
       case 'smile':
         return <Smile className="w-8 h-8 text-white" />;
       case 'microscope':
         return <Microscope className="w-8 h-8 text-white" />;
       case 'zap':
         return <Zap className="w-8 h-8 text-white" />;
-      default:
-        return <Crown className="w-8 h-8 text-white" />;
+
     }
   };
 

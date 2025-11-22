@@ -77,8 +77,13 @@ export const updateUserOrderService = async (req: any) => {
     await checkUser(userId);
     await checkOrder(orderId);
     const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (req.user.role === "CLIENT" && order?.userId !== userId) {
+    
+    if (!order) {
+      throw new Error("Order not found");
+    }
+    if (req.user.role === "CLIENT" && order.userId !== userId) {
       throw new Error("You are not allowed to update this order");
+      
     }
 
     const allowedFields = ["status", "options", "totalPrice"];

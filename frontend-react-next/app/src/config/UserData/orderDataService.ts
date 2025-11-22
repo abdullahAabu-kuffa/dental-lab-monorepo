@@ -1,12 +1,11 @@
 
  
 
-import type { Order, OrderStats } from '../../types';
+import type { Order } from '../../types';
 import {
   Check, Zap, Clock, X, Truck, AlertCircle,
   Package, Eye, Settings, Microscope,
-  CheckCircle, Crown, FileText,
-  Search, Plus, Filter
+  CheckCircle, Crown, FileText
 
 } from '../../utils/UnifiedIcons';
 
@@ -193,116 +192,39 @@ export const SAMPLE_ORDERS: Order[] = [
   }
 ];
 
-// STATUS CONFIGURATION
 
+
+// STATUS CONFIGURATION
 export const STATUS_CONFIG = {
   completed: {
     icon: Check,
     label: 'Completed',
-    color: {
-      bg: 'bg-green-500',
-      text: 'text-white',
-      border: 'border-green-500',
-      light: 'bg-green-100',
-      darkText: 'text-green-700'
-    },
-    gradient: ['#10B981', '#059669'],
-    manufacturingColors: {
-      bg: 'bg-gradient-to-br from-emerald-400 to-emerald-600',
-      text: 'text-white',
-      border: 'border-emerald-400',
-      connector: 'bg-gradient-to-r from-emerald-400 to-emerald-500'
-    }
+    gradient: ['#10B981', '#059669']
   },
   inProgress: {
     icon: Zap,
     label: 'In Progress',
-    color: {
-      bg: 'bg-blue-500',
-      text: 'text-white',
-      border: 'border-blue-500',
-      light: 'bg-blue-100',
-      darkText: 'text-blue-700'
-    },
-    gradient: ['#3B82F6', '#2563EB'],
-    manufacturingColors: {
-      bg: 'bg-gradient-to-br from-blue-400 to-blue-600',
-      text: 'text-white',
-      border: 'border-blue-400',
-      connector: 'bg-gradient-to-r from-blue-400 to-blue-500'
-    }
+    gradient: ['#3B82F6', '#2563EB']
   },
   pending: {
     icon: Clock,
     label: 'Pending',
-    color: {
-      bg: 'bg-orange-500',
-      text: 'text-white',
-      border: 'border-orange-500',
-      light: 'bg-orange-100',
-      darkText: 'text-orange-700'
-    },
-    gradient: ['#F59E0B', '#D97706'],
-    manufacturingColors: {
-      bg: 'bg-gradient-to-br from-amber-400 to-amber-600',
-      text: 'text-white',
-      border: 'border-amber-400',
-      connector: 'bg-gradient-to-r from-amber-400 to-amber-500'
-    }
+    gradient: ['#F59E0B', '#D97706']
   },
   rejected: {
     icon: X,
     label: 'Needs Attention',
-    color: {
-      bg: 'bg-red-500',
-      text: 'text-white',
-      border: 'border-red-500',
-      light: 'bg-red-100',
-      darkText: 'text-red-700'
-    },
-    gradient: ['#EF4444', '#DC2626'],
-    manufacturingColors: {
-      bg: 'bg-gradient-to-br from-red-400 to-red-600',
-      text: 'text-white',
-      border: 'border-red-400',
-      connector: 'bg-gradient-to-r from-red-400 to-red-500'
-    }
+    gradient: ['#EF4444', '#DC2626']
   },
   shipped: {
     icon: Truck,
     label: 'Shipped',
-    color: {
-      bg: 'bg-cyan-500',
-      text: 'text-white',
-      border: 'border-cyan-500',
-      light: 'bg-cyan-100',
-      darkText: 'text-cyan-700'
-    },
-    gradient: ['#06B6D4', '#0891B2'],
-    manufacturingColors: {
-      bg: 'bg-gradient-to-br from-cyan-400 to-cyan-600',
-      text: 'text-white',
-      border: 'border-cyan-400',
-      connector: 'bg-gradient-to-r from-cyan-400 to-cyan-500'
-    }
+    gradient: ['#06B6D4', '#0891B2']
   },
   waiting: {
     icon: AlertCircle,
     label: 'Unknown',
-    color: {
-      bg: 'bg-gray-400',
-      text: 'text-white',
-      border: 'border-gray-400',
-      light: 'bg-gray-100',
-      darkText: 'text-gray-700'
-    },
-    gradient: ['#9CA3AF', '#6B7280'],
-    manufacturingColors: {
-      bg: 'bg-gradient-to-br from-gray-300 to-gray-500',
-      text: 'text-gray-600',
-      border: 'border-gray-300',
-      connector: 'bg-gradient-to-r from-gray-300 to-gray-400'
-    }
+    gradient: ['#9CA3AF', '#6B7280']
   }
 } as const;
 
@@ -374,154 +296,9 @@ export const getStatusCount = (orders: Order[], statusId: string): number => {
   }
 };
 
-// MANUFACTURING PROCESS STEPS - Enhanced with dynamic colors
-
-export const getManufacturingStepsForOrder = (order: Order) => {
-  const statusConfig = getOrderStatusConfig(order.status);
-  
-  return [
-    { 
-      label: "Order Placed", 
-      icon: Package,
-      completed: true,
-      active: false,
-      date: new Date(order.createdAt).toLocaleDateString(),
-      status: 'completed'
-    },
-    { 
-      label: "Digital Design", 
-      icon: Eye,
-      completed: order.status === 'Completed' || order.status === 'In Progress',
-      active: order.status === 'In Progress',
-      date: order.status === 'Completed' || order.status === 'In Progress' 
-        ? new Date(order.updatedAt).toLocaleDateString() 
-        : 'In Progress',
-      status: order.status === 'Completed' ? 'completed' : order.status === 'In Progress' ? 'active' : 'pending'
-    },
-    { 
-      label: "Manufacturing", 
-      icon: Settings,
-      completed: order.status === 'Completed',
-      active: order.status === 'In Progress',
-      date: order.status === 'Completed' ? 'Completed' : order.status === 'In Progress' ? 'In Progress' : 'Pending',
-      status: order.status === 'Completed' ? 'completed' : order.status === 'In Progress' ? 'active' : 'pending'
-    },
-    { 
-      label: "Quality Control", 
-      icon: Microscope,
-      completed: false,
-      active: false,
-      date: order.status === 'Completed' ? 'Completed' : 'Pending',
-      status: order.status === 'Completed' ? 'completed' : 'pending'
-    },
-    { 
-      label: "Shipped", 
-      icon: Truck,
-      completed: order.status === 'Completed',
-      active: false,
-      date: order.status === 'Completed' ? 'Shipped' : 'Pending',
-      status: order.status === 'Completed' ? 'completed' : 'pending'
-    },
-  ];
-};
-
-// UI CONFIGURATION
-
-export const UI_CONFIG = {
-  header: {
-    title: "My Orders",
-    subtitle: "Track and manage your dental orders",
-    searchPlaceholder: "Search orders by patient name..."
-  },
-  actions: {
-    newOrder: {
-      label: "New Order",
-      icon: Plus
-    },
-    filter: {
-      label: "Filter", 
-      icon: Filter
-    },
-    search: {
-      icon: Search
-    }
-  },
-  cards: {
-    emptyState: {
-      noOrders: {
-        title: "No matching orders",
-        description: "Try a different patient name"
-      },
-      selectOrder: {
-        title: "Select an Order",
-        description: "Click on an order card to view its detailed progress"
-      },
-      quickDetails: {
-        title: "Quick Details", 
-        description: "View order summary when selected"
-      }
-    }
-  }
-};
 
 
-// CALCULATED STATS
 
-
-export const calculateOrderStats = (orders: Order[]): OrderStats => {
-  return {
-    total: orders.length,
-    pending: orders.filter(o => o.status === 'Pending').length,
-    inProgress: orders.filter(o => o.status === 'In Progress').length,
-    completed: orders.filter(o => o.status === 'Completed').length,
-    totalRevenue: orders.reduce((sum, order) => sum + order.totalAmount, 0)
-  };
-};
-
-export const DEFAULT_ORDER_STATS: OrderStats = calculateOrderStats(SAMPLE_ORDERS);
-
-
-// UTILITY FUNCTIONS
-
-// Get status configuration for an order
-export const getOrderStatusConfig = (status: string) => {
-  const normalizedStatus = status.toLowerCase().replace(/_/g, " ");
-  
-  switch (normalizedStatus) {
-    case "completed":
-      return STATUS_CONFIG.completed;
-    case "in progress":
-      return STATUS_CONFIG.inProgress;
-    case "pending":
-      return STATUS_CONFIG.pending;
-    case "rejected":
-    case "needs attention":
-      return STATUS_CONFIG.rejected;
-    case "shipped":
-      return STATUS_CONFIG.shipped;
-    default:
-      return STATUS_CONFIG.waiting;
-  }
-};
-
-// Get progress percentage based on status
-export const getProgressPercentage = (status: string): number => {
-  switch (status.toLowerCase()) {
-    case "completed":
-      return 100;
-    case "in progress":
-      return 60;
-    case "shipped":
-      return 90;
-    case "pending":
-      return 20;
-    case "rejected":
-    case "needs attention":
-      return 0;
-    default:
-      return 10;
-  }
-};
 
 // Filter orders by status
 export const filterOrdersByStatus = (orders: Order[], status: string): Order[] => {
@@ -529,13 +306,13 @@ export const filterOrdersByStatus = (orders: Order[], status: string): Order[] =
   
   // Handle special cases for status matching
   switch (status) {
-    case "completed":
+    case "COMPLETED":
       return orders.filter(order => order.status === 'Completed');
-    case "in-progress":
+    case "IN_PROGRESS":
       return orders.filter(order => order.status === 'In Progress');
-    case "pending":
+    case "PENDING":
       return orders.filter(order => order.status === 'Pending');
-    case "cancelled":
+    case "CANCELLED":
       return orders.filter(order => order.status === 'Cancelled');
     default:
       return orders.filter(order => 
@@ -544,25 +321,6 @@ export const filterOrdersByStatus = (orders: Order[], status: string): Order[] =
   }
 };
 
-// Search orders by patient name
-export const searchOrders = (orders: Order[], searchTerm: string): Order[] => {
-  if (!searchTerm.trim()) return orders;
-  return orders.filter(order =>
-    order.patientName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-};
-
-// Manufacturing stage names - consistent across all components
-export const MANUFACTURING_STAGES = {
-  orderPlaced: 'Order Placed',
-  upload: 'Upload & Documentation',
-  digitalDesign: 'Digital Design & Planning',
-  material: 'Material Selection',
-  manufacturing: 'Manufacturing & Fabrication',
-  qualityControl: 'Quality Control & Inspection',
-  shipped: 'Packaged & Shipped',
-  completion: 'Order Completed'
-} as const;
 
 // Get detailed stage information for an order
 export const getOrderStages = (order: Order) => {
@@ -609,22 +367,6 @@ export const getOrderStages = (order: Order) => {
   ];
   
   return stages;
-};
-
-// Digital Manufacturing Process Description
-export const DIGITAL_MANUFACTURING_PROCESS_DESCRIPTION = {
-  title: "Digital Manufacturing Process",
-  subtitle: "Follow your dental case from upload to delivery — every stage, visible in real-time.",
-  description: "All updates appear live in your client dashboard — giving you full transparency and control over your cases.",
-  steps: [
-    "Upload Case",
-    "Material Selection",
-    "Design Process", 
-    "Quality Check",
-    "Documentation",
-    "Shipping",
-    "Completion"
-  ]
 };
 
 // Enhanced user process steps for landing page
@@ -688,25 +430,14 @@ export const USER_PROCESS_STEPS = [
 const orderDataService = {
   // Data
   SAMPLE_ORDERS,
-  STATUS_CONFIG,
   STATUS_FILTER_ITEMS,
-  UI_CONFIG,
-  
-  // Stats
-  DEFAULT_ORDER_STATS,
-  calculateOrderStats,
   
   // Utilities
-  getOrderStatusConfig,
-  getProgressPercentage,
   filterOrdersByStatus,
-  searchOrders,
   calculateStatusCounts,
   getStatusCount,
-  getManufacturingStepsForOrder,
   
   // Additional utilities
-  MANUFACTURING_STAGES,
   getOrderStages,
   USER_PROCESS_STEPS
 };

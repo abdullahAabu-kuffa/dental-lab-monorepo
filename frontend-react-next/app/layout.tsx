@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
+ front-end-login
 import { QueryProvider } from "@/QueryProvider";
 import { AuthProvider } from "./src/context/AuthContext";
+import Provider from "./provider";
+import { LoadingProvider } from "./src/contexts/LoadingContext";
+import GlobalLoader from "./src/components/GlobalLoader";
+
+
+
 const playfair = Playfair_Display({
 	variable: "--font-playfair",
 	subsets: ["latin"],
@@ -23,11 +30,18 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={`${playfair.variable} antialiased`}>
-				<QueryProvider>
-					<AuthProvider>{children}</AuthProvider>
-				</QueryProvider>
-			</body>
-		</html>
-	);
+      <body className={`${playfair.variable} antialiased`}>
+        <Provider>
+          <QueryProvider>
+            <AuthProvider>
+              <LoadingProvider>
+                <GlobalLoader />
+                {children}
+              </LoadingProvider>
+            </AuthProvider>
+          </QueryProvider>
+        </Provider>
+      </body>
+    </html>
+  );
 }
