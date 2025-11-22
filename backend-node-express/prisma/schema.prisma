@@ -125,15 +125,13 @@ model File {
   id           Int       @id @default(autoincrement())
   
   // B2 identifiers
-  fileName     String
+  b2FileId     String    
+  b2FileName   String
   
   // File metadata
   originalName String
   fileSize     Int
   fileType     String
-  
-  // Status
-  storageStatus StorageStatus @default(STAGING)
   
   // Timestamps
   createdAt    DateTime  @default(now())
@@ -144,11 +142,7 @@ model File {
 
 }
 
-enum StorageStatus {
-  STAGING
-  APPROVED
-  REJECTED
-}
+
 
 model AuditLog {
   id        Int      @id @default(autoincrement())

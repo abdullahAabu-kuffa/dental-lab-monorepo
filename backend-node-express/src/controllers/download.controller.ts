@@ -25,7 +25,7 @@ export async function getDownloadUrl(req: Request, res: Response) {
     const forceDownload = asAttachment === "true";
 
     // Generate secure download URL and token
-    const { url, authToken } = await generateSecureDownloadUrl(
+    const { url } = await generateSecureDownloadUrl(
       filename,
       validDuration,
       forceDownload
@@ -36,19 +36,22 @@ export async function getDownloadUrl(req: Request, res: Response) {
         `(valid for ${validDuration}s, disposition: ${forceDownload ? "attachment" : "inline"})`
     );
 
-    return res.status(200).json(
-      successResponse(
-        {
-          url,
-          authToken,
-          filename,
-          expiresIn: validDuration,
-          expiresAt: new Date(Date.now() + validDuration * 1000).toISOString(),
-          disposition: forceDownload ? "attachment" : "inline",
-        },
-        "Download URL and token generated successfully"
-      )
-    );
+    // return res.status(200).json(
+    //   successResponse(
+    //     {
+    //       url,
+    //       authToken,
+    //       filename,
+    //       expiresIn: validDuration,
+    //       expiresAt: new Date(Date.now() + validDuration * 1000).toISOString(),
+    //       disposition: forceDownload ? "attachment" : "inline",
+    //     },
+    //     "Download URL and token generated successfully"
+    //   )
+    // );
+    logger.info(`Redirecting to: ${url}`);
+    res.setHeader("Content-Disposition", "attachment" );
+    return res.redirect(url);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Download URL generation error: ${errorMessage}`);

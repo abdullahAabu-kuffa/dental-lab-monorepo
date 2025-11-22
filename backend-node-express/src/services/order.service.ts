@@ -11,11 +11,13 @@ export const createOrderServices = async (userId: any, orderData: any) => {
   try {
     parseId(userId);
     await checkUser(userId);
+    
     const newOrder = await prisma.order.create({
       data: {
         userId,
         options: orderData.options,
         totalPrice: orderData.totalPrice,
+        fileId: orderData.fileId
       },
     });
     return newOrder;

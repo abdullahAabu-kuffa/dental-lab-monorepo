@@ -235,28 +235,43 @@ export async function generateSecureDownloadUrl(
   filename: string,
   validDurationSeconds: number = 3600,
   forceDownload: boolean = false
-): Promise<{ url: string; authToken: string }> {
+): Promise<{ url: string }> {
   try {
-    const contentDisposition = forceDownload
-      ? `attachment; filename="${filename.split("/").pop()}"`
-      : undefined;
+    const auth = await authorize();
+    const contentDisposition = `attachment; filename="${filename.split("/").pop()}"`;
 
-    const { token, downloadUrl } = await getDownloadAuthorization(
-      filename,
-      validDurationSeconds,
+    const bucketId = process.env.B2_BUCKET_ID!;
+    const bucketName = process.env.B2_BUCKET_NAME!;
+    const { data: authData } = await b2.getDownloadAuthorization({
+      bucketId,
+      fileNamePrefix: filename,
+      validDurationInSeconds: Math.min(validDurationSeconds, 604800),
+      b2ContentDisposition: contentDisposition,
+    });
+    const token = authData.authorizationToken;
+    const downloadUrl = `${auth.downloadUrl}/file/${bucketName}/${encodeURIComponent(filename)}?Authorization=${encodeURIComponent(token)}&b2ContentDisposition=${encodeURIComponent(
       contentDisposition
-    );
+    )}`;
+    return {
+      url: downloadUrl,
+    };
+
+    // await getDownloadAuthorization(
+    //   filename,
+    //   validDurationSeconds,
+    //   contentDisposition
+    // );
 
     // B2 expects authorization as a header, not query param
     // But we return both the URL and token so frontend can use either method
-    const urlWithQueryParam = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}?Authorization=${token}`;
+    // const urlWithQueryParam = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}?Authorization=${token}`;
 
-    const plainUrl = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}`;
+    // const plainUrl = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}`;
 
-    return {
-      url: plainUrl,
-      authToken: token,
-    };
+    // return {
+    //   url: plainUrl,
+    //   authToken: token,
+    // };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Failed to generate secure download URL: ${errorMessage}`);
