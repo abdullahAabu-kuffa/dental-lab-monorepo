@@ -2,15 +2,15 @@
 
 import { use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {useMutation, useQueryClient } from "@tanstack/react-query";
-import { Order } from "../interfaces/users";
 import { useGetProfileInfo } from "../services/hookes/get_profile_info";
+import { useChangeOrderStatus } from "../services/hookes/change_order_status";
+import { Order } from "../interfaces/orders";
 
 export default function OrderDetails({
   params,
 }: {
   params: Promise<{ id: string }>;
-  }) {
+}) {
   const { data: me } = useGetProfileInfo();
   useEffect(() => {
     if (me) {
@@ -19,32 +19,34 @@ export default function OrderDetails({
   }, [me]);
   const searchParams = useSearchParams();
   const orderQuery = searchParams.get("order");
-  const [order, setOrder] = useState(orderQuery ? JSON.parse(orderQuery) : null);
+  const [order, setOrder] = useState(
+    orderQuery ? JSON.parse(orderQuery) : null
+  );
   const { id } = use(params);
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
+  const updateStatus = useChangeOrderStatus();
+  // const updateStatus = useMutation({
+  //   mutationFn: async (newStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED") => {
+  //     const res = await fetch(`http://localhost:3001/api/orders/${id}`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM4MDk5ODMsImV4cCI6MTc2Mzg5NjM4M30.I6MUalfg3MHIv0T9eFCI3vDiT-GrTxmmjQS2tlRP3_o`,
+  //       },
+  //       body: JSON.stringify({ status: newStatus }),
+  //     });
 
-  const updateStatus = useMutation({
-    mutationFn: async (newStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED") => {
-      const res = await fetch(`http://localhost:3001/api/orders/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM4MDk5ODMsImV4cCI6MTc2Mzg5NjM4M30.I6MUalfg3MHIv0T9eFCI3vDiT-GrTxmmjQS2tlRP3_o`,
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (!res.ok) throw new Error("Failed updating status");
-      return res.json();
-    },
-    onSuccess: (data) => {
-      setOrder((prev: Order) => ({
-        ...prev,
-        status: data.data.status, 
-      }));
-      queryClient.invalidateQueries({ queryKey: ["order", id] });
-    },
-  });
+  //     if (!res.ok) throw new Error("Failed updating status");
+  //     return res.json();
+  //   },
+  //   onSuccess: (data) => {
+  //     setOrder((prev: Order) => ({
+  //       ...prev,
+  //       status: data.data.status,
+  //     }));
+  //     queryClient.invalidateQueries({ queryKey: ["order", id] });
+  //   },
+  // });
   const mapBackendStatusToUI = (status: string) => {
     switch (status) {
       case "PENDING":
@@ -80,7 +82,7 @@ export default function OrderDetails({
       <div className="max-w-3xl mx-auto bg-white/20 backdrop-blur-2xl shadow-2xl border border-white/20 rounded-3xl p-10 animate-fadeIn">
         {/* TITLE */}
         <h1 className="text-4xl font-bold text-black drop-shadow-lg mb-10 text-center">
-        Order Details
+          Order Details
         </h1>
 
         {/* Main Info Card */}
@@ -106,9 +108,16 @@ export default function OrderDetails({
                 className="px-4 py-2 rounded-xl bg-white/40 border border-white/50 shadow-inner 
                            cursor-pointer focus:ring-2 ring-white-400 transition"
                 value={mapBackendStatusToUI(order.status)}
-                onChange={(e) =>
-                  updateStatus.mutate(mapUIStatusToBackend(e.target.value))
-                }
+                onChange={(e) => {
+                  updateStatus.mutate({
+                    orderId: Number(id),
+                    action: mapUIStatusToBackend(e.target.value),
+                  });
+                  setOrder((prev: Order) => ({
+                    ...prev,
+                    status: e.target.value,
+                  }));
+                }}
               >
                 <option>Pending</option>
                 <option>In Progress</option>
@@ -139,10 +148,7 @@ export default function OrderDetails({
           ) : (
             <div className="space-y-2 text-black">
               {Object.entries(order.options.data).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="flex py-2 border-b border-white/20"
-                >
+                <div key={key} className="flex py-2 border-b border-white/20">
                   <span className="font-semibold capitalize mr-1">{key}</span>
                   <span>: {String(value)}</span>
                 </div>
@@ -154,7 +160,7 @@ export default function OrderDetails({
         {/* Customer Card */}
         <div className="rounded-2xl p-6 bg-white/20 shadow-xl border border-white/30">
           <h2 className="text-2xl font-bold text-black mb-4 drop-shadow-md">
-             Customer Information
+            Customer Information
           </h2>
 
           <div className="space-y-2 text-black/90">
@@ -185,7 +191,7 @@ export default function OrderDetails({
           className="w-full mt-10 py-3 text-xl rounded-xl bg-blue-500 text-white font-semibold 
                      shadow-lg hover:bg-blue-600 transition backdrop-blur-lg"
         >
-           Go Back
+          Go Back
         </button>
       </div>
     </div>

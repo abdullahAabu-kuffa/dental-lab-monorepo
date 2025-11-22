@@ -8,7 +8,6 @@ import { ApiOrder, Order } from "../interfaces/orders";
 import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
-import { Pagination } from "./@pagination";
 import Loading from "./@loading";
 
 const ACTION_MAP: Record<string, "IN_PROGRESS" | "CANCELLED"> = {
