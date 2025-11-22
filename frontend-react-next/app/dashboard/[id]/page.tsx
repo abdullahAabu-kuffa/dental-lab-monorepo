@@ -1,5 +1,4 @@
 "use client";
-
 import { use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useGetProfileInfo } from "../services/hookes/get_profile_info";
@@ -23,30 +22,7 @@ export default function OrderDetails({
     orderQuery ? JSON.parse(orderQuery) : null
   );
   const { id } = use(params);
-  // const queryClient = useQueryClient();
   const updateStatus = useChangeOrderStatus();
-  // const updateStatus = useMutation({
-  //   mutationFn: async (newStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED") => {
-  //     const res = await fetch(`http://localhost:3001/api/orders/${id}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM4MDk5ODMsImV4cCI6MTc2Mzg5NjM4M30.I6MUalfg3MHIv0T9eFCI3vDiT-GrTxmmjQS2tlRP3_o`,
-  //       },
-  //       body: JSON.stringify({ status: newStatus }),
-  //     });
-
-  //     if (!res.ok) throw new Error("Failed updating status");
-  //     return res.json();
-  //   },
-  //   onSuccess: (data) => {
-  //     setOrder((prev: Order) => ({
-  //       ...prev,
-  //       status: data.data.status,
-  //     }));
-  //     queryClient.invalidateQueries({ queryKey: ["order", id] });
-  //   },
-  // });
   const mapBackendStatusToUI = (status: string) => {
     switch (status) {
       case "PENDING":
