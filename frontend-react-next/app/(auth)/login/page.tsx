@@ -5,15 +5,12 @@ import { useRouter } from "next/navigation";
 import Lottie from "lottie-react";
 
 import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
-import { apiFetch } from "@/app/src/lib/apiClient";
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
 import { z } from "zod";
 import animationData from "@/assets/lotties/Cleantooth.json";
-import { apiFetch } from "@/app/src/lib/apiClient";
 import { useAuthContext } from "@/app/src/context/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/app/src/hooks/useAuth";
 import type { User } from "@/app/dashboard/interfaces/users";
 // Zod schema for simple validation
 const loginSchema = z.object({
