@@ -52,7 +52,7 @@ export const getAllOrdersServices = async (userId: any, req: any) => {
       throw new Error("no orders Found");
     }
     let totalPages = Math.ceil(totalOrders / limit);
-    return { orders, page, limit, totalPages };
+    return { orders, page, limit,totalOrders, totalPages };
   } catch (error: any) {
     logger.error(`[getAllOrdersServices error] : ${error.message}`);
     throw error;
