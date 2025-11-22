@@ -110,11 +110,11 @@ export const loginUser = async (email: string, password: string) => {
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("Invalid cradintails");
     }
     const isPasswordValid = await verifyPassword(password, user.password);
     if (!isPasswordValid) {
-      throw new Error("Invalid password");
+      throw new Error("Invalid cradintails");
     }
 
     const allSessions = await prisma.session.findMany({
@@ -130,10 +130,11 @@ export const loginUser = async (email: string, password: string) => {
       });
     }
 
-    const accessToken = generateAccessToken({ id: user.id, email: user.email });
+    const accessToken = generateAccessToken({ id: user.id, email: user.email ,role: user.role  });
     const refreshToken = generateRefreshToken({
       id: user.id,
       email: user.email,
+      role: user.role 
     });
     const session = await prisma.session.create({
       data: {
@@ -208,10 +209,12 @@ export const refreshTokenService = async (
     const newAccessToken = generateAccessToken({
       id: user.id,
       email: user.email,
+      role: user.role 
     });
     const newRefreshToken = generateRefreshToken({
       id: user.id,
       email: user.email,
+      role: user.role
     });
 
     await prisma.session.update({
@@ -237,7 +240,7 @@ export const forgotPasswordService = async (email: string) => {
     if (!user) {
       throw new Error("User not found");
     }
-    const token =  generateAccessToken({ id: user.id, email: user.email });
+    const token =  generateAccessToken({ id: user.id, email: user.email ,role: user.role, });
     const resetLink = `http://localhost:3000/reset-password?token=${token}`;
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",

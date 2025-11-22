@@ -1,9 +1,9 @@
+import { getAccessToken } from "@/app/src/auth/tokenStore";
+
 import axios from "axios";
 import { FetchUsersResponse } from "../interfaces/users";
-import { getToken } from "@/app/src/lib/apiClient";
-
 axios.defaults.baseURL = 'http://localhost:3001/api';
-const token = getToken() || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM4MDk5ODMsImV4cCI6MTc2Mzg5NjM4M30.I6MUalfg3MHIv0T9eFCI3vDiT-GrTxmmjQS2tlRP3_o";
+const token = getAccessToken() || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM4MDk5ODMsImV4cCI6MTc2Mzg5NjM4M30.I6MUalfg3MHIv0T9eFCI3vDiT-GrTxmmjQS2tlRP3_o";
 console.log(token);
 
 // this fuction fetches all orders
@@ -36,7 +36,6 @@ export const changeOrderStatus = async (orderId: number, action: "PENDING" | "IN
    const json = await res.json();
    return json;
 };
-
 // get me info
 export const getMe = async () => {
   const res = await fetch(`http://localhost:3001/api/users/me`, {
@@ -49,7 +48,6 @@ export const getMe = async () => {
   const json = await res.json();
   return json;
 }
-
 export const changeUserStatus = async (userId: number, action: "approve" | "reject") => {
   const res = await axios.put(
     `/users/${userId}/status`,

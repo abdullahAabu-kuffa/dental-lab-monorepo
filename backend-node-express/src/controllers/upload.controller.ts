@@ -12,7 +12,9 @@ import { fileTypeFromBuffer } from 'file-type';
 export async function uploadFile(req: Request, res: Response) {
   try {
     if (!req.file) {
+      console.log('No file provided', 400, req.body);
       return res.status(400).json(errorResponse('No file provided', 400));
+      
     }
     console.log("file type:", await fileTypeFromBuffer(req.file.buffer));
 

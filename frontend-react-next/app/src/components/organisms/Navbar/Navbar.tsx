@@ -28,7 +28,7 @@ const Navbar = () => {
 
 	async function handleLogout() {
 		try {
-			await logoutRequest();
+			await logoutRequest(router);
 		} catch (error) {
 			console.error("Logout failed:", error);
 		} finally {
