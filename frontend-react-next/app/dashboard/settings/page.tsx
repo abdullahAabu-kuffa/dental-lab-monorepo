@@ -190,6 +190,8 @@ export default function AccountPage() {
                     //   defaultValue="Dr. Ahmed Hassan"
 
                     value={info.fullName}
+                    readOnly
+                    disabled
                     onChange={(e) =>
                       setInfo({
                         ...info,
@@ -215,6 +217,8 @@ export default function AccountPage() {
 `}
                     //   defaultValue="ahmed.hassan@dentalclinic.com"
                     value={info.email}
+                    readOnly
+                    disabled
                     onChange={(e) =>
                       setInfo({
                         ...info,
@@ -239,6 +243,8 @@ export default function AccountPage() {
   ${basicErrors.phoneNumber ? errorStyle : successStyle}
 `}
                     value={info.phoneNumber}
+                    disabled
+                    readOnly
                     onChange={(e) => {
                       setInfo({
                         ...info,
@@ -263,6 +269,8 @@ export default function AccountPage() {
   ${basicErrors.city ? errorStyle : successStyle}
 `}
                     value={info.city}
+                    readOnly
+                    disabled
                     onChange={(e) => {
                       setInfo({
                         ...info,
@@ -287,6 +295,8 @@ export default function AccountPage() {
   ${basicErrors.clinicName ? errorStyle : successStyle}
 `}
                     value={info.clinicName}
+                    disabled
+                    readOnly
                     onChange={(e) => {
                       setInfo({
                         ...info,
@@ -303,9 +313,9 @@ export default function AccountPage() {
               </div>
             </div>
 
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md mt-5">
+            {/* <button className="px-4 py-2 bg-blue-600 text-white rounded-md mt-5">
               Save Changes
-            </button>
+            </button> */}
           </form>
         </div>
         {/* Security & Preferences */}

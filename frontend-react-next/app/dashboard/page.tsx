@@ -26,19 +26,10 @@ const Dashboard = () => {
   const { data, isLoading, isError, error } = useGetAllOrders(currentPage);
   const pages = data?.data?.totalPages || 1;
   const { data: users } = useUsers(currentPage, 10);
-  console.log(users);
   if (isLoading) return <Loading />;
   if (isError) return <ErrorMessage message={error.message} />;
-  console.log(data);
   const totalOrders = data?.data?.totalOrders || 0;
   const totalUsers = users?.data?.pagination?.total || 0;
-  const usersList: User[] = Array.isArray(users?.data?.data?.users)
-    ? users.data.data.users
-    : [];
-
-  const pendingUsersNumber = usersList.filter((user) => !user.isActive).length;
-
-  console.log(data?.data?.data?.orders);
   return (
     <div className="bg-[F5F7FA]">
       <div className="p-6">
@@ -50,7 +41,7 @@ const Dashboard = () => {
           <div className="flex flex-wrap justify-center gap-6 mt-12 mx-6">
             <Link
               href="/dashboard/users"
-              className="w-full sm:w-[48%] lg:w-[23%]"
+              className="w-full sm:w-[48%] lg:w-[23%] "
             >
               <StatsCard
                 title="Total Users"
@@ -63,7 +54,7 @@ const Dashboard = () => {
             </Link>
             <Link
               href="/dashboard/orders"
-              className="w-full sm:w-[48%] lg:w-[23%]"
+              className="w-full sm:w-[48%] lg:w-[23%] "
             >
               <StatsCard
                 title="Total Orders"
