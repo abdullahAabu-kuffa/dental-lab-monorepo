@@ -15,6 +15,7 @@ import notificationRoutes from "./src/routes/notification.routes";
 import notificationTestRoutes from "./src/routes/notification-test.routes";
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
+import { http } from "winston";
 
 const app = express();
 app.use(morgan("dev"));
@@ -23,7 +24,7 @@ setupSwagger(app);
 
 // TODO: Security middleware
 app.use(helmet());
-app.use(cors({credentials: true}));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 // TODO: Body parser
 app.use(express.json({ limit: "150mb" }));

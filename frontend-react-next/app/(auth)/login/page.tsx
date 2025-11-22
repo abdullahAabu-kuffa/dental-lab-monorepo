@@ -4,14 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import { motionVariants } from "@/app/design-system/";
-import { apiFetch } from "@/app/src/lib/apiClient";
 import Button from "@/app/src/components/atoms/Button/Button";
 import GoldenGlow from "@/app/src/components/atoms/GoldenGlow/GoldenGlow";
-
 import { z } from "zod";
 import animationData from "@/assets/lotties/Cleantooth.json";
-
+import { apiFetch } from "@/app/src/lib/apiClient";
+import { useAuthContext } from "@/app/src/context/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/app/src/hooks/useAuth";
+import type { User } from "@/app/dashboard/interfaces/users";
 // Zod schema for simple validation
 const loginSchema = z.object({
 	email: z.string().email("Invalid email format"),
@@ -35,6 +36,9 @@ export default function LoginPage() {
 		email?: string;
 		password?: string;
 	}>({});
+
+	const { setAccessToken } = useAuthContext();
+	const queryClient = useQueryClient();
 
 	// Validate each field on change
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,29 +93,38 @@ export default function LoginPage() {
 				return;
 			}
 			const data = await res.json();
-			localStorage.setItem("accessToken", data.data.accessToken);
-			const meRes = await apiFetch("/api/users/me", {
-				headers: {
-					Authorization: `Bearer ${data.data.accessToken}`,
-				},
-			});
+			setAccessToken(data.data.accessToken);
+			await queryClient.invalidateQueries({ queryKey: ["user"] });
+			await queryClient.refetchQueries({ queryKey: ["user"] });
 
-			if (!meRes.ok) {
-				setErrorMessage("Failed to fetch user info");
-				return;
+			const newUser = queryClient.getQueryData<User | null>(["user"]);
+			if (newUser?.role === "ADMIN") {
+				router.push("/dashboard");
+			} else {
+				router.push("/");
 			}
+			// const meRes = await apiFetch("/api/users/me", {
+			// 	method: "GET",
+			// 	headers: {
+			// 		Authorization: `Bearer ${data.data.accessToken}`,
+			// 	},
+			// });
 
-			const meData = await meRes.json();
-			const role = meData?.data?.user?.role;
-
-			switch (role) {
-				case "ADMIN":
-					router.push("/dashboard/admin");
-					break;
-				case "CLIENT":
-					router.push("/");
-					break;
-			}
+			// if (!meRes.ok) {
+			// 	setErrorMessage("Failed to fetch user info");
+			// 	return;
+			// }
+			// const meData = await meRes.json();
+			// const role = meData?.data?.user?.role;
+			// console.log("role :", role);
+			// switch (role) {
+			// 	case "ADMIN":
+			// 		router.push("/dashboard");
+			// 		break;
+			// 	case "CLIENT":
+			// 		router.push("/");
+			// 		break;
+			// }
 		} catch {
 			setErrorMessage("Something went wrong. Try again.");
 		} finally {

@@ -7,7 +7,7 @@ import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
 interface NavMobileMenuProps {
 	isOpen: boolean;
 	onClose: () => void;
-	user: { email: string } | null;
+	user: { email: string } | null | undefined;
 	loading: boolean;
 	onLogout: () => void;
 }
