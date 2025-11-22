@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
- front-end-login
 import { QueryProvider } from "@/QueryProvider";
 import { AuthProvider } from "./src/context/AuthContext";
 import Provider from "./provider";
