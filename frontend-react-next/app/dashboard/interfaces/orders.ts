@@ -19,7 +19,7 @@ export interface Order {
   type: string;
   date: string;
   options: Options;
-  status: "Pending" | "In Progress" | "Completed" | "Rejected";
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED" | "CANCELLED";
   price: string;
   user: User;
 }

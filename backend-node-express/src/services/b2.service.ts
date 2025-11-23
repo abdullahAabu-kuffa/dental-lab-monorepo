@@ -74,189 +74,35 @@ export async function uploadFileToB2(
   }
 }
 
-// /**
-//  * Generate secure download authorization token
-//  * This is the RECOMMENDED approach for private buckets
-//  *
-//  * @param fileNamePrefix - File or folder to authorize (can be full filename for single file)
-//  * @param validDurationSeconds - How long token is valid (1 to 604800 seconds)
-//  * @param contentDisposition - Optional: force download with specific filename
-//  * @returns Download authorization token
-//  */
-// export async function getDownloadAuthorization(
-//   fileNamePrefix: string,
-//   validDurationSeconds: number = 3600, // 1 hour default
-//   contentDisposition?: string
-// ): Promise<string> {
-//   try {
-//     const auth = await authorize();
-
-//     const requestData: any = {
-//       bucketId: process.env.B2_BUCKET_ID!,
-//       fileNamePrefix: fileNamePrefix,
-//       validDurationInSeconds: validDurationSeconds,
-//     };
-
-//     // Optional: force download with specific filename
-//     if (contentDisposition) {
-//       requestData.b2ContentDisposition = contentDisposition;
-//     }
-
-//     // Call B2 API directly (SDK doesn't have this method)
-//     const response = await fetch(
-//       `${auth.apiUrl}/b2api/v2/b2_get_download_authorization`,
-//       {
-//         method: "POST",
-//         headers: {
-//           Authorization: auth.authorizationToken,
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(requestData),
-//       }
-//     );
-
-//     if (!response.ok) {
-//       const error = (await response.json()) as Record<string, any>;
-//       throw new Error(
-//         `B2 download auth failed: ${error.message || response.statusText}`
-//       );
-//     }
-
-//     const data = (await response.json()) as B2DownloadAuthResponse;
-
-//     logger.info(
-//       `Download authorization created for: ${fileNamePrefix} (valid for ${validDurationSeconds}s)`
-//     );
-
-//     return data.authorizationToken;
-//   } catch (error: any) {
-//     logger.error(`Failed to get download authorization: ${error.message}`);
-//     throw error;
-//   }
-// }
-
-// /**
-//  * Generate secure download URL with time-limited token
-//  * This creates a URL that expires and is file-specific
-//  */
-// export async function generateSecureDownloadUrl(
-//   filename: string,
-//   validDurationSeconds: number = 3600,
-//   forceDownload: boolean = false
-// ): Promise<string> {
-//   try {
-//     const auth = await authorize();
-
-//     // Generate download authorization token for this specific file
-//     const contentDisposition = forceDownload
-//       ? `attachment; filename="${filename.split("/").pop()}"`
-//       : undefined;
-
-//     const downloadToken = await getDownloadAuthorization(
-//       filename,
-//       validDurationSeconds,
-//       contentDisposition
-//     );
-
-//     // Build download URL with token
-//     const downloadUrl = `${auth.downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}?Authorization=${downloadToken}`;
-
-//     return downloadUrl;
-//   } catch (error: any) {
-//     logger.error(`Failed to generate secure download URL: ${error.message}`);
-//     throw error;
-//   }
-// }
-
-/**
- * Generate secure download authorization token
- * B2's proper way: uses b2_get_download_authorization API
- */
-export async function getDownloadAuthorization(
-  fileNamePrefix: string,
-  validDurationSeconds: number = 3600,
-  contentDisposition?: string
-): Promise<{ token: string; downloadUrl: string }> {
-  try {
-    const auth = await authorize();
-
-    const requestData: Record<string, any> = {
-      bucketId: process.env.B2_BUCKET_ID!,
-      fileNamePrefix: fileNamePrefix,
-      validDurationInSeconds: Math.min(validDurationSeconds, 604800),
-    };
-
-    if (contentDisposition) {
-      requestData.b2ContentDisposition = contentDisposition;
-    }
-
-    const response = await fetch(
-      `${auth.apiUrl}/b2api/v2/b2_get_download_authorization`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: auth.authorizationToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = (await response.json()) as Record<string, any>;
-      throw new Error(
-        `B2 download auth failed: ${errorData.message || response.statusText}`
-      );
-    }
-
-    const data = (await response.json()) as Record<string, any>;
-
-    logger.info(
-      `Download authorization created for: ${fileNamePrefix} (valid for ${validDurationSeconds}s)`
-    );
-
-    return {
-      token: data.authorizationToken,
-      downloadUrl: auth.downloadUrl,
-    };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error(`Failed to get download authorization: ${errorMessage}`);
-    throw error;
-  }
-}
 
 /**
  * Generate secure download URL with time-limited token
- * IMPORTANT: B2 download authorization tokens must be sent as 'Authorization' header,
- * NOT as query parameter!
  */
 export async function generateSecureDownloadUrl(
+  originalFilename: string,
   filename: string,
   validDurationSeconds: number = 3600,
-  forceDownload: boolean = false
-): Promise<{ url: string; authToken: string }> {
+): Promise<{ url: string }> {
   try {
-    const contentDisposition = forceDownload
-      ? `attachment; filename="${filename.split("/").pop()}"`
-      : undefined;
+    const auth = await authorize();
+    const contentDisposition = `attachment; filename="${originalFilename}"`;
 
-    const { token, downloadUrl } = await getDownloadAuthorization(
-      filename,
-      validDurationSeconds,
+    const bucketId = process.env.B2_BUCKET_ID!;
+    const bucketName = process.env.B2_BUCKET_NAME!;
+    const { data: authData } = await b2.getDownloadAuthorization({
+      bucketId,
+      fileNamePrefix: filename,
+      validDurationInSeconds: Math.min(validDurationSeconds, 604800),
+      b2ContentDisposition: contentDisposition,
+    });
+    const token = authData.authorizationToken;
+    const downloadUrl = `${auth.downloadUrl}/file/${bucketName}/${encodeURIComponent(filename)}?Authorization=${encodeURIComponent(token)}&b2ContentDisposition=${encodeURIComponent(
       contentDisposition
-    );
-
-    // B2 expects authorization as a header, not query param
-    // But we return both the URL and token so frontend can use either method
-    const urlWithQueryParam = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}?Authorization=${token}`;
-
-    const plainUrl = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filename}`;
-
+    )}`;
     return {
-      url: plainUrl,
-      authToken: token,
+      url: downloadUrl,
     };
+
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Failed to generate secure download URL: ${errorMessage}`);
