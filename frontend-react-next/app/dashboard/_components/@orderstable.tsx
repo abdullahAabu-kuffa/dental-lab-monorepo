@@ -9,6 +9,7 @@ import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
 import Loading from "./@loading";
+import useOrderStore from "@/stores/orders-store";
 
 const ACTION_MAP: Record<string, "IN_PROGRESS" | "CANCELLED"> = {
   approve: "IN_PROGRESS",
@@ -27,6 +28,7 @@ const statusColors = {
 const filters = ["All", "PENDING", "IN_PROGRESS", "COMPLETED", "REJECTED"];
 
 const OrdersTable = ({ overview, currentPage }: { overview?: boolean, currentPage: number }) => {
+  const getOrders = useOrderStore((state) => state.getOrders);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -55,17 +57,11 @@ const OrdersTable = ({ overview, currentPage }: { overview?: boolean, currentPag
 
 
   const mappedOrders: Order[] = (apiOrders as ApiOrder[]).map((o) => ({
-    id: String(o.id),
+    id: Number(o.id),
+    userId: o.user.id,
     type: o.type ?? "Unknown",
     date: o.createdAt.split("T")[0],
-    status:
-      o.status === "PENDING"
-        ? "PENDING"
-        : o.status === "IN_PROGRESS"
-        ? "IN_PROGRESS"
-        : o.status === "COMPLETED"
-        ? "COMPLETED"
-        : "REJECTED",
+    status: o.status==="CANCELLED" ? "REJECTED" : o.status,
     price: `${o.totalPrice} EGP`,
     approvedBy: o.approvedBy,
     createdAt: o.createdAt,
@@ -224,7 +220,12 @@ const OrdersTable = ({ overview, currentPage }: { overview?: boolean, currentPag
                   orderId,
                   action: ACTION_MAP[action],
                 },
-                { onSuccess: () => setShowModal(false) }
+                {
+                  onSuccess: () => {
+                    setShowModal(false);
+                    getOrders(currentPage); // 🔹 refresh table after approve/reject
+                  },
+                }
               )
             }
             onCancel={() => setShowModal(false)}

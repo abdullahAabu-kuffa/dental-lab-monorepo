@@ -1,24 +1,36 @@
 
-export interface Options {
-  [key: string]: string | number | boolean | null | undefined;
+export interface OrderOptions {
+  age: string;
+  patientName: string;
+  selectedServices: SelectedService[];
 }
-
+export interface SelectedService {
+  label: string;
+  price: number;
+}
 export interface User {
-  clinicAddress: string;
-  clinicName: string;
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
+    id: number,
+  fullName: string,
+    email: string,
+    password: string,
+    phoneNumber: string,
+    clinicName: string,
+    clinicAddress: string,
+    role: string,
+    isActive: boolean,
+    isVerified: boolean,
+    createdAt: string,
+    updatedAt: string
 }
 
 export interface Order {
-  id: string;
+  id: number;
+  userId: number;
   approvedBy: string | null;
   createdAt: string;
   type: string;
   date: string;
-  options: Options;
+  options: OrderOptions;
   status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED" | "CANCELLED";
   price: string;
   user: User;
@@ -30,8 +42,8 @@ export interface ApiOrder {
   createdAt: string;
   type: string;
   date: string;
-  options: Options;
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED";
+  options: OrderOptions;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   totalPrice: string;
   user: User;
 }
@@ -40,5 +52,6 @@ export interface PaginatedOrdersResponse {
   data: {
     orders: ApiOrder[];
     totalPages: number;
+    totalOrders: number;
   };
 }
