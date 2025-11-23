@@ -122,24 +122,27 @@ enum PaymentStatus {
 }
 
 model File {
-  id            Int           @id @default(autoincrement())
-  orderId       Int?           
-  order         Order?        @relation
-  origenalName  String
-  filePath      String
-  fileSize      Int
-  fileType      String
-  storageStatus StorageStatus @default(STAGING)
-  updatedAt     DateTime      @updatedAt
-  approvedAt    DateTime?
-  deletedAt     DateTime?
+  id           Int       @id @default(autoincrement())
+  
+  // B2 identifiers
+  b2FileId     String    
+  b2FileName   String
+  
+  // File metadata
+  originalName String
+  fileSize     Int
+  fileType     String
+  
+  // Timestamps
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relation to Order (back-relation)
+  order        Order?
+
 }
 
-enum StorageStatus {
-  STAGING
-  APPROVED
-  REJECTED
-}
+
 
 model AuditLog {
   id        Int      @id @default(autoincrement())

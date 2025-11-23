@@ -13,6 +13,7 @@ import uploadRoutes from "./src/routes/upload.routes";
 import downloadRoutes from "./src/routes/download.routes";
 import notificationRoutes from "./src/routes/notification.routes";
 import notificationTestRoutes from "./src/routes/notification-test.routes";
+import fileRoutes from "./src/routes/file.routes";
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
 
@@ -63,6 +64,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/notifications-test", notificationTestRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use('/api/files', fileRoutes);
 
 // TODO: 404 handler
 app.use((req, res) => {
