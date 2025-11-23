@@ -35,7 +35,11 @@ export default function OrderForm({
       onFormDataChange(newFormData);
     }
   };
-  const { mutate, mutateAsync, isLoading, error, data } = useCreateOrder();
+  // const { mutate, mutateAsync, isLoading, error, data } = useCreateOrder();
+  // mutate({
+  //   options: formData,
+  //   totalPrice: 1500,
+  // });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const data = new FormData();
@@ -50,7 +54,6 @@ export default function OrderForm({
       onContinueToUpload();
     }
   };
-
 
   const [orderLocked, setOrderLocked] = useState(true);
   useNavigationGuard(orderLocked);
@@ -154,7 +157,7 @@ export default function OrderForm({
           <button
             type="button"
             disabled={isSubmitting}
-            onClick={() => toast.error('Successfully created!')}
+            onClick={() => toast.error("Successfully created!")}
             className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all disabled:opacity-50"
           >
             Save as Draft
@@ -162,13 +165,9 @@ export default function OrderForm({
 
           <button
             type="button"
-            onClick={()=>{
-              mutate({
-                options: formData, 
-                totalPrice: 1500, 
-              });
+            onClick={() => {
               setOrderLocked(false);
-              handleContinueClick()
+              handleContinueClick();
             }}
             disabled={isSubmitting}
             className="px-8 py-4 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"

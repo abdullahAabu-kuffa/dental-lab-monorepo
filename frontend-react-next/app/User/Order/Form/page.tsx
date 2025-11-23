@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
-import OrderForm from '../components/FormComponent/OrderForm';
-import PaymentSummary from '../components/FormComponent/PaymentSummary';
-import { useNavigation,  animations } from '../../../src/utils/pageUtils';
-import { calculateSelectedServices } from '../../../src/utils/pricingService';
-import { useCreateOrder } from './quere';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ShoppingCart } from "lucide-react";
+import OrderForm from "../components/FormComponent/OrderForm";
+import PaymentSummary from "../components/FormComponent/PaymentSummary";
+import { useNavigation, animations } from "../../../src/utils/pageUtils";
+import { calculateSelectedServices } from "../../../src/utils/pricingService";
+import { useCreateOrder } from "./quere";
+import { logoutRequest } from "@/app/src/services/auth";
+import { apiFetch, getToken } from "@/app/src/lib/apiClient";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function NewOrderPage() {
   const { navigateToUpload } = useNavigation();
@@ -15,6 +19,9 @@ export default function NewOrderPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [formData, setFormData] = useState<Record<string, unknown>>({});
+  const router = useRouter();
+  const [meData, setMeData] = useState<{ isActive: boolean } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const handleFormDataChange = (newFormData: Record<string, unknown>) => {
     setFormData(newFormData);
@@ -24,12 +31,13 @@ export default function NewOrderPage() {
     setIsProcessingPayment(true);
 
     try {
-      const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+      const { selectedServices, totalAmount } =
+        calculateSelectedServices(formData);
 
       // Create order data
       const orderData = {
         ...formData,
-        paymentStatus: 'paid',
+        paymentStatus: "paid",
         paymentAmount: totalAmount,
         paymentDate: new Date().toISOString(),
       };
@@ -37,7 +45,7 @@ export default function NewOrderPage() {
       console.log("Processing payment:", orderData);
 
       // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Navigate to upload page after successful payment
       navigateToUpload();
@@ -48,6 +56,40 @@ export default function NewOrderPage() {
     }
   };
 
+  useEffect(() => {
+    async function fetchMe() {
+      try {
+        const res = await apiFetch("/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        const data = await res.json();
+        const user = data?.data?.user;
+        setMeData(user);
+
+        if (user && !user.isActive) {
+          Swal.fire({
+            icon: "info",
+            title: "Account Not Active",
+            text: "You cannot create orders until your account is activated. Activation may take 1-2 days.",
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          }).then(() => {
+            router.replace("/");
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch user info:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMe();
+  }, [router]);
+
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
 
   return (
@@ -57,8 +99,12 @@ export default function NewOrderPage() {
           {...animations.fadeInUp}
           className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-6 mb-6"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Order</h1>
-          <p className="text-gray-600">Fill in the details to create a new dental order</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Create New Order
+          </h1>
+          <p className="text-gray-600">
+            Fill in the details to create a new dental order
+          </p>
         </motion.div>
 
         <div className="flex gap-6">
