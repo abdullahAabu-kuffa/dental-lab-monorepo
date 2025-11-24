@@ -36,11 +36,11 @@ export async function refreshAccessToken() {
       return { error: 'expired', status: 401 };
     }
 
-    console.error('[Auth] Refresh failed:', response.status);
+    console.warn('[Auth] Refresh failed:', response.status);
     return { error: 'network', status: response.status };
 
   } catch (error) {
-    console.error('[Auth] Network error:', error);
+    console.warn('[Auth] Network error:', error);
     return { error: 'network' };
   }
 }
