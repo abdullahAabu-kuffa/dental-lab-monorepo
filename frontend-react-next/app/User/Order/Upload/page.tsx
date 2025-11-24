@@ -69,7 +69,7 @@ export default function UploadPage() {
       cancelButtonColor: "#aaa",
     });
 
-    // لو المستخدم لغى
+
     if (!confirm.isConfirmed) {
       Swal.fire({
         icon: "info",
@@ -80,7 +80,7 @@ export default function UploadPage() {
       return;
     }
 
-    // 2) 🟢 لو وافق → نرفع الملف
+
     uploadMutate(file, {
       onSuccess: (uploadResponse) => {
         const fileId = uploadResponse?.data?.id;

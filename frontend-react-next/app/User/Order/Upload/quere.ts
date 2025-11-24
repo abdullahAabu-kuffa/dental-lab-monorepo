@@ -2,7 +2,7 @@
 import { getAccessToken } from "@/app/src/auth/tokenStore";
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 export async function uploadFile(file: File) {
-  const Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzIsImVtYWlsIjoibW9oYW1lZGVtYWRyb3NoZHkxQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2MzkyNjcxNywiZXhwIjoxNzY0MDEzMTE3fQ.H41pjpDBVTGBPivYf9H_XQakAxmbAu6V-fydlzVggqg";
+  const Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzIsImVtYWlsIjoibW9oYW1lZGVtYWRyb3NoZHkxQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2Mzk3OTUxMSwiZXhwIjoxNzY0MDY1OTExfQ.DGWyxI6gY7uN7VM26V-ZUeO3Q_yzA8ZOkMiK6DZQilg";
   if (!Token) throw new Error("No access token found");
   const formData= new FormData();
    formData.append("file", file);
