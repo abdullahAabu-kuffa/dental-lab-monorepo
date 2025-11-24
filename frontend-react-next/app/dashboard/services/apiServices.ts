@@ -6,7 +6,7 @@ axios.defaults.baseURL = "http://localhost:3001/api";
 
 const token =
   getAccessToken() ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjM4NDg1NDMsImV4cCI6MTc2MzkzNDk0M30.qLP-EDcKj0sYvQoXLFrRXSKgG7ju485DpRA8NiAigkI";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjM5MzUxNzMsImV4cCI6MTc2NDAyMTU3M30.MF89id0dvFIbbs7w9tBQVNsIhonQzEOx1xSt-EYGyKM";
 
 console.log(token);
 
