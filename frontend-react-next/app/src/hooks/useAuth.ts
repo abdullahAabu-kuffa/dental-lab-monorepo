@@ -3,8 +3,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch, refreshAccessToken } from "../lib/apiClient";
 import { useEffect, useState } from "react";
+import { SessionPayload } from "../lib/dal/session";
 
-type UserRole = "CLIENT" | "ADMIN" | "OTHER";
+type UserRole = "CLIENT" | "ADMIN" | "OWNER";
 
 interface User {
     id: number;
@@ -15,24 +16,30 @@ interface User {
 }
 
 async function fetchUser(): Promise<User | null> {
-    const res = await apiFetch("/api/users/me", {
+    // const res = await apiFetch("/api/users/me", {
+    //     method: "GET",
+    //     retryOn401: true,
+    // });
+
+    const res= await fetch("/api/session", {
         method: "GET",
-        retryOn401: true,
+        credentials: "include",
     });
+
 
     if (!res.ok) return null;
 
-    const json = await res.json();
-    const apiUser = json?.data?.user;
+    const sessionData:SessionPayload = await res.json();
+    // const apiUser = json?.data?.user;
 
-    if (!apiUser) return null;
+    if (!sessionData) return null;
 
     return {
-        id: apiUser.id,
-        email: apiUser.email,
-        role: apiUser.role,
-        isVerified: apiUser.isVerified,
-        isActive: apiUser.isActive,
+        id: sessionData.userId,
+        email: sessionData.email,
+        role: sessionData.role,
+        isVerified: sessionData.isVerified,
+        isActive: sessionData.isActive,
     };
 }
 

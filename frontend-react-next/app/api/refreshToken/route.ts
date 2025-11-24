@@ -8,6 +8,10 @@ export async function POST() {
         credentials: "include",
     });
 
-    const data = await upstream.json();
-    return NextResponse.json(data, { status: upstream.status });
+    if (!upstream.ok) {
+        return NextResponse.json({ status: upstream.status });
+    }
+
+    // const data = await upstream.json();
+    return NextResponse.json({ status: upstream.status });
 }

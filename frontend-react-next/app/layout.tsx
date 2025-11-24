@@ -6,6 +6,8 @@ import { AuthProvider } from "./src/context/AuthContext";
 import Provider from "./provider";
 import { LoadingProvider } from "./src/contexts/LoadingContext";
 import GlobalLoader from "./src/components/GlobalLoader";
+import { getSession } from "./src/lib/dal/session";
+import { TokenRefreshInitializer } from "./src/components/TokenRefreshInitializer";
 
 
 
@@ -22,16 +24,19 @@ export const metadata: Metadata = {
 		"Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+  const session= await getSession();
+  console.log("user session : ",session);
 	return (
 		<html lang="en">
       <body className={`${playfair.variable} antialiased`}>
         <Provider>
           <QueryProvider>
+            <TokenRefreshInitializer />
             <AuthProvider>
               <LoadingProvider>
                 <GlobalLoader />

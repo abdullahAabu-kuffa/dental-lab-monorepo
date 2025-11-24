@@ -4,6 +4,7 @@ export async function logoutRequest() {
     const res = await apiFetch("/api/auth/logout", {
         method: "POST",
         retryOn401: false,
+        credentials: "include",
     });
 
     if (!res.ok && res.status !== 401) {
