@@ -1,9 +1,11 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch, refreshAccessToken } from "../lib/apiClient";
 import { useEffect, useState } from "react";
-import { apiFetch } from "../lib/apiClient";
+import { SessionPayload } from "../lib/dal/session";
 
-type UserRole = "CLIENT" | "ADMIN" | "OTHER";
+type UserRole = "CLIENT" | "ADMIN" | "OWNER";
 
 interface User {
     id: number;
@@ -13,54 +15,68 @@ interface User {
     isActive: boolean;
 }
 
+async function fetchUser(): Promise<User | null> {
+    // const res = await apiFetch("/api/users/me", {
+    //     method: "GET",
+    //     retryOn401: true,
+    // });
+
+    const res= await fetch("/api/session", {
+        method: "GET",
+        credentials: "include",
+    });
+
+
+    if (!res.ok) return null;
+
+    const sessionData:SessionPayload = await res.json();
+    // const apiUser = json?.data?.user;
+
+    if (!sessionData) return null;
+
+    return {
+        id: sessionData.userId,
+        email: sessionData.email,
+        role: sessionData.role,
+        isVerified: sessionData.isVerified,
+        isActive: sessionData.isActive,
+    };
+}
+
 export function useAuth() {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    // bootstrap state to ensure refresh runs before fetching user
+    const [bootstrapDone, setBootstrapDone] = useState(false);
 
     useEffect(() => {
-        async function loadUser() {
+        let cancelled = false;
+
+        async function bootstrap() {
             try {
-                const res = await apiFetch("/api/users/me", {
-                    method: "GET",
-                    retryOn401: true,
-                });
-
-                if (res.status === 401) {
-                    setUser(null);
-                    setLoading(false);
-                    return;
-                }
-
-                if (!res.ok) {
-                    throw new Error("Failed to fetch user");
-                }
-
-                const json = await res.json();
-                const apiUser = json?.data?.user;
-
-                if (apiUser) {
-                    const mappedUser: User = {
-                        id: apiUser.id,
-                        email: apiUser.email,
-                        role: apiUser.role,
-                        isVerified: apiUser.isVerified,
-                        isActive: apiUser.isActive,
-                    };
-
-                    setUser(mappedUser);
-                } else {
-                    setUser(null);
-                }
-            } catch (error) {
-                console.error("useAuth error:", error);
-                setUser(null);
+                await refreshAccessToken();
             } finally {
-                setLoading(false);
+                if (!cancelled) setBootstrapDone(true);
             }
         }
 
-        loadUser();
+        bootstrap();
+
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
-    return { user, loading };
+    const { data: user, isLoading } = useQuery({
+        queryKey: ["user"],
+        queryFn: fetchUser,
+        staleTime: 1000 * 60 * 5,
+        enabled: bootstrapDone,
+    });
+
+    return {
+        user,
+        loading: !bootstrapDone || isLoading,
+        isAuthenticated: !!user,
+        role: user?.role,
+    };
 }

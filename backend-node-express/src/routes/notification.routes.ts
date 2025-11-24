@@ -156,7 +156,7 @@ const router = Router();
  *       
  *       **Example JavaScript client:**
  *       ```
- *       const eventSource = new EventSource('/api/v1/notifications/stream', {
+ *       const eventSource = new EventSource('/api/notifications/stream', {
  *         headers: { 'Authorization': 'Bearer YOUR_JWT_TOKEN' }
  *       });
  *       
@@ -260,7 +260,7 @@ res.write(`event: connected\ndata: Connected to notifications stream\n\n`);
 
 /**
  * @swagger
- * /api/v1/notifications:
+ * /api/notifications:
  *   get:
  *     summary: Get paginated notifications for current user
  *     description: Fetch all notifications for the authenticated user with pagination
@@ -359,7 +359,7 @@ router.get('/', verifyAccessToken, async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /api/v1/notifications/unread/count:
+ * /api/notifications/unread/count:
  *   get:
  *     summary: Get count of unread notifications
  *     description: Returns the number of unread notifications for the current user
@@ -412,7 +412,7 @@ router.get('/unread/count', verifyAccessToken, async (req: Request, res: Respons
 
 /**
  * @swagger
- * /api/v1/notifications/{id}/read:
+ * /api/notifications/{id}/read:
  *   patch:
  *     summary: Mark notification as read
  *     description: Mark a single notification as read and update the readAt timestamp
@@ -484,7 +484,7 @@ router.patch('/:id/read', verifyAccessToken, async (req: Request, res: Response)
 
 /**
  * @swagger
- * /api/v1/notifications/read-batch:
+ * /api/notifications/read-batch:
  *   post:
  *     summary: Mark multiple notifications as read
  *     description: Mark multiple notifications as read in a single request
@@ -564,7 +564,7 @@ router.post('/read-batch', verifyAccessToken, async (req: Request, res: Response
 
 /**
  * @swagger
- * /api/v1/notifications/{id}:
+ * /api/notifications/{id}:
  *   delete:
  *     summary: Delete notification
  *     description: Delete a notification. Only the owner can delete their notifications.

@@ -1,13 +1,10 @@
 
 import { apiFetch } from "../lib/apiClient";
-
-export async function logoutRequest(router:any) {
-    
-    router.push('login');
-    localStorage.removeItem("accessToken");
+export async function logoutRequest() {
     const res = await apiFetch("/api/auth/logout", {
         method: "POST",
         retryOn401: false,
+        credentials: "include",
     });
 
     if (!res.ok && res.status !== 401) {

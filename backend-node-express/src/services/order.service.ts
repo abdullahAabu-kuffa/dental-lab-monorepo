@@ -11,11 +11,13 @@ export const createOrderServices = async (userId: any, orderData: any) => {
   try {
     parseId(userId);
     await checkUser(userId);
+    
     const newOrder = await prisma.order.create({
       data: {
         userId,
         options: orderData.options,
         totalPrice: orderData.totalPrice,
+        fileId: orderData.fileId
       },
     });
     return newOrder;
@@ -50,7 +52,7 @@ export const getAllOrdersServices = async (userId: any, req: any) => {
       throw new Error("no orders Found");
     }
     let totalPages = Math.ceil(totalOrders / limit);
-    return { orders, page, limit, totalPages };
+    return { orders, page, limit,totalOrders, totalPages };
   } catch (error: any) {
     logger.error(`[getAllOrdersServices error] : ${error.message}`);
     throw error;

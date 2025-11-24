@@ -16,7 +16,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-welcome:
+ * /api/notifications-test/send-welcome:
  *   post:
  *     summary: "[TEST] Send WELCOME notification"
  *     description: Manually trigger a WELCOME notification for testing
@@ -76,7 +76,7 @@ router.post('/send-welcome', verifyAccessToken, async (req: Request, res: Respon
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-account-activated:
+ * /api/notifications-test/send-account-activated:
  *   post:
  *     summary: "[TEST] Send ACCOUNT_ACTIVATED notification"
  *     description: Manually trigger an account activation notification
@@ -121,7 +121,7 @@ router.post('/send-account-activated', verifyAccessToken, async (req: Request, r
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-upload-success:
+ * /api/notifications-test/send-upload-success:
  *   post:
  *     summary: "[TEST] Send UPLOAD_SUCCESS notification"
  *     description: Manually trigger a file upload success notification
@@ -189,7 +189,7 @@ router.post('/send-upload-success', verifyAccessToken, async (req: Request, res:
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-upload-failed:
+ * /api/notifications-test/send-upload-failed:
  *   post:
  *     summary: "[TEST] Send UPLOAD_FAILED notification"
  *     description: Manually trigger a file upload failure notification
@@ -246,7 +246,7 @@ router.post('/send-upload-failed', verifyAccessToken, async (req: Request, res: 
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-file-approved:
+ * /api/notifications-test/send-file-approved:
  *   post:
  *     summary: "[TEST] Send FILE_APPROVED notification"
  *     description: Manually trigger a file approval notification
@@ -303,7 +303,7 @@ router.post('/send-file-approved', verifyAccessToken, async (req: Request, res: 
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-file-rejected:
+ * /api/notifications-test/send-file-rejected:
  *   post:
  *     summary: "[TEST] Send FILE_REJECTED notification"
  *     description: Manually trigger a file rejection notification
@@ -367,7 +367,7 @@ router.post('/send-file-rejected', verifyAccessToken, async (req: Request, res: 
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-rejected:
+ * /api/notifications-test/send-rejected:
  *   post:
  *     summary: "[TEST] Send REJECTED notification"
  *     description: Manually trigger a user rejection notification
@@ -424,7 +424,7 @@ router.post('/send-rejected', verifyAccessToken, async (req: Request, res: Respo
 
 /**
  * @swagger
- * /api/v1/notifications-test/send-custom:
+ * /api/notifications-test/send-custom:
  *   post:
  *     summary: "[TEST] Send custom notification"
  *     description: Send a custom notification with any type and message

@@ -1,13 +1,12 @@
 "use client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getAllOrders } from "../apiServices";
 
 export const useGetAllOrders = (page: number) => {
-    // const queryClient = useQueryClient();
-
     return useQuery({
         queryKey: ["orders", page],
         queryFn: () => getAllOrders({ page }), 
-
-    });
+        staleTime: 1000 * 60 * 5,
+        refetchInterval: 1000 * 60 * 5,
+    })
 };

@@ -1,6 +1,6 @@
 // user.routes.ts
 // Purpose: Handle user management routes
-// Usage: Mount at /api/v1/users in app.ts
+// Usage: Mount at /api/users in app.ts
 
 import { Router } from "express";
 import { verifyAccessToken } from "../middlewares/auth.middleware";

@@ -1,89 +1,100 @@
+import { getAccessToken } from "@/app/src/auth/tokenStore";
 import axios from "axios";
 import { FetchUsersResponse } from "../interfaces/users";
-import { getToken } from "@/app/src/lib/apiClient";
 
-axios.defaults.baseURL = 'http://localhost:3001/api';
-const token = getToken() || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJpYXQiOjE3NjM2NzI4MjksImV4cCI6MTc2Mzc1OTIyOX0.MTPIqsoF7CDPGikFURnxZpbvQCpwim8yltSue8WzoNU";
+axios.defaults.baseURL = "http://localhost:3001/api";
+
+const token =
+  getAccessToken() ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjM5MzUxNzMsImV4cCI6MTc2NDAyMTU3M30.MF89id0dvFIbbs7w9tBQVNsIhonQzEOx1xSt-EYGyKM";
+
 console.log(token);
 
-// this fuction fetches all orders
-export const getAllOrders = async ( { page }: { page: number}) => {
-    const res = await fetch(
-        `http://localhost:3001/api/orders?page=${page}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    const json = await res.json();
-    
-    return json;
-} 
-
-// change order status
-export const changeOrderStatus = async (orderId: number, action: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED") => {
-   const res = await fetch(`http://localhost:3001/api/orders/${orderId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: action }),
-   });
-   const json = await res.json();
-   return json;
+const authHeader = {
+  Authorization: `Bearer ${token}`,
 };
 
-// get me info
-export const getMe = async () => {
-  const res = await fetch(`http://localhost:3001/api/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+/* ===========================================
+   GET ALL ORDERS
+=========================================== */
+export const getAllOrders = async ({ page }: { page: number }) => {
+  const res = await axios.get(`/orders`, {
+    params: { page },
+    // headers: authHeader,
+    withCredentials: true,
   });
-  const json = await res.json();
-  return json;
-}
+  return res.data;
+};
 
-export const changeUserStatus = async (userId: number, action: "approve" | "reject") => {
+/* ===========================================
+   CHANGE ORDER STATUS
+=========================================== */
+export const changeOrderStatus = async (
+  orderId: number,
+  action: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED"
+) => {
+  const res = await axios.patch(
+    `/orders/${orderId}`,
+    { status: action },
+    // { headers: authHeader }
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+/* ===========================================
+   GET LOGGED-IN USER
+=========================================== */
+export const getMe = async () => {
+  const res = await axios.get(`/users/me`, {
+    // headers: authHeader,
+    withCredentials: true,
+  });
+  return res.data;
+};
+
+/* ===========================================
+   CHANGE USER STATUS
+=========================================== */
+export const changeUserStatus = async (
+  userId: number,
+  action: "approve" | "reject"
+) => {
   const res = await axios.put(
     `/users/${userId}/status`,
-    {}, // empty body
+    {},
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        action,
-      },
+      // headers: authHeader,
+      withCredentials: true,
+      params: { action },
     }
   );
 
   return res.data;
 };
 
-
-export const fetchUsers = async (page: number, limit: number): Promise<FetchUsersResponse> => {
+/* ===========================================
+   FETCH USERS
+=========================================== */
+export const fetchUsers = async (
+  page: number,
+  limit: number
+): Promise<FetchUsersResponse> => {
   const response = await axios.get<FetchUsersResponse>(`/users`, {
     params: { page, limit },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-
+    // headers: authHeader,
+    withCredentials: true,
   });
   return response.data;
 };
 
+/* ===========================================
+   DELETE USER
+=========================================== */
 export const deleteUser = async (userId: number) => {
   const response = await axios.delete(`/users/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    // headers: authHeader,
+    withCredentials: true,
   });
   return response.data;
 }
@@ -96,3 +107,4 @@ export const getNotifications = async () => {
   });
   return res.data;
 }
+};

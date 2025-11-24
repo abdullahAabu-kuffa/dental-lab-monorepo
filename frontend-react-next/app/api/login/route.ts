@@ -31,7 +31,7 @@ export async function POST(req: Request) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
             signal: controller.signal,
-            credentials: "include"
+            //credentials: "include"
 
         })
         clearTimeout(timeout)
