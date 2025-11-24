@@ -21,18 +21,11 @@ export function verifyAccessToken(
   next: NextFunction
 ) {
   try {
-    const authHeader = req.headers.authorization;
-
-    // Check if Authorization header exists and has Bearer token
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      logger.warn("Missing Authorization header");
-      return res
-        .status(401)
-        .json(errorResponse("Missing or invalid Authorization header", 401));
+    const accessTokenCookie = req.cookies.accessToken;
+    if (!accessTokenCookie) {
+      return res.status(401).json(errorResponse("Unauthorized", 401));
     }
-
-    // Extract token and verify
-    const token = authHeader.substring(7);
+    const token = accessTokenCookie;
     const decoded = Jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
 
     // Attach decoded user data to request
