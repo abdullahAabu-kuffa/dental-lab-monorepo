@@ -12,6 +12,8 @@ import { useCreateOrder } from "../../Form/quere";
 import { useOrders } from "../../orders-list/quere";
 import toast from "react-hot-toast";
 import { useNavigationGuard } from "@/app/src/hooks/useNavigationGuard";
+import { calculateSelectedServices } from "@/app/src/utils/pricingService";
+import Swal from "sweetalert2";
 
 interface OrderFormProps {
   onSubmit: (formData: FormData) => void;
@@ -28,6 +30,7 @@ export default function OrderForm({
 }: OrderFormProps) {
   const [formData, setFormData] = useState<Record<string, unknown>>({});
 
+  const { selectedServices, totalAmount } = calculateSelectedServices(formData);
   const handleChange = (fieldId: string, value: string | boolean) => {
     const newFormData = { ...formData, [fieldId]: value };
     setFormData(newFormData);
@@ -35,11 +38,7 @@ export default function OrderForm({
       onFormDataChange(newFormData);
     }
   };
-  // const { mutate, mutateAsync, isLoading, error, data } = useCreateOrder();
-  // mutate({
-  //   options: formData,
-  //   totalPrice: 1500,
-  // });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const data = new FormData();
@@ -50,9 +49,93 @@ export default function OrderForm({
   };
 
   const handleContinueClick = () => {
-    if (onContinueToUpload) {
-      onContinueToUpload();
+    if (!selectedServices || selectedServices.length === 0) {
+      return Swal.fire({
+        title: "No Materials Selected",
+        text: "Please choose at least one material before continuing.",
+        icon: "warning",
+        confirmButtonColor: "#E4B441",
+      });
     }
+
+    const materialsList = selectedServices
+      .map(
+        (item) => `
+        <div style="
+          display:flex; 
+          justify-content:space-between; 
+          padding:8px 0; 
+          border-bottom:1px solid #f0f0f0;
+        ">
+          <span style="font-weight:500; color:#444">${item.label}</span>
+          <span style="font-weight:600; color:#E4B441">${item.price} EGP</span>
+        </div>
+      `
+      )
+      .join("");
+
+    const totalAmount = selectedServices.reduce(
+      (acc, curr) => acc + curr.price,
+      0
+    );
+
+    Swal.fire({
+      title: "Confirm to Continue",
+      html: `
+      <div style="
+        text-align:left; 
+        font-size:15px; 
+        color:#444; 
+        line-height:1.7;
+      ">
+        <div style="
+          max-height:250px; 
+          overflow-y:auto; 
+          padding-right:5px;
+        ">
+          ${materialsList}
+        </div>
+
+        <div style="
+          margin-top:15px; 
+          padding:12px; 
+          background:#FFF8E1; 
+          border-left:4px solid #E4B441; 
+          border-radius:8px; 
+          display:flex; 
+          justify-content:space-between;
+          font-size:16px;
+        ">
+          <span style="font-weight:600; color:#333">Total Amount:</span>
+          <span style="font-weight:700; color:#E4B441">${totalAmount} EGP</span>
+        </div>
+      </div>
+    `,
+      showCancelButton: true,
+      confirmButtonText: "Continue",
+      cancelButtonText: "Cancel",
+
+      background: "#ffffff",
+      color: "#333",
+      width: "450px",
+
+      confirmButtonColor: "#E4B441",
+      cancelButtonColor: "#999",
+      buttonsStyling: true,
+
+      customClass: {
+        popup: "rounded-xl shadow-xl",
+        confirmButton:
+          "px-5 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg",
+        cancelButton:
+          "px-5 py-3 rounded-lg font-medium hover:bg-gray-100 transition-all",
+        title: "text-xl font-semibold text-gray-900",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onContinueToUpload?.();
+      }
+    });
   };
 
   const [orderLocked, setOrderLocked] = useState(true);
@@ -108,7 +191,6 @@ export default function OrderForm({
       </div>
     );
   };
-
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="space-y-8">

@@ -9,20 +9,23 @@ import { useNavigation, animations } from "../../../src/utils/pageUtils";
 import { calculateSelectedServices } from "../../../src/utils/pricingService";
 import { useCreateOrder } from "./quere";
 import { logoutRequest } from "@/app/src/services/auth";
-import { apiFetch, getToken } from "@/app/src/lib/apiClient";
+import { apiFetch } from "@/app/src/lib/apiClient";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { getAccessToken } from "@/app/src/auth/tokenStore";
+import { useOrderStore } from "@/app/src/store/createOrderStore";
+import { useAuth } from "@/app/src/hooks/useAuth";
 
 export default function NewOrderPage() {
   const { navigateToUpload } = useNavigation();
-
+  const { formData, setFormData } = useOrderStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [formData, setFormData] = useState<Record<string, unknown>>({});
+  // const [formData, setFormData] = useState<Record<string, unknown>>({});
   const router = useRouter();
   const [meData, setMeData] = useState<{ isActive: boolean } | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const { user, loading: userLoading } = useAuth();
   const handleFormDataChange = (newFormData: Record<string, unknown>) => {
     setFormData(newFormData);
   };
@@ -57,41 +60,20 @@ export default function NewOrderPage() {
   };
 
   useEffect(() => {
-    async function fetchMe() {
-      try {
-        const res = await apiFetch("/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        });
-        const data = await res.json();
-        const user = data?.data?.user;
-        setMeData(user);
-
-        if (user && !user.isActive) {
-          Swal.fire({
-            icon: "info",
-            title: "Account Not Active",
-            text: "You cannot create orders until your account is activated. Activation may take 1-2 days.",
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false,
-          }).then(() => {
-            router.replace("/");
-          });
-        }
-      } catch (err) {
-        console.error("Failed to fetch user info:", err);
-      } finally {
-        setLoading(false);
-      }
+    if (!userLoading && user && !user.isActive) {
+      Swal.fire({
+        icon: "info",
+        title: "Account Not Active",
+        text: "You cannot create orders until your account is activated. Activation may take 1-2 days.",
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      }).then(() => {
+        router.replace("/");
+      });
     }
-
-    fetchMe();
-  }, [router]);
-
+  }, [user, userLoading, router]);
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-6">
       <div className="max-w-7xl mx-auto">

@@ -10,8 +10,9 @@ import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
 import { logoutRequest } from "../../../services/auth";
 import { useAuth } from "@/app/src/hooks/useAuth";
 import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
-import { apiFetch, getToken } from "@/app/src/lib/apiClient";
+import { apiFetch } from "@/app/src/lib/apiClient";
 import Swal from "sweetalert2";
+import { getAccessToken } from "@/app/src/auth/tokenStore";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,7 +44,7 @@ const Navbar = () => {
   async function handlCheckActivation() {
     const res = await apiFetch("/api/users/me", {
       headers: {
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getAccessToken()}`,
       },
     });
 
@@ -52,11 +53,16 @@ const Navbar = () => {
   }
   useEffect(() => {
     async function fetchMe() {
-      if (!getToken()) return;
+      const token = getAccessToken();
+
+      if (!token) {
+        console.log("Waiting for token...");
+        return;
+      }
 
       const res = await apiFetch("/api/users/me", {
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -66,7 +72,8 @@ const Navbar = () => {
 
     fetchMe();
   }, [user]);
-
+  console.log(user);
+  
   function handleOrdersClick(e) {
     if (meData && !meData.isActive) {
       e.preventDefault();
@@ -84,6 +91,7 @@ const Navbar = () => {
       });
     }
   }
+
   return (
     <>
       <nav
@@ -146,7 +154,7 @@ const Navbar = () => {
                 {user ? (
                   <>
                     <span className="text-[#CABEB2] text-sm font-medium">
-                      Welcome, {user.email}
+                      Welcome, {user.name}
                     </span>
 
                     <button

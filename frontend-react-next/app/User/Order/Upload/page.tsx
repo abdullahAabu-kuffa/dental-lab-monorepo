@@ -13,15 +13,124 @@ import { ShoppingCart } from "lucide-react";
 import PaymentSummary from "../components/FormComponent/PaymentSummary";
 import { calculateSelectedServices } from "../../../src/utils/pricingService";
 import { useUploadFile } from "./quere";
+import { useOrderStore } from "@/app/src/store/createOrderStore";
+import { useCreateOrder } from "../Form/quere";
+import Swal from "sweetalert2";
 
 export default function UploadPage() {
   const { navigateToForm, navigateToHome } = useNavigation();
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [formData, setFormData] = useState<Record<string, unknown>>({});
-   const { mutate ,data} = useUploadFile(); 
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-
+  const [note, setnNote] = useState("");
+  const { formData } = useOrderStore();
+  const { mutate: uploadMutate } = useUploadFile();
+  const { mutate: orderMutate } = useCreateOrder();
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+
+  console.log(formData, totalAmount, selectedServices);
+
+  const handleSubmitOrder = async (file: File) => {
+    const { selectedServices, totalAmount } =
+      calculateSelectedServices(formData);
+
+    // 1) 🟡 Alert تأكيد
+    const confirm = await Swal.fire({
+      title: "Confirm Your Order",
+      html: `
+        <div style="text-align:left; font-size:15px; line-height:1.5;">
+          <strong>Selected Services:</strong>
+          <strong>Materials:</strong>
+          <ul>
+            ${selectedServices
+              ?.map(
+                (m: any) =>
+                  `<li>• ${m.label} — <span style="color:#e4b441;">$${m.price}</span></li>`
+              )
+              .join("")}
+          </ul>
+
+          <br/>
+
+          <strong>Total Amount:</strong> 
+          <span style="color:#e4b441; font-weight:600;">$${totalAmount}</span>
+          
+          <br/><br/>
+
+          <strong>Patient Name:</strong> ${formData?.patientName || "-"} <br/>
+          <strong>Age:</strong> ${formData?.date || "-"} <br/>
+          <strong>Notes:</strong> ${note || "No notes"}
+        </div>
+      `,
+
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Confirm Order",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#E4B441",
+      cancelButtonColor: "#aaa",
+    });
+
+    // لو المستخدم لغى
+    if (!confirm.isConfirmed) {
+      Swal.fire({
+        icon: "info",
+        title: "Order Cancelled",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
+    // 2) 🟢 لو وافق → نرفع الملف
+    uploadMutate(file, {
+      onSuccess: (uploadResponse) => {
+        const fileId = uploadResponse?.data?.id;
+
+        orderMutate(
+          {
+            ...formData,
+            fileId,
+            totalPrice: totalAmount,
+            options: {
+              patientName: formData?.patientName,
+              age: formData.date,
+              note,
+              selectedServices,
+            },
+          },
+          {
+            onSuccess: () => {
+              Swal.fire({
+                icon: "success",
+                title: "Order Created Successfully!",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigateToHome();
+            },
+            onError: (err) => {
+              console.error("Failed to create order:", err);
+              Swal.fire({
+                icon: "error",
+                title: "Failed to create order",
+                text: err?.message || "",
+              });
+            },
+          }
+        );
+      },
+
+      onError: (err) => {
+        console.error("File upload failed:", err);
+        Swal.fire({
+          icon: "error",
+          title: "File Upload Failed",
+          text: err?.message || "",
+        });
+      },
+    });
+  };
+
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const handlePayNow = async () => {
     setIsProcessingPayment(true);
@@ -114,8 +223,7 @@ export default function UploadPage() {
                   e.preventDefault();
                   const files = Array.from(e.dataTransfer.files).slice(0, 5);
                   setUploadedFiles(files);
-                  console.log(uploadedFiles[0]);
-                  
+                  uploadMutate(files[0]);
                 }}
                 onClick={() => {
                   const input = document.createElement("input");
@@ -164,6 +272,8 @@ export default function UploadPage() {
               <textarea
                 placeholder="Write your notes here..."
                 rows={6}
+                value={note}
+                onChange={(e) => setnNote(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E4B441] focus:border-[#E4B441] resize-none"
               />
             </motion.div>
@@ -183,9 +293,9 @@ export default function UploadPage() {
 
               <button
                 onClick={() => {
-                  console.log(uploadedFiles[0]);
-                  mutate(uploadedFiles[0])
-                  navigateToHome()
+                  if (uploadedFiles[0]) {
+                    handleSubmitOrder(uploadedFiles[0]);
+                  }
                 }}
                 className="px-6 py-3 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg"
               >
