@@ -21,7 +21,6 @@ export async function POST() {
         'Content-Type': 'application/json',
         'Cookie': `refreshToken=${refreshToken}`,
       },
-      // ❌ REMOVE: credentials: 'include'
     });
 
     // 3. Extract and forward Set-Cookie headers

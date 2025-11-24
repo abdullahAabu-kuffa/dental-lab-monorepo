@@ -10,7 +10,7 @@ import {
 import { PaginatedOrdersResponse } from "@/app/dashboard/interfaces/orders";
 import useOrderStore2 from "../store/orders-store";
 async function fetchOrders(page = 1) {
-  const res = await fetch(`http://localhost:3001/api/orders`, {
+  const res = await fetch(`http://localhost:3001/api/orders?page=${page}`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -23,7 +23,10 @@ async function fetchOrders(page = 1) {
 export function useOrders(page = 1) {
   return useQuery<PaginatedOrdersResponse, Error>({
     queryKey: ["orders", page],
-    queryFn: () => fetchOrders(page).then((res) => res.data.data),
+    queryFn: async() => {
+      const res = await fetchOrders(page);
+      return res.data?.orders ?? [];
+    },
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: true,
   });

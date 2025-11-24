@@ -11,8 +11,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Lottie from "lottie-react";
 import animationData from "@/assets/lotties/Anesthesia.json";
 import {
-  SAMPLE_ORDERS,
-  filterOrdersByStatus,
+filterOrdersByStatus,
 } from "../../../src/config/UserData/orderDataService";
 import { Order } from "../../../src/types";
 import { useRouter } from "next/navigation";
@@ -20,17 +19,16 @@ import toast from "react-hot-toast";
 import { useLoading } from "@/app/src/contexts/LoadingContext";
 import { useOrders } from "@/app/src/lib/orders";
 
+
 export default function OrdersListPage() {
   const router = useRouter();
-
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(SAMPLE_ORDERS);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
-  const { setLoading } = useLoading();
   const { data, isLoading } = useOrders();
-  const orders = data?.data?.orders;
-  
+  const orders = data;
+    console.log(orders);
+    
   const getSelectedPaymentInfo = () => {
     if (!selectedOrder) return { items: [], total: 0 };
 
@@ -71,7 +69,6 @@ export default function OrdersListPage() {
   const handlePayNow = () => {
     router.push("/User/Order/Form");
   };
-  if (isLoading) {setLoading(true)}
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 relative overflow-hidden">
@@ -92,7 +89,7 @@ export default function OrdersListPage() {
               <h1 className="text-33xl sm:text-4xl font-extrabold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent whitespace-nowrap">
                 My Orders{" "}
                 <span className="text-2xl sm:text-3xl font-semibold text-gray-400">
-                  ({filteredOrders.length})
+                  {/* ({orders.length}) */}
                 </span>
               </h1>
 
