@@ -5,14 +5,11 @@ import { FetchUsersResponse } from "../interfaces/users";
 axios.defaults.baseURL = "http://localhost:3001/api";
 
 const token =
-  getAccessToken() ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoibXVzdGFmYUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjM5MzUxNzMsImV4cCI6MTc2NDAyMTU3M30.MF89id0dvFIbbs7w9tBQVNsIhonQzEOx1xSt-EYGyKM";
+  getAccessToken();
 
 console.log(token);
 
-const authHeader = {
-  Authorization: `Bearer ${token}`,
-};
+
 
 /* ===========================================
    GET ALL ORDERS

@@ -108,7 +108,6 @@ export default function OrderDetails({
             </p>
             <p className="text-lg">
               <span className="font-semibold">Total Price:</span> {order.price}{" "}
-              EGP
             </p>
             <p className="text-lg">
               <span className="font-semibold">Created:</span>{" "}

@@ -27,13 +27,11 @@ const Orders = () => {
     }
   }, [me]);
 
-  // const { data } = useGetAllOrders(currentPage);
   const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
   const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const pages = data?.data?.totalPages || 1;
   const totalOrders = data?.data?.totalOrders || 0;
   const list = data?.data?.orders ?? [];
-  console.log("list", list);
   const pendingOrders = list.filter(
     (order) => order.status === "PENDING"
   ).length;
