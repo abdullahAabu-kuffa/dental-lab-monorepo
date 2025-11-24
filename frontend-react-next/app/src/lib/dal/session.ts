@@ -12,7 +12,8 @@ export interface SessionPayload extends JoseJWTPayload {
   role: 'CLIENT' | 'OWNER' | 'ADMIN';
   isVerified: boolean;
   isActive: boolean;
-
+  iat: number;
+  exp: number;
 }
 
 /**
@@ -40,7 +41,7 @@ export async function getSession(): Promise<SessionPayload | null> {
 
     return payload;
   } catch (error) {
-    console.error('Session verification failed:', error);
+    console.warn('Session verification failed:', error);
     return null;
   }
 }

@@ -31,7 +31,7 @@ const Navbar = () => {
 			console.log("Logging out...");
 			await logoutRequest();
 		} catch (error) {
-			console.error("Logout failed:", error);
+			console.warn("Logout failed:", error);
 		} finally {
 			// console.log("Logout successful");
 			router.refresh();
