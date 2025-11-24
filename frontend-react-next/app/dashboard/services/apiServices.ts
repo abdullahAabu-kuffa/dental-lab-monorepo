@@ -87,3 +87,12 @@ export const deleteUser = async (userId: number) => {
   });
   return response.data;
 }
+
+export const getNotifications = async () => {
+  const res = await axios.get('/notifications', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+}
