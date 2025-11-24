@@ -104,4 +104,3 @@ export const getNotifications = async () => {
   });
   return res.data;
 }
-};
