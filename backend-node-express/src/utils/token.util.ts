@@ -3,13 +3,16 @@ import logger from "./logger.util";
 import { Role } from "../../generated/prisma/enums";
 
 interface TokenPayload {
+  fullName: string;
   id: number;
   email: string;
   role: Role;
+  isVerified: boolean;
+  isActive: boolean;
 }
 // logger.info("jwt secret",process.env.JWT_SECRET);
 export const generateAccessToken = (payload:TokenPayload) => {
-    return Jwt.sign(payload, process.env.JWT_SECRET!,{expiresIn:"1d"})
+    return Jwt.sign(payload, process.env.JWT_SECRET!,{expiresIn:"15m"})
 }
 export const generateRefreshToken  = (payload:TokenPayload) => {
     return Jwt.sign(payload, process.env.JWT_REFRESH_SECRET!,{expiresIn:"7d"})

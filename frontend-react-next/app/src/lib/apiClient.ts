@@ -46,14 +46,14 @@ export async function refreshAccessToken() {
 
         if (!res.ok) return false;
 
-        const data = await res.json();
+        // const data = await res.json();
 
-        const token: string | undefined =
-            data?.accessToken || data?.data?.accessToken;
+        // const token: string | undefined =
+        //     data?.accessToken || data?.data?.accessToken;
 
-        if (!token) return false;
+        // if (!token) return false;
 
-        setAccessTokenInternal(token);
+        // setAccessTokenInternal(token);
 
         return true;
     } catch {
