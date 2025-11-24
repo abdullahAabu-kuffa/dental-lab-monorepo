@@ -130,11 +130,21 @@ export const loginUser = async (email: string, password: string) => {
       });
     }
 
-    const accessToken = generateAccessToken({ id: user.id, email: user.email ,role: user.role  });
-    const refreshToken = generateRefreshToken({
+    const accessToken = generateAccessToken({
+      fullName: user.fullName || "",
       id: user.id,
       email: user.email,
-      role: user.role 
+      role: user.role,
+      isVerified: user.isVerified,
+      isActive: user.isActive,
+    });
+    const refreshToken = generateRefreshToken({
+      fullName: user.fullName || "",
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      isActive: user.isActive,
     });
     const session = await prisma.session.create({
       data: {
@@ -207,14 +217,20 @@ export const refreshTokenService = async (
     //   throw new Error("Account disabled or deleted");
     // }
     const newAccessToken = generateAccessToken({
+      fullName: user.fullName || "",
       id: user.id,
       email: user.email,
-      role: user.role 
+      role: user.role,
+      isVerified: user.isVerified,
+      isActive: user.isActive,
     });
     const newRefreshToken = generateRefreshToken({
+      fullName: user.fullName || "",
       id: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      isVerified: user.isVerified,
+      isActive: user.isActive,
     });
 
     await prisma.session.update({
@@ -240,7 +256,14 @@ export const forgotPasswordService = async (email: string) => {
     if (!user) {
       throw new Error("User not found");
     }
-    const token =  generateAccessToken({ id: user.id, email: user.email ,role: user.role, });
+    const token = generateAccessToken({
+      fullName: user.fullName || "",
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      isActive: user.isActive,
+    });
     const resetLink = `http://localhost:3000/reset-password?token=${token}`;
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",
@@ -289,7 +312,7 @@ export const resetPasswordService = async (
     });
     if (!tokenExist) throw new Error("Invalid Token");
     if (tokenExist.expiresAt < new Date()) throw new Error("Token expired");
-    
+
     const hashedPassword = await bcryptPassword(newPassword);
     if (!tokenExist) {
       throw new Error("Invalid Token");

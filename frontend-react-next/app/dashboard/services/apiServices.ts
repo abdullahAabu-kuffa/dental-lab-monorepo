@@ -20,7 +20,8 @@ const authHeader = {
 export const getAllOrders = async ({ page }: { page: number }) => {
   const res = await axios.get(`/orders`, {
     params: { page },
-    headers: authHeader,
+    // headers: authHeader,
+    withCredentials: true,
   });
   return res.data;
 };
@@ -35,7 +36,8 @@ export const changeOrderStatus = async (
   const res = await axios.patch(
     `/orders/${orderId}`,
     { status: action },
-    { headers: authHeader }
+    // { headers: authHeader }
+    { withCredentials: true }
   );
   return res.data;
 };
@@ -45,7 +47,8 @@ export const changeOrderStatus = async (
 =========================================== */
 export const getMe = async () => {
   const res = await axios.get(`/users/me`, {
-    headers: authHeader,
+    // headers: authHeader,
+    withCredentials: true,
   });
   return res.data;
 };
@@ -61,7 +64,8 @@ export const changeUserStatus = async (
     `/users/${userId}/status`,
     {},
     {
-      headers: authHeader,
+      // headers: authHeader,
+      withCredentials: true,
       params: { action },
     }
   );
@@ -78,7 +82,8 @@ export const fetchUsers = async (
 ): Promise<FetchUsersResponse> => {
   const response = await axios.get<FetchUsersResponse>(`/users`, {
     params: { page, limit },
-    headers: authHeader,
+    // headers: authHeader,
+    withCredentials: true,
   });
   return response.data;
 };
@@ -88,7 +93,18 @@ export const fetchUsers = async (
 =========================================== */
 export const deleteUser = async (userId: number) => {
   const response = await axios.delete(`/users/${userId}`, {
-    headers: authHeader,
+    // headers: authHeader,
+    withCredentials: true,
   });
   return response.data;
-};
+}
+
+export const getNotifications = async () => {
+  const res = await axios.get('/notifications', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+}
+

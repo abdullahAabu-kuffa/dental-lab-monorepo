@@ -51,15 +51,19 @@ export const login = async (req: Request, res: Response) => {
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    res.cookie("accessToken", userData.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
 
-    res
-      .status(201)
-      .json(
-        successResponse(
-          { accessToken: userData.accessToken },
-          "Login successful"
-        )
-      );
+    res.status(201).json(
+      successResponse(
+        // { accessToken: userData.accessToken },
+        "Login successful"
+      )
+    );
   } catch (err: any) {
     res.status(401).json(errorResponse(err.message, 401));
   }
@@ -71,6 +75,7 @@ export const login = async (req: Request, res: Response) => {
 export const refreshToken = async (req: Request, res: Response) => {
   try {
     const { refreshToken: tokenFromCookie } = req.cookies;
+    console.log("recieved token", tokenFromCookie);
     const { newAccessToken, newRefreshToken } =
       await refreshTokenService(tokenFromCookie);
     res.cookie("refreshToken", newRefreshToken, {
@@ -79,7 +84,17 @@ export const refreshToken = async (req: Request, res: Response) => {
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    return res.json({ accessToken: newAccessToken });
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+        console.log("[Express] Set-Cookie headers:", res.getHeader('Set-Cookie'));
+
+    return res
+      .status(200)
+      .json(successResponse("Token refreshed successfully"));
   } catch (err: any) {
     logger.error(`Refresh token error: ${err.message}`);
 
@@ -133,6 +148,11 @@ export const logout = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
     return res.status(200).json({ message: "Logout successful" });
   } catch (err: any) {
     logger.error(`Refresh token error: ${err.message}`);
@@ -176,15 +196,13 @@ export const resetPassword = async (
 ) => {
   try {
     const { token, newPassword } = req.body;
-    const result = await resetPasswordService(token, newPassword)
-    return res.status(200).json(
-      successResponse(
-        { passwordReset: true },
-        "Password reset successfully"
-      )
-    );
-  }
-  catch (err: any) {
+    const result = await resetPasswordService(token, newPassword);
+    return res
+      .status(200)
+      .json(
+        successResponse({ passwordReset: true }, "Password reset successfully")
+      );
+  } catch (err: any) {
     logger.error(`forget password errror: ${err.message}`);
     return res
       .status(500)

@@ -16,9 +16,9 @@ import {
 } from "../../../src/config/UserData/orderDataService";
 import { Order } from "../../../src/types";
 import { useRouter } from "next/navigation";
-import { useOrders } from "./quere";
 import toast from "react-hot-toast";
 import { useLoading } from "@/app/src/contexts/LoadingContext";
+import { useOrders } from "@/app/src/lib/orders";
 
 export default function OrdersListPage() {
   const router = useRouter();
@@ -28,13 +28,9 @@ export default function OrdersListPage() {
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
   const { setLoading } = useLoading();
-  setLoading(false)
-
   const { data, isLoading } = useOrders();
   const orders = data?.data?.orders;
-  console.log(data);
-  console.log(orders);
-
+  
   const getSelectedPaymentInfo = () => {
     if (!selectedOrder) return { items: [], total: 0 };
 

@@ -30,16 +30,20 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  async function handleLogout() {
-    try {
-      await logoutRequest(router);
-    } catch (error) {
-      console.error("Logout failed:", error);
-    } finally {
-      router.refresh();
-      window.location.reload();
-    }
-  }
+
+	async function handleLogout() {
+		try {
+			console.log("Logging out...");
+			await logoutRequest();
+		} catch (error) {
+			console.warn("Logout failed:", error);
+		} finally {
+			// console.log("Logout successful");
+			router.refresh();
+			window.location.reload();
+		}
+	}
+
 
   async function handlCheckActivation() {
     const res = await apiFetch("/api/users/me", {
