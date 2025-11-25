@@ -5,9 +5,12 @@ import { date } from "joi";
 // Responsibility: Implement createOrder, getOrders, getOrder, updateOrder, deleteOrder methods
 
 import {
+  completeStepOrderServices,
   createOrderServices,
+  createStepOrderServices,
   deleteUserOrderServices,
   getAllOrdersServices,
+  getAllStepOrderServices,
   getUserOrderServices,
   updateUserOrderService,
 } from "../services/order.service";
@@ -49,12 +52,7 @@ export async function getUserOrder(req: Request, res: Response) {
     const order = await getUserOrderServices(req);
     return res
       .status(200)
-      .json(
-        successResponse(
-          order,
-          "Order fetched successfully"
-        )
-      );
+      .json(successResponse(order, "Order fetched successfully"));
   } catch (error: any) {
     logger.error(`Registration controller error: ${error.message}`);
     return res.status(400).json(errorResponse(error.message, 400));
@@ -65,7 +63,9 @@ export async function updateUserOrder(req: Request, res: Response) {
   try {
     console.log("USER FROM TOKEN:", req.user);
     const updatedOrder = await updateUserOrderService(req);
-    return res.status(200).json(successResponse(updatedOrder, "Order updated successfully"));
+    return res
+      .status(200)
+      .json(successResponse(updatedOrder, "Order updated successfully"));
   } catch (error: any) {
     logger.error(`Registration controller error: ${error.message}`);
     return res.status(400).json(errorResponse(error.message, 400));
@@ -75,9 +75,48 @@ export async function updateUserOrder(req: Request, res: Response) {
 export async function deleteUserOrder(req: Request, res: Response) {
   try {
     const deletedOrder = await deleteUserOrderServices(req);
-    return res.status(200).json(successResponse(deletedOrder, "Order deleted successfully"));
+    return res
+      .status(200)
+      .json(successResponse(deletedOrder, "Order deleted successfully"));
   } catch (error: any) {
     logger.error(`Registration controller error: ${error.message}`);
+    return res.status(400).json(errorResponse(error.message, 400));
+  }
+}
+
+export async function createStepOrder(req: Request, res: Response) {
+  try {
+    const step = await createStepOrderServices(req);
+    return res
+      .status(201)
+      .json(successResponse(step, "createStepOrder successfully"));
+  } catch (error: any) {
+    logger.error(`createStepOrder controller error: ${error.message}`);
+    return res.status(400).json(errorResponse(error.message, 400));
+  }
+}
+export async function getAllStepOrder(req: Request, res: Response) {
+  try {
+    const orderSteps = await getAllStepOrderServices(req);
+    return res
+      .status(201)
+      .json(successResponse(orderSteps, "getAllStepOrder successfully"));
+  } catch (error: any) {
+    logger.error(`getAllStepOrder controller error: ${error.message}`);
+    return res.status(400).json(errorResponse(error.message, 400));
+  }
+}
+
+
+export async function completeStepOrder(req: Request, res: Response) {
+  try {
+    const orderTrackingId = parseInt(req.params.TrackingId)
+    const orderSteps = await completeStepOrderServices(orderTrackingId);
+    return res
+      .status(201)
+      .json(successResponse(orderSteps, "completeStepOrder successfully"));
+  } catch (error: any) {
+    logger.error(`completeStepOrder controller error: ${error.message}`);
     return res.status(400).json(errorResponse(error.message, 400));
   }
 }

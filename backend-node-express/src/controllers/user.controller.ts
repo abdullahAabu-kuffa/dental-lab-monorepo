@@ -3,7 +3,7 @@
 // Usage: Called from user routes
 // Responsibility: Implement getProfile, updateProfile, listUsers, approveUser methods
 import { date } from "joi";
-import { approveUserService, deleteUserServices, getAllUsersService, getUserDataService, rejectedUserService } from "../services/user.service";
+import { approveUserService, deleteUserServices, getAllUsersService, getUserDataService, rejectedUserService, updateUserProfileService } from "../services/user.service";
 import logger from "../utils/logger.util";
 import { errorResponse, successResponse } from "../utils/response.util";
 import { NextFunction, Request, Response } from "express";
@@ -25,26 +25,59 @@ export async function getUserData(req: AuthRequest, res: Response) {
         return res.status(400).json(errorResponse(error.message, 400));
     }
 }
-export async function getAllUsers(req: AuthRequest, res: Response) {
-    try {
-        const {users, limit ,total , totalPages ,page} = await getAllUsersService(req);
-        return res
-        .status(200)
-        .json(successResponse({
-            data:{users},
-            pagination: {
-                limit
-                ,total
-                ,totalPages
-                ,page
-            }
+// export async function getAllUsers(req: AuthRequest, res: Response) {
+//     try {
+//         const {users, limit ,total , totalPages ,page} = await getAllUsersService(req);
+//         return res
+//         .status(200)
+//         .json(successResponse({
+//             data:{users},
+//             pagination: {
+//                 limit
+//                 ,total
+//                 ,totalPages
+//                 ,page
+//             }
             
-        }, "Fetched all users successfully"));
-    } catch (error: any) {
-        logger.error(`Registration controller error: ${error.message}`);
-        return res.status(400).json(errorResponse(error.message, 400));
-    }
+//         }, "Fetched all users successfully"));
+//     } catch (error: any) {
+//         logger.error(`Registration controller error: ${error.message}`);
+//         return res.status(400).json(errorResponse(error.message, 400));
+//     }
+// }
+
+export async function getAllUsers(req: AuthRequest, res: Response) {
+  try {
+    const { users, limit, total, totalPages, page } = await getAllUsersService(
+      req
+    );
+
+    logger.info(
+      `[getAllUsers] Retrieved ${users.length} users for page ${page}`
+    );
+
+    return res.status(200).json(
+      successResponse(
+        {
+          users,
+          pagination: {
+            page,
+            limit,
+            total,
+            totalPages,
+          },
+        },
+        'Fetched all users successfully'
+      )
+    );
+  } catch (error: any) {
+    logger.error(`[getAllUsers controller error]: ${error.message}`);
+    return res
+      .status(400)
+      .json(errorResponse(error.message, 400));
+  }
 }
+
 
 export async function createNewUser(req: AuthRequest, res: Response) {
   try {
@@ -98,3 +131,23 @@ export async function deleteUser(req: AuthRequest, res: Response) {
     return res.status(400).json(errorResponse(error.message, 400));
   }
 }
+
+  export async function updateUserProfile(req: AuthRequest, res: Response) {
+    try {
+  
+      const userId = parseInt(req.params.id, 10);
+      const body = req.body
+      const updated = await updateUserProfileService(userId,body)
+      return res
+        .status(201)
+        .json(
+          successResponse(
+            updated,
+            "admin approve successfuly."
+          )
+        );
+    } catch (error: any) {
+      logger.error(`Registration controller error: ${error.message}`);
+      return res.status(400).json(errorResponse(error.message, 400));
+    }
+  }

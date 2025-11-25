@@ -11,6 +11,7 @@ import {
   changeUserStatus,
   deleteUser,
   getUserData,
+  updateUserProfile,
 } from "../controllers/user.controller";
 
 const router = Router();
@@ -88,7 +89,7 @@ const router = Router();
  * @swagger
  * /users:
  *   get:
- *     summary: Get all users with pagination
+ *     summary: Get all users with pagination, search, and filters
  *     tags:
  *       - Users
  *     security:
@@ -99,14 +100,33 @@ const router = Router();
  *         schema:
  *           type: integer
  *           default: 1
+ *         description: Page number for pagination
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 20
+ *           maximum: 100
+ *         description: Number of records per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by user name or email (case-insensitive)
+ *         example: john
+ *       - in: query
+ *         name: filter
+ *         schema:
+ *           type: string
+ *           enum: [pending, approved]
+ *         description: |
+ *           Filter by user status:
+ *           - pending: Users with isActive = false (awaiting approval)
+ *           - approved: Users with isActive = true (approved accounts)
+ *         example: pending
  *     responses:
  *       200:
- *         description: List of users with pagination info
+ *         description: List of users with pagination, search and filter info
  *         content:
  *           application/json:
  *             schema:
@@ -119,12 +139,51 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
- *                     data:
+ *                     users:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/User'
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           fullName:
+ *                             type: string
+ *                           email:
+ *                             type: string
+ *                           phoneNumber:
+ *                             type: string
+ *                           clinicName:
+ *                             type: string
+ *                           clinicAddress:
+ *                             type: string
+ *                           role:
+ *                             type: string
+ *                             enum: [CLIENT, ADMIN, OWNER]
+ *                           isActive:
+ *                             type: boolean
+ *                           isVerified:
+ *                             type: boolean
+ *                           createdAt:
+ *                             type: string
+ *                             format: date-time
+ *                           updatedAt:
+ *                             type: string
+ *                             format: date-time
  *                     pagination:
- *                       $ref: '#/components/schemas/Pagination'
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: integer
+ *                         limit:
+ *                           type: integer
+ *                         total:
+ *                           type: integer
+ *                         totalPages:
+ *                           type: integer
+ *       400:
+ *         description: Invalid parameters
+ *       401:
+ *         description: Unauthorized
  */
 
 /**
@@ -231,6 +290,98 @@ const router = Router();
  *       200:
  *         description: User deleted successfully
  */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateUserProfileInput:
+ *       type: object
+ *       properties:
+ *         fullName:
+ *           type: string
+ *           description: User full name
+ *           nullable: true
+ *         phoneNumber:
+ *           type: string
+ *           description: User phone number
+ *           nullable: true
+ *         clinicName:
+ *           type: string
+ *           description: Clinic name
+ *           nullable: true
+ *         clinicAddress:
+ *           type: string
+ *           description: Clinic address
+ *           nullable: true
+ *       example:
+ *         fullName: "Mohamed Roshdy"
+ *         phoneNumber: "+201032057556"
+ *         clinicName: "Avante Dental Lab"
+ *         clinicAddress: "Giza, Egypt"
+ *     UserResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         fullName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         phoneNumber:
+ *           type: string
+ *         clinicName:
+ *           type: string
+ *         clinicAddress:
+ *           type: string
+ *         role:
+ *           type: string
+ *         isActive:
+ *           type: boolean
+ *         isVerified:
+ *           type: boolean
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   patch:
+ *     summary: Update user profile
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUserProfileInput'
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Bad request, no fields to update or invalid input
+ *       401:
+ *         description: Unauthorized, token missing or invalid
+ *       404:
+ *         description: User not found
+ */
 
 // get all user
 router.get("/", verifyAccessToken, getAllUsers);
@@ -242,5 +393,6 @@ router.post("/", verifyAccessToken, requireAdmin, createNewUser);
 router.put("/:id/status", verifyAccessToken, changeUserStatus);
 // delete user
 router.delete("/:id", verifyAccessToken, deleteUser);
+router.patch("/:id", verifyAccessToken, updateUserProfile);
 
 export default router;

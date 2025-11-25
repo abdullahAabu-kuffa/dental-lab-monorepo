@@ -114,6 +114,64 @@ export function subscribeToNotifications(
 }
 
 /**
+ * Publish a notification to all admins
+ * Uses a broadcast channel that all admins subscribe to
+ */
+export async function publishAdminNotification(
+  notificationData: NotificationPayload & { triggeredBy?: number }
+): Promise<void> {
+  try {
+    const channel = `notifications:admin:broadcast`;
+    const message = JSON.stringify(notificationData);
+    
+    const result = await publisherClient.publish(channel, message);
+    logger.info(`[PubSub] Published admin notification to channel ${channel}, subscribers: ${result}`);
+  } catch (error: any) {
+    logger.error(`[PubSub] Failed to publish admin notification:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Subscribe an admin to the broadcast admin notification channel
+ * @param onMessage - Callback when admin notification received
+ * @returns Unsubscribe function
+ */
+export function subscribeToAdminNotifications(
+  onMessage: (message: NotificationPayload) => void
+): () => Promise<void> {
+  const channel = `notifications:admin:broadcast`;
+  
+  const messageHandler = (_receivedChannel: string, message: string) => {
+    if (_receivedChannel === channel) {
+      try {
+        const notificationData = JSON.parse(message) as NotificationPayload;
+        onMessage(notificationData);
+      } catch (error: any) {
+        logger.error(`[PubSub] Failed to parse admin notification message:`, error);
+      }
+    }
+  };
+
+  subscriberClient.on('message', messageHandler);
+  subscriberClient.subscribe(channel, (err) => {
+    if (err) {
+      logger.error(`[PubSub] Failed to subscribe to ${channel}:`, err);
+    } else {
+      logger.info(`[PubSub] Admin subscribed to channel ${channel}`);
+    }
+  });
+
+  // Return unsubscribe function
+  return async () => {
+    await subscriberClient.unsubscribe(channel);
+    subscriberClient.removeListener('message', messageHandler);
+    logger.info(`[PubSub] Admin unsubscribed from channel ${channel}`);
+  };
+}
+
+
+/**
  * Get number of subscribers to a channel (for monitoring)
  */
 export async function getChannelSubscriberCount(userId: number): Promise<number> {
@@ -142,3 +200,4 @@ export default {
   getChannelSubscriberCount,
   closePubSub,
 };
+

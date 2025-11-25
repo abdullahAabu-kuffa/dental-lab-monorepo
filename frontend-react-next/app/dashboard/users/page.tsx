@@ -12,22 +12,13 @@ import Loading from "../_components/@loading";
 import ErrorMessage from "../_components/@displayerrors";
 
 import { useUsers } from "../services/hookes/fetch_all_users";
-import { useGetProfileInfo } from "../services/hookes/get_profile_info";
 
 const usersList = () => {
-  // check if the user is not authorized
-  const { data: me } = useGetProfileInfo();
-
-  useEffect(() => {
-    if (me) {
-      if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
-    }
-  }, [me]);
 
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { data, isLoading, isError, error } = useUsers(page, limit);
+  const { data:respose, isLoading, isError, error } = useUsers(page, limit);
 
   // Handle loading state
   if (isLoading) return <Loading />;
@@ -35,14 +26,14 @@ const usersList = () => {
   // Handle error state
   if (isError) return <ErrorMessage message={error.message} />;
 
-  const users: User[] = Array.isArray(data?.data?.data?.users)
-    ? data.data.data.users
+  const users: User[] = Array.isArray(respose?.data?.users)
+    ? respose.data.users
     : [];
 
   const penddingUsersNumber = users.filter((user) => !user.isActive).length;
   const approvedUsersNumber = users.filter((user) => user.isActive).length;
 
-  const pagination: Pagination | undefined = data?.data?.pagination;
+  const pagination: Pagination | undefined = respose?.data?.pagination;
   const totalPages = pagination?.totalPages || 1;
   const total = pagination?.total || 0;
 

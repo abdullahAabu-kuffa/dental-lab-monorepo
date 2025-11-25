@@ -6,18 +6,24 @@ import { checkOrder } from "../utils/helper/checkOrder";
 // Purpose: Handle order business logic
 // Usage: Called by order controller
 // Responsibility: Create, read, update, delete orders; order status management
-
+const ORDER_STEPS = [
+  "Receive case",
+  "Scan model",
+  "Design",
+  "Milling",
+  "Finishing",
+];
 export const createOrderServices = async (userId: any, orderData: any) => {
   try {
     parseId(userId);
     await checkUser(userId);
-    
+
     const newOrder = await prisma.order.create({
       data: {
         userId,
         options: orderData.options,
         totalPrice: orderData.totalPrice,
-        fileId: orderData.fileId
+        fileId: orderData.fileId,
       },
     });
     return newOrder;
@@ -26,33 +32,125 @@ export const createOrderServices = async (userId: any, orderData: any) => {
     throw error;
   }
 };
+// export const getAllOrdersServices = async (userId: any, req: any) => {
+//   try {
+//     const page = parseInt(req.query.page as string) || 1;
+//     const limit = 10;
+//     let orders;
+//     let totalOrders;
+//     parseId(userId);
+//     const user = await checkUser(userId);
+//     if (user.role === "CLIENT") {
+//       totalOrders = await prisma.order.count({ where: { userId } });
+//       orders = await prisma.order.findMany({ where: { userId } });
+//     } else if (user.role === "ADMIN" || user.role === "OWNER") {
+//       totalOrders = await prisma.order.count();
+//       orders = await prisma.order.findMany({
+//         include: { user: true, invoice: true, file: true },
+//         skip: (page - 1) * limit,
+//         take: limit,
+//       });
+//     } else {
+//       throw new Error("No Role Provided");
+//     }
+
+//     if (orders?.length === 0) {
+//       throw new Error("no orders Found");
+//     }
+//     let totalPages = Math.ceil(totalOrders / limit);
+//     return { orders, page, limit, totalOrders, totalPages };
+//   } catch (error: any) {
+//     logger.error(`[getAllOrdersServices error] : ${error.message}`);
+//     throw error;
+//   }
+// };
 export const getAllOrdersServices = async (userId: any, req: any) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = 10;
+    const search = (req.query.search as string)?.trim() || '';
+    const filter = (req.query.filter as string)?.toLowerCase() || '';
+
+    parseId(userId);
+    const user = await checkUser(userId);
+
+    logger.info(
+      `[getAllOrdersServices] Fetching orders - page: ${page}, limit: ${limit}, search: ${search}, filter: ${filter}, userRole: ${user.role}`
+    );
+
     let orders;
     let totalOrders;
-    parseId(userId);
-    const user =await checkUser(userId)
-    if (user.role === "CLIENT") {
-      totalOrders = await prisma.order.count({ where: { userId } });
-      orders = await prisma.order.findMany({ where: { userId } });
-    } else if (user.role === "ADMIN" || user.role === "OWNER") {
-      totalOrders = await prisma.order.count();
+
+    if (user.role === 'CLIENT') {
+      // Build where clause for client orders
+      const whereClause: any = { userId };
+
+      // Status filter for clients
+      if (filter && ['pending', 'in_progress', 'completed', 'cancelled'].includes(filter)) {
+        whereClause.status = filter.toUpperCase();
+        logger.info(`[getAllOrdersServices] Applied status filter: ${filter}`);
+      }
+
+      totalOrders = await prisma.order.count({
+        where: whereClause,
+      });
+
       orders = await prisma.order.findMany({
+        where: whereClause,
+        include: { user: true, invoice: true, file: true },
+        orderBy: { createdAt: 'desc' },
+      });
+    } else if (user.role === 'ADMIN' || user.role === 'OWNER') {
+      // Build where clause for admin orders
+      const whereClause: any = {};
+
+      // Search by user fullName
+      if (search) {
+        whereClause.user = {
+          fullName: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        };
+        logger.info(`[getAllOrdersServices] Applied search filter: ${search}`);
+      }
+
+      // Status filter for admins
+      if (filter && ['pending', 'in_progress', 'completed', 'cancelled'].includes(filter)) {
+        whereClause.status = filter.toUpperCase();
+        logger.info(`[getAllOrdersServices] Applied status filter: ${filter}`);
+      }
+
+      totalOrders = await prisma.order.count({
+        where: whereClause,
+      });
+
+      orders = await prisma.order.findMany({
+        where: whereClause,
         include: { user: true, invoice: true, file: true },
         skip: (page - 1) * limit,
         take: limit,
+        orderBy: { createdAt: 'desc' },
       });
     } else {
-      throw new Error("No Role Provided");
+      throw new Error('No Role Provided');
     }
 
     if (orders?.length === 0) {
-      throw new Error("no orders Found");
+      logger.warn(
+        `[getAllOrdersServices] No orders found with filters - search: ${search}, filter: ${filter}`
+      );
+      // Don't throw - return empty array instead
+      // throw new Error("no orders Found");
     }
-    let totalPages = Math.ceil(totalOrders / limit);
-    return { orders, page, limit,totalOrders, totalPages };
+
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    logger.info(
+      `[getAllOrdersServices] Fetched ${orders.length} orders (total: ${totalOrders})`
+    );
+
+    return { orders, page, limit, totalOrders, totalPages };
   } catch (error: any) {
     logger.error(`[getAllOrdersServices error] : ${error.message}`);
     throw error;
@@ -65,6 +163,9 @@ export const getUserOrderServices = async (req: any) => {
     const orderId = parseId(req.params.orderId);
     await checkUser(userId);
     const order = await checkOrder(orderId);
+    if (req.user.role === "CLIENT" && order.userId !== userId) {
+      throw new Error("You are not allowed to view this order");
+    }
     return order;
   } catch (error: any) {
     logger.error(`[getUserOrderServices error] : ${error.message}`);
@@ -79,13 +180,12 @@ export const updateUserOrderService = async (req: any) => {
     await checkUser(userId);
     await checkOrder(orderId);
     const order = await prisma.order.findUnique({ where: { id: orderId } });
-    
+
     if (!order) {
       throw new Error("Order not found");
     }
     if (req.user.role === "CLIENT" && order.userId !== userId) {
       throw new Error("You are not allowed to update this order");
-      
     }
 
     const allowedFields = ["status", "options", "totalPrice"];
@@ -109,13 +209,116 @@ export const deleteUserOrderServices = async (req: any) => {
     const orderId = parseId(req.params.orderId);
     const user = await checkUser(userId);
     const order = await checkOrder(orderId);
-    if (user.role  === "CLIENT" && order?.userId !== userId) {
-        throw new Error("You are not allowed to Delete this order");
+    if (user.role === "CLIENT" && order?.userId !== userId) {
+      throw new Error("You are not allowed to Delete this order");
     }
-    const deletedOrder  = await prisma.order.delete({where:{id:orderId}})
+    const deletedOrder = await prisma.order.delete({ where: { id: orderId } });
     return deletedOrder;
   } catch (error: any) {
     logger.error(`[deleteUserOrderServices error] : ${error.message}`);
     throw error;
   }
+};
+
+export const createStepOrderServices = async (req: any) => {
+  try {
+    const userId = parseId(req.user?.id);
+    const orderId = parseId(req.params.orderId);
+    const user = await checkUser(userId);
+    const order = await checkOrder(orderId);
+    if (order.status === "COMPLETED") {
+      throw new Error(
+        "Order is already completed. No more steps can be added."
+      );
+    }
+    const lastStep = await prisma.orderTracking.findFirst({
+      where: { orderId },
+      orderBy: { stepOrder: "desc" },
+      include: { actor: true },
+    });
+    const nextStepOrder = lastStep ? lastStep.stepOrder + 1 : 1;
+
+    const { process, note } = req.body;
+    const activeStep = await prisma.orderTracking.findFirst({
+      where: { orderId, status: "IN_PROGRESS" },
+    });
+    if (activeStep)
+      throw new Error("You must complete the current step first.");
+    if (nextStepOrder > ORDER_STEPS.length) {
+      throw new Error("All steps for this order are already created.");
+    }
+
+    const processName = process || ORDER_STEPS[nextStepOrder - 1];
+    const orderStep = await prisma.orderTracking.create({
+      data: {
+        orderId: orderId,
+        actorId: userId,
+        status: "IN_PROGRESS",
+        stepOrder: nextStepOrder,
+        process: processName,
+        startDate: new Date(),
+        note: note || null,
+      },
+    });
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: "IN_PROGRESS" },
+    });
+    return orderStep;
+  } catch (error: any) {
+    logger.error(`[createStepOrderServices  error] : ${error.message}`);
+    throw error;
+  }
+};
+export const getAllStepOrderServices = async (req: any) => {
+  try {
+    const userId = parseId(req.user?.id);
+    const orderId = parseId(req.params.orderId);
+    const user = await checkUser(userId);
+    const order = await checkOrder(orderId);
+    const orderSteps = await prisma.orderTracking.findMany({
+      where: { orderId },
+      orderBy: { stepOrder: "asc" },
+      include: { actor: true },
+    });
+    orderSteps.forEach((step) => {
+      console.log(
+        `Step ${step.stepOrder}: ${step.process} by ${step.actor.fullName}`
+      );
+    });
+    return orderSteps;
+  } catch (error: any) {
+    logger.error(`[getAllStepOrder  error] : ${error.message}`);
+    throw error;
+  }
+};
+
+export const completeStepOrderServices = async (orderTrackingId: number) => {
+  const totalSteps = ORDER_STEPS.length;
+  const step = await prisma.orderTracking.findUnique({
+    where: { id: orderTrackingId },
+  });
+  if (!step) throw new Error("Step not found");
+  if (step.status === "COMPLETED") {
+    throw new Error("Step already completed.");
+  }
+  const stepUpdated = await prisma.orderTracking.update({
+    where: { id: orderTrackingId },
+    data: {
+      status: "COMPLETED",
+      endDate: new Date(),
+    },
+  });
+  const completedSteps = await prisma.orderTracking.count({
+    where: { orderId: stepUpdated.orderId, status: "COMPLETED" },
+  });
+
+  if (completedSteps === totalSteps) {
+    await prisma.order.update({
+      where: { id: stepUpdated.orderId },
+      data: { status: "COMPLETED" },
+    });
+  }
+
+  return stepUpdated;
 };

@@ -5,15 +5,17 @@
 import { Router } from "express";
 import { verifyAccessToken } from "../middlewares/auth.middleware";
 import {
+  completeStepOrder,
   createOrder,
+  createStepOrder,
   deleteUserOrder,
   getAllOrders,
+  getAllStepOrder,
   getUserOrder,
   updateUserOrder,
 } from "../controllers/order.controller";
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -95,7 +97,10 @@ const router = Router();
  *         description: Unauthorized (token missing or invalid)
  *
  *   get:
- *     summary: Get all orders (paginated for admins, user-specific for clients)
+ *     summary: Get all orders with pagination, search, and filters
+ *     description: |
+ *       For CLIENT: Returns only their own orders
+ *       For ADMIN/OWNER: Returns all orders with search and filter capabilities
  *     tags: [Orders]
  *     security:
  *       - BearerAuth: []
@@ -105,7 +110,20 @@ const router = Router();
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Page number for pagination
+ *         description: Page number for pagination (admins only)
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by user fullName (case-insensitive, admins only)
+ *         example: john
+ *       - in: query
+ *         name: filter
+ *         schema:
+ *           type: string
+ *           enum: [pending, in_progress, completed, cancelled]
+ *         description: Filter by order status
+ *         example: pending
  *     responses:
  *       200:
  *         description: Orders fetched successfully
@@ -114,18 +132,71 @@ const router = Router();
  *             schema:
  *               type: object
  *               properties:
- *                 orders:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Order'
- *                 page:
- *                   type: integer
- *                 limit:
- *                   type: integer
- *                 totalPages:
- *                   type: integer
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     orders:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           userId:
+ *                             type: integer
+ *                           fileId:
+ *                             type: integer
+ *                             nullable: true
+ *                           status:
+ *                             type: string
+ *                             enum: [PENDING, IN_PROGRESS, COMPLETED, CANCELLED]
+ *                           invoiceId:
+ *                             type: integer
+ *                             nullable: true
+ *                           options:
+ *                             type: object
+ *                           totalPrice:
+ *                             type: number
+ *                           createdAt:
+ *                             type: string
+ *                             format: date-time
+ *                           updatedAt:
+ *                             type: string
+ *                             format: date-time
+ *                           user:
+ *                             type: object
+ *                             properties:
+ *                               id:
+ *                                 type: integer
+ *                               fullName:
+ *                                 type: string
+ *                               email:
+ *                                 type: string
+ *                           invoice:
+ *                             type: object
+ *                             nullable: true
+ *                           file:
+ *                             type: object
+ *                             nullable: true
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: integer
+ *                         limit:
+ *                           type: integer
+ *                         totalOrders:
+ *                           type: integer
+ *                         totalPages:
+ *                           type: integer
  *       400:
- *         description: Bad request or unauthorized
+ *         description: Bad request or no orders found
+ *       401:
+ *         description: Unauthorized
  *
  * /api/orders/{orderId}:
  *   get:
@@ -216,7 +287,146 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     OrderTracking:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         orderId:
+ *           type: integer
+ *         actorId:
+ *           type: integer
+ *         status:
+ *           type: string
+ *           enum: [IN_PROGRESS, COMPLETED]
+ *         stepOrder:
+ *           type: integer
+ *         process:
+ *           type: string
+ *         note:
+ *           type: string
+ *           nullable: true
+ *         startDate:
+ *           type: string
+ *           format: date-time
+ *         endDate:
+ *           type: string
+ *           format: date-time
+ *           nullable: true
+ *
+ *     CreateStepInput:
+ *       type: object
+ *       properties:
+ *         note:
+ *           type: string
+ *           nullable: true
+ *       required: []
+ *
+ *     CompleteStepResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         status:
+ *           type: string
+ *         endDate:
+ *           type: string
+ *           format: date-time
+ */
 
+/**
+ * @swagger
+ * /api/orders/{orderId}/track:
+ *   post:
+ *     summary: Create a new step for an order
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Order ID
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStepInput'
+ *     responses:
+ *       201:
+ *         description: Step created successfully (IN_PROGRESS)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/OrderTracking'
+ *       400:
+ *         description: Bad request (step already exists or order finished)
+ *       401:
+ *         description: Unauthorized
+ *
+ *   get:
+ *     summary: Get all tracking steps for an order
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of order tracking steps
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/OrderTracking'
+ *       401:
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /api/orders/{orderId}/track/{trackingId}:
+ *   patch:
+ *     summary: Complete a specific step for an order
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: trackingId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Tracking step ID
+ *     responses:
+ *       200:
+ *         description: Step completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompleteStepResponse'
+ *       400:
+ *         description: Step already completed or invalid state
+ *       401:
+ *         description: Unauthorized
+ */
 
 // create new Order
 router.post("/", verifyAccessToken, createOrder);
@@ -230,5 +440,13 @@ router.patch("/:orderId/status", verifyAccessToken, updateUserOrder);
 router.patch("/:orderId", verifyAccessToken, updateUserOrder);
 // delete user order
 router.delete("/:orderId", verifyAccessToken, deleteUserOrder);
+// traking
+router.post("/:orderId/track", verifyAccessToken, createStepOrder);
+router.get("/:orderId/track", verifyAccessToken, getAllStepOrder);
+router.patch(
+  "/:orderId/track/:TrackingId",
+  verifyAccessToken,
+  completeStepOrder
+);
 
 export default router;

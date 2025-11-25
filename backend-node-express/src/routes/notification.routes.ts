@@ -8,7 +8,7 @@ import {
   markBatchAsRead,
   deleteNotification,
 } from '../services/notification.service';
-import { subscribeToNotifications } from '../lib/redisPubSub';
+import { subscribeToAdminNotifications, subscribeToNotifications } from '../lib/redisPubSub';
 import logger from '../utils/logger.util';
 import { successResponse, errorResponse } from '../utils/response.util';
 
@@ -253,6 +253,99 @@ res.write(`event: connected\ndata: Connected to notifications stream\n\n`);
     } catch (error: any) {
       logger.error('[Notification SSE] Unexpected error in SSE endpoint:', error);
       res.status(500).json(errorResponse('Failed to establish SSE connection', 500));
+    }
+  }
+);
+
+
+/**
+ * @swagger
+ * /api/notifications/admin/stream:
+ *   get:
+ *     summary: Admin real-time notification stream (SSE)
+ *     description: |
+ *       Establishes a Server-Sent Events (SSE) connection for admin-only notifications.
+ *       Admins will receive real-time alerts for:
+ *       - New account approvals pending
+ *       - New order approvals pending
+ *       
+ *       **Only accessible by ADMIN and OWNER roles**
+ *     tags:
+ *       - Notifications
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: SSE stream established successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Only admins can access this endpoint
+ *       429:
+ *         description: Too many requests
+ */
+router.get(
+  '/admin/stream',
+  verifyAccessToken,
+  throttleByIP,
+  (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
+      const userRole = (req as any).user?.role;
+
+      // Check authorization
+      if (userRole !== 'ADMIN' && userRole !== 'OWNER') {
+        logger.warn(`[Notification Admin SSE] Unauthorized access attempt by user ${userId}`);
+        return res.status(403).json(errorResponse('Only admins can access this endpoint', 403));
+      }
+
+      if (!userId) {
+        logger.warn('[Notification Admin SSE] No userId found in request');
+        return res.status(401).json(errorResponse('Unauthorized', 401));
+      }
+
+      logger.info(`[Notification Admin SSE] Admin ${userId} connecting to admin notification stream`);
+
+      // Set SSE response headers
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('X-Accel-Buffering', 'no');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.flushHeaders?.();
+
+      res.write(`event: connected\ndata: Connected to admin notifications stream\n\n`);
+
+      // Subscribe to admin broadcast channel
+      
+      const unsubscribe = subscribeToAdminNotifications((notification) => {
+        res.write(`event: admin_notification\n`);
+        res.write(`data: ${JSON.stringify(notification)}\n\n`);
+        logger.info(
+          `[Notification Admin SSE] Sent admin notification to user ${userId}`
+        );
+      });
+
+      req.on('close', () => {
+        logger.info(`[Notification Admin SSE] Admin ${userId} disconnected`);
+        unsubscribe();
+        res.end();
+      });
+
+      req.on('error', (error: any) => {
+        logger.error(`[Notification Admin SSE] Error for admin ${userId}:`, error);
+        unsubscribe();
+        res.end();
+      });
+
+      res.on('error', (error: any) => {
+        logger.error(`[Notification Admin SSE] Response error for admin ${userId}:`, error);
+        unsubscribe();
+        res.end();
+      });
+    } catch (error: any) {
+      logger.error('[Notification Admin SSE] Unexpected error:', error);
+      res.status(500).json(errorResponse('Failed to establish admin notification stream', 500));
     }
   }
 );

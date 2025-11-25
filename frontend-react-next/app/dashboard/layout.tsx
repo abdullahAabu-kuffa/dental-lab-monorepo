@@ -1,6 +1,8 @@
+import { requireRole } from "../src/lib/dal/session";
 import Sidebar from "./_components/@sidebar";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
+  await requireRole(["ADMIN", "OWNER"]);
   return (
     <div>
       <div className="flex h-screen overflow-hidden">

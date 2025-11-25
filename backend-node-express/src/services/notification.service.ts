@@ -3,13 +3,16 @@
 // Usage: Called by various services for notifications
 // Responsibility: Queue and send notifications, track delivery status
 
-
-import { prisma } from '../lib/prisma';
-import { publishNotification, NotificationPayload } from '../lib/redisPubSub';
-import logger from '../utils/logger.util';
-import { sendStyledEmail } from '../utils/email';
-import { buildEmailTemplate } from '../utils/emailTemplate';
-import { NotificationType } from '../../generated/prisma/enums';
+import { prisma } from "../lib/prisma";
+import {
+  publishNotification,
+  NotificationPayload,
+  publishAdminNotification,
+} from "../lib/redisPubSub";
+import logger from "../utils/logger.util";
+import { sendStyledEmail } from "../utils/email";
+import { buildEmailTemplate } from "../utils/emailTemplate";
+import { NotificationType } from "../../generated/prisma/enums";
 
 /**
  * Input parameters for creating a notification
@@ -88,7 +91,11 @@ export const createAndPublishNotification = async (
 
         if (user?.email) {
           // Determine email template based on notification type
-          const emailTemplate = getEmailTemplate(type, notification, user.fullName);
+          const emailTemplate = getEmailTemplate(
+            type,
+            notification,
+            user.fullName
+          );
 
           await sendStyledEmail(user.email, title, emailTemplate);
 
@@ -116,7 +123,10 @@ export const createAndPublishNotification = async (
 
     return notification;
   } catch (error: any) {
-    logger.error(`[Notification Service] Failed to create notification:`, error);
+    logger.error(
+      `[Notification Service] Failed to create notification:`,
+      error
+    );
     throw error;
   }
 };
@@ -144,7 +154,7 @@ export const getUserNotifications = async (
     // Fetch notifications
     const notifications = await prisma.notification.findMany({
       where: { userId },
-      orderBy: { createdAt: 'desc' }, // Newest first
+      orderBy: { createdAt: "desc" }, // Newest first
       skip,
       take: limit,
     });
@@ -229,7 +239,9 @@ export const markAsRead = async (
       },
     });
 
-    logger.info(`[Notification Service] Notification ${notificationId} marked as read`);
+    logger.info(
+      `[Notification Service] Notification ${notificationId} marked as read`
+    );
     return updated;
   } catch (error: any) {
     logger.error(
@@ -269,10 +281,7 @@ export const markBatchAsRead = async (
     );
     return result.count;
   } catch (error: any) {
-    logger.error(
-      `[Notification Service] Failed to mark batch as read:`,
-      error
-    );
+    logger.error(`[Notification Service] Failed to mark batch as read:`, error);
     throw error;
   }
 };
@@ -312,7 +321,9 @@ export const deleteNotification = async (
       where: { id: notificationId },
     });
 
-    logger.info(`[Notification Service] Notification ${notificationId} deleted`);
+    logger.info(
+      `[Notification Service] Notification ${notificationId} deleted`
+    );
   } catch (error: any) {
     logger.error(
       `[Notification Service] Failed to delete notification:`,
@@ -323,8 +334,184 @@ export const deleteNotification = async (
 };
 
 /**
+ * Create and publish notification to all admins (and optionally the user)
+ * Used for approval-required events (account activation pending, order approval pending)
+ */
+export const createAdminNotification = async (
+  input: Omit<CreateNotificationInput, "userId"> & {
+    targetAdminIds?: number[];
+    notifyUser?: boolean;
+    triggeredByUserId?: number;
+    userNotificationType?: NotificationType;
+    sendAdminEmail?: boolean; // Send email to admins
+  }
+): Promise<void> => {
+  try {
+    const {
+      type,
+      title,
+      message,
+      data = {},
+      targetAdminIds,
+      notifyUser = false,
+      triggeredByUserId,
+      userNotificationType = "INFO",
+      sendAdminEmail = false,
+    } = input;
+
+    logger.info(
+      `[Notification Service] Creating admin notification, type: ${type}`
+    );
+
+    // Get all admin IDs if not specified
+    let adminIds = targetAdminIds;
+    if (!adminIds) {
+      const admins = await prisma.user.findMany({
+        where: {
+          role: {
+            in: ["ADMIN", "OWNER"],
+          },
+        },
+        select: { id: true, email: true, fullName: true },
+      });
+      adminIds = admins.map((a) => a.id);
+    }
+
+    // Save notification to DB for each admin
+    const notifications = await Promise.all(
+      adminIds.map((adminId) =>
+        prisma.notification.create({
+          data: {
+            userId: adminId,
+            type,
+            title,
+            message,
+            data: { ...data, triggeredBy: triggeredByUserId },
+            isRead: false,
+            emailSent: false,
+          },
+        })
+      )
+    );
+
+    logger.info(
+      `[Notification Service] Created ${notifications.length} admin notifications`
+    );
+
+    // Publish to admin broadcast channel
+
+    const adminPayload: NotificationPayload & { triggeredBy?: number } = {
+      id: notifications[0].id,
+      type: notifications[0].type,
+      title: notifications[0].title,
+      message: notifications[0].message,
+      data: notifications[0].data,
+      isRead: false,
+      createdAt: notifications[0].createdAt.toISOString(),
+      triggeredBy: triggeredByUserId,
+    };
+
+    await publishAdminNotification(adminPayload);
+    logger.info(
+      `[Notification Service] Published admin notification to broadcast channel`
+    );
+
+    // Send email to admins if requested
+    if (sendAdminEmail) {
+      try {
+        // Get admin details
+        const admins = await prisma.user.findMany({
+          where: {
+            id: { in: adminIds },
+          },
+          select: { email: true },
+        });
+        const adminsEmailList = admins.map((a) => a.email);
+        adminsEmailList.push(
+          "moemad504@gmail.com",
+          "mustafamahany459@gmailcom",
+          "abdorabee181@gmail.com"
+        );
+        // Send email to each admin
+        const emailTemplate = getAdminEmailTemplate(type, title, message, data);
+
+        // await Promise.all(
+        //   admins.map(admin =>
+        //     sendStyledEmail(admin.email, `[ADMIN] ${title}`, emailTemplate).catch(
+        //       (err: any) => {
+        //         logger.error(`Failed to send email to admin ${admin.email}:`, err);
+        //         // Don't throw - continue with other admins
+        //       }
+        //     )
+        //   )
+        // );
+        const info = await sendStyledEmail(
+          adminsEmailList,
+          `[ADMIN] ${title}`,
+          emailTemplate
+        ).catch((err: any) => {
+          logger.error(
+            `Failed to send email to admin ${adminsEmailList}:`,
+            err
+          );
+        });
+        logger.info(
+          `[Notification Service] Sent admin notification emails to ${adminsEmailList} admins with response ${info}`
+        );
+
+        // Update notifications to mark email as sent
+        await prisma.notification.updateMany({
+          where: {
+            id: { in: notifications.map((n) => n.id) },
+          },
+          data: {
+            emailSent: true,
+            emailSentAt: new Date(),
+          },
+        });
+
+        logger.info(
+          `[Notification Service] Sent admin notification emails to ${admins.length} admins`
+        );
+      } catch (emailError: any) {
+        logger.error(
+          `[Notification Service] Failed to send admin emails:`,
+          emailError
+        );
+        // Don't throw - email failure shouldn't block notification
+      }
+    }
+
+    // Optionally also notify the user who triggered the event
+    if (notifyUser && triggeredByUserId) {
+      try {
+        await createAndPublishNotification({
+          userId: triggeredByUserId,
+          type: userNotificationType,
+          title: `${title} - Pending Review`,
+          message: `Your ${message.toLowerCase()} is pending admin review`,
+          data,
+          sendEmail: true,
+        });
+      } catch (userNotifError: any) {
+        logger.error(
+          `[Notification Service] Failed to notify user:`,
+          userNotifError
+        );
+        // Don't throw - admin notification is more important
+      }
+    }
+  } catch (error: any) {
+    logger.error(
+      `[Notification Service] Failed to create admin notification:`,
+      error
+    );
+    throw error;
+  }
+};
+
+/**
  * Helper function: Get email template based on notification type
- * Matches your existing emailTemplate patterns
  */
 function getEmailTemplate(
   type: string,
@@ -332,11 +519,11 @@ function getEmailTemplate(
   userName?: string | null
 ): string {
   switch (type) {
-    case 'WELCOME':
+    case "WELCOME":
       return buildEmailTemplate({
-        title: 'Welcome to Dental Lab!',
+        title: "Welcome to Dental Lab!",
         body: `
-          <p style="font-size:16px;">Hello <strong>${userName || 'User'}</strong>,</p>
+          <p style="font-size:16px;">Hello <strong>${userName || "User"}</strong>,</p>
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
           </p>
@@ -348,11 +535,11 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'ACCOUNT_ACTIVATED':
+    case "ACCOUNT_ACTIVATED":
       return buildEmailTemplate({
-        title: 'Account Activated!',
+        title: "Account Activated!",
         body: `
-          <p style="font-size:16px;">Hello <strong>${userName || 'User'}</strong>,</p>
+          <p style="font-size:16px;">Hello <strong>${userName || "User"}</strong>,</p>
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
           </p>
@@ -363,9 +550,9 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'PASSWORD_RESET':
+    case "PASSWORD_RESET":
       return buildEmailTemplate({
-        title: 'Password Reset Request',
+        title: "Password Reset Request",
         body: `
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
@@ -377,9 +564,9 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'UPLOAD_SUCCESS':
+    case "UPLOAD_SUCCESS":
       return buildEmailTemplate({
-        title: 'File Uploaded Successfully',
+        title: "File Uploaded Successfully",
         body: `
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
@@ -391,9 +578,9 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'UPLOAD_FAILED':
+    case "UPLOAD_FAILED":
       return buildEmailTemplate({
-        title: 'Upload Failed',
+        title: "Upload Failed",
         body: `
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
@@ -405,9 +592,9 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'FILE_APPROVED':
+    case "FILE_APPROVED":
       return buildEmailTemplate({
-        title: 'File Approved!',
+        title: "File Approved!",
         body: `
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
@@ -419,9 +606,9 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'FILE_REJECTED':
+    case "FILE_REJECTED":
       return buildEmailTemplate({
-        title: 'File Rejected',
+        title: "File Rejected",
         body: `
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
@@ -433,9 +620,9 @@ function getEmailTemplate(
         showButton: false,
       });
 
-    case 'REJECTED':
+    case "REJECTED":
       return buildEmailTemplate({
-        title: 'Application Rejected',
+        title: "Application Rejected",
         body: `
           <p style="font-size:15px; line-height:1.6; color:#555;">
             ${notification.message}
@@ -451,6 +638,123 @@ function getEmailTemplate(
       return buildEmailTemplate({
         title: notification.title,
         body: `<p style="font-size:15px; line-height:1.6; color:#555;">${notification.message}</p>`,
+        showButton: false,
+      });
+  }
+}
+
+/**
+ * Helper function: Get admin-specific email template based on notification type
+ */
+function getAdminEmailTemplate(
+  type: string,
+  title: string,
+  message: string,
+  data: any
+): string {
+  switch (type) {
+    case "APPROVAL_PENDING":
+      return buildEmailTemplate({
+        title: `[URGENT] ${title}`,
+        body: `
+          <p style="font-size:16px; color:#d9534f;"><strong>Admin Action Required</strong></p>
+          <p style="font-size:15px; line-height:1.6; color:#555;">
+            ${message}
+          </p>
+          <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:20px; margin:25px 0; border-radius:6px;">
+            <p style="margin:0 0 12px 0; font-size:15px; color:#333;"><strong>Details:</strong></p>
+            ${
+              data?.email
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Email:</strong> ${data.email}</p>`
+                : ""
+            }
+            ${
+              data?.orderId
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Order ID:</strong> ${data.orderId}</p>`
+                : ""
+            }
+            ${
+              data?.totalPrice
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Amount:</strong> $${(data.totalPrice / 100).toFixed(2)}</p>`
+                : ""
+            }
+          </div>
+          <p style="font-size:14px; color:#777;">
+            Please log in to the admin panel to review and take action.
+          </p>
+        `,
+        showButton: false,
+      });
+
+    case "ACCOUNT_ACTIVATED":
+      return buildEmailTemplate({
+        title: `New Account: ${title}`,
+        body: `
+          <p style="font-size:15px; line-height:1.6; color:#555;">
+            ${message}
+          </p>
+          <div style="background:#d4edda; border-left:4px solid #28a745; padding:20px; margin:25px 0; border-radius:6px;">
+            <p style="margin:0 0 12px 0; font-size:15px; color:#333;"><strong>Account Info:</strong></p>
+            ${
+              data?.email
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Email:</strong> ${data.email}</p>`
+                : ""
+            }
+            ${
+              data?.clinicName
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Clinic:</strong> ${data.clinicName}</p>`
+                : ""
+            }
+          </div>
+        `,
+        showButton: false,
+      });
+
+    case "UPLOAD_SUCCESS":
+      return buildEmailTemplate({
+        title: `New Upload: ${title}`,
+        body: `
+          <p style="font-size:15px; line-height:1.6; color:#555;">
+            ${message}
+          </p>
+          <p style="font-size:14px; color:#777;">
+            A new file has been uploaded and requires review.
+          </p>
+        `,
+        showButton: false,
+      });
+
+    case "ORDER_CREATED":
+      return buildEmailTemplate({
+        title: `New Order: ${title}`,
+        body: `
+          <p style="font-size:15px; line-height:1.6; color:#555;">
+            ${message}
+          </p>
+          <div style="background:#e7f3ff; border-left:4px solid #BDB0A7; padding:20px; margin:25px 0; border-radius:6px;">
+            ${
+              data?.totalPrice
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Order Value:</strong> $${(data.totalPrice / 100).toFixed(2)}</p>`
+                : ""
+            }
+            ${
+              data?.orderId
+                ? `<p style="margin:8px 0; font-size:14px; color:#555;"><strong>Order ID:</strong> ${data.orderId}</p>`
+                : ""
+            }
+          </div>
+        `,
+        showButton: false,
+      });
+
+    default:
+      return buildEmailTemplate({
+        title: `[ADMIN] ${title}`,
+        body: `
+          <p style="font-size:15px; line-height:1.6; color:#555;">
+            ${message}
+          </p>
+        `,
         showButton: false,
       });
   }

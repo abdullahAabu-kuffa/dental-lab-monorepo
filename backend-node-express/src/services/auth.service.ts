@@ -10,6 +10,7 @@ import logger from "../utils/logger.util";
 import jwt from "jsonwebtoken";
 import { sendStyledEmail } from "../utils/email";
 import { buildEmailTemplate } from "../utils/emailTemplate";
+import { createAdminNotification } from "./notification.service";
 
 interface RegisterInput {
   fullName: string;
@@ -65,6 +66,32 @@ export const registerUser = async (input: RegisterInput) => {
         createdAt: true,
       },
     });
+    // Send admin notification
+    try {
+      await createAdminNotification({
+        type: 'APPROVAL_PENDING',
+        title: 'New Account Awaiting Approval',
+        message: `New account "${user.fullName}" from ${user.clinicName} requires activation approval`,
+        data: {
+          userId: user.id,
+          email: user.email,
+          clinicName: user.clinicName,
+          fullName: user.fullName,
+        },
+        notifyUser: false,
+        userNotificationType: 'WELCOME', // User gets WELCOME notification
+        triggeredByUserId: user.id,
+        sendAdminEmail: false, // Send email to admins
+      });
+      
+      logger.info(`[Auth Service] Admin notification created for user ${user.id}`);
+    } catch (notificationError: any) {
+      logger.error(
+        `[Auth Service] Failed to send admin notification for user ${user.id}:`,
+        notificationError
+      );
+      // Don't throw - user registration shouldn't fail if notification fails
+    }
 
     const htmlTemplate = buildEmailTemplate({
       title: "Registration Successful",
@@ -99,6 +126,9 @@ export const registerUser = async (input: RegisterInput) => {
     );
 
     logger.info(`New user registered: ${email} (awaiting admin approval)`);
+
+
+
     return user;
   } catch (error: any) {
     logger.error(`Registration error: ${error.message}`);
@@ -251,6 +281,7 @@ export const refreshTokenService = async (
 // forgotPassword service
 
 export const forgotPasswordService = async (email: string) => {
+  logger.info(`[Forgot Password Service] Email: ${email}`);
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
@@ -264,7 +295,8 @@ export const forgotPasswordService = async (email: string) => {
       isVerified: user.isVerified,
       isActive: user.isActive,
     });
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    logger.info(`[Forgot Password Service] Token: ${token}`);
+    const resetLink = `http://localhost:${process.env.PORT}/api/auth/reset-password?token=${token}`;
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",
       body: `
