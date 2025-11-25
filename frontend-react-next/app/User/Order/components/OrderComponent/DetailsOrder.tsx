@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Package, CreditCard } from "lucide-react";
+import { Package } from "lucide-react";
 import { Order } from "../../../../src/types";
 import { getStatusColors, getUrgencyColors } from "../../../../design-system/orderStyles";
 
@@ -41,7 +41,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Patient Name</label>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.patientName}</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.patientName || order?.options?.patientName || "Unknown Patient"}</p>
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Order Type</label>
@@ -56,7 +56,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</label>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.date}</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.date || order.date || "Not specified"}</p>
               </div>
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Urgency</label>
@@ -70,11 +70,11 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
             </div>
             <div className="group">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Material</label>
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.material}</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.material || order.material || "Not specified"}</p>
             </div>
             <div className="group">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Notes</label>
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">{order?.options?.notes}</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">{order?.options?.notes || order.notes || "No notes available"}</p>
             </div>
           </div>
 
@@ -119,30 +119,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
         </div>
       </motion.div>
 
-      {/* Payment Section */}
-      <motion.div 
-        className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border-2 border-blue-200/50 dark:border-blue-700/50"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">Total Amount</p>
-            <p className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              ${order.totalPrice}
-            </p>
-          </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-bold text-white transition-all duration-300"
-          >
-            <CreditCard className="w-5 h-5" />
-            <span>Pay Now</span>
-          </motion.button>
-        </div>
-      </motion.div>
+ 
     </div>
   );
 };

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import { OrderCard } from "../components/OrderComponent/OrderCard";
@@ -146,26 +145,7 @@ export default function OrdersListPage() {
               </div>
 
               {/* EVENTS BUTTON */}
-              <button
-                onClick={() => {
-                  window.location.href = "/#events";
-                }}
-                className={componentStyles.statusIcons.eventButton}
-                title="Events"
-              >
-                <div className="relative w-full h-full flex items-center justify-center rounded-full">
-                  <Calendar
-                    className={componentStyles.statusIcons.icon}
-                    strokeWidth={2}
-                  />
-                </div>
-                <div className={componentStyles.statusIcons.counterBadge}>
-                  3
-                </div>
-                <div className={componentStyles.statusIcons.tooltip}>
-                  <span>Events</span>
-                </div>
-              </button>
+           
             </div>
           </div>
         </ScrollAnimation>
