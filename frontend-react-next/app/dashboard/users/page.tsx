@@ -12,17 +12,8 @@ import Loading from "../_components/@loading";
 import ErrorMessage from "../_components/@displayerrors";
 
 import { useUsers } from "../services/hookes/fetch_all_users";
-import { useGetProfileInfo } from "../services/hookes/get_profile_info";
 
 const usersList = () => {
-  // check if the user is not authorized
-  const { data: me } = useGetProfileInfo();
-
-  useEffect(() => {
-    if (me) {
-      if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
-    }
-  }, [me]);
 
   const [page, setPage] = useState(1);
   const limit = 10;

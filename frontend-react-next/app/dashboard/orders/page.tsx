@@ -4,7 +4,6 @@ import StatsCard from "../_components/@statecard";
 import { MdDone } from "react-icons/md";
 import { FcCancel } from "react-icons/fc";
 import OrdersTable from "../_components/@orderstable";
-import { useGetProfileInfo } from "../services/hookes/get_profile_info";
 import { useEffect, useState } from "react";
 import { Pagination } from "../_components/@pagination";
 import useOrderStore from "@/stores/orders-store";
@@ -16,16 +15,10 @@ const Orders = () => {
   const isError = useOrderStore((state) => state.isError);
   const error = useOrderStore((state) => state.error);
   const getOrders = useOrderStore((state) => state.getOrders);
-  const { data: me } = useGetProfileInfo();
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     getOrders(currentPage);
   }, []);
-  useEffect(() => {
-    if (me) {
-      if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
-    }
-  }, [me]);
 
   const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
   const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
