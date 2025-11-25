@@ -11,6 +11,7 @@ import jwt from "jsonwebtoken";
 import { sendStyledEmail } from "../utils/email";
 import { buildEmailTemplate } from "../utils/emailTemplate";
 import { createAdminNotification } from "./notification.service";
+import{Request} from "express"
 
 interface RegisterInput {
   fullName: string;
@@ -69,8 +70,8 @@ export const registerUser = async (input: RegisterInput) => {
     // Send admin notification
     try {
       await createAdminNotification({
-        type: 'APPROVAL_PENDING',
-        title: 'New Account Awaiting Approval',
+        type: "APPROVAL_PENDING",
+        title: "New Account Awaiting Approval",
         message: `New account "${user.fullName}" from ${user.clinicName} requires activation approval`,
         data: {
           userId: user.id,
@@ -79,12 +80,14 @@ export const registerUser = async (input: RegisterInput) => {
           fullName: user.fullName,
         },
         notifyUser: false,
-        userNotificationType: 'WELCOME', // User gets WELCOME notification
+        userNotificationType: "WELCOME", // User gets WELCOME notification
         triggeredByUserId: user.id,
         sendAdminEmail: false, // Send email to admins
       });
-      
-      logger.info(`[Auth Service] Admin notification created for user ${user.id}`);
+
+      logger.info(
+        `[Auth Service] Admin notification created for user ${user.id}`
+      );
     } catch (notificationError: any) {
       logger.error(
         `[Auth Service] Failed to send admin notification for user ${user.id}:`,
@@ -127,8 +130,6 @@ export const registerUser = async (input: RegisterInput) => {
 
     logger.info(`New user registered: ${email} (awaiting admin approval)`);
 
-
-
     return user;
   } catch (error: any) {
     logger.error(`Registration error: ${error.message}`);
@@ -136,7 +137,12 @@ export const registerUser = async (input: RegisterInput) => {
   }
 };
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (
+  email: string,
+  password: string,
+  req: Request, // ✅ Add this parameter
+  clientType: string
+) => {
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
@@ -169,18 +175,21 @@ export const loginUser = async (email: string, password: string) => {
       isActive: user.isActive,
     });
     const refreshToken = generateRefreshToken({
-      fullName: user.fullName || "",
       id: user.id,
       email: user.email,
       role: user.role,
-      isVerified: user.isVerified,
-      isActive: user.isActive,
     });
+     // ✅ Get userAgent from request
+    const userAgent = req.headers['user-agent'] || 'unknown';
+
+    // ✅ Store clientType and userAgent in session
     const session = await prisma.session.create({
       data: {
         userId: user.id,
         refreshToken,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        clientType,
+        userAgent,
       },
     });
 
@@ -190,6 +199,7 @@ export const loginUser = async (email: string, password: string) => {
       refreshToken,
       email: user.email,
       name: user.fullName,
+      role: user.role,
       session,
     };
   } catch (error: any) {
@@ -199,22 +209,39 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const refreshTokenService = async (
-  tokenFromCookie: string
+  refreshToken: string,
+   clientType: 'web' | 'mobile',  // ✅ Add this parameter
+  userAgent: string  // ✅ Add this parameter
 ): Promise<RefreshTokenResult> => {
   try {
-    if (!tokenFromCookie) throw new Error("No Refresh Token");
+    if (!refreshToken) throw new Error("No Refresh Token");
 
     let payload: any;
     try {
-      payload = jwt.verify(tokenFromCookie, process.env.JWT_REFRESH_SECRET!);
+      payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!);
     } catch {
       throw new Error("Invalid or tampered refresh token");
     }
     const session = await prisma.session.findUnique({
-      where: { refreshToken: tokenFromCookie },
+      where: { refreshToken: refreshToken },
     });
 
     if (!session) throw new Error("Invalid refresh token");
+      //  NEW: Verify clientType matches
+    if (session.clientType !== clientType) {
+      logger.warn(
+        `[SECURITY] ClientType mismatch: session=${session.clientType}, request=${clientType}`
+      );
+      throw new Error('Invalid device type');
+    }
+
+    //  NEW: Verify userAgent hasn't changed
+    if (session.userAgent !== userAgent) {
+      logger.warn(
+        `[SECURITY] UserAgent mismatch: stored=${session.userAgent}, current=${userAgent}`
+      );
+      // Just log for now, allow the request
+    }
 
     if (new Date() > session.expiresAt) {
       await prisma.session.delete({ where: { id: session.id } });
@@ -255,12 +282,9 @@ export const refreshTokenService = async (
       isActive: user.isActive,
     });
     const newRefreshToken = generateRefreshToken({
-      fullName: user.fullName || "",
       id: user.id,
       email: user.email,
       role: user.role,
-      isVerified: user.isVerified,
-      isActive: user.isActive,
     });
 
     await prisma.session.update({

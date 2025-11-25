@@ -51,6 +51,8 @@ model Session {
   devices      Json     @default("[]")
   createdAt    DateTime @default(now())
   expiresAt    DateTime
+  clientType    String    @default("web")
+  userAgent     String?
 }
 
 model Security_Token {

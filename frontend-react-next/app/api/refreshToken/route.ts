@@ -21,6 +21,7 @@ export async function POST() {
         'Content-Type': 'application/json',
         'Cookie': `refreshToken=${refreshToken}`,
       },
+      body: JSON.stringify({ clientType: 'web' }),
     });
 
     // 3. Extract and forward Set-Cookie headers

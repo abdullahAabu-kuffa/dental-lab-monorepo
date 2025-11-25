@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from "express";
 import Jwt from "jsonwebtoken";
 import { errorResponse } from "../utils/response.util";
 import logger from "../utils/logger.util";
+import { prisma } from "../lib/prisma";
 
 /**
  * Middleware to verify JWT access token and attach user to request
@@ -15,18 +16,65 @@ interface DecodedToken {
   email: string;
   role?: string;
 }
-export function verifyAccessToken(
+export async function verifyAccessToken(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const accessTokenCookie = req.cookies.accessToken;
-    if (!accessTokenCookie) {
+        const userAgent = req.headers['user-agent'] || 'unknown';
+    let token: string;
+    let clientType: 'web' | 'mobile';
+
+    const hasCookies = !!req.cookies.accessToken;
+    const hasBearer = req.headers.authorization?.startsWith('Bearer ');
+
+    if (hasCookies && !hasBearer) {
+      // WEB
+      token = req.cookies.accessToken;
+      clientType = 'web';
+    } else if (!hasCookies && hasBearer) {
+      // MOBILE
+      token = req.headers.authorization!.substring(7);
+      clientType = 'mobile';
+    } else {
+      // Invalid request
       return res.status(401).json(errorResponse("Unauthorized", 401));
     }
-    const token = accessTokenCookie;
+
+    // const accessTokenCookie = req.cookies.accessToken;
+    // if (!accessTokenCookie) {
+    //   return res.status(401).json(errorResponse("Unauthorized", 401));
+    // }
+    // const token = accessTokenCookie;
+
     const decoded = Jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
+
+    // ✅ NEW: Find session and verify clientType + userAgent
+    const session = await prisma.session.findFirst({
+      where: { userId: decoded.id },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!session) {
+      return res.status(401).json(errorResponse("Session not found", 401));
+    }
+
+    //  NEW: Verify clientType matches
+    if (session.clientType !== clientType) {
+      logger.warn(
+        `[SECURITY] ClientType mismatch: session=${session.clientType}, request=${clientType}`
+      );
+      return res.status(401).json(errorResponse("Invalid device type", 401));
+    }
+
+    //  NEW: Verify userAgent matches
+    if (session.userAgent !== userAgent) {
+      logger.warn(
+        `[SECURITY] UserAgent mismatch for ${decoded.email}: stored=${session.userAgent}, current=${userAgent}`
+      );
+      return res.status(401).json(errorResponse("Invalid device type", 401));
+    }
 
     // Attach decoded user data to request
     req.user = {
