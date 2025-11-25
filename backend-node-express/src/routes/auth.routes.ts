@@ -240,6 +240,6 @@ router.post("/refreshToken", refreshToken);
 router.post("/logout", logout);
 
 router.post('/forgot-password' , forgotPassword)
-router.post('/reset-password' , resetPassword)
+router.get('/reset-password' , resetPassword)
 
 export default router;

@@ -52,7 +52,7 @@ export function useAuth() {
 
         async function bootstrap() {
             try {
-                await refreshAccessToken();
+                // await refreshAccessToken();
             } finally {
                 if (!cancelled) setBootstrapDone(true);
             }

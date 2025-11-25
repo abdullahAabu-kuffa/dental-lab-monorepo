@@ -7,8 +7,9 @@ export async function fetchOrders() {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${Token}`
+     
     },
+    credentials: "include",
   });
   if (!res.ok) {
     const errorData = await res.json().catch(() => null);
@@ -16,15 +17,15 @@ export async function fetchOrders() {
   }
 
   const data = await res.json();
-  return data; 
+  return data;
 }
 export function useOrders() {
   return useQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
     staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5, 
-    refetchOnWindowFocus: true,     
+    refetchInterval: 1000 * 60 * 5,
+    refetchOnWindowFocus: true,
   });
 }
 // export function createOrder  (body:object)=> {
