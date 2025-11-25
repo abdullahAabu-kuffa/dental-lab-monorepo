@@ -11,13 +11,13 @@ export const createOrderServices = async (userId: any, orderData: any) => {
   try {
     parseId(userId);
     await checkUser(userId);
-    
+
     const newOrder = await prisma.order.create({
       data: {
         userId,
         options: orderData.options,
         totalPrice: orderData.totalPrice,
-        fileId: orderData.fileId
+        fileId: orderData.fileId,
       },
     });
     return newOrder;
@@ -33,7 +33,7 @@ export const getAllOrdersServices = async (userId: any, req: any) => {
     let orders;
     let totalOrders;
     parseId(userId);
-    const user =await checkUser(userId)
+    const user = await checkUser(userId);
     if (user.role === "CLIENT") {
       totalOrders = await prisma.order.count({ where: { userId } });
       orders = await prisma.order.findMany({ where: { userId } });
@@ -52,7 +52,7 @@ export const getAllOrdersServices = async (userId: any, req: any) => {
       throw new Error("no orders Found");
     }
     let totalPages = Math.ceil(totalOrders / limit);
-    return { orders, page, limit,totalOrders, totalPages };
+    return { orders, page, limit, totalOrders, totalPages };
   } catch (error: any) {
     logger.error(`[getAllOrdersServices error] : ${error.message}`);
     throw error;
@@ -79,13 +79,12 @@ export const updateUserOrderService = async (req: any) => {
     await checkUser(userId);
     await checkOrder(orderId);
     const order = await prisma.order.findUnique({ where: { id: orderId } });
-    
+
     if (!order) {
       throw new Error("Order not found");
     }
     if (req.user.role === "CLIENT" && order.userId !== userId) {
       throw new Error("You are not allowed to update this order");
-      
     }
 
     const allowedFields = ["status", "options", "totalPrice"];
@@ -109,13 +108,49 @@ export const deleteUserOrderServices = async (req: any) => {
     const orderId = parseId(req.params.orderId);
     const user = await checkUser(userId);
     const order = await checkOrder(orderId);
-    if (user.role  === "CLIENT" && order?.userId !== userId) {
-        throw new Error("You are not allowed to Delete this order");
+    if (user.role === "CLIENT" && order?.userId !== userId) {
+      throw new Error("You are not allowed to Delete this order");
     }
-    const deletedOrder  = await prisma.order.delete({where:{id:orderId}})
+    const deletedOrder = await prisma.order.delete({ where: { id: orderId } });
     return deletedOrder;
   } catch (error: any) {
     logger.error(`[deleteUserOrderServices error] : ${error.message}`);
+    throw error;
+  }
+};
+
+export const createStepOrderServices = async (req: any) => {
+  try {
+    const userId = parseId(req.user?.id);
+    const orderId = parseId(req.params.orderId);
+    const user = await checkUser(userId);
+    const order = await checkOrder(orderId);
+    const lastStep = await prisma.orderTracking.findFirst({
+      where: { orderId },
+      orderBy: { stepOrder: "desc" },
+    });
+    const nextStepOrder = lastStep ? lastStep.stepOrder + 1 : 1;
+
+    const { process, note } = req.body;
+
+    const orderStep = await prisma.orderTracking.create({
+      data: {
+        orderId: orderId,
+        actorId: userId,
+        status: "IN_PROGRESS",
+        stepOrder: nextStepOrder,
+        process: process || `Step ${nextStepOrder}`,
+        startDate: new Date(),
+        note: note || null,
+      },
+    });
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: "IN_PROGRESS" },
+    });
+    return orderStep;
+  } catch (error: any) {
+    logger.error(`[createStepOrderServices  error] : ${error.message}`);
     throw error;
   }
 };
