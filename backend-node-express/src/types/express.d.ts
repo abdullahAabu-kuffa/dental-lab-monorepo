@@ -14,6 +14,7 @@ declare global {
         email: string;
         role: string;
       };
+      userAgent?: string;
     }
   }
 }

@@ -140,7 +140,7 @@ export const registerUser = async (input: RegisterInput) => {
 export const loginUser = async (
   email: string,
   password: string,
-  req: Request, // ✅ Add this parameter
+  userAgent: string,
   clientType: string
 ) => {
   try {
@@ -180,7 +180,7 @@ export const loginUser = async (
       role: user.role,
     });
      // ✅ Get userAgent from request
-    const userAgent = req.headers['user-agent'] || 'unknown';
+    logger.info(`Login attempt from ${userAgent} with clientType: ${clientType}`);
 
     // ✅ Store clientType and userAgent in session
     const session = await prisma.session.create({

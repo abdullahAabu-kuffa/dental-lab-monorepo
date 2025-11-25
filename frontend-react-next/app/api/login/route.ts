@@ -9,7 +9,15 @@ export async function POST(req: Request) {
   let data: unknown;
   try {
     data = await req.json();
-    console.log("login data = ", data);
+    console.log(
+      "login data = ",
+      data,
+      " , after adding",
+      JSON.stringify({
+        ...(data as Record<string, unknown>),
+        clientType: "web",
+  }).toString()
+    );
   } catch {
     return NextResponse.json({ error: "invalid JSON body" }, { status: 400 });
   }
@@ -17,12 +25,17 @@ export async function POST(req: Request) {
   // this is for control the requests using network abort
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
+      const userAgent = req.headers.get('user-agent') || 'unknown';
+
 
   try {
     const upstream = await fetch(`${HostIP}api/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data, clientType: "web" }),
+      headers: { "Content-Type": "application/json" , 'user-agent': userAgent},
+      body: JSON.stringify({
+        ...(data as Record<string, unknown>),
+        clientType: "web",
+      }),
       signal: controller.signal,
       //credentials: "include"
     });
