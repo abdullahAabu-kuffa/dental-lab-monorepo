@@ -66,7 +66,7 @@ export const registerUser = async (input: RegisterInput) => {
         createdAt: true,
       },
     });
-            // ✅ ADD NOTIFICATION HERE
+    // Send admin notification
     try {
       await createAdminNotification({
         type: 'APPROVAL_PENDING',
@@ -78,10 +78,10 @@ export const registerUser = async (input: RegisterInput) => {
           clinicName: user.clinicName,
           fullName: user.fullName,
         },
-        notifyUser: true,
+        notifyUser: false,
         userNotificationType: 'WELCOME', // User gets WELCOME notification
         triggeredByUserId: user.id,
-        sendAdminEmail: true, // Send email to admins
+        sendAdminEmail: false, // Send email to admins
       });
       
       logger.info(`[Auth Service] Admin notification created for user ${user.id}`);
