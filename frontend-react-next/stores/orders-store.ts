@@ -22,7 +22,6 @@ export const useOrderStore = create<OrderStore>((set) => ({
 
     try {
         const data= await getAllOrders({ page });
-        console.log("Fetched orders:", data);
         set({ data, isLoading: false });
     } catch (error) {
         console.error("Error fetching orders:", error);
