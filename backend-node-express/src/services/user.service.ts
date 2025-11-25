@@ -7,16 +7,99 @@ import { error } from "console";
 import { prisma } from "../lib/prisma";
 import logger from "../utils/logger.util";
 
+// export const getAllUsersService = async (req: any) => {
+//   try {
+//     const page = parseInt(req.query.page as string) || 1;
+//     const limit = parseInt(req.query.limit as string) || 20;
+//     const total = await prisma.user.count();
+//     const totalPages = Math.ceil(total / limit);
+//     const users = await prisma.user.findMany({
+//       skip: (page - 1) * limit,
+//       take: limit,
+//     });
+//     return { page, limit, total, totalPages, users };
+//   } catch (error: any) {
+//     logger.error(`[getAllUsersService Error]: ${error.message}`);
+//     throw error;
+//   }
+// };
+
 export const getAllUsersService = async (req: any) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const total = await prisma.user.count();
+    const search = (req.query.search as string)?.trim() || '';
+    const filter = (req.query.filter as string)?.toLowerCase() || '';
+
+    logger.info(
+      `[getAllUsersService] Fetching users - page: ${page}, limit: ${limit}, search: ${search}, filter: ${filter}`
+    );
+
+    // Build where clause for filtering
+    const whereClause: any = {};
+
+    // Search filter: by name or email
+    if (search) {
+      whereClause.OR = [
+        {
+          fullName: {
+            contains: search,
+            mode: 'insensitive', // Case-insensitive search
+          },
+        },
+        {
+          email: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+      logger.info(`[getAllUsersService] Applied search filter: ${search}`);
+    }
+
+    // Status filter: pending or approved
+    if (filter === 'pending') {
+      whereClause.isActive = false;
+      logger.info(`[getAllUsersService] Applied filter: pending (isActive = false)`);
+    } else if (filter === 'approved') {
+      whereClause.isActive = true;
+      logger.info(`[getAllUsersService] Applied filter: approved (isActive = true)`);
+    }
+
+    // Get total count with filters applied
+    const total = await prisma.user.count({
+      where: whereClause,
+    });
+
     const totalPages = Math.ceil(total / limit);
+
+    // Fetch paginated users with filters
     const users = await prisma.user.findMany({
+      where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        phoneNumber: true,
+        clinicName: true,
+        clinicAddress: true,
+        role: true,
+        isActive: true,
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc', // Newest first
+      },
     });
+
+    logger.info(
+      `[getAllUsersService] Fetched ${users.length} users (total: ${total})`
+    );
+
     return { page, limit, total, totalPages, users };
   } catch (error: any) {
     logger.error(`[getAllUsersService Error]: ${error.message}`);
