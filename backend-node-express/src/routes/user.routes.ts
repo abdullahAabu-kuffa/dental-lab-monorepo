@@ -11,6 +11,7 @@ import {
   changeUserStatus,
   deleteUser,
   getUserData,
+  updateUserProfile,
 } from "../controllers/user.controller";
 
 const router = Router();
@@ -231,6 +232,98 @@ const router = Router();
  *       200:
  *         description: User deleted successfully
  */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateUserProfileInput:
+ *       type: object
+ *       properties:
+ *         fullName:
+ *           type: string
+ *           description: User full name
+ *           nullable: true
+ *         phoneNumber:
+ *           type: string
+ *           description: User phone number
+ *           nullable: true
+ *         clinicName:
+ *           type: string
+ *           description: Clinic name
+ *           nullable: true
+ *         clinicAddress:
+ *           type: string
+ *           description: Clinic address
+ *           nullable: true
+ *       example:
+ *         fullName: "Mohamed Roshdy"
+ *         phoneNumber: "+201032057556"
+ *         clinicName: "Avante Dental Lab"
+ *         clinicAddress: "Giza, Egypt"
+ *     UserResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         fullName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         phoneNumber:
+ *           type: string
+ *         clinicName:
+ *           type: string
+ *         clinicAddress:
+ *           type: string
+ *         role:
+ *           type: string
+ *         isActive:
+ *           type: boolean
+ *         isVerified:
+ *           type: boolean
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   patch:
+ *     summary: Update user profile
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUserProfileInput'
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Bad request, no fields to update or invalid input
+ *       401:
+ *         description: Unauthorized, token missing or invalid
+ *       404:
+ *         description: User not found
+ */
 
 // get all user
 router.get("/", verifyAccessToken, getAllUsers);
@@ -242,5 +335,6 @@ router.post("/", verifyAccessToken, requireAdmin, createNewUser);
 router.put("/:id/status", verifyAccessToken, changeUserStatus);
 // delete user
 router.delete("/:id", verifyAccessToken, deleteUser);
+router.patch("/:id", verifyAccessToken, updateUserProfile);
 
 export default router;

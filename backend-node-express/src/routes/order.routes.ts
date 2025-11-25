@@ -5,16 +5,17 @@
 import { Router } from "express";
 import { verifyAccessToken } from "../middlewares/auth.middleware";
 import {
+  completeStepOrder,
   createOrder,
   createStepOrder,
   deleteUserOrder,
   getAllOrders,
+  getAllStepOrder,
   getUserOrder,
   updateUserOrder,
 } from "../controllers/order.controller";
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -217,7 +218,146 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     OrderTracking:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         orderId:
+ *           type: integer
+ *         actorId:
+ *           type: integer
+ *         status:
+ *           type: string
+ *           enum: [IN_PROGRESS, COMPLETED]
+ *         stepOrder:
+ *           type: integer
+ *         process:
+ *           type: string
+ *         note:
+ *           type: string
+ *           nullable: true
+ *         startDate:
+ *           type: string
+ *           format: date-time
+ *         endDate:
+ *           type: string
+ *           format: date-time
+ *           nullable: true
+ *
+ *     CreateStepInput:
+ *       type: object
+ *       properties:
+ *         note:
+ *           type: string
+ *           nullable: true
+ *       required: []
+ *
+ *     CompleteStepResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         status:
+ *           type: string
+ *         endDate:
+ *           type: string
+ *           format: date-time
+ */
 
+/**
+ * @swagger
+ * /api/orders/{orderId}/track:
+ *   post:
+ *     summary: Create a new step for an order
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Order ID
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStepInput'
+ *     responses:
+ *       201:
+ *         description: Step created successfully (IN_PROGRESS)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/OrderTracking'
+ *       400:
+ *         description: Bad request (step already exists or order finished)
+ *       401:
+ *         description: Unauthorized
+ *
+ *   get:
+ *     summary: Get all tracking steps for an order
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of order tracking steps
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/OrderTracking'
+ *       401:
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /api/orders/{orderId}/track/{trackingId}:
+ *   patch:
+ *     summary: Complete a specific step for an order
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: trackingId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Tracking step ID
+ *     responses:
+ *       200:
+ *         description: Step completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompleteStepResponse'
+ *       400:
+ *         description: Step already completed or invalid state
+ *       401:
+ *         description: Unauthorized
+ */
 
 // create new Order
 router.post("/", verifyAccessToken, createOrder);
@@ -231,7 +371,13 @@ router.patch("/:orderId/status", verifyAccessToken, updateUserOrder);
 router.patch("/:orderId", verifyAccessToken, updateUserOrder);
 // delete user order
 router.delete("/:orderId", verifyAccessToken, deleteUserOrder);
-// traking 
-router.post("/:orderId/track",verifyAccessToken, createStepOrder )
+// traking
+router.post("/:orderId/track", verifyAccessToken, createStepOrder);
+router.get("/:orderId/track", verifyAccessToken, getAllStepOrder);
+router.patch(
+  "/:orderId/track/:TrackingId",
+  verifyAccessToken,
+  completeStepOrder
+);
 
 export default router;

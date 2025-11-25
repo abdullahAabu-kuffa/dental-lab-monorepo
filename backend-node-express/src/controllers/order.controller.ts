@@ -5,10 +5,12 @@ import { date } from "joi";
 // Responsibility: Implement createOrder, getOrders, getOrder, updateOrder, deleteOrder methods
 
 import {
+  completeStepOrderServices,
   createOrderServices,
   createStepOrderServices,
   deleteUserOrderServices,
   getAllOrdersServices,
+  getAllStepOrderServices,
   getUserOrderServices,
   updateUserOrderService,
 } from "../services/order.service";
@@ -90,6 +92,31 @@ export async function createStepOrder(req: Request, res: Response) {
       .json(successResponse(step, "createStepOrder successfully"));
   } catch (error: any) {
     logger.error(`createStepOrder controller error: ${error.message}`);
+    return res.status(400).json(errorResponse(error.message, 400));
+  }
+}
+export async function getAllStepOrder(req: Request, res: Response) {
+  try {
+    const orderSteps = await getAllStepOrderServices(req);
+    return res
+      .status(201)
+      .json(successResponse(orderSteps, "getAllStepOrder successfully"));
+  } catch (error: any) {
+    logger.error(`getAllStepOrder controller error: ${error.message}`);
+    return res.status(400).json(errorResponse(error.message, 400));
+  }
+}
+
+
+export async function completeStepOrder(req: Request, res: Response) {
+  try {
+    const orderTrackingId = parseInt(req.params.TrackingId)
+    const orderSteps = await completeStepOrderServices(orderTrackingId);
+    return res
+      .status(201)
+      .json(successResponse(orderSteps, "completeStepOrder successfully"));
+  } catch (error: any) {
+    logger.error(`completeStepOrder controller error: ${error.message}`);
     return res.status(400).json(errorResponse(error.message, 400));
   }
 }
