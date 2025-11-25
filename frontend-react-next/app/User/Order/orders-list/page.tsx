@@ -4,20 +4,10 @@ import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import { OrderCard } from "../components/OrderComponent/OrderCard";
 import { OrderProgress } from "../components/OrderComponent/OrderProgress";
 import { StatusIcons } from "../components/OrderComponent/CatHead";
-import { Calendar } from "lucide-react";
-import { componentStyles } from "../../../design-system";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import Lottie from "lottie-react";
-import animationData from "@/assets/lotties/Anesthesia.json";
-import {
-filterOrdersByStatus,
-} from "../../../src/config/UserData/orderDataService";
-import { Order } from "../../../src/types";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { useLoading } from "@/app/src/contexts/LoadingContext";
+import { filterOrdersByStatus } from "../../../src/config/UserData/orderDataService";
+import { Order } from "../../../src/types";
 import { useOrders } from "@/app/src/lib/orders";
-
 
 export default function OrdersListPage() {
   const router = useRouter();
@@ -26,22 +16,8 @@ export default function OrdersListPage() {
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
   const { data, isLoading } = useOrders();
   const orders = data;
-    console.log(orders);
-    
-  const getSelectedPaymentInfo = () => {
-    if (!selectedOrder) return { items: [], total: 0 };
 
-    const items = [
-      {
-        label: `${selectedOrder.orderType} - ${selectedOrder.material}`,
-        price: selectedOrder.totalAmount,
-      },
-    ];
-
-    return { items, total: selectedOrder?.totalPrice };
-  };
-
-  const { items: paymentItems, total: paymentTotal } = getSelectedPaymentInfo();
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders || []);
 
   const handleDetailsClick = (order: Order) => {
     setSelectedOrder(order);
@@ -65,31 +41,17 @@ export default function OrdersListPage() {
     }
   };
 
-  const handlePayNow = () => {
-    router.push("/User/Order/Form");
-  };
-
   return (
-    <div className="w-full min-h-screen ">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      </div>
-
+    <div className="w-full min-h-screen relative">
       <div className="relative max-w-[1800px] mx-auto p-3 sm:p-4 lg:p-6 space-y-3">
-        {/* HEADER */}
+
+        {/* HEADER - all aligned left */}
         <ScrollAnimation
           animation="fadeInFromTop"
-          className=" px-2 py-1 rounded-3xl border border-white/50 transition-all duration-300"
+          className="px-2 py-1 rounded-3xl transition-all duration-300"
         >
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
-              <h1 className="text-33xl sm:text-4xl font-extrabold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent whitespace-nowrap">
-                My Orders{" "}
-                <span className="text-2xl sm:text-3xl font-semibold text-gray-400">
-                  {/* ({orders.length}) */}
-                </span>
-              </h1>
-            </div>
-
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            {/* جميع العناصر على الشمال */}
             <div className="flex items-center gap-3">
               {/* STATUS ICONS */}
               <StatusIcons
@@ -128,7 +90,6 @@ export default function OrdersListPage() {
                         order.orderType.toLowerCase().includes(searchTerm) ||
                         order.material.toLowerCase().includes(searchTerm)
                     );
-
                     setFilteredOrders(filtered);
 
                     if (
@@ -150,7 +111,7 @@ export default function OrdersListPage() {
           {/* LIST */}
           <div className="lg:col-span-4 xl:col-span-3">
             <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-              {orders?.map((order, index) => (
+              {filteredOrders?.map((order, index) => (
                 <ScrollAnimation
                   key={order.id}
                   animation="fadeInFromLeft"

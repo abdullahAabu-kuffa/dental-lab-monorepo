@@ -19,13 +19,11 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   const { navigateToForm, navigateToOrdersList } = useNavigation();
   const doctorName = "Dr. Ahmed Hassan";
 
-  // Handle New Order - navigate to form page
   const handleNewOrder = () => {
     navigateToForm();
     onNewOrder?.();
   };
 
-  // Handle Start Order (main button)
   const handleStartOrder = () => {
     navigateToForm();
     onStartOrder?.();
@@ -37,7 +35,8 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 relative">
+   
+    <div className="w-full min-h-screen relative">
       <div className="relative w-full p-6 space-y-6">
         {/* Main Content Area */}
         <motion.div

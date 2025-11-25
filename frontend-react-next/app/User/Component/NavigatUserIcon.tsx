@@ -73,7 +73,7 @@ export const NavigationUserIcon: React.FC<NavigationUserIconProps> = ({
       icon: Settings,
       label: "Settings",
       styleClass: componentStyles.statusIcons.eventButton,
-      onClick: () => handleNavigation("/User/Settings")
+      onClick: () => handleNavigation("/User/Order/Setting")
     }
   ];
 
