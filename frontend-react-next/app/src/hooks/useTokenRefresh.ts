@@ -68,17 +68,17 @@ export function useTokenRefresh() {
     interval = setInterval(performRefresh, REFRESH_INTERVAL);
 
     // Also refresh when user returns to app
-    const handleFocus = async () => {
-      console.log('[Auth] Window focused - refreshing token...');
-      await performRefresh();
-    };
+    // const handleFocus = async () => {
+    //   console.log('[Auth] Window focused - refreshing token...');
+    //   await performRefresh();
+    // };
 
-    window.addEventListener('focus', handleFocus);
+    // window.addEventListener('focus', handleFocus);
 
     // Cleanup on unmount
     return () => {
       clearInterval(interval);
-      window.removeEventListener('focus', handleFocus);
+      // window.removeEventListener('focus', handleFocus);
     };
   }, [queryClient, router]);
 }
