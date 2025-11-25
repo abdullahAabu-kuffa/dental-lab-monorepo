@@ -12,7 +12,7 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({ order, onPay }) =>
   const isPaid = (order.paymentStatus || "unpaid") === "paid";
 
   return (
-    <div className="bg-gray-50 rounded-2xl p-6 shadow space-y-6 max-w-xl mx-auto">
+    <div className="bg-gray-50 rounded-2xl p-6  space-y-6 max-w-xl mx-auto">
       {isPaid ? (
         <div className="text-center space-y-3">
           <div className="flex justify-center">

@@ -5,11 +5,13 @@ import { Wallet, DollarSign, FileText, TrendingUp } from "lucide-react";
 import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
 import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
 import { PaymentStatus } from "../components/invoic/PaymentInformation";
+import { InvoiceModal } from "../components/invoic/InvoiceModal";
 import { staticInvoiceOrders, getInvoiceStats } from "../staticData";
 import { Order} from "../../../src/types";
 
 export default function PaymentPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Use static data instead of API
   const orders: Order[] = staticInvoiceOrders;
@@ -19,6 +21,29 @@ export default function PaymentPage() {
 
   const handleDetailsClick = (order: Order) => {
     setSelectedOrder(order);
+  };
+
+  const handlePayClick = (order: Order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  const handleConfirmPayment = (orderId: string) => {
+    // Simple UI update without API calls
+    const orderIndex = orders.findIndex(o => o.id === orderId);
+    if (orderIndex !== -1) {
+      orders[orderIndex].paymentStatus = "paid";
+      orders[orderIndex].paymentMethod = "Credit Card";
+      orders[orderIndex].transactionId = "TXN" + Date.now();
+      orders[orderIndex].paymentDate = new Date();
+    }
+    
+    setShowModal(false);
+    
+    // Refresh the selected order to reflect changes
+    if (selectedOrder?.id === orderId) {
+      setSelectedOrder({...orders[orderIndex]});
+    }
   };
 
   return (
@@ -58,10 +83,7 @@ export default function PaymentPage() {
                 <div className="w-1/2">
                   <PaymentStatus 
                     order={selectedOrder} 
-                    onPay={() => {
-                      // TODO: Implement payment processing logic
-                      console.log(`Processing payment for order ${selectedOrder.id}`);
-                    }}
+                    onPay={() => handlePayClick(selectedOrder)}
                   />
                 </div>
 
@@ -77,6 +99,16 @@ export default function PaymentPage() {
           </div>
         </div>
       </div>
+
+      {/* Invoice Modal */}
+      {selectedOrder && (
+        <InvoiceModal
+          order={selectedOrder}
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onConfirmPayment={handleConfirmPayment}
+        />
+      )}
     </div>
   );
 }

@@ -10,7 +10,7 @@ export default function UserOrderLayout({
   return (
     <div className="w-full">
       {/* Reusable Navigation Icon Bar */}
-      <div className="w-full bg-white border-b border-gray-200 px-4 py-3">
+  
         <div className="max-w-7xl mx-auto">
           <NavigationUserIcon 
             className="justify-end"
@@ -26,7 +26,7 @@ export default function UserOrderLayout({
             // showDefaultItems={false}
           />
         </div>
-      </div>
+
       
       <Toaster
         position="top-center"

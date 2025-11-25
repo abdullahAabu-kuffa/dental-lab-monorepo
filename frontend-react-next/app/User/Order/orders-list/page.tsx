@@ -70,18 +70,15 @@ export default function OrdersListPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 relative overflow-hidden">
+    <div className="w-full min-h-screen ">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="relative max-w-[1800px] mx-auto p-3 sm:p-4 lg:p-6 space-y-3">
         {/* HEADER */}
         <ScrollAnimation
           animation="fadeInFromTop"
-          className="backdrop-blur-xl px-2 py-1 rounded-3xl border border-white/50 transition-all duration-300"
+          className=" px-2 py-1 rounded-3xl border border-white/50 transition-all duration-300"
         >
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
@@ -91,17 +88,18 @@ export default function OrdersListPage() {
                   {/* ({orders.length}) */}
                 </span>
               </h1>
+            </div>
 
+            <div className="flex items-center gap-3">
+              {/* STATUS ICONS */}
               <StatusIcons
                 onNewOrder={() => router.push("/User/Order/Form")}
                 onShowStatusOrders={handleShowStatusOrders}
                 orders={orders}
               />
-            </div>
 
-            <div className="flex items-center gap-3 w-full lg:w-auto lg:min-w-96">
               {/* SEARCH */}
-              <div className="relative group flex-1">
+              <div className="relative group flex items-center ml-4">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg
                     className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
@@ -121,7 +119,7 @@ export default function OrdersListPage() {
                 <input
                   type="text"
                   placeholder="Search by patient, type, or material..."
-                  className="block w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
+                  className="block w-64 pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
                     const filtered = orders?.filter(
@@ -143,9 +141,6 @@ export default function OrdersListPage() {
                   }}
                 />
               </div>
-
-              {/* EVENTS BUTTON */}
-           
             </div>
           </div>
         </ScrollAnimation>

@@ -55,7 +55,7 @@ export const NavigationUserIcon: React.FC<NavigationUserIconProps> = ({
       icon: Calendar,
       label: "Events",
       styleClass: componentStyles.statusIcons.eventButton,
-      onClick: () => handleNavigation("/User/event")
+      onClick: () => handleNavigation("/User/Order/Event")
     },
     {
       icon: FileText,
