@@ -9,11 +9,9 @@ import { useGetAllOrders } from "./services/hookes/get_all_orders";
 import Loading from "./_components/@loading";
 import ErrorMessage from "./_components/@displayerrors";
 import { useUsers } from "./services/hookes/fetch_all_users";
-import { User } from "./interfaces/users";
 import { Pagination } from "./_components/@pagination";
 
 const Dashboard = () => {
-  // const [page, setPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
   const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
@@ -65,22 +63,6 @@ const Dashboard = () => {
                 toColor="to-green-600"
               />
             </Link>
-            {/* <StatsCard
-              title="Pending Approvals"
-              value={pendingUsersNumber}
-              growth="Requires attention"
-              icon={<Clock size={24} />}
-              fromColor="from-red-500"
-              toColor="to-red-600"
-            /> */}
-            {/* <StatsCard
-              title="Total Revenue"
-              value={48562}
-              growth="+15% this month"
-              icon={<DollarSign size={24} />}
-              fromColor="from-yellow-500"
-              toColor="to-yellow-600"
-            /> */}
           </div>
         </div>
       </div>

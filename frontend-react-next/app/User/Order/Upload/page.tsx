@@ -12,16 +12,122 @@ import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import PaymentSummary from "../components/FormComponent/PaymentSummary";
 import { calculateSelectedServices } from "../../../src/utils/pricingService";
-import { useUploadFile } from "./quere";
+import { useOrderStore } from "@/app/src/store/createOrderStore";
+import Swal from "sweetalert2";
+import { useCreateOrder, useUploadFile } from "@/app/src/lib/orders";
+import { useLoading } from "@/app/src/contexts/LoadingContext";
 
 export default function UploadPage() {
   const { navigateToForm, navigateToHome } = useNavigation();
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [formData, setFormData] = useState<Record<string, unknown>>({});
-   const { mutate ,data} = useUploadFile(); 
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-
+  const [note, setnNote] = useState("");
+  const { formData } = useOrderStore();
+  const uploadMutation = useUploadFile();
+  const orderMutation = useCreateOrder();
+  const { setLoading } = useLoading();
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  console.log(formData, totalAmount, selectedServices);
+
+  const handleSubmitOrder = async () => {
+    setIsSubmitting(true)
+    setLoading(true);
+
+    // 1) 🟡 Alert تأكيد
+    const confirm = await Swal.fire({
+      title: "Confirm Your Order",
+      html: `
+      <div style="text-align:left; font-size:15px; line-height:1.5;">
+        <strong>Selected Services:</strong>
+        <ul>
+          ${selectedServices
+            ?.map(
+              (m: any) =>
+                `<li>• ${m.label} — <span style="color:#e4b441;">$${m.price}</span></li>`
+            )
+            .join("")}
+        </ul>
+
+        <br/>
+        <strong>Total Amount:</strong> 
+        <span style="color:#e4b441; font-weight:600;">$${totalAmount}</span>
+        <br/><br/>
+        <strong>Patient Name:</strong> ${formData?.patientName || "-"} <br/>
+        <strong>Age:</strong> ${formData?.date || "-"} <br/>
+        <strong>Notes:</strong> ${note || "No notes"}
+      </div>
+    `,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Confirm Order",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#E4B441",
+      cancelButtonColor: "#aaa",
+    });
+
+    if (!confirm.isConfirmed) {
+      Swal.fire({
+        icon: "info",
+        title: "Order Cancelled",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
+    if (!uploadedFiles.length) {
+      Swal.fire({
+        icon: "warning",
+        title: "No Files Selected",
+        text: "Please upload at least one file.",
+      });
+      return;
+    }
+
+    try {
+      // 2) رفع كل الملفات وانتظار كل واحدة
+      const fileIds = [];
+      for (const file of uploadedFiles) {
+        const resp = await uploadMutation.mutateAsync(file); // await mutateAsync
+        fileIds.push(resp?.data?.id);
+      }
+
+      // 3) إنشاء الأوردر بعد رفع الملفات
+      await orderMutation.mutateAsync({
+        ...formData,
+        fileIds, // جميع الملفات
+        totalPrice: totalAmount,
+        options: {
+          patientName: formData?.patientName,
+          age: formData?.date,
+          note,
+          selectedServices,
+        },
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Order Created Successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      navigateToHome();
+    } catch (err: any) {
+      console.error("Error submitting order:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: err?.message || "An error occurred",
+      });
+    } finally {
+    setIsSubmitting(false)
+      setLoading(false);
+    }
+  };
+
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const handlePayNow = async () => {
     setIsProcessingPayment(true);
@@ -48,7 +154,6 @@ export default function UploadPage() {
       setIsProcessingPayment(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
@@ -114,8 +219,6 @@ export default function UploadPage() {
                   e.preventDefault();
                   const files = Array.from(e.dataTransfer.files).slice(0, 5);
                   setUploadedFiles(files);
-                  console.log(uploadedFiles[0]);
-                  
                 }}
                 onClick={() => {
                   const input = document.createElement("input");
@@ -164,6 +267,8 @@ export default function UploadPage() {
               <textarea
                 placeholder="Write your notes here..."
                 rows={6}
+                value={note}
+                onChange={(e) => setnNote(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E4B441] focus:border-[#E4B441] resize-none"
               />
             </motion.div>
@@ -182,10 +287,9 @@ export default function UploadPage() {
               </button>
 
               <button
+                disabled={isSubmitting}
                 onClick={() => {
-                  console.log(uploadedFiles[0]);
-                  mutate(uploadedFiles[0])
-                  navigateToHome()
+                  handleSubmitOrder();
                 }}
                 className="px-6 py-3 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg"
               >

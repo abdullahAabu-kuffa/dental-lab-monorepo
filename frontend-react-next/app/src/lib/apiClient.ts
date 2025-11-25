@@ -2,7 +2,7 @@ import { getAccessToken, setAccessToken } from "../auth/tokenStore";
 
 
 
-const API_URL = process.env.NEXT_PUBLIC_AUTH_LOCAL_IP;
+const API_URL = "http://localhost:3001";
 
 let getAccessTokenInternal: () => string | null = getAccessToken;
 let setAccessTokenInternal: (t: string | null) => void = setAccessToken;
@@ -64,8 +64,8 @@ export async function apiFetch(path: string, options: ApiOption = {}) {
     if (!API_URL) throw new Error("Missing NEXT_PUBLIC_AUTH_LOCAL_IP");
 
     const url = `${API_URL}${path}`;
-    const token = getAccessTokenInternal();
-
+    const token = await getAccessTokenInternal();
+    if (!token) console.log("errorr form token");
     console.log("curr token:", token);
 
     // initial request

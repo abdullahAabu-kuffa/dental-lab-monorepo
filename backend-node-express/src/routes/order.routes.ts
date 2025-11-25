@@ -6,6 +6,7 @@ import { Router } from "express";
 import { verifyAccessToken } from "../middlewares/auth.middleware";
 import {
   createOrder,
+  createStepOrder,
   deleteUserOrder,
   getAllOrders,
   getUserOrder,
@@ -230,5 +231,7 @@ router.patch("/:orderId/status", verifyAccessToken, updateUserOrder);
 router.patch("/:orderId", verifyAccessToken, updateUserOrder);
 // delete user order
 router.delete("/:orderId", verifyAccessToken, deleteUserOrder);
+// traking 
+router.post("/:orderId/track",verifyAccessToken, createStepOrder )
 
 export default router;
