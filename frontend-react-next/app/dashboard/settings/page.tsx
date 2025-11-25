@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SwitchButton from "../_components/@switchBtn";
 import { Upload } from "lucide-react";
 import { useGetProfileInfo } from "../services/hookes/get_profile_info";
@@ -13,12 +13,6 @@ export default function AccountPage() {
     "https://cdn.vectorstock.com/i/1000v/29/52/faceless-male-avatar-in-hoodie-vector-56412952.avif"
   );
   const { data, isLoading, isError } = useGetProfileInfo();
-    useEffect(() => {
-      if (data) {
-        if (data?.data?.user?.role !== "ADMIN") window.location.href = "/User";
-      }
-    }, [data]);
-  // console.log(data.data.user);
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
