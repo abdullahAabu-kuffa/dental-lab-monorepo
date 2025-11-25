@@ -32,32 +32,124 @@ export const createOrderServices = async (userId: any, orderData: any) => {
     throw error;
   }
 };
+// export const getAllOrdersServices = async (userId: any, req: any) => {
+//   try {
+//     const page = parseInt(req.query.page as string) || 1;
+//     const limit = 10;
+//     let orders;
+//     let totalOrders;
+//     parseId(userId);
+//     const user = await checkUser(userId);
+//     if (user.role === "CLIENT") {
+//       totalOrders = await prisma.order.count({ where: { userId } });
+//       orders = await prisma.order.findMany({ where: { userId } });
+//     } else if (user.role === "ADMIN" || user.role === "OWNER") {
+//       totalOrders = await prisma.order.count();
+//       orders = await prisma.order.findMany({
+//         include: { user: true, invoice: true, file: true },
+//         skip: (page - 1) * limit,
+//         take: limit,
+//       });
+//     } else {
+//       throw new Error("No Role Provided");
+//     }
+
+//     if (orders?.length === 0) {
+//       throw new Error("no orders Found");
+//     }
+//     let totalPages = Math.ceil(totalOrders / limit);
+//     return { orders, page, limit, totalOrders, totalPages };
+//   } catch (error: any) {
+//     logger.error(`[getAllOrdersServices error] : ${error.message}`);
+//     throw error;
+//   }
+// };
 export const getAllOrdersServices = async (userId: any, req: any) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = 10;
-    let orders;
-    let totalOrders;
+    const search = (req.query.search as string)?.trim() || '';
+    const filter = (req.query.filter as string)?.toLowerCase() || '';
+
     parseId(userId);
     const user = await checkUser(userId);
-    if (user.role === "CLIENT") {
-      totalOrders = await prisma.order.count({ where: { userId } });
-      orders = await prisma.order.findMany({ where: { userId } });
-    } else if (user.role === "ADMIN" || user.role === "OWNER") {
-      totalOrders = await prisma.order.count();
+
+    logger.info(
+      `[getAllOrdersServices] Fetching orders - page: ${page}, limit: ${limit}, search: ${search}, filter: ${filter}, userRole: ${user.role}`
+    );
+
+    let orders;
+    let totalOrders;
+
+    if (user.role === 'CLIENT') {
+      // Build where clause for client orders
+      const whereClause: any = { userId };
+
+      // Status filter for clients
+      if (filter && ['pending', 'in_progress', 'completed', 'cancelled'].includes(filter)) {
+        whereClause.status = filter.toUpperCase();
+        logger.info(`[getAllOrdersServices] Applied status filter: ${filter}`);
+      }
+
+      totalOrders = await prisma.order.count({
+        where: whereClause,
+      });
+
       orders = await prisma.order.findMany({
+        where: whereClause,
+        include: { user: true, invoice: true, file: true },
+        orderBy: { createdAt: 'desc' },
+      });
+    } else if (user.role === 'ADMIN' || user.role === 'OWNER') {
+      // Build where clause for admin orders
+      const whereClause: any = {};
+
+      // Search by user fullName
+      if (search) {
+        whereClause.user = {
+          fullName: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        };
+        logger.info(`[getAllOrdersServices] Applied search filter: ${search}`);
+      }
+
+      // Status filter for admins
+      if (filter && ['pending', 'in_progress', 'completed', 'cancelled'].includes(filter)) {
+        whereClause.status = filter.toUpperCase();
+        logger.info(`[getAllOrdersServices] Applied status filter: ${filter}`);
+      }
+
+      totalOrders = await prisma.order.count({
+        where: whereClause,
+      });
+
+      orders = await prisma.order.findMany({
+        where: whereClause,
         include: { user: true, invoice: true, file: true },
         skip: (page - 1) * limit,
         take: limit,
+        orderBy: { createdAt: 'desc' },
       });
     } else {
-      throw new Error("No Role Provided");
+      throw new Error('No Role Provided');
     }
 
     if (orders?.length === 0) {
-      throw new Error("no orders Found");
+      logger.warn(
+        `[getAllOrdersServices] No orders found with filters - search: ${search}, filter: ${filter}`
+      );
+      // Don't throw - return empty array instead
+      // throw new Error("no orders Found");
     }
-    let totalPages = Math.ceil(totalOrders / limit);
+
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    logger.info(
+      `[getAllOrdersServices] Fetched ${orders.length} orders (total: ${totalOrders})`
+    );
+
     return { orders, page, limit, totalOrders, totalPages };
   } catch (error: any) {
     logger.error(`[getAllOrdersServices error] : ${error.message}`);

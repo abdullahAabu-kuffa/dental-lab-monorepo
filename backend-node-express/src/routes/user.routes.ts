@@ -89,7 +89,7 @@ const router = Router();
  * @swagger
  * /users:
  *   get:
- *     summary: Get all users with pagination
+ *     summary: Get all users with pagination, search, and filters
  *     tags:
  *       - Users
  *     security:
@@ -100,14 +100,33 @@ const router = Router();
  *         schema:
  *           type: integer
  *           default: 1
+ *         description: Page number for pagination
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 20
+ *           maximum: 100
+ *         description: Number of records per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by user name or email (case-insensitive)
+ *         example: john
+ *       - in: query
+ *         name: filter
+ *         schema:
+ *           type: string
+ *           enum: [pending, approved]
+ *         description: |
+ *           Filter by user status:
+ *           - pending: Users with isActive = false (awaiting approval)
+ *           - approved: Users with isActive = true (approved accounts)
+ *         example: pending
  *     responses:
  *       200:
- *         description: List of users with pagination info
+ *         description: List of users with pagination, search and filter info
  *         content:
  *           application/json:
  *             schema:
@@ -120,12 +139,51 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
- *                     data:
+ *                     users:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/User'
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           fullName:
+ *                             type: string
+ *                           email:
+ *                             type: string
+ *                           phoneNumber:
+ *                             type: string
+ *                           clinicName:
+ *                             type: string
+ *                           clinicAddress:
+ *                             type: string
+ *                           role:
+ *                             type: string
+ *                             enum: [CLIENT, ADMIN, OWNER]
+ *                           isActive:
+ *                             type: boolean
+ *                           isVerified:
+ *                             type: boolean
+ *                           createdAt:
+ *                             type: string
+ *                             format: date-time
+ *                           updatedAt:
+ *                             type: string
+ *                             format: date-time
  *                     pagination:
- *                       $ref: '#/components/schemas/Pagination'
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: integer
+ *                         limit:
+ *                           type: integer
+ *                         total:
+ *                           type: integer
+ *                         totalPages:
+ *                           type: integer
+ *       400:
+ *         description: Invalid parameters
+ *       401:
+ *         description: Unauthorized
  */
 
 /**

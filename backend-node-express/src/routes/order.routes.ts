@@ -97,7 +97,10 @@ const router = Router();
  *         description: Unauthorized (token missing or invalid)
  *
  *   get:
- *     summary: Get all orders (paginated for admins, user-specific for clients)
+ *     summary: Get all orders with pagination, search, and filters
+ *     description: |
+ *       For CLIENT: Returns only their own orders
+ *       For ADMIN/OWNER: Returns all orders with search and filter capabilities
  *     tags: [Orders]
  *     security:
  *       - BearerAuth: []
@@ -107,7 +110,20 @@ const router = Router();
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Page number for pagination
+ *         description: Page number for pagination (admins only)
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by user fullName (case-insensitive, admins only)
+ *         example: john
+ *       - in: query
+ *         name: filter
+ *         schema:
+ *           type: string
+ *           enum: [pending, in_progress, completed, cancelled]
+ *         description: Filter by order status
+ *         example: pending
  *     responses:
  *       200:
  *         description: Orders fetched successfully
@@ -116,18 +132,71 @@ const router = Router();
  *             schema:
  *               type: object
  *               properties:
- *                 orders:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Order'
- *                 page:
- *                   type: integer
- *                 limit:
- *                   type: integer
- *                 totalPages:
- *                   type: integer
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     orders:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           userId:
+ *                             type: integer
+ *                           fileId:
+ *                             type: integer
+ *                             nullable: true
+ *                           status:
+ *                             type: string
+ *                             enum: [PENDING, IN_PROGRESS, COMPLETED, CANCELLED]
+ *                           invoiceId:
+ *                             type: integer
+ *                             nullable: true
+ *                           options:
+ *                             type: object
+ *                           totalPrice:
+ *                             type: number
+ *                           createdAt:
+ *                             type: string
+ *                             format: date-time
+ *                           updatedAt:
+ *                             type: string
+ *                             format: date-time
+ *                           user:
+ *                             type: object
+ *                             properties:
+ *                               id:
+ *                                 type: integer
+ *                               fullName:
+ *                                 type: string
+ *                               email:
+ *                                 type: string
+ *                           invoice:
+ *                             type: object
+ *                             nullable: true
+ *                           file:
+ *                             type: object
+ *                             nullable: true
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: integer
+ *                         limit:
+ *                           type: integer
+ *                         totalOrders:
+ *                           type: integer
+ *                         totalPages:
+ *                           type: integer
  *       400:
- *         description: Bad request or unauthorized
+ *         description: Bad request or no orders found
+ *       401:
+ *         description: Unauthorized
  *
  * /api/orders/{orderId}:
  *   get:

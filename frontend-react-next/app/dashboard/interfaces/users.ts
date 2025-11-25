@@ -38,9 +38,7 @@ interface FetchUsersResponse {
     success: boolean;
     message: string;
     data: {
-        data: {
             users: User[];
-        };
         pagination: Pagination;
     };
 }
