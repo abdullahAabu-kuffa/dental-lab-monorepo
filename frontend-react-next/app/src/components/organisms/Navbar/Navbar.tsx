@@ -13,23 +13,33 @@ import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 import { apiFetch } from "@/app/src/lib/apiClient";
 import Swal from "sweetalert2";
 import { getAccessToken } from "@/app/src/auth/tokenStore";
+
+import NotificationBell from "../../molecules/notificationBell";
+import NotificationsMenu from "../notifaicationMenu";
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [meData, setMeData] = useState(null);
+	const [isScrolled, setIsScrolled] = useState(false);
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [meData, setMeData] = useState(null);
 
-  const pathname = usePathname();
-  const router = useRouter();
-  const { user, loading } = useAuth();
+	const pathname = usePathname();
+	const router = useRouter();
+	const { user, loading, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+	//notification part
+	const [open, setOpen] = useState(false);
+	const [unread, setUnread] = useState(0);
+	function toggleMenu() {
+		setOpen((prev) => !prev);
+	}
 
+	useEffect(() => {
+		console.log("user data from nav", user?.name);
+		const handleScroll = () => {
+			setIsScrolled(window.scrollY > 20);
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
 	async function handleLogout() {
 		try {
@@ -44,173 +54,182 @@ const Navbar = () => {
 		}
 	}
 
+	async function handlCheckActivation() {
+		const res = await apiFetch("/api/users/me", {
+			headers: {
+				Authorization: `Bearer ${getAccessToken()}`,
+			},
+		});
 
-  async function handlCheckActivation() {
-    const res = await apiFetch("/api/users/me", {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    });
+		const data = await res.json();
+		console.log("ME DATA:", data);
+	}
+	useEffect(() => {
+		async function fetchMe() {
+			const token = getAccessToken();
 
-    const data = await res.json();
-    console.log("ME DATA:", data);
-  }
-  useEffect(() => {
-    async function fetchMe() {
-      const token = getAccessToken();
+			if (!token) {
+				console.log("Waiting for token...");
+				return;
+			}
 
-      if (!token) {
-        console.log("Waiting for token...");
-        return;
-      }
+			const res = await apiFetch("/api/users/me", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
-      const res = await apiFetch("/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+			const data = await res.json();
+			setMeData(data?.data?.user);
+		}
 
-      const data = await res.json();
-      setMeData(data?.data?.user);
-    }
+		fetchMe();
+	}, [user]);
+	console.log(user);
 
-    fetchMe();
-  }, [user]);
-  console.log(user);
-  
-  function handleOrdersClick(e) {
-    if (meData && !meData.isActive) {
-      e.preventDefault();
+	// function handleOrdersClick(e) {
+	// 	if (meData && !meData.isActive) {
+	// 		e.preventDefault()
 
-      Swal.fire({
-        icon: "info",
-        title: "Account Not Active Yet",
-        html: `
-        Your account is not yet activated.<br/>
-        You won't be able to place orders until activation is complete.<br/>
-        Activation usually takes 1-2 business days.
-      `,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#d4a431",
-      });
-    }
-  }
+	// 		Swal.fire({
+	// 			icon: "info",
+	// 			title: "Account Not Active Yet",
+	// 			html: `
+	//       Your account is not yet activated.<br/>
+	//       You won't be able to place orders until activation is complete.<br/>
+	//       Activation usually takes 1-2 business days.
+	//     `,
+	// 			confirmButtonText: "OK",
+	// 			confirmButtonColor: "#d4a431",
+	// 		});
+	// 	}
+	// }
+	function handleOrdersClick() {
+		console.log("the complete  handle error function ned to refactor ");
+	}
+	return (
+		<>
+			<nav
+				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+					isScrolled
+						? "bg-gradient-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl"
+						: "bg-gradient-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
+				}`}
+			>
+				<div className="max-w-7xl mx-auto px-4 sm:px-6">
+					<div className="flex items-center justify-between h-20">
+						{/* Logo */}
+						<div className="flex-shrink-0">
+							<Link href="/" className="flex items-center gap-3">
+								<Image
+									src={NAVBAR_CONFIG.logo.src}
+									alt={NAVBAR_CONFIG.logo.alt}
+									className={`${NAVBAR_CONFIG.logo.width} ${NAVBAR_CONFIG.logo.height} filter brightness-110 contrast-125`}
+									width={100}
+									height={100}
+									style={{
+										filter:
+											"brightness(1.1) contrast(1.25) drop-shadow(0 0 1px rgba(212, 175, 55, 0.3))",
+									}}
+								/>
+							</Link>
+						</div>
 
-  return (
-    <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-gradient-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl"
-            : "bg-gradient-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <Link href="/" className="flex items-center gap-3">
-                <Image
-                  src={NAVBAR_CONFIG.logo.src}
-                  alt={NAVBAR_CONFIG.logo.alt}
-                  className={`${NAVBAR_CONFIG.logo.width} ${NAVBAR_CONFIG.logo.height} filter brightness-110 contrast-125`}
-                  width={100}
-                  height={100}
-                  style={{
-                    filter:
-                      "brightness(1.1) contrast(1.25) drop-shadow(0 0 1px rgba(212, 175, 55, 0.3))",
-                  }}
-                />
-              </Link>
-            </div>
+						{/* Desktop Navigation */}
+						<div className="hidden md:flex items-center gap-8">
+							{NAVBAR_CONFIG.links.map((link, index) => {
+								const isActive = pathname === link.href;
+								return (
+									<Link
+										key={index}
+										href={link.href}
+										onClick={
+											link.name === "Orders" ? handleOrdersClick : undefined
+										}
+										className={`font-semibold text-base transition-all duration-200 relative group ${
+											isActive
+												? "text-[#FFD700] border-b-2 border-[#E4B441]"
+												: "text-[#CABEB2] hover:text-[#FFD700]"
+										}`}
+									>
+										{link.name}
+										<span
+											className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${
+												isActive ? "w-full" : "w-0 group-hover:w-full"
+											}`}
+										/>
+									</Link>
+								);
+							})}
+						</div>
+						{/* notification part */}
+						<div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+							{user && (
+								<>
+									<NotificationBell unreadCount={unread} onClick={toggleMenu} />
+									{open && <NotificationsMenu />}
+								</>
+							)}
+						</div>
+						{/* Desktop Auth Section */}
+						{!loading && (
+							<div className="hidden md:flex items-center gap-3">
+								{user ? (
+									<>
+										<span className="text-[#CABEB2] text-sm font-medium">
+											Welcome, {user.name}
+										</span>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
-              {NAVBAR_CONFIG.links.map((link, index) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={index}
-                    href={link.href}
-                    onClick={
-                      link.name === "Orders" ? handleOrdersClick : undefined
-                    }
-                    className={`font-semibold text-base transition-all duration-200 relative group ${
-                      isActive
-                        ? "text-[#FFD700] border-b-2 border-[#E4B441]"
-                        : "text-[#CABEB2] hover:text-[#FFD700]"
-                    }`}
-                  >
-                    {link.name}
-                    <span
-                      className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${
-                        isActive ? "w-full" : "w-0 group-hover:w-full"
-                      }`}
-                    />
-                  </Link>
-                );
-              })}
-            </div>
+										<button
+											onClick={handleLogout}
+											className="px-4 py-2 rounded-lg border border-red-500 text-red-500 font-semibold text-sm transition-all duration-200 hover:bg-red-500 hover:text-white"
+										>
+											Logout
+										</button>
+									</>
+								) : (
+									<>
+										<Link
+											href={NAVBAR_CONFIG.authButtons.login.href}
+											className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
+										>
+											{NAVBAR_CONFIG.authButtons.login.text}
+										</Link>
 
-            {/* Desktop Auth Section */}
-            {!loading && (
-              <div className="hidden md:flex items-center gap-3">
-                {user ? (
-                  <>
-                    <span className="text-[#CABEB2] text-sm font-medium">
-                      Welcome, {user.name}
-                    </span>
+										<Link
+											href={NAVBAR_CONFIG.authButtons.register.href}
+											className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
+										>
+											{NAVBAR_CONFIG.authButtons.register.text}
+										</Link>
+									</>
+								)}
+							</div>
+						)}
 
-                    <button
-                      onClick={handleLogout}
-                      className="px-4 py-2 rounded-lg border border-red-500 text-red-500 font-semibold text-sm transition-all duration-200 hover:bg-red-500 hover:text-white"
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href={NAVBAR_CONFIG.authButtons.login.href}
-                      className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
-                    >
-                      {NAVBAR_CONFIG.authButtons.login.text}
-                    </Link>
+						{/* Mobile Menu Button */}
+						<button
+							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+							className="md:hidden p-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
+						>
+							{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+						</button>
+					</div>
+				</div>
 
-                    <Link
-                      href={NAVBAR_CONFIG.authButtons.register.href}
-                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
-                    >
-                      {NAVBAR_CONFIG.authButtons.register.text}
-                    </Link>
-                  </>
-                )}
-              </div>
-            )}
+				<NavMobileMenu
+					isOpen={isMobileMenuOpen}
+					onClose={() => setIsMobileMenuOpen(false)}
+					user={user}
+					loading={loading}
+					onLogout={handleLogout}
+				/>
+			</nav>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        <NavMobileMenu
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-          user={user}
-          loading={loading}
-          onLogout={handleLogout}
-        />
-      </nav>
-
-      {/* Spacer */}
-      <div className="h-20"></div>
-    </>
-  );
+			{/* Spacer */}
+			<div className="h-20"></div>
+		</>
+	);
 };
 
 export default Navbar;

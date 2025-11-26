@@ -17,32 +17,29 @@ interface User {
 
 async function fetchUser(): Promise<User | null> {
 
-    // const res = await apiFetch("/api/users/me", {
-    //     method: "GET",
-    //     retryOn401: true,
-    // });
-
-    const res= await fetch("/api/session", {
-        method: "GET",
-        credentials: "include",
-    });
 
 
-    if (!res.ok) return null;
+  const res = await fetch("/api/session", {
+    method: "GET",
+    credentials: "include",
+  });
 
-    const sessionData:SessionPayload = await res.json();
-    // const apiUser = json?.data?.user;
 
-    if (!sessionData) return null;
+  if (!res.ok) return null;
 
-    return {
-        id: sessionData.userId,
-        email: sessionData.email,
-        role: sessionData.role,
-        isVerified: sessionData.isVerified,
-        isActive: sessionData.isActive,
-        name:sessionData.fullName
-    };
+  const sessionData: SessionPayload = await res.json();
+  // const apiUser = json?.data?.user;
+
+  if (!sessionData) return null;
+
+  return {
+    id: sessionData.userId,
+    email: sessionData.email,
+    role: sessionData.role,
+    isVerified: sessionData.isVerified,
+    isActive: sessionData.isActive,
+    name: sessionData.fullName
+  };
 }
 
 export function useAuth() {
