@@ -51,7 +51,7 @@ export default function OrdersListPage() {
           className="px-2 py-1 rounded-3xl transition-all duration-300"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            {/* جميع العناصر على الشمال */}
+       
             <div className="flex items-center gap-3">
               {/* STATUS ICONS */}
               <StatusIcons
@@ -134,7 +134,7 @@ export default function OrdersListPage() {
                 <OrderProgress order={selectedOrder} />
               </ScrollAnimation>
             ) : (
-              <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-16 text-center border-2 border-dashed border-gray-200">
+              <div className="bg-white/50  rounded-2xl p-16 text-center border-2 border-dashed border-gray-200">
                 <svg
                   className="mx-auto h-16 w-16 text-gray-300 mb-4"
                   fill="none"

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { PlusCircle } from "lucide-react";
+import { FileText, PlusCircle } from "lucide-react"; 
 import { calculateStatusCounts, SAMPLE_ORDERS } from "../../../../src/config/UserData/orderDataService";
 import { Order } from "../../../../src/types";
 import { componentStyles } from "../../../../design-system/components";
@@ -18,16 +18,26 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
   onShowStatusOrders,
   orders = SAMPLE_ORDERS,
 }) => {
-  const statusItemsWithCounts = calculateStatusCounts(orders);
+
+  const statusItems = calculateStatusCounts(orders);
+  const statusItemsWithDraft = [
+    ...statusItems,
+    {
+      id: "draft",
+      label: "Draft",
+      Icon: FileText,
+      gradient: ["#FFD700", "#FFA500"], 
+      count: orders.filter(o => o.status === "draft").length,
+    },
+  ];
 
   return (
-    <motion.div className="flex items-center gap-4">
-      {/* الهيدر */}
+    <motion.div className="flex items-center gap-2"> 
       <h2 className="text-xl font-bold text-gray-700">Orders</h2>
 
       {/* Status Icons */}
-      <div className="flex items-center gap-3">
-        {statusItemsWithCounts.map((item) => (
+      <div className="flex items-center gap-2">
+        {statusItemsWithDraft.map((item) => (
           <motion.button
             key={item.id}
             onClick={() => onShowStatusOrders?.(item.id)}
@@ -61,12 +71,21 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
             </div>
           </motion.button>
         ))}
-
-
+        <motion.button
+          onClick={onNewOrder}
+          className={componentStyles.statusIcons.statusButton}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.1 }}
+        >
+          <div className="relative w-10 h-10 flex items-center justify-center rounded-full bg-blue-500">
+            <PlusCircle className="text-white w-5 h-5" />
+          </div>
+          <div className={componentStyles.statusIcons.tooltip}>
+            <span>New Order</span>
+          </div>
+        </motion.button>
       </div>
-
-
-      
     </motion.div>
   );
 };

@@ -6,7 +6,7 @@ import { Order } from "../../../../src/types";
 import { getOrderStages } from "../../../../src/config/UserData/orderDataService";
 import { getProgressStepColors } from "../../../../design-system/orderStyles";
 import { DetailsOrder } from "./DetailsOrder";
-import OrderDetails from "./OrderDetails";
+
 interface OrderProgressProps {
   order: Order;
   useNewDetails?: boolean; // Optional prop to use the new OrderDetails component
@@ -86,17 +86,9 @@ export const OrderProgress: React.FC<OrderProgressProps> = ({ order, useNewDetai
         </div>
         {/* Order Details */}
         <div className="lg:col-span-2">
-          {useNewDetails ? (
-            <OrderDetails 
-              order={order}
-              showPaymentSection={true}
-              showShippingInfo={true}
-              showTimeline={true}
-              className="bg-transparent p-0 border-none"
-            />
-          ) : (
+        
             <DetailsOrder order={order} />
-          )}
+        
         </div>
       </div>
     </div>

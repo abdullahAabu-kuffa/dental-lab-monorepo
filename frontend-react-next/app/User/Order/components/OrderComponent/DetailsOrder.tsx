@@ -23,6 +23,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
+        {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl">
             <Package className="w-5 h-5 text-white" />
@@ -31,6 +32,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
             Order Details
           </h3>
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6">
           {/* Left Column - Main Order Details */}
           <div className="lg:col-span-2 space-y-5">
@@ -39,66 +41,79 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Order ID</label>
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">#{order.id}</p>
               </div>
+
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Patient Name</label>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.patientName || order?.options?.patientName || "Unknown Patient"}</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
+                  {order.patientName || order?.options?.patientName || "Unknown Patient"}
+                </p>
               </div>
+
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Order Type</label>
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.orderType}</p>
               </div>
+
+              {/* Status - stacked vertical */}
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</label>
-                <p className={`text-sm font-bold mt-1 inline-flex items-center gap-2 px-3 py-1 rounded-full ${statusColors.badge}`}>
-                  <span className={`w-2 h-2 rounded-full ${statusColors.dot}`}></span>
-                  {order.status}
-                </p>
+                <div className="mt-1 flex flex-col gap-1">
+                  <p className={`text-sm font-bold inline-flex items-center gap-2 px-3 py-1 rounded-full ${statusColors.badge}`}>
+                    <span className={`w-2 h-2 rounded-full ${statusColors.dot}`}></span>
+                    {order.status}
+                  </p>
+                </div>
               </div>
+
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</label>
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.date || order.date || "Not specified"}</p>
               </div>
+
+              {/* Urgency - stacked vertical */}
               <div className="group">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Urgency</label>
-                <p className="text-sm font-bold flex items-center gap-2 mt-1">
-                  <span className={`w-3 h-3 rounded-full ${urgencyColors.dot}`}></span> 
-                  <span className={urgencyColors.text}>
-                    {order.urgency}
-                  </span>
-                </p>
+                <div className="mt-1 flex flex-col gap-1">
+                  <p className="text-sm font-bold flex items-center gap-2">
+                    <span className={`w-3 h-3 rounded-full ${urgencyColors.dot}`}></span>
+                    <span className={urgencyColors.text}>{order.urgency}</span>
+                  </p>
+                </div>
               </div>
             </div>
+
             <div className="group">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Material</label>
               <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order?.options?.material || order.material || "Not specified"}</p>
             </div>
+
             <div className="group">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Notes</label>
               <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">{order?.options?.notes || order.notes || "No notes available"}</p>
             </div>
           </div>
 
-          {/* Right Column - Timestamps & Tracking */}
-          <div className="space-y-5">
-            <div className="border-t border-slate-200/60 dark:border-slate-700/60 pt-4">
-              <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-4">Order Timeline</h4>
-              <div className="space-y-4">
-                <div className="group">
-                  <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Created At</label>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="group">
-                  <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Last Updated</label>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
-                    {new Date(order.updatedAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="group">
-                  <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lab</label>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.lab}</p>
-                </div>
+          {/* Right Column - Timestamps & Shipping */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-4">Order Timeline</h4>
+            <div className="space-y-4">
+              <div className="group">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Created At</label>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
+                  {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "Not specified"}
+                </p>
+              </div>
+
+              <div className="group">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Last Updated</label>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
+                  {order.updatedAt ? new Date(order.updatedAt).toLocaleDateString() : "Not specified"}
+                </p>
+              </div>
+
+              <div className="group">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lab</label>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{order.lab}</p>
               </div>
             </div>
 
@@ -118,8 +133,6 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
           </div>
         </div>
       </motion.div>
-
- 
     </div>
   );
 };

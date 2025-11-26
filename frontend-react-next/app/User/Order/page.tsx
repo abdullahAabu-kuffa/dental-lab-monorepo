@@ -5,7 +5,7 @@ import { motionVariants, componentStyles, welcomePageAnimations } from '../../de
 import { User, Crown } from '../../src/utils/UnifiedIcons';
 import { USER_PROCESS_STEPS } from '../../src/config/UserData/orderDataService';
 import { WelcomePageProps } from '../../src/types';
-import { useNavigation, animations } from '../../src/utils/pageUtils';
+import { useNavigation } from '../../src/utils/pageUtils';
 
 const PROCESS_STEPS = USER_PROCESS_STEPS;
 
