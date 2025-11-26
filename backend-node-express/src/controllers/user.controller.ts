@@ -3,7 +3,7 @@
 // Usage: Called from user routes
 // Responsibility: Implement getProfile, updateProfile, listUsers, approveUser methods
 import { date } from "joi";
-import { approveUserService, deleteUserServices, getAllUsersService, getUserDataService, rejectedUserService } from "../services/user.service";
+import { approveUserService, deleteUserServices, getAllUsersService, getUserDataService, rejectedUserService, updateUserProfileService } from "../services/user.service";
 import logger from "../utils/logger.util";
 import { errorResponse, successResponse } from "../utils/response.util";
 import { NextFunction, Request, Response } from "express";
@@ -131,3 +131,23 @@ export async function deleteUser(req: AuthRequest, res: Response) {
     return res.status(400).json(errorResponse(error.message, 400));
   }
 }
+
+  export async function updateUserProfile(req: AuthRequest, res: Response) {
+    try {
+  
+      const userId = parseInt(req.params.id, 10);
+      const body = req.body
+      const updated = await updateUserProfileService(userId,body)
+      return res
+        .status(201)
+        .json(
+          successResponse(
+            updated,
+            "admin approve successfuly."
+          )
+        );
+    } catch (error: any) {
+      logger.error(`Registration controller error: ${error.message}`);
+      return res.status(400).json(errorResponse(error.message, 400));
+    }
+  }

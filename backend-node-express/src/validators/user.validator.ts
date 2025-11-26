@@ -50,4 +50,9 @@ export const loginSchema = Joi.object({
   password: Joi.string().required().messages({
     "any.required": "Password is required",
   }),
+  //clientType either web or mobile
+  clientType: Joi.string().valid("web", "mobile").required().messages({
+    "any.only": "Client type must be either 'web' or 'mobile'",
+    "any.required": "Client type is required",
+  }),
 });

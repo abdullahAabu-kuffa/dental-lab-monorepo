@@ -6,7 +6,13 @@ import { checkOrder } from "../utils/helper/checkOrder";
 // Purpose: Handle order business logic
 // Usage: Called by order controller
 // Responsibility: Create, read, update, delete orders; order status management
-
+const ORDER_STEPS = [
+  "Receive case",
+  "Scan model",
+  "Design",
+  "Milling",
+  "Finishing",
+];
 export const createOrderServices = async (userId: any, orderData: any) => {
   try {
     parseId(userId);
@@ -157,6 +163,9 @@ export const getUserOrderServices = async (req: any) => {
     const orderId = parseId(req.params.orderId);
     await checkUser(userId);
     const order = await checkOrder(orderId);
+    if (req.user.role === "CLIENT" && order.userId !== userId) {
+      throw new Error("You are not allowed to view this order");
+    }
     return order;
   } catch (error: any) {
     logger.error(`[getUserOrderServices error] : ${error.message}`);
@@ -217,21 +226,36 @@ export const createStepOrderServices = async (req: any) => {
     const orderId = parseId(req.params.orderId);
     const user = await checkUser(userId);
     const order = await checkOrder(orderId);
+    if (order.status === "COMPLETED") {
+      throw new Error(
+        "Order is already completed. No more steps can be added."
+      );
+    }
     const lastStep = await prisma.orderTracking.findFirst({
       where: { orderId },
       orderBy: { stepOrder: "desc" },
+      include: { actor: true },
     });
     const nextStepOrder = lastStep ? lastStep.stepOrder + 1 : 1;
 
     const { process, note } = req.body;
+    const activeStep = await prisma.orderTracking.findFirst({
+      where: { orderId, status: "IN_PROGRESS" },
+    });
+    if (activeStep)
+      throw new Error("You must complete the current step first.");
+    if (nextStepOrder > ORDER_STEPS.length) {
+      throw new Error("All steps for this order are already created.");
+    }
 
+    const processName = process || ORDER_STEPS[nextStepOrder - 1];
     const orderStep = await prisma.orderTracking.create({
       data: {
         orderId: orderId,
         actorId: userId,
         status: "IN_PROGRESS",
         stepOrder: nextStepOrder,
-        process: process || `Step ${nextStepOrder}`,
+        process: processName,
         startDate: new Date(),
         note: note || null,
       },
@@ -245,4 +269,56 @@ export const createStepOrderServices = async (req: any) => {
     logger.error(`[createStepOrderServices  error] : ${error.message}`);
     throw error;
   }
+};
+export const getAllStepOrderServices = async (req: any) => {
+  try {
+    const userId = parseId(req.user?.id);
+    const orderId = parseId(req.params.orderId);
+    const user = await checkUser(userId);
+    const order = await checkOrder(orderId);
+    const orderSteps = await prisma.orderTracking.findMany({
+      where: { orderId },
+      orderBy: { stepOrder: "asc" },
+      include: { actor: true },
+    });
+    orderSteps.forEach((step) => {
+      console.log(
+        `Step ${step.stepOrder}: ${step.process} by ${step.actor.fullName}`
+      );
+    });
+    return orderSteps;
+  } catch (error: any) {
+    logger.error(`[getAllStepOrder  error] : ${error.message}`);
+    throw error;
+  }
+};
+
+export const completeStepOrderServices = async (orderTrackingId: number) => {
+  const totalSteps = ORDER_STEPS.length;
+  const step = await prisma.orderTracking.findUnique({
+    where: { id: orderTrackingId },
+  });
+  if (!step) throw new Error("Step not found");
+  if (step.status === "COMPLETED") {
+    throw new Error("Step already completed.");
+  }
+  const stepUpdated = await prisma.orderTracking.update({
+    where: { id: orderTrackingId },
+    data: {
+      status: "COMPLETED",
+      endDate: new Date(),
+    },
+  });
+  const completedSteps = await prisma.orderTracking.count({
+    where: { orderId: stepUpdated.orderId, status: "COMPLETED" },
+  });
+
+  if (completedSteps === totalSteps) {
+    await prisma.order.update({
+      where: { id: stepUpdated.orderId },
+      data: { status: "COMPLETED" },
+    });
+  }
+
+  return stepUpdated;
 };

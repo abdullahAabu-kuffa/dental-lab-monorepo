@@ -6,6 +6,13 @@
 import { error } from "console";
 import { prisma } from "../lib/prisma";
 import logger from "../utils/logger.util";
+import { checkUser } from "../utils/helper/checkUser";
+interface UpdateUserProfileDto {
+  fullName?: string;
+  phoneNumber?: string;
+  clinicName?: string;
+  clinicAddress?: string;
+}
 
 // export const getAllUsersService = async (req: any) => {
 //   try {
@@ -109,10 +116,9 @@ export const getAllUsersService = async (req: any) => {
 
 export const approveUserService = async (userId: number) => {
   try {
-
     const updatedUser = await prisma.user.update({
-      where: {  id: userId  },
-      data: {isVerified:true,isActive:true},
+      where: { id: userId },
+      data: { isVerified: true, isActive: true },
     });
     return updatedUser;
   } catch (error: any) {
@@ -123,8 +129,8 @@ export const approveUserService = async (userId: number) => {
 export const rejectedUserService = async (userId: number) => {
   try {
     const updatedUser = await prisma.user.update({
-      where: {  id: userId  },
-      data: {isVerified:false,isActive:false},
+      where: { id: userId },
+      data: { isVerified: false, isActive: false },
     });
     return updatedUser;
   } catch (error: any) {
@@ -132,27 +138,51 @@ export const rejectedUserService = async (userId: number) => {
     throw error;
   }
 };
-export const deleteUserServices = async (userId:number)=> {
+export const deleteUserServices = async (userId: number) => {
   try {
     const deleteUser = await prisma.user.delete({
-      where: {  id: userId },
+      where: { id: userId },
     });
     return deleteUser;
   } catch (error: any) {
     logger.error(`[rejectUserService  Error]: ${error.message}`);
     throw error;
   }
-}
-export const getUserDataService = async (id:number)=> {
+};
+export const getUserDataService = async (id: number) => {
   try {
-    
     const user = await prisma.user.findUnique({
-      where: {  id: id },
-      include:{orders:true}
+      where: { id: id },
+      include: { orders: true ,invoices:true},
     });
     return user;
   } catch (error: any) {
     logger.error(`[rejectUserService  Error]: ${error.message}`);
     throw error;
   }
-}
+};
+export const updateUserProfileService = async (
+  id: number,
+  body: UpdateUserProfileDto
+) => {
+  try {
+    const { fullName, phoneNumber, clinicName, clinicAddress } = body;
+    const dataToUpdate: any = {};
+    if (fullName) dataToUpdate.fullName = fullName;
+    if (phoneNumber) dataToUpdate.phoneNumber = phoneNumber;
+    if (clinicName) dataToUpdate.clinicName = clinicName;
+    if (clinicAddress) dataToUpdate.clinicAddress = clinicAddress;
+    if (Object.keys(dataToUpdate).length === 0) {
+      throw new Error("No fields to update");
+    }
+    await checkUser(id);
+    const user = await prisma.user.update({
+      where: { id: id },
+      data: dataToUpdate,
+    });
+    return user;
+  } catch (error: any) {
+    logger.error(`[updateUserProfileService  Error]: ${error.message}`);
+    throw error;
+  }
+};
