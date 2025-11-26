@@ -6,8 +6,15 @@ import { LucideIcon } from 'lucide-react';
 
 export interface Order {
   id: string;
-  patientName: string;
+  patientName?: string;
   orderType: string;
+  options?: {
+    patientName?: string;
+    date?: string;
+    material?: string;
+    notes?: string;
+    [key: string]: unknown;
+  };
   status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
   date: string;
   totalAmount: number;
@@ -15,8 +22,13 @@ export interface Order {
   material: string;
   notes: string;
   attachments?: FileAttachment[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  // Payment information
+  paymentStatus?: 'paid' | 'unpaid';
+  paymentMethod?: string;
+  paymentDate?: Date | string;
+  transactionId?: string;
   // Shipping and tracking information
   lab?: string;
   shippingCarrier?: string;
@@ -251,3 +263,7 @@ export type Colors = import('../../design-system/colors').Colors;
 
 // Lucide icon type
 export type { LucideIcon } from 'lucide-react';
+
+// Re-export from dashboard interfaces
+export type { ApiOrder, PaginatedOrdersResponse } from '../../dashboard/interfaces/orders';
+export type { OrderOptions, SelectedService, User } from '../../dashboard/interfaces/orders';
