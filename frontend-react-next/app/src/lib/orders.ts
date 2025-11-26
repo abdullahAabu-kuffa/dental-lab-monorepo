@@ -1,14 +1,7 @@
 // lib/orders.ts
 "use client";
-import * as React from "react";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  UseMutationOptions,
-} from "@tanstack/react-query";
-import { PaginatedOrdersResponse } from "@/app/dashboard/interfaces/orders";
-import useOrderStore2 from "../store/orders-store";
+import { useQuery, useMutation, useQueryClient, UseMutationOptions } from "@tanstack/react-query";
+import { PaginatedOrdersResponse, ApiOrder } from "@/app/dashboard/interfaces/orders";
 async function fetchOrders(page = 1) {
   const res = await fetch(`http://localhost:3001/api/orders?page=${page}`, {
     credentials: "include",
@@ -21,7 +14,7 @@ async function fetchOrders(page = 1) {
 }
 
 export function useOrders(page = 1) {
-  return useQuery<PaginatedOrdersResponse, Error>({
+  return useQuery<ApiOrder[], Error>({
     queryKey: ["orders", page],
     queryFn: async() => {
       const res = await fetchOrders(page);

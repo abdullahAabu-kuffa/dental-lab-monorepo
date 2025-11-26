@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Event } from '../../../types/components';
+import { Event } from '../../../types';
 import Button from '../Button/Button';
 
 interface EventCardProps {
