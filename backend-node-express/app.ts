@@ -2,6 +2,7 @@
 // Responsibility: Configure middleware, routes, error handling
 
 import express from "express";
+// import "./src/jobs/createMonthlyInvoices";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import compression from "compression";
@@ -16,6 +17,7 @@ import notificationTestRoutes from "./src/routes/notification-test.routes";
 import fileRoutes from "./src/routes/file.routes";
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
+import { captureUserAgent } from "./src/middlewares/captureUserAgent";
 
 const app = express();
 app.use(morgan("dev"));
@@ -48,6 +50,9 @@ const shouldCompress = (req: express.Request, res: express.Response) => {
 };
 
 app.use(compression({ filter: shouldCompress }));
+
+app.use(captureUserAgent);
+
 
 // TODO: Health check endpoint
 

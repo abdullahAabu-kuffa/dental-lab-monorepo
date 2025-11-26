@@ -41,6 +41,9 @@ export async function refreshAccessToken() {
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+                clientType: 'web',
+            }),
             credentials: "include"
         });
 

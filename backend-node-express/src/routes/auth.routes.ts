@@ -74,10 +74,25 @@ router.post("/register", validate(registerSchema), register);
 
 /**
  * @swagger
- * /api/auth/login:
+ * /auth/login:
  *   post:
- *     summary: Login a user
+ *     summary: User Login (Web & Mobile)
  *     tags: [Auth]
+ *     description: |
+ *       Authenticate user with email and password.
+ *       
+ *       **Token Delivery (based on clientType):**
+ *       - **Web** (clientType: 'web'): Tokens sent as httpOnly cookies
+ *         - Response: 201 with empty data
+ *         - Cookies: accessToken, refreshToken
+ *       - **Mobile** (clientType: 'mobile'): Tokens in response body
+ *         - Response: 201 with accessToken and refreshToken
+ *         - No cookies set
+ *       
+ *       **Device Binding:**
+ *       - User-Agent header is captured and stored in session
+ *       - Subsequent requests must use same User-Agent
+ *       - Token is bound to clientType (web ≠ mobile)
  *     requestBody:
  *       required: true
  *       content:
@@ -87,6 +102,7 @@ router.post("/register", validate(registerSchema), register);
  *             required:
  *               - email
  *               - password
+ *               - clientType
  *             properties:
  *               email:
  *                 type: string
@@ -96,15 +112,33 @@ router.post("/register", validate(registerSchema), register);
  *                 type: string
  *                 format: password
  *                 example: Test1234
+ *               clientType:
+ *                 type: string
+ *                 enum: [web, mobile]
+ *                 example: web
+ *                 description: Client type determines token delivery method
+ *           examples:
+ *             web:
+ *               summary: Web Client Login
+ *               value:
+ *                 email: ahmed@clinic.com
+ *                 password: Test1234
+ *                 clientType: web
+ *             mobile:
+ *               summary: Mobile Client Login
+ *               value:
+ *                 email: ahmed@clinic.com
+ *                 password: Test1234
+ *                 clientType: mobile
  *     responses:
- *       200:
+ *       201:
  *         description: Login successful
  *         headers:
  *           Set-Cookie:
  *             schema:
  *               type: string
- *               example: refreshToken=eyJhbGciOiJI...; HttpOnly; Secure; SameSite=Strict
- *             description: HttpOnly refresh token cookie
+ *               example: accessToken=eyJhbGciOiJI...; HttpOnly; Secure; SameSite=Strict
+ *             description: Web clients only - httpOnly cookies for tokens
  *           X-RateLimit-Limit:
  *             schema:
  *               type: integer
@@ -123,14 +157,53 @@ router.post("/register", validate(registerSchema), register);
  *         content:
  *           application/json:
  *             schema:
+ *               oneOf:
+ *                 - type: object
+ *                   description: Web client response (tokens in cookies)
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Login successful
+ *                     data:
+ *                       type: 'null'
+ *                 - type: object
+ *                   description: Mobile client response (tokens in body)
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Login successful
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         user:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: integer
+ *                               example: 1
+ *                             email:
+ *                               type: string
+ *                               example: ahmed@clinic.com
+ *                             name:
+ *                               type: string
+ *                               example: Ahmed Hassan
+ *                         accessToken:
+ *                           type: string
+ *                           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                           description: JWT access token (15 min expiry)
+ *                         refreshToken:
+ *                           type: string
+ *                           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                           description: JWT refresh token (7 days expiry)
+ *       400:
+ *         description: Bad request / Validation error
+ *         content:
+ *           application/json:
+ *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Login successful
- *                 accessToken:
- *                       type: string
- *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
  *         description: Invalid credentials, email not verified, or account inactive
  *         content:
@@ -138,25 +211,19 @@ router.post("/register", validate(registerSchema), register);
  *             schema:
  *               type: object
  *               properties:
- *                 status:
- *                   type: string
- *                   example: error
  *                 message:
  *                   type: string
- *                   example: Invalid email or password
- *                 statusCode:
- *                   type: integer
- *                   example: 401
+ *                   example: Invalid credentials
  *       403:
- *         description: Account inactive
+ *         description: Account inactive or email not verified
  *       429:
- *         description: Too many login attempts
+ *         description: Too many login attempts (rate limited)
  *         headers:
  *           Retry-After:
  *             schema:
  *               type: integer
  *               example: 900
- *             description: Number of seconds to wait before retrying
+ *             description: Seconds to wait before retrying
  *           X-RateLimit-Limit:
  *             schema:
  *               type: integer
@@ -169,20 +236,6 @@ router.post("/register", validate(registerSchema), register);
  *             schema:
  *               type: string
  *               format: date-time
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: error
- *                 message:
- *                   type: string
- *                   example: Too many failed login attempts. Please try again in 15 minutes.
- *                 statusCode:
- *                   type: integer
- *                   example: 429
  *       500:
  *         description: Internal server error
  */
@@ -190,10 +243,28 @@ router.post("/login",throttleLogin, validate(loginSchema), login);
 
 /**
  * @swagger
- * /api/auth/refreshToken:
+ * /auth/refreshToken:
  *   post:
- *     summary: Refresh access token using HttpOnly refresh token
+ *     summary: Refresh Access Token (Web & Mobile)
  *     tags: [Auth]
+ *     description: |
+ *       Refresh expired access token using refresh token.
+ *       
+ *       **Token Handling (based on how token is sent):**
+ *       - **Web Client**: 
+ *         - Sends: Refresh token in httpOnly cookie (automatically sent by browser)
+ *         - Receives: New tokens in httpOnly cookies
+ *       - **Mobile Client**:
+ *         - Sends: Refresh token in Authorization header (Bearer token)
+ *         - Receives: New tokens in response body
+ *       
+ *       **Device Binding:**
+ *       - clientType of session must match how token is sent
+ *       - User-Agent must match original login
+ *       - Request will fail if device changed (clientType mismatch)
+ *     security:
+ *       - cookieAuth: []
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Token refreshed successfully
@@ -201,17 +272,57 @@ router.post("/login",throttleLogin, validate(loginSchema), login);
  *           Set-Cookie:
  *             schema:
  *               type: string
- *               example: refreshToken=eyJhbGciOiJI...
- *             description: New HttpOnly refresh token
+ *               example: accessToken=eyJhbGciOiJI...; HttpOnly; Secure; SameSite=Strict
+ *             description: Web clients only - New httpOnly cookies with refreshed tokens
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - type: object
+ *                   description: Web client response (tokens in cookies)
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Token refreshed successfully
+ *                     data:
+ *                       type: 'null'
+ *                 - type: object
+ *                   description: Mobile client response (tokens in body)
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Token refreshed successfully
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         accessToken:
+ *                           type: string
+ *                           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                           description: New JWT access token (15 min expiry)
+ *                         refreshToken:
+ *                           type: string
+ *                           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                           description: New JWT refresh token (7 days expiry)
+ *       401:
+ *         description: Unauthorized - Invalid/expired refresh token or clientType mismatch
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                 message:
  *                   type: string
+ *                   example: Invalid device type
  *       403:
- *         description: Invalid, tampered, expired, or missing refresh token
+ *         description: Forbidden - Refresh token expired, tampered, or session not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Refresh token expired
  *       500:
  *         description: Internal server error
  */
@@ -221,8 +332,21 @@ router.post("/refreshToken", refreshToken);
  * @swagger
  * /api/auth/logout:
  *   post:
- *     summary: Logout user and clear refresh token
+ *     summary: User Logout (Web & Mobile)
  *     tags: [Auth]
+ *     description: |
+ *       Logout user and invalidate session.
+ *       
+ *       **Token Handling:**
+ *       - **Web Client**: 
+ *         - Sends: Refresh token in httpOnly cookie (automatically sent)
+ *         - Action: Clears cookies and removes session from database
+ *       - **Mobile Client**:
+ *         - Sends: Refresh token in Authorization header (Bearer token)
+ *         - Action: Removes session from database
+ *     security:
+ *       - cookieAuth: []
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Logout successful
@@ -230,10 +354,26 @@ router.post("/refreshToken", refreshToken);
  *           Set-Cookie:
  *             schema:
  *               type: string
- *               example: refreshToken=; Max-Age=0
- *             description: Clears the refresh token cookie
+ *               example: accessToken=; Max-Age=0; HttpOnly; Secure; SameSite=Strict
+ *             description: Web clients only - Clears all authentication cookies
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logout successful
  *       401:
- *         description: User not logged in / no refresh token
+ *         description: Unauthorized - User not logged in or no refresh token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: You are not logged in
  *       500:
  *         description: Internal server error
  */

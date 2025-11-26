@@ -41,29 +41,51 @@ export async function register(req: Request, res: Response) {
  */
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-    logger.info(`Login request received: ${req.body}`);
+    const { email, password, clientType } = req.body;
+    logger.info(`Login request received: ${JSON.stringify(req.body)}`);
+    const userAgent = req.userAgent || 'unknown';
 
-    const userData = await loginUser(email, password);
-    res.cookie("refreshToken", userData.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    res.cookie("accessToken", userData.accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
-    });
+    const userData = await loginUser(email, password, userAgent, clientType);
+    //WEB set httpOnly cookies
+    if (clientType === "web") {
+      res.cookie("refreshToken", userData.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.cookie("accessToken", userData.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
 
-    res.status(201).json(
-      successResponse(
-        // { accessToken: userData.accessToken },
-        "Login successful"
-      )
-    );
+      res.status(201).json(
+        successResponse(
+          // { accessToken: userData.accessToken },
+          "Login successful"
+        )
+      );
+    }
+    // MOBILE: Return tokens in response body
+    else if (clientType === "mobile") {
+      return res.status(201).json(
+        successResponse({
+          user: {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            role: userData.role,
+          },
+          accessToken: userData.accessToken,
+          refreshToken: userData.refreshToken,
+        })
+      );
+    } else {
+      //finally if not either web or mobile return 401
+      return res.status(401).json(errorResponse("Invalid request", 401));
+    }
   } catch (err: any) {
     res.status(401).json(errorResponse(err.message, 401));
   }
@@ -74,38 +96,67 @@ export const login = async (req: Request, res: Response) => {
 
 export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const { refreshToken: tokenFromCookie } = req.cookies;
-    console.log("recieved token", tokenFromCookie);
-    const { newAccessToken, newRefreshToken } =
-      await refreshTokenService(tokenFromCookie);
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    res.cookie("accessToken", newAccessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
-    });
-        console.log("[Express] Set-Cookie headers:", res.getHeader('Set-Cookie'));
+    const userAgent = req.userAgent || 'unknown';
 
-    return res
-      .status(200)
-      .json(successResponse("Token refreshed successfully"));
+    //  Check where token came from
+    const hasCookies = !!req.cookies.refreshToken;
+    const hasBearer = req.headers.authorization?.startsWith("Bearer ");
+
+    // WEB: Has cookies, no bearer
+    if (hasCookies && !hasBearer) {
+      const { newAccessToken, newRefreshToken } = await refreshTokenService(
+        req.cookies.refreshToken,
+        "web",
+        userAgent
+      );
+
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
+      console.log("[Express] Set-Cookie headers:", res.getHeader("Set-Cookie"));
+
+      return res
+        .status(200)
+        .json(successResponse("Token refreshed successfully"));
+    }
+
+    // MOBILE: No cookies, has bearer
+    else if (!hasCookies && hasBearer) {
+      const token = req.headers.authorization!.substring(7);
+      const { newAccessToken, newRefreshToken } = await refreshTokenService(
+        token,
+        "mobile",
+        userAgent
+      );
+
+      return res.status(200).json(
+        successResponse({
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        })
+      );
+    } else {
+      // Invalid request
+      return res.status(401).json(errorResponse("Invalid request", 401));
+    }
   } catch (err: any) {
     logger.error(`Refresh token error: ${err.message}`);
 
-    // JWT token tampered or invalid
     if (err.name === "JsonWebTokenError") {
       return res
         .status(403)
         .json(errorResponse("Invalid or tampered refresh token", 403));
     }
 
-    // Missing or invalid refresh token
     if (
       err.message === "No Refresh Token" ||
       err.message === "Invalid or tampered refresh token"
@@ -113,12 +164,10 @@ export const refreshToken = async (req: Request, res: Response) => {
       return res.status(403).json(errorResponse(err.message, 403));
     }
 
-    // Token expired
     if (err.message === "Refresh token expired") {
       return res.status(403).json(errorResponse(err.message, 403));
     }
 
-    // Account-related issues
     if (
       err.message === "Account disabled or deleted" ||
       err.message === "Please verify your email before login."
@@ -126,7 +175,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       return res.status(403).json(errorResponse(err.message, 403));
     }
 
-    // Default / fallback error
     return res
       .status(500)
       .json(errorResponse("Internal server error", 500, err));
@@ -138,11 +186,22 @@ export const refreshToken = async (req: Request, res: Response) => {
  */
 export const logout = async (req: Request, res: Response) => {
   try {
-    const { refreshToken } = req.cookies;
+    //  Support both cookie and bearer token
+    let refreshToken = req.cookies.refreshToken;
+
     if (!refreshToken) {
-      return res.status(401).json({ message: "Your Are Not Login" });
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith("Bearer ")) {
+        refreshToken = authHeader.substring(7);
+      }
     }
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "You are not logged in" });
+    }
+
     await prisma.session.deleteMany({ where: { refreshToken } });
+
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -153,14 +212,16 @@ export const logout = async (req: Request, res: Response) => {
       secure: true,
       sameSite: "strict",
     });
+
     return res.status(200).json({ message: "Logout successful" });
   } catch (err: any) {
-    logger.error(`Refresh token error: ${err.message}`);
+    logger.error(`Logout error: ${err.message}`);
     return res
       .status(500)
       .json(errorResponse("Internal server error", 500, err));
   }
 };
+
 /**
  * Handle user forgot password
  */
@@ -197,7 +258,7 @@ export const resetPassword = async (
   try {
     //extract token query param token
     const token = req.query.token as string;
-    const {  newPassword } = req.body;
+    const { newPassword } = req.body;
     const result = await resetPasswordService(token, newPassword);
     return res
       .status(200)

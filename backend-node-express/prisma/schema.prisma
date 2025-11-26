@@ -51,6 +51,8 @@ model Session {
   devices      Json     @default("[]")
   createdAt    DateTime @default(now())
   expiresAt    DateTime
+  clientType    String    @default("web")
+  userAgent     String?
 }
 
 model Security_Token {
@@ -125,6 +127,7 @@ model Invoice {
   client     User          @relation(fields: [clientId], references: [id])
   orders     Order[]       @relation("InvoiceOrders")
   totalPrice Int
+  isSummary  Boolean       @default(false)
   status     PaymentStatus @default(PENDING)
   dueDate    DateTime
   paidAt     DateTime?
