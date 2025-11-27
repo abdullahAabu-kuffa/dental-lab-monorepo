@@ -14,6 +14,7 @@ import {
   Crown,
   FileText,
 } from "../../utils/UnifiedIcons";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 // ORDERS DATA
 export enum ProcessStatus {
@@ -39,6 +40,10 @@ export const SAMPLE_ORDERS: Order[] = [
     lab: "Precision Dental Labs",
     shippingCarrier: "FedEx",
     trackingNumber: "FX123456789EG",
+    paymentStatus: "paid",
+    paymentMethod: "Credit Card",
+    paymentDate: new Date("2024-01-15T09:15:00Z"),
+    transactionId: "TXN123456789",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-15" },
       digitalDesign: { completed: true, completedAt: "2024-01-16" },
@@ -62,6 +67,8 @@ export const SAMPLE_ORDERS: Order[] = [
     lab: "Elite Dental Solutions",
     shippingCarrier: "DHL",
     trackingNumber: "DH987654321EG",
+    paymentStatus: "unpaid",
+    paymentMethod: "Bank Transfer",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-16" },
       digitalDesign: { completed: true, completedAt: "2024-01-18" },
@@ -85,6 +92,10 @@ export const SAMPLE_ORDERS: Order[] = [
     lab: "Advanced Dental Arts",
     shippingCarrier: "UPS",
     trackingNumber: "1Z999AA10123456784",
+    paymentStatus: "paid",
+    paymentMethod: "Cash",
+    paymentDate: new Date("2024-01-17T11:45:00Z"),
+    transactionId: "TXN987654321",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-17" },
       digitalDesign: { completed: true, completedAt: "2024-01-19" },
@@ -108,6 +119,10 @@ export const SAMPLE_ORDERS: Order[] = [
     lab: "Precision Dental Labs",
     shippingCarrier: "Aramex",
     trackingNumber: "AR1234567890",
+    paymentStatus: "paid",
+    paymentMethod: "Credit Card",
+    paymentDate: new Date("2024-01-18T13:15:00Z"),
+    transactionId: "TXN456789123",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-18" },
       digitalDesign: { completed: true, completedAt: "2024-01-20" },
@@ -129,6 +144,7 @@ export const SAMPLE_ORDERS: Order[] = [
     createdAt: new Date("2024-01-19T14:30:00Z"),
     updatedAt: new Date("2024-01-21T16:00:00Z"),
     lab: "Elite Dental Solutions",
+    paymentStatus: "unpaid",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-19" },
       digitalDesign: { completed: true, completedAt: "2024-01-21" },
@@ -152,6 +168,10 @@ export const SAMPLE_ORDERS: Order[] = [
     lab: "Advanced Dental Arts",
     shippingCarrier: "FedEx",
     trackingNumber: "FX987654321EG",
+    paymentStatus: "paid",
+    paymentMethod: "Bank Transfer",
+    paymentDate: new Date("2024-01-20T09:00:00Z"),
+    transactionId: "TXN789123456",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-20" },
       digitalDesign: { completed: true, completedAt: "2024-01-21" },
@@ -173,6 +193,7 @@ export const SAMPLE_ORDERS: Order[] = [
     createdAt: new Date("2024-01-21T11:00:00Z"),
     updatedAt: new Date("2024-01-21T11:00:00Z"),
     lab: "Precision Dental Labs",
+    paymentStatus: "unpaid",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-21" },
       digitalDesign: { completed: false, completedAt: "Pending" },
@@ -194,6 +215,8 @@ export const SAMPLE_ORDERS: Order[] = [
     createdAt: new Date("2024-01-22T14:30:00Z"),
     updatedAt: new Date("2024-01-22T14:30:00Z"),
     lab: "Elite Dental Solutions",
+    paymentStatus: "unpaid",
+    paymentMethod: "Credit Card",
     stages: {
       orderPlaced: { completed: true, completedAt: "2024-01-22" },
       digitalDesign: { completed: false, completedAt: "In Queue" },
@@ -300,60 +323,107 @@ export const filterOrdersByStatus = (
 };
 
 // Get detailed stage information for an order
+// export const getOrderStages = (order: Order) => {
+//   const stages = [
+//     {
+//       key: "orderPlaced",
+//       label: "Order Placed",
+//       icon: Package,
+//       status: order?.status === "PENDING" ,
+//       date: order.stages?.orderPlaced?.completedAt || "---",
+//     },
+//     {
+//       key: "digitalDesign",
+//       label: "Digital Design & Planning",
+//       icon: Eye,
+//       status: order.stages?.digitalDesign?.completed
+//         ? "completed"
+//         : order.stages?.orderPlaced?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.digitalDesign?.completedAt || "---",
+//     },
+//     {
+//       key: "manufacturing",
+//       label: "Manufacturing & Fabrication",
+//       icon: Settings,
+//       status: order.stages?.manufacturing?.completed
+//         ? "completed"
+//         : order.stages?.digitalDesign?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.manufacturing?.completedAt || "---",
+//     },
+//     {
+//       key: "qualityControl",
+//       label: "Quality Control & Inspection",
+//       icon: Microscope,
+//       status: order.stages?.qualityControl?.completed
+//         ? "completed"
+//         : order.stages?.manufacturing?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.qualityControl?.completedAt || "---",
+//     },
+//     {
+//       key: "shipped",
+//       label: "Packaged & Shipped",
+//       icon: Truck,
+//       status: order.stages?.shipped?.completed
+//         ? "completed"
+//         : order.stages?.qualityControl?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.shipped?.completedAt || "---",
+//     },
+//   ];
+
+//   return stages;
+// };
+
 export const getOrderStages = (order: Order) => {
-  const stages = [
-    {
-      key: "orderPlaced",
-      label: "Order Placed",
-      icon: Package,
-      status: order.stages?.orderPlaced?.completed ? "completed" : "pending",
-      date: order.stages?.orderPlaced?.completedAt || "---",
-    },
-    {
-      key: "digitalDesign",
-      label: "Digital Design & Planning",
-      icon: Eye,
-      status: order.stages?.digitalDesign?.completed
-        ? "completed"
-        : order.stages?.orderPlaced?.completed
+  const rawStatus = order.status;
+  const status = order.status;
+
+const stages = [
+  {
+    key: "orderPlaced",
+    label: "Order Placed",
+    icon: Package,
+    status: "completed",
+    date: order.createdAt,
+  },
+  {
+    key: "inProgress",
+    label: "In Progress",
+    icon: Settings,
+    status:
+      status === "IN_PROGRESS"
         ? "active"
-        : "pending",
-      date: order.stages?.digitalDesign?.completedAt || "---",
-    },
-    {
-      key: "manufacturing",
-      label: "Manufacturing & Fabrication",
-      icon: Settings,
-      status: order.stages?.manufacturing?.completed
+        : status === "COMPLETED"
         ? "completed"
-        : order.stages?.digitalDesign?.completed
-        ? "active"
         : "pending",
-      date: order.stages?.manufacturing?.completedAt || "---",
-    },
-    {
-      key: "qualityControl",
-      label: "Quality Control & Inspection",
-      icon: Microscope,
-      status: order.stages?.qualityControl?.completed
-        ? "completed"
-        : order.stages?.manufacturing?.completed
-        ? "active"
-        : "pending",
-      date: order.stages?.qualityControl?.completedAt || "---",
-    },
-    {
-      key: "shipped",
-      label: "Packaged & Shipped",
-      icon: Truck,
-      status: order.stages?.shipped?.completed
-        ? "completed"
-        : order.stages?.qualityControl?.completed
-        ? "active"
-        : "pending",
-      date: order.stages?.shipped?.completedAt || "---",
-    },
-  ];
+    date:
+      status === "IN_PROGRESS" || status === "COMPLETED"
+        ? order.updatedAt
+        : "---",
+  },
+  {
+    key: "finished",
+    label: "Finished",
+    icon: CheckCircle2,
+    status: status === "COMPLETED" ? "completed" : "pending",
+    date: status === "COMPLETED" ? order.updatedAt : "---",
+  },
+  {
+    key: "canceled",
+    label: "Canceled",
+    icon: XCircle,
+    status: status === "CANCELLED" ? "active" : "pending",
+    date: status === "CANCELLED" ? order.updatedAt : "---",
+  },
+];
+
 
   return stages;
 };

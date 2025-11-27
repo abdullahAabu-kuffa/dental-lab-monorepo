@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
@@ -7,12 +6,8 @@ import OrderForm from "../components/FormComponent/OrderForm";
 import PaymentSummary from "../components/FormComponent/PaymentSummary";
 import { useNavigation, animations } from "../../../src/utils/pageUtils";
 import { calculateSelectedServices } from "../../../src/utils/pricingService";
-import { useCreateOrder } from "./quere";
-import { logoutRequest } from "@/app/src/services/auth";
-import { apiFetch } from "@/app/src/lib/apiClient";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { getAccessToken } from "@/app/src/auth/tokenStore";
 import { useOrderStore } from "@/app/src/store/createOrderStore";
 import { useAuth } from "@/app/src/hooks/useAuth";
 
@@ -23,44 +18,42 @@ export default function NewOrderPage() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   // const [formData, setFormData] = useState<Record<string, unknown>>({});
   const router = useRouter();
-  const [meData, setMeData] = useState<{ isActive: boolean } | null>(null);
-  const [loading, setLoading] = useState(true);
   const { user, loading: userLoading } = useAuth();
+  const userData = user?.data.user;
   const handleFormDataChange = (newFormData: Record<string, unknown>) => {
     setFormData(newFormData);
   };
 
-  const handlePayNow = async () => {
-    setIsProcessingPayment(true);
 
+	const handlePayNow = async () => {
+		setIsProcessingPayment(true);
     try {
-      const { selectedServices, totalAmount } =
-        calculateSelectedServices(formData);
+      const { totalAmount } = calculateSelectedServices(formData);
+			// Create order data
+			const orderData = {
+				...formData,
+				paymentStatus: "paid",
+				paymentAmount: totalAmount,
+				paymentDate: new Date().toISOString(),
+			};
 
-      // Create order data
-      const orderData = {
-        ...formData,
-        paymentStatus: "paid",
-        paymentAmount: totalAmount,
-        paymentDate: new Date().toISOString(),
-      };
+			console.log("Processing payment:", orderData);
 
-      console.log("Processing payment:", orderData);
+			// Simulate payment processing
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Simulate payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+			// Navigate to upload page after successful payment
+			navigateToUpload();
+		} catch (err) {
+			console.error("Payment Error:", err);
+		} finally {
+			setIsProcessingPayment(false);
+		}
+	};
 
-      // Navigate to upload page after successful payment
-      navigateToUpload();
-    } catch (err) {
-      console.error("Payment Error:", err);
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
 
   useEffect(() => {
-    if (!userLoading && user && !user.isActive) {
+    if (!userLoading && userData && !userData.isActive) {
       Swal.fire({
         icon: "info",
         title: "Account Not Active",
@@ -72,8 +65,9 @@ export default function NewOrderPage() {
         router.replace("/");
       });
     }
-  }, [user, userLoading, router]);
+  }, [userData, userLoading, router]);
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
@@ -89,32 +83,32 @@ export default function NewOrderPage() {
           </p>
         </motion.div>
 
-        <div className="flex gap-6">
-          {/* Form */}
-          <div className="flex-1 min-w-0">
-            <OrderForm
-              onSubmit={() => {}}
-              isSubmitting={isSubmitting}
-              onFormDataChange={handleFormDataChange}
-              onContinueToUpload={() => navigateToUpload()}
-            />
-          </div>
+				<div className="flex gap-6">
+					{/* Form */}
+					<div className="flex-1 min-w-0">
+						<OrderForm
+							onSubmit={() => {}}
+							isSubmitting={isSubmitting}
+							onFormDataChange={handleFormDataChange}
+							onContinueToUpload={() => navigateToUpload()}
+						/>
+					</div>
 
-          {/* Payment Summary */}
-          <div className="w-80 sm:w-96 flex-shrink-0">
-            <PaymentSummary
-              title="Order Summary"
-              subtitle="Selected services"
-              icon={<ShoppingCart className="w-5 h-5 text-white" />}
-              selectedItems={selectedServices}
-              totalAmount={totalAmount}
-              buttonLabel="Pay Now"
-              onAction={handlePayNow}
-              disabled={isProcessingPayment}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+					{/* Payment Summary */}
+					<div className="w-80 sm:w-96 flex-shrink-0">
+						<PaymentSummary
+							title="Order Summary"
+							subtitle="Selected services"
+							icon={<ShoppingCart className="w-5 h-5 text-white" />}
+							selectedItems={selectedServices}
+							totalAmount={totalAmount}
+							buttonLabel="Pay Now"
+							onAction={handlePayNow}
+							disabled={isProcessingPayment}
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }

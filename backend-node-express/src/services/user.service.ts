@@ -153,7 +153,7 @@ export const getUserDataService = async (id: number) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: id },
-      include: { orders: true ,invoices:true},
+      include: {invoices:true},
     });
     return user;
   } catch (error: any) {

@@ -1,14 +1,15 @@
 // lib/orders.ts
 "use client";
-import * as React from "react";
 import {
   useQuery,
   useMutation,
   useQueryClient,
   UseMutationOptions,
 } from "@tanstack/react-query";
-import { PaginatedOrdersResponse } from "@/app/dashboard/interfaces/orders";
-import useOrderStore2 from "../store/orders-store";
+import {
+  PaginatedOrdersResponse,
+  ApiOrder,
+} from "@/app/dashboard/interfaces/orders";
 async function fetchOrders(page = 1) {
   const res = await fetch(`http://localhost:3001/api/orders?page=${page}`, {
     credentials: "include",
@@ -21,14 +22,14 @@ async function fetchOrders(page = 1) {
 }
 
 export function useOrders(page = 1) {
-  return useQuery<PaginatedOrdersResponse, Error>({
+  return useQuery<ApiOrder[], Error>({
     queryKey: ["orders", page],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await fetchOrders(page);
       return res.data?.orders ?? [];
     },
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: true,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -81,6 +82,9 @@ export async function uploadFile(file: File) {
   const data = await res.json();
   return data;
 }
+
+
+
 export function useUploadFile(
   options?: UseMutationOptions<any, unknown, File>
 ) {

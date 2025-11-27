@@ -220,10 +220,11 @@ router.get(
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
       res.setHeader('X-Accel-Buffering', 'no');
-      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader("Access-Control-Allow-Credentials", "true"); //Allow cred
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');//Allow local origin 
       res.flushHeaders?.();
 
-res.write(`event: connected\ndata: Connected to notifications stream\n\n`);
+      res.write(`event: connected\ndata: Connected to notifications stream\n\n`);
 
       const unsubscribe = subscribeToNotifications(userId, (notification) => {
         res.write(`event: notification\n`);
@@ -317,7 +318,7 @@ router.get(
       res.write(`event: connected\ndata: Connected to admin notifications stream\n\n`);
 
       // Subscribe to admin broadcast channel
-      
+
       const unsubscribe = subscribeToAdminNotifications((notification) => {
         res.write(`event: admin_notification\n`);
         res.write(`data: ${JSON.stringify(notification)}\n\n`);
