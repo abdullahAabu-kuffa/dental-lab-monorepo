@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Bell } from "lucide-react";
+import NotificationBadge from "../../atoms/NotificationBadge";
 
 interface NotificationBellProps {
 	unreadCount: number;
@@ -12,33 +13,20 @@ export default function NotificationBell({
 }: NotificationBellProps) {
 	return (
 		<button
+			type="button"
 			onClick={onClick}
 			aria-label="Notifications"
-			style={{
-				position: "relative",
-				background: "transparent",
-				border: "none",
-				cursor: "pointer",
-			}}
+			className={[
+				"relative flex h-9 w-9 items-center justify-center rounded-full",
+				"border border-[#E4B441]/70 bg-[#1F1F1F]",
+				"text-[#FFD700] shadow-[0_0_8px_rgba(0,0,0,0.35)]",
+				"transition-transform transition-colors duration-150",
+				"hover:scale-105 hover:border-[#FFD700] hover:text-[#FFE78A]",
+				"focus:outline-none focus:ring-2 focus:ring-[#E4B441]/80 focus:ring-offset-2 focus:ring-offset-[#1C1C1C]",
+			].join(" ")}
 		>
-			<Bell size={22} />
-
-			{unreadCount > 0 && (
-				<span
-					style={{
-						position: "absolute",
-						top: "-4px",
-						right: "-4px",
-						background: "red",
-						color: "white",
-						borderRadius: "50%",
-						padding: "2px 6px",
-						fontSize: "20px",
-					}}
-				>
-					{unreadCount}
-				</span>
-			)}
+			<Bell className="h-5 w-5" />
+			<NotificationBadge count={unreadCount} />
 		</button>
 	);
 }

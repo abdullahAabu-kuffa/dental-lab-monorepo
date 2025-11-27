@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiFetch, refreshAccessToken } from "../lib/apiClient";
 import { useEffect, useState } from "react";
 import { SessionPayload } from "../lib/dal/session";
 type UserRole = "CLIENT" | "ADMIN" | "OWNER";
@@ -28,7 +27,6 @@ async function fetchUser(): Promise<User | null> {
   if (!res.ok) return null;
 
   const sessionData: SessionPayload = await res.json();
-  // const apiUser = json?.data?.user;
 
   if (!sessionData) return null;
 

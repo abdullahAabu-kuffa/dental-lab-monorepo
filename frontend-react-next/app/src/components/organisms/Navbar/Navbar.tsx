@@ -7,20 +7,23 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
 import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
+import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
+
+//*************************Auth ***********************
 import { logoutRequest } from "../../../services/auth";
 import { useAuth } from "@/app/src/hooks/useAuth";
-import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
-import { apiFetch } from "@/app/src/lib/apiClient";
-import Swal from "sweetalert2";
-import { getAccessToken } from "@/app/src/auth/tokenStore";
+//*************************Auth ***********************
 
+import Swal from "sweetalert2";
+
+//*************************Notification Part***********************
 import NotificationBell from "../../molecules/notificationBell";
-import NotificationsMenu from "../notifaicationMenu";
+import NotificationsMenu from "../notificationMenu";
+//*************************Notification Part***********************
+
 const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [meData, setMeData] = useState(null);
-
 	const pathname = usePathname();
 	const router = useRouter();
 	const { user, loading, isAuthenticated } = useAuth();
@@ -31,82 +34,59 @@ const Navbar = () => {
 	function toggleMenu() {
 		setOpen((prev) => !prev);
 	}
-
+	// -------------------------------------------------------------------
+	// SCROLL EFFECT
+	// -------------------------------------------------------------------
 	useEffect(() => {
-		console.log("user data from nav", user?.name);
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 20);
 		};
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
-
+	// -------------------------------------------------------------------
+	// Logout
+	// -------------------------------------------------------------------
 	async function handleLogout() {
 		try {
-			console.log("Logging out...");
 			await logoutRequest();
 		} catch (error) {
-			console.warn("Logout failed:", error);
 		} finally {
-			// console.log("Logout successful");
 			router.refresh();
 			window.location.reload();
 		}
 	}
 
-	async function handlCheckActivation() {
-		const res = await apiFetch("/api/users/me", {
-			headers: {
-				Authorization: `Bearer ${getAccessToken()}`,
-			},
-		});
-
-		const data = await res.json();
-		console.log("ME DATA:", data);
-	}
-	useEffect(() => {
-		async function fetchMe() {
-			const token = getAccessToken();
-
-			if (!token) {
-				console.log("Waiting for token...");
-				return;
-			}
-
-			const res = await apiFetch("/api/users/me", {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
-
-			const data = await res.json();
-			setMeData(data?.data?.user);
+	// -------------------------------------------------------------------
+	// Orders Page  Authority
+	// -------------------------------------------------------------------
+	function handleOrdersClick(e: React.MouseEvent<HTMLAnchorElement>) {
+		if (loading) {
+			e.preventDefault();
+			return;
 		}
 
-		fetchMe();
-	}, [user]);
-	console.log(user);
+		if (!isAuthenticated) {
+			return;
+		}
 
-	// function handleOrdersClick(e) {
-	// 	if (meData && !meData.isActive) {
-	// 		e.preventDefault()
+		if (user && !user.isActive) {
+			e.preventDefault();
 
-	// 		Swal.fire({
-	// 			icon: "info",
-	// 			title: "Account Not Active Yet",
-	// 			html: `
-	//       Your account is not yet activated.<br/>
-	//       You won't be able to place orders until activation is complete.<br/>
-	//       Activation usually takes 1-2 business days.
-	//     `,
-	// 			confirmButtonText: "OK",
-	// 			confirmButtonColor: "#d4a431",
-	// 		});
-	// 	}
-	// }
-	function handleOrdersClick() {
-		console.log("the complete  handle error function ned to refactor ");
+			Swal.fire({
+				icon: "info",
+				title: "Account Not Active Yet",
+				html: `
+        Your account is not yet activated.<br/>
+        You won't be able to place orders until activation is complete.<br/>
+        Activation usually takes 1-2 business days.
+        `,
+				confirmButtonText: "OK",
+				confirmButtonColor: "#d4a431",
+			});
+		}
 	}
+
 	return (
 		<>
 			<nav
@@ -165,12 +145,17 @@ const Navbar = () => {
 						{/* notification part */}
 						<div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
 							{user && (
-								<>
+								<div className="relative">
 									<NotificationBell unreadCount={unread} onClick={toggleMenu} />
-									{open && <NotificationsMenu />}
-								</>
+									<NotificationsMenu
+										isOpen={open}
+										onUnreadChange={setUnread}
+										onClose={() => setOpen(false)}
+									/>
+								</div>
 							)}
 						</div>
+
 						{/* Desktop Auth Section */}
 						{!loading && (
 							<div className="hidden md:flex items-center gap-3">
