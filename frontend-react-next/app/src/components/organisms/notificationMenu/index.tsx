@@ -31,6 +31,7 @@ export default function NotificationsMenu({
 	const [items, setItems] = useState<ApiNotification[]>([]);
 	const [loading, setLoading] = useState(true);
 	const menuRef = useRef<HTMLDivElement | null>(null);
+	const eventSourceRef = useRef<EventSource | null>(null);
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
@@ -71,34 +72,50 @@ export default function NotificationsMenu({
 	}, []);
 
 	useEffect(() => {
-		const sseUrl = `${HostIp}/api/notifications/stream`;
+		function connectSSE() {
+			console.log("[SSE] Connecting...");
+			const es = new EventSource(`${HostIp}/api/notifications/stream`, {
+				withCredentials: true,
+			});
 
-		const eventSource = new EventSource(sseUrl, { withCredentials: true });
+			eventSourceRef.current = es;
 
-		eventSource.onmessage = (event) => {
-			try {
-				const newNotification: ApiNotification = JSON.parse(event.data);
+			es.addEventListener("connected", () => {
+				console.log("[SSE] Connected successfully");
+			});
 
-				// Avoid duplicates
-				setItems((prev) => {
-					if (prev.some((n) => n.id === newNotification.id)) return prev;
-					return [newNotification, ...prev];
-				});
-			} catch (err) {
-				console.error("Failed to parse SSE message:", err);
-			}
-		};
+			es.addEventListener("notification", (event: MessageEvent) => {
+				try {
+					const data: ApiNotification = JSON.parse(event.data);
+					setItems((prev) => {
+						if (prev.some((n) => n.id === data.id)) return prev;
+						return [data, ...prev];
+					});
+				} catch (err) {
+					console.error("[SSE] Parse error:", err);
+				}
+			});
 
-		eventSource.onerror = (err) => {
-			console.error("SSE error:", err);
-			eventSource.close();
-		};
+			es.onerror = (err) => {
+				console.error("[SSE] Error:", err);
+
+				es.close();
+				eventSourceRef.current = null;
+
+				console.log("[SSE] Reconnecting in 2 seconds...");
+				setTimeout(connectSSE, 2000);
+			};
+		}
+
+		connectSSE();
 
 		return () => {
-			eventSource.close();
+			if (eventSourceRef.current) {
+				eventSourceRef.current.close();
+				eventSourceRef.current = null;
+			}
 		};
 	}, []);
-
 	useEffect(() => {
 		const unread = items.filter((n) => !n.isRead).length;
 		onUnreadChange?.(unread);

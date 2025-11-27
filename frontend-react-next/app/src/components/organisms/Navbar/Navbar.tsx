@@ -115,7 +115,7 @@ const Navbar = () => {
 										key={index}
 										href={link.href}
 										onClick={
-											link.name === "Orders" ? handleOrdersClick : undefined
+											link.name == "Orders" ? handleOrdersClick : undefined
 										}
 										className={`font-semibold text-base transition-all duration-200 relative group ${
 											isActive

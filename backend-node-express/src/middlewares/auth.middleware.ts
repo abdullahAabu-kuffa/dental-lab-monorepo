@@ -22,7 +22,7 @@ export async function verifyAccessToken(
   next: NextFunction
 ) {
   try {
-        const userAgent = req.headers['user-agent'] || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
     let token: string;
     let clientType: 'web' | 'mobile';
 
@@ -68,13 +68,20 @@ export async function verifyAccessToken(
       return res.status(401).json(errorResponse("Invalid device type", 401));
     }
 
-    //  NEW: Verify userAgent matches
-    if (session.userAgent !== userAgent) {
-      logger.warn(
-        `[SECURITY] UserAgent mismatch for ${decoded.email}: stored=${session.userAgent}, current=${userAgent}`
-      );
-      return res.status(401).json(errorResponse("Invalid device type", 401));
+
+    // bypass  the User agent check for SSE only
+    const isSSE = req.path.startsWith("/api/notifications/stream");
+
+    if (!isSSE) {
+      if (session.userAgent !== userAgent) {
+        logger.warn(
+          `[SECURITY] UserAgent mismatch for ${decoded.email}: stored=${session.userAgent}, current=${userAgent}`
+        );
+        return res.status(401).json(errorResponse("Invalid device type", 401));
+      }
     }
+
+
 
     // Attach decoded user data to request
     req.user = {
