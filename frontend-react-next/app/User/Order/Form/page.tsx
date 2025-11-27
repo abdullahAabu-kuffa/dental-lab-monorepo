@@ -18,7 +18,6 @@ export default function NewOrderPage() {
 	const { formData, setFormData } = useOrderStore();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-	// const [formData, setFormData] = useState<Record<string, unknown>>({});
 	const router = useRouter();
 	const { user, loading: userLoading } = useAuth();
 	const handleFormDataChange = (newFormData: Record<string, unknown>) => {
