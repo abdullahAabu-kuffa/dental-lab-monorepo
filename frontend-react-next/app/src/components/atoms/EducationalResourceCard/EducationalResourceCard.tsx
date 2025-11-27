@@ -3,6 +3,7 @@ import { EducationalResource } from '../../../config/LandingData/educational-res
 
 interface EducationalResourceCardProps {
   resource: EducationalResource;
+  onReadMore?: (resource: EducationalResource) => void;
 }
 
 const DIFFICULTY_COLORS = {
@@ -11,9 +12,17 @@ const DIFFICULTY_COLORS = {
   Advanced: 'bg-red-100 text-red-600',
 } as const;
 
-export default function EducationalResourceCard({ resource }: EducationalResourceCardProps) {
+export default function EducationalResourceCard({ resource, onReadMore }: EducationalResourceCardProps) {
   const difficultyColor = DIFFICULTY_COLORS[resource.difficulty as keyof typeof DIFFICULTY_COLORS]
     || 'bg-gray-100 text-gray-600';
+
+  const handleReadMore = () => {
+    if (onReadMore) {
+      onReadMore(resource);
+    } else if (resource.readMoreLink && resource.readMoreLink !== '#') {
+      window.open(resource.readMoreLink, '_blank');
+    }
+  };
 
   return (
     <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200">
@@ -52,16 +61,14 @@ export default function EducationalResourceCard({ resource }: EducationalResourc
           </span>
         </div>
         
-        {/* Read More Link */}
-        <a
-          href={resource.readMoreLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-[#E4B441] font-semibold text-sm hover:underline hover:gap-2 transition-all"
+        {/* Read More Button */}
+        <button
+          onClick={handleReadMore}
+          className="inline-flex items-center gap-1 text-[#E4B441] font-semibold text-sm hover:underline hover:gap-2 transition-all bg-transparent border-0 cursor-pointer p-0"
         >
           Read More
           <ExternalLink className="w-3 h-3" />
-        </a>
+        </button>
       </div>
     </article>
   );
