@@ -6,10 +6,12 @@ import { Order } from "../../../../src/types";
 import { getOrderStages } from "../../../../src/config/UserData/orderDataService";
 import { getProgressStepColors } from "../../../../design-system/orderStyles";
 import { DetailsOrder } from "./DetailsOrder";
+
 interface OrderProgressProps {
   order: Order;
+  useNewDetails?: boolean; // Optional prop to use the new OrderDetails component
 }
-export const OrderProgress: React.FC<OrderProgressProps> = ({ order }) => {
+export const OrderProgress: React.FC<OrderProgressProps> = ({ order, useNewDetails = false }) => {
   // Get progress steps from config based on order stages
   const progressSteps = getOrderStages(order);
   const FirstIcon = progressSteps[0].icon;
@@ -84,7 +86,9 @@ export const OrderProgress: React.FC<OrderProgressProps> = ({ order }) => {
         </div>
         {/* Order Details */}
         <div className="lg:col-span-2">
-          <DetailsOrder order={order} />
+        
+            <DetailsOrder order={order} />
+        
         </div>
       </div>
     </div>

@@ -13,9 +13,9 @@ interface SimpleServiceCardProps {
 const SimpleServiceCard: React.FC<SimpleServiceCardProps> = ({ service, delay = 0 }) => {
   const renderIcon = () => {
     if (service.iconType === 'fontawesome') {
-      return <i className={`${service.icon as string} text-lg`}></i>;
+      return <i className={`${service.icon as unknown as string} text-lg`}></i>;
     } else {
-      const IconComponent = service.icon as React.ComponentType<{ className?: string }>;
+      const IconComponent = (service.icon as unknown as { component: React.ComponentType<{ className?: string }> }).component;
       return <IconComponent className="w-6 h-6 text-white" />;
     }
   };
