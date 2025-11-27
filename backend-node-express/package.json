@@ -11,7 +11,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts",
     "test": "jest",
-    "import:kb": "ts-node --project tsconfig.json src/scripts/import-knowledge-base.ts"
+    "import:kb": "npx ts-node src/scripts/import-knowledge-base.ts"
   },
   "keywords": [],
   "author": "",
