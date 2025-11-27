@@ -1,7 +1,16 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Settings, ChevronDown, FileText, Package, Calendar, FilePlus } from "lucide-react";
+import {
+  Settings,
+  ChevronDown,
+  FileText,
+  Package,
+  Calendar,
+  FilePlus,
+} from "lucide-react";
+import { logoutRequest } from "@/app/src/services/auth";
+import { useRouter } from "next/navigation";
 
 interface ListProps {
   username?: string;
@@ -59,6 +68,20 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onClose,
   onEvent,
 }) => {
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      console.log("Logging out...");
+      await logoutRequest();
+    } catch (error) {
+      console.warn("Logout failed:", error);
+    } finally {
+      // console.log("Logout successful");
+      router.refresh();
+      window.location.reload();
+    }
+  }
   const handleClick = (type: string) => {
     onEvent?.(type);
     onClose();
@@ -129,7 +152,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         <button
           onClick={() => {
             handleClick("logout");
-            onLogout?.();
+            handleLogout();
           }}
           className="w-full px-4 py-3 hover:bg-red-50 text-red-600 flex items-center gap-3 transition-colors font-medium"
         >
@@ -164,11 +187,21 @@ const List: React.FC<ListProps> = ({
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 px-2 py-2 hover:bg-gray-100 rounded transition"
+        className="
+  flex items-center gap-3 
+  px-3 py-2
+  rounded-xl
+  transition-all duration-200
+  hover:bg-gray-700/60
+  hover:text-white
+  cursor-pointer
+"
       >
         <ProfileIcon size="md" username={username} />
         <ChevronDown
-          className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-5 h-5 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
 

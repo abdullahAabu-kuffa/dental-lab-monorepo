@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import {  Menu, X } from "lucide-react";
 import Image from "next/image";
 
 import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
@@ -13,6 +13,7 @@ import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 import { apiFetch } from "@/app/src/lib/apiClient";
 import Swal from "sweetalert2";
 import { getAccessToken } from "@/app/src/auth/tokenStore";
+import List from "../list";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,7 +22,9 @@ const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useAuth();
-
+  const  userData = user?.data.user
+  // console.log(userData);
+  
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -30,20 +33,18 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
-	async function handleLogout() {
-		try {
-			console.log("Logging out...");
-			await logoutRequest();
-		} catch (error) {
-			console.warn("Logout failed:", error);
-		} finally {
-			// console.log("Logout successful");
-			router.refresh();
-			window.location.reload();
-		}
-	}
-
+  async function handleLogout() {
+    try {
+      console.log("Logging out...");
+      await logoutRequest();
+    } catch (error) {
+      console.warn("Logout failed:", error);
+    } finally {
+      // console.log("Logout successful");
+      router.refresh();
+      window.location.reload();
+    }
+  }
 
   async function handlCheckActivation() {
     const res = await apiFetch("/api/users/me", {
@@ -55,29 +56,7 @@ const Navbar = () => {
     const data = await res.json();
     console.log("ME DATA:", data);
   }
-  useEffect(() => {
-    async function fetchMe() {
-      const token = getAccessToken();
 
-      if (!token) {
-        console.log("Waiting for token...");
-        return;
-      }
-
-      const res = await apiFetch("/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      setMeData(data?.data?.user);
-    }
-
-    fetchMe();
-  }, [user]);
-  console.log(user);
-  
   function handleOrdersClick(e) {
     if (meData && !meData.isActive) {
       e.preventDefault();
@@ -158,15 +137,10 @@ const Navbar = () => {
                 {user ? (
                   <>
                     <span className="text-[#CABEB2] text-sm font-medium">
-                      Welcome, {user.name}
+                      Welcome, {userData?.fullName}
                     </span>
-
-                    <button
-                      onClick={handleLogout}
-                      className="px-4 py-2 rounded-lg border border-red-500 text-red-500 font-semibold text-sm transition-all duration-200 hover:bg-red-500 hover:text-white"
-                    >
-                      Logout
-                    </button>
+                    
+                    <List />
                   </>
                 ) : (
                   <>
@@ -201,7 +175,7 @@ const Navbar = () => {
         <NavMobileMenu
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
-          user={user}
+          user={userData}
           loading={loading}
           onLogout={handleLogout}
         />

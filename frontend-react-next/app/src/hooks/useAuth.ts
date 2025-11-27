@@ -6,43 +6,75 @@ import { useEffect, useState } from "react";
 import { SessionPayload } from "../lib/dal/session";
 type UserRole = "CLIENT" | "ADMIN" | "OWNER";
 
-interface User {
+// interface User {
+//   id: number;
+//   email: string;
+//   role: UserRole;
+//   isVerified: boolean;
+//   isActive: boolean;
+//   name: string;
+// }
+
+export interface Invoice {
   id: number;
+  clientId: number;
+  totalPrice: number;
+  isSummary: boolean;
+  status: "PENDING" | "PAID" | "CANCELLED";
+  dueDate: string;
+  paidAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface UserWithInvoices {
+  id: number;
+  fullName: string;
   email: string;
-  role: UserRole;
-  isVerified: boolean;
+  phoneNumber: string;
+  clinicName: string;
+  clinicAddress: string;
+  role: "CLIENT" | "ADMIN" | "OWNER";
   isActive: boolean;
-  name: string;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  invoices: Invoice[];
+}
+export interface ClientDashboardResponse {
+  status: "success" | "error";
+  message: string;
+  data: {
+    user: UserWithInvoices;
+  };
 }
 
-async function fetchUser(): Promise<User | null> {
+async function fetchUser(): Promise<ClientDashboardResponse> {
+  const res = await apiFetch("/api/users/me", {
+    method: "GET",
+    retryOn401: true,
+  });
 
-    // const res = await apiFetch("/api/users/me", {
-    //     method: "GET",
-    //     retryOn401: true,
-    // });
+  if (!res.ok) throw new Error("Failed to fetch User Data");
+  const json = await res.json();
+  // console.log("From UserAuth", json.data.user);
+  return json;
+  // const res= await fetch("/api/session", {
+  //     method: "GET",
+  //     credentials: "include",
+  // });
+  // const sessionData:SessionPayload = await res.json();
+  // const apiUser = json?.data?.user;
 
-    const res= await fetch("/api/session", {
-        method: "GET",
-        credentials: "include",
-    });
+  // if (!sessionData) return null;
 
-
-    if (!res.ok) return null;
-
-    const sessionData:SessionPayload = await res.json();
-    // const apiUser = json?.data?.user;
-
-    if (!sessionData) return null;
-
-    return {
-        id: sessionData.userId,
-        email: sessionData.email,
-        role: sessionData.role,
-        isVerified: sessionData.isVerified,
-        isActive: sessionData.isActive,
-        name:sessionData.fullName
-    };
+  // return {
+  //     id: sessionData.userId,
+  //     email: sessionData.email,
+  //     role: sessionData.role,
+  //     isVerified: sessionData.isVerified,
+  //     isActive: sessionData.isActive,
+  //     name:sessionData.fullName
+  // };
 }
 
 export function useAuth() {
@@ -69,14 +101,18 @@ export function useAuth() {
   const { data: user, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: fetchUser,
-    staleTime: 1000 * 60 * 5,
-    enabled: bootstrapDone,
+    staleTime: 1000 * 60 * 60 * 24 * 10,
+    gcTime: 1000 * 60 * 60 * 24 * 35, 
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 
   return {
     user,
     loading: !bootstrapDone || isLoading,
     isAuthenticated: !!user,
-    role: user?.role,
+    role: user?.data.user.role,
   };
 }

@@ -10,9 +10,6 @@ export default function UserOrderLayout({
   return (
     <div className="w-full relative min-h-screen">
       {/* Fixed User Profile Dropdown - positioned at top right with high z-index */}
-      <div className="fixed top-3 right-6 z-[9999]">
-        <List />
-      </div>
 
       {/* Toaster for notifications */}
       <Toaster

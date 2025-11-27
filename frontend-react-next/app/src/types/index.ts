@@ -1,6 +1,6 @@
 // Consolidated type definitions for the entire application
 
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from "lucide-react";
 
 // ORDER MANAGEMENT TYPES
 
@@ -15,17 +15,17 @@ export interface Order {
     notes?: string;
     [key: string]: unknown;
   };
-  status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   date: string;
   totalAmount: number;
-  urgency: 'Low' | 'Medium' | 'High';
+  urgency: "Low" | "Medium" | "High";
   material: string;
   notes: string;
   attachments?: FileAttachment[];
   createdAt: Date | string;
   updatedAt: Date | string;
   // Payment information
-  paymentStatus?: 'paid' | 'unpaid';
+  paymentStatus?: "paid" | "unpaid";
   paymentMethod?: string;
   paymentDate?: Date | string;
   transactionId?: string;
@@ -63,7 +63,7 @@ export interface ManufacturingStep {
   id: string;
   title: string;
   description: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'rejected';
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   completedAt?: Date;
   icon: React.ComponentType<{ className?: string }>; // LucideIcon type
   completed: boolean;
@@ -105,7 +105,7 @@ export interface OrderProgressProps {
   order: Order;
   showPercentage?: boolean;
   showTimeline?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   className?: string;
 }
 
@@ -113,7 +113,7 @@ export interface ProgressStep {
   id: string;
   name: string;
   description: string;
-  status: 'completed' | 'active' | 'pending' | 'rejected';
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   icon: React.ComponentType<{ className?: string }>;
   timestamp?: Date;
   estimatedCompletion?: Date;
@@ -192,6 +192,15 @@ export interface ContactInfo {
     facebook?: string;
   };
 }
+export interface Invoice {
+  id: string;
+  totalPrice: number;
+  paymentStatus?: "paid" | "unpaid";
+  createdAt: string;
+  paymentMethod?: string;
+  transactionId?: string;
+  paymentDate?: Date;
+}
 
 export interface WorkflowStep {
   id: number;
@@ -213,14 +222,14 @@ export interface ProcessStep {
   id: string;
   title: string;
   icon: LucideIcon;
-  status: 'completed' | 'active' | 'pending';
+  status: "completed" | "active" | "pending";
 }
 
 export interface WorkflowCard {
   step: string;
   title: string;
   description: string;
-  iconName: 'upload' | 'creditCard' | 'trendingUp' | 'truck';
+  iconName: "upload" | "creditCard" | "trendingUp" | "truck";
   iconComponent: React.ComponentType<{ size?: number; color?: string }>;
 }
 
@@ -228,7 +237,7 @@ export interface WorkflowCard {
 
 export interface FormField {
   id: string;
-  type: 'text' | 'checkbox' | 'textarea' | 'file';
+  type: "text" | "checkbox" | "textarea" | "file";
   label: string;
   required?: boolean;
 }
@@ -255,15 +264,24 @@ export interface WelcomePageProps {
 // RE-EXPORT TYPES FROM DESIGN SYSTEM
 
 // Design system types
-export type Typography = import('../../design-system/typography').Typography;
-export type ComponentStyles = import('../../design-system/components').ComponentStyles;
-export type AnimationConfig = import('../../design-system/animations').AnimationConfig;
-export type Gradients = import('../../design-system/gradients').Gradients;
-export type Colors = import('../../design-system/colors').Colors;
+export type Typography = import("../../design-system/typography").Typography;
+export type ComponentStyles =
+  import("../../design-system/components").ComponentStyles;
+export type AnimationConfig =
+  import("../../design-system/animations").AnimationConfig;
+export type Gradients = import("../../design-system/gradients").Gradients;
+export type Colors = import("../../design-system/colors").Colors;
 
 // Lucide icon type
-export type { LucideIcon } from 'lucide-react';
+export type { LucideIcon } from "lucide-react";
 
 // Re-export from dashboard interfaces
-export type { ApiOrder, PaginatedOrdersResponse } from '../../dashboard/interfaces/orders';
-export type { OrderOptions, SelectedService, User } from '../../dashboard/interfaces/orders';
+export type {
+  ApiOrder,
+  PaginatedOrdersResponse,
+} from "../../dashboard/interfaces/orders";
+export type {
+  OrderOptions,
+  SelectedService,
+  User,
+} from "../../dashboard/interfaces/orders";

@@ -9,30 +9,30 @@ import GlobalLoader from "./src/components/GlobalLoader";
 import { getSession } from "./src/lib/dal/session";
 import { TokenRefreshInitializer } from "./src/components/TokenRefreshInitializer";
 
-
-
 const playfair = Playfair_Display({
-	variable: "--font-playfair",
-	subsets: ["latin"],
-	weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-	title: "Avante Dental Lab",
-
-	description:
-		"Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
+  title: "Avante Dental Lab",
+  icons: {
+    icon: "/only-tooth-logo.png",
+  },
+  description:
+    "Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
 };
 
 export default async function RootLayout({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-  const session= await getSession();
-  console.log("user session : ",session);
-	return (
-		<html lang="en">
+  const session = await getSession();
+  console.log("user session : ", session);
+  return (
+    <html lang="en">
       <body className={`${playfair.variable} antialiased`}>
         <Provider>
           <QueryProvider>

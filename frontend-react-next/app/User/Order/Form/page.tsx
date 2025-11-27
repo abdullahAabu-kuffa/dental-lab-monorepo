@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
@@ -7,12 +6,8 @@ import OrderForm from "../components/FormComponent/OrderForm";
 import PaymentSummary from "../components/FormComponent/PaymentSummary";
 import { useNavigation, animations } from "../../../src/utils/pageUtils";
 import { calculateSelectedServices } from "../../../src/utils/pricingService";
-
-import { logoutRequest } from "@/app/src/services/auth";
-import { apiFetch } from "@/app/src/lib/apiClient";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { getAccessToken } from "@/app/src/auth/tokenStore";
 import { useOrderStore } from "@/app/src/store/createOrderStore";
 import { useAuth } from "@/app/src/hooks/useAuth";
 
@@ -23,9 +18,8 @@ export default function NewOrderPage() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   // const [formData, setFormData] = useState<Record<string, unknown>>({});
   const router = useRouter();
-  const [meData, setMeData] = useState<{ isActive: boolean } | null>(null);
-  const [loading, setLoading] = useState(true);
   const { user, loading: userLoading } = useAuth();
+  const userData = user?.data.user;
   const handleFormDataChange = (newFormData: Record<string, unknown>) => {
     setFormData(newFormData);
   };
@@ -34,8 +28,7 @@ export default function NewOrderPage() {
     setIsProcessingPayment(true);
 
     try {
-      const { selectedServices, totalAmount } =
-        calculateSelectedServices(formData);
+      const { totalAmount } = calculateSelectedServices(formData);
 
       // Create order data
       const orderData = {
@@ -60,7 +53,7 @@ export default function NewOrderPage() {
   };
 
   useEffect(() => {
-    if (!userLoading && user && !user.isActive) {
+    if (!userLoading && userData && !userData.isActive) {
       Swal.fire({
         icon: "info",
         title: "Account Not Active",
@@ -72,8 +65,9 @@ export default function NewOrderPage() {
         router.replace("/");
       });
     }
-  }, [user, userLoading, router]);
+  }, [userData, userLoading, router]);
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
