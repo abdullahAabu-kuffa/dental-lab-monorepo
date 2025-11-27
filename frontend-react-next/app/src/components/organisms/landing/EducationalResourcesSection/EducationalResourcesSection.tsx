@@ -4,7 +4,7 @@ import EducationalResourceCard from '../../../atoms/EducationalResourceCard/Educ
 import Button from '../../../atoms/Button/Button';
 import { HeroHeading ,componentStyles ,HeroSubtitle} from '../../../../../design-system';
 import ScrollAnimation, { StaggeredAnimation } from '../../../../../design-system/components/ScrollAnimation';
-import { EDUCATIONAL_RESOURCES } from '../../../../config/LandingData/educational-resources.data';
+import { EDUCATIONAL_RESOURCES } from '@/app/src/config/LandingData/educational-resources.data';
 
 const EducationalResourcesSection: React.FC = () => {
   return (

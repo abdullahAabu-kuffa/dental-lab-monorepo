@@ -8,6 +8,8 @@ import { LoadingProvider } from "./src/contexts/LoadingContext";
 import GlobalLoader from "./src/components/GlobalLoader";
 import { getSession } from "./src/lib/dal/session";
 import { TokenRefreshInitializer } from "./src/components/TokenRefreshInitializer";
+import Navbar from "./src/components/organisms/Navbar/Navbar";
+import Footer from "./src/components/organisms/Footer/Footer";
 
 const playfair = Playfair_Display({
 	variable: "--font-playfair",
@@ -34,11 +36,13 @@ export default async function RootLayout({
 			<body className={`${playfair.variable} antialiased`}>
 				<Provider>
 					<QueryProvider>
+						<Navbar />
 						<TokenRefreshInitializer />
 						<AuthProvider>
 							<LoadingProvider>
 								<GlobalLoader />
 								{children}
+								<Footer />
 							</LoadingProvider>
 						</AuthProvider>
 					</QueryProvider>

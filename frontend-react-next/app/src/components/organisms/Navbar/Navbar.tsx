@@ -5,38 +5,35 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-
 import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
 import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 
-//*************************Auth ***********************
+// Auth
 import { logoutRequest } from "../../../services/auth";
 import { useAuth } from "@/app/src/hooks/useAuth";
-//*************************Auth ***********************
 
-import Swal from "sweetalert2";
-
-//*************************Notification Part***********************
+// Notifications
 import NotificationBell from "../../molecules/notificationBell";
 import NotificationsMenu from "../notificationMenu";
-//*************************Notification Part***********************
+
+import Swal from "sweetalert2";
 
 const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [unread, setUnread] = useState(0);
+
 	const pathname = usePathname();
 	const router = useRouter();
 	const { user, loading, isAuthenticated } = useAuth();
 
-	//notification part
-	const [open, setOpen] = useState(false);
-	const [unread, setUnread] = useState(0);
+	// Notification toggle
 	function toggleMenu() {
 		setOpen((prev) => !prev);
 	}
-	// -------------------------------------------------------------------
-	// SCROLL EFFECT
-	// -------------------------------------------------------------------
+
+	// Scroll effect
 	useEffect(() => {
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 20);
@@ -44,9 +41,8 @@ const Navbar = () => {
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
-	// -------------------------------------------------------------------
+
 	// Logout
-	// -------------------------------------------------------------------
 	async function handleLogout() {
 		try {
 			await logoutRequest();
@@ -57,22 +53,15 @@ const Navbar = () => {
 		}
 	}
 
-	// -------------------------------------------------------------------
-	// Orders Page  Authority
-	// -------------------------------------------------------------------
+	// Orders page authority
 	function handleOrdersClick(e: React.MouseEvent<HTMLAnchorElement>) {
 		if (loading) {
 			e.preventDefault();
 			return;
 		}
-
-		if (!isAuthenticated) {
-			return;
-		}
-
+		if (!isAuthenticated) return;
 		if (user && !user.isActive) {
 			e.preventDefault();
-
 			Swal.fire({
 				icon: "info",
 				title: "Account Not Active Yet",
@@ -142,7 +131,8 @@ const Navbar = () => {
 								);
 							})}
 						</div>
-						{/* notification part */}
+
+						{/* Notification Part */}
 						<div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
 							{user && (
 								<div className="relative">
