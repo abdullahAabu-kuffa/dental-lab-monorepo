@@ -1,10 +1,10 @@
 export const NAV_LINKS = [
   { name: 'Home', href: '/' },
-  { name: 'Orders', href: '/User/Order' },
-  { name: 'Services', href: '#services' },
-  { name: 'Process', href: '#process' },
-  { name: 'Events', href: '#events' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'About Us', href: '/aboutUs' },
+  { name: 'Cases', href: '/cases' },
+  { name: 'Blogs', href: '/blogs' },
+  { name: 'Gallery and Videos', href: '/gallery' },
+  { name: 'Contact Us', href: '/contact' },
 ] as const;
 
 export const NAVBAR_CONFIG = {

@@ -5,18 +5,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-
 import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
 import { logoutRequest } from "../../../services/auth";
 import { useAuth } from "@/app/src/hooks/useAuth";
 import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
-import { apiFetch } from "@/app/src/lib/apiClient";
-import Swal from "sweetalert2";
-import { getAccessToken } from "@/app/src/auth/tokenStore";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [meData, setMeData] = useState(null);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -30,8 +25,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
-	async function handleLogout() {
+  async function handleLogout() {
 		try {
 			console.log("Logging out...");
 			await logoutRequest();
@@ -43,58 +37,6 @@ const Navbar = () => {
 			window.location.reload();
 		}
 	}
-
-
-  async function handlCheckActivation() {
-    const res = await apiFetch("/api/users/me", {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    });
-
-    const data = await res.json();
-    console.log("ME DATA:", data);
-  }
-  useEffect(() => {
-    async function fetchMe() {
-      const token = getAccessToken();
-
-      if (!token) {
-        console.log("Waiting for token...");
-        return;
-      }
-
-      const res = await apiFetch("/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      setMeData(data?.data?.user);
-    }
-
-    fetchMe();
-  }, [user]);
-  console.log(user);
-  
-  function handleOrdersClick(e) {
-    if (meData && !meData.isActive) {
-      e.preventDefault();
-
-      Swal.fire({
-        icon: "info",
-        title: "Account Not Active Yet",
-        html: `
-        Your account is not yet activated.<br/>
-        You won't be able to place orders until activation is complete.<br/>
-        Activation usually takes 1-2 business days.
-      `,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#d4a431",
-      });
-    }
-  }
 
   return (
     <>
@@ -132,9 +74,7 @@ const Navbar = () => {
                   <Link
                     key={index}
                     href={link.href}
-                    onClick={
-                      link.name === "Orders" ? handleOrdersClick : undefined
-                    }
+                    onClick={undefined}
                     className={`font-semibold text-base transition-all duration-200 relative group ${
                       isActive
                         ? "text-[#FFD700] border-b-2 border-[#E4B441]"
