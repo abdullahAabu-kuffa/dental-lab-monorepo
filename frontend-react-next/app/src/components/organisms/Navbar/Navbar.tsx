@@ -17,6 +17,7 @@ import NotificationBell from "../../molecules/notificationBell";
 import NotificationsMenu from "../notificationMenu";
 
 import Swal from "sweetalert2";
+import List from "../list";
 
 const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -27,7 +28,8 @@ const Navbar = () => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { user, loading, isAuthenticated } = useAuth();
-
+  console.log(user);
+  
 	// Notification toggle
 	function toggleMenu() {
 		setOpen((prev) => !prev);
@@ -152,15 +154,16 @@ const Navbar = () => {
 								{user ? (
 									<>
 										<span className="text-[#CABEB2] text-sm font-medium">
-											Welcome, {user.name}
+											Welcome, {user.data.user.fullName}
 										</span>
-
+{/* 
 										<button
 											onClick={handleLogout}
 											className="px-4 py-2 rounded-lg border border-red-500 text-red-500 font-semibold text-sm transition-all duration-200 hover:bg-red-500 hover:text-white"
 										>
 											Logout
-										</button>
+										</button> */}
+                    <List/>
 									</>
 								) : (
 									<>

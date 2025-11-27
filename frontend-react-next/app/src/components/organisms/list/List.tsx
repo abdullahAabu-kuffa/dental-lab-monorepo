@@ -12,6 +12,7 @@ import {
 import { logoutRequest } from "@/app/src/services/auth";
 import { useRouter } from "next/navigation";
   import Swal from "sweetalert2";
+import { useAuth } from "@/app/src/hooks/useAuth";
 
 
 interface ListProps {
@@ -71,7 +72,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onEvent,
 }) => {
   const router = useRouter();
-
+    const { user, loading, isAuthenticated } = useAuth();
 
   async function handleLogout() {
     const result = await Swal.fire({
@@ -130,8 +131,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         <div className="flex items-center gap-3">
           <ProfileIcon size="lg" username={username} />
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900">{username}</h3>
-            <p className="text-sm text-gray-500 truncate">{email}</p>
+            <h3 className="font-semibold text-gray-900">{user?.data.user.fullName}</h3>
+            <p className="text-sm text-gray-500 truncate">{user?.data.user.email}</p>
           </div>
         </div>
       </div>
