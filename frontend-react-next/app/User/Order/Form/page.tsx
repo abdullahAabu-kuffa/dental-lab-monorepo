@@ -24,33 +24,33 @@ export default function NewOrderPage() {
     setFormData(newFormData);
   };
 
-  const handlePayNow = async () => {
-    setIsProcessingPayment(true);
 
+	const handlePayNow = async () => {
+		setIsProcessingPayment(true);
     try {
       const { totalAmount } = calculateSelectedServices(formData);
+			// Create order data
+			const orderData = {
+				...formData,
+				paymentStatus: "paid",
+				paymentAmount: totalAmount,
+				paymentDate: new Date().toISOString(),
+			};
 
-      // Create order data
-      const orderData = {
-        ...formData,
-        paymentStatus: "paid",
-        paymentAmount: totalAmount,
-        paymentDate: new Date().toISOString(),
-      };
+			console.log("Processing payment:", orderData);
 
-      console.log("Processing payment:", orderData);
+			// Simulate payment processing
+			await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Simulate payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+			// Navigate to upload page after successful payment
+			navigateToUpload();
+		} catch (err) {
+			console.error("Payment Error:", err);
+		} finally {
+			setIsProcessingPayment(false);
+		}
+	};
 
-      // Navigate to upload page after successful payment
-      navigateToUpload();
-    } catch (err) {
-      console.error("Payment Error:", err);
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
 
   useEffect(() => {
     if (!userLoading && userData && !userData.isActive) {
@@ -83,32 +83,32 @@ export default function NewOrderPage() {
           </p>
         </motion.div>
 
-        <div className="flex gap-6">
-          {/* Form */}
-          <div className="flex-1 min-w-0">
-            <OrderForm
-              onSubmit={() => {}}
-              isSubmitting={isSubmitting}
-              onFormDataChange={handleFormDataChange}
-              onContinueToUpload={() => navigateToUpload()}
-            />
-          </div>
+				<div className="flex gap-6">
+					{/* Form */}
+					<div className="flex-1 min-w-0">
+						<OrderForm
+							onSubmit={() => {}}
+							isSubmitting={isSubmitting}
+							onFormDataChange={handleFormDataChange}
+							onContinueToUpload={() => navigateToUpload()}
+						/>
+					</div>
 
-          {/* Payment Summary */}
-          <div className="w-80 sm:w-96 flex-shrink-0">
-            <PaymentSummary
-              title="Order Summary"
-              subtitle="Selected services"
-              icon={<ShoppingCart className="w-5 h-5 text-white" />}
-              selectedItems={selectedServices}
-              totalAmount={totalAmount}
-              buttonLabel="Pay Now"
-              onAction={handlePayNow}
-              disabled={isProcessingPayment}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+					{/* Payment Summary */}
+					<div className="w-80 sm:w-96 flex-shrink-0">
+						<PaymentSummary
+							title="Order Summary"
+							subtitle="Selected services"
+							icon={<ShoppingCart className="w-5 h-5 text-white" />}
+							selectedItems={selectedServices}
+							totalAmount={totalAmount}
+							buttonLabel="Pay Now"
+							onAction={handlePayNow}
+							disabled={isProcessingPayment}
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }

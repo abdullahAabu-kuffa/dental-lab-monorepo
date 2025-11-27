@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiFetch, refreshAccessToken } from "../lib/apiClient";
 import { useEffect, useState } from "react";
 import { SessionPayload } from "../lib/dal/session";
+import { apiFetch } from "../lib/apiClient";
 type UserRole = "CLIENT" | "ADMIN" | "OWNER";
 
 // interface User {
@@ -54,6 +54,7 @@ async function fetchUser(): Promise<ClientDashboardResponse> {
     retryOn401: true,
   });
 
+// <<<<<<< HEAD
   if (!res.ok) throw new Error("Failed to fetch User Data");
   const json = await res.json();
   // console.log("From UserAuth", json.data.user);
@@ -75,6 +76,30 @@ async function fetchUser(): Promise<ClientDashboardResponse> {
   //     isActive: sessionData.isActive,
   //     name:sessionData.fullName
   // };
+// =======
+
+
+//   const res = await fetch("/api/session", {
+//     method: "GET",
+//     credentials: "include",
+//   });
+
+
+//   if (!res.ok) return null;
+
+//   const sessionData: SessionPayload = await res.json();
+
+//   if (!sessionData) return null;
+
+//   return {
+//     id: sessionData.userId,
+//     email: sessionData.email,
+//     role: sessionData.role,
+//     isVerified: sessionData.isVerified,
+//     isActive: sessionData.isActive,
+//     name: sessionData.fullName
+//   };
+// >>>>>>> 3787db59c4d7d1ee84accbc5c2b0dfb6e599ae23
 }
 
 export function useAuth() {
