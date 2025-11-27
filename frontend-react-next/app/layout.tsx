@@ -9,8 +9,6 @@ import GlobalLoader from "./src/components/GlobalLoader";
 import { getSession } from "./src/lib/dal/session";
 import { TokenRefreshInitializer } from "./src/components/TokenRefreshInitializer";
 
-
-
 const playfair = Playfair_Display({
 	variable: "--font-playfair",
 	subsets: ["latin"],
@@ -19,7 +17,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
 	title: "Avante Dental Lab",
-
+	icons: { icon: `/search.png` },
 	description:
 		"Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
 };
@@ -29,23 +27,23 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-  const session= await getSession();
-  console.log("user session : ",session);
+	const session = await getSession();
+	console.log("user session : ", session);
 	return (
 		<html lang="en">
-      <body className={`${playfair.variable} antialiased`}>
-        <Provider>
-          <QueryProvider>
-            <TokenRefreshInitializer />
-            <AuthProvider>
-              <LoadingProvider>
-                <GlobalLoader />
-                {children}
-              </LoadingProvider>
-            </AuthProvider>
-          </QueryProvider>
-        </Provider>
-      </body>
-    </html>
-  );
+			<body className={`${playfair.variable} antialiased`}>
+				<Provider>
+					<QueryProvider>
+						<TokenRefreshInitializer />
+						<AuthProvider>
+							<LoadingProvider>
+								<GlobalLoader />
+								{children}
+							</LoadingProvider>
+						</AuthProvider>
+					</QueryProvider>
+				</Provider>
+			</body>
+		</html>
+	);
 }
