@@ -6,24 +6,22 @@ import OrderForm from "../components/FormComponent/OrderForm";
 import PaymentSummary from "../components/FormComponent/PaymentSummary";
 import { useNavigation, animations } from "../../../src/utils/pageUtils";
 import { calculateSelectedServices } from "../../../src/utils/pricingService";
+
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { useOrderStore } from "@/app/src/store/createOrderStore";
 import { useAuth } from "@/app/src/hooks/useAuth";
 
 export default function NewOrderPage() {
-  const { navigateToUpload } = useNavigation();
-  const { formData, setFormData } = useOrderStore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  // const [formData, setFormData] = useState<Record<string, unknown>>({});
-  const router = useRouter();
-  const { user, loading: userLoading } = useAuth();
-  const userData = user?.data.user;
-  const handleFormDataChange = (newFormData: Record<string, unknown>) => {
-    setFormData(newFormData);
-  };
-
+	const { navigateToUpload } = useNavigation();
+	const { formData, setFormData } = useOrderStore();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+	const router = useRouter();
+	const { user, loading: userLoading } = useAuth();
+	const handleFormDataChange = (newFormData: Record<string, unknown>) => {
+		setFormData(newFormData);
+	};
 
 	const handlePayNow = async () => {
 		setIsProcessingPayment(true);
