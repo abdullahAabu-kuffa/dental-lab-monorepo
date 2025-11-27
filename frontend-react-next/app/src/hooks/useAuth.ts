@@ -126,7 +126,7 @@ export function useAuth() {
   const { data: user, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: fetchUser,
-    staleTime: 1000 * 60 * 60 * 24 * 10,
+    staleTime: Infinity,
     gcTime: 1000 * 60 * 60 * 24 * 35, 
     refetchOnMount: false,
     refetchOnReconnect: false,

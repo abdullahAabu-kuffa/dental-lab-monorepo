@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { logoutRequest } from "@/app/src/services/auth";
 import { useRouter } from "next/navigation";
+  import Swal from "sweetalert2";
+
 
 interface ListProps {
   username?: string;
@@ -70,18 +72,52 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 }) => {
   const router = useRouter();
 
+
   async function handleLogout() {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out from your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    });
+
+    if (!result.isConfirmed) return;
+
+    Swal.fire({
+      title: "Logging out...",
+      text: "Please wait",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     try {
-      console.log("Logging out...");
       await logoutRequest();
+      Swal.fire({
+        icon: "success",
+        title: "Logged Out",
+        text: "You have been logged out successfully.",
+        confirmButtonColor: "#3085d6",
+      }).then(() => {
+        router.replace("./login");
+        // window.location.reload();
+      });
     } catch (error) {
-      console.warn("Logout failed:", error);
-    } finally {
-      // console.log("Logout successful");
-      router.refresh();
-      window.location.reload();
+      Swal.fire({
+        icon: "error",
+        title: "Logout Failed",
+        text: "Something went wrong. Please try again.",
+        confirmButtonColor: "#3085d6",
+      });
     }
   }
+
   const handleClick = (type: string) => {
     onEvent?.(type);
     onClose();
