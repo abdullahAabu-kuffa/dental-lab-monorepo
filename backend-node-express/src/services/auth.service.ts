@@ -11,7 +11,7 @@ import jwt from "jsonwebtoken";
 import { sendStyledEmail } from "../utils/email";
 import { buildEmailTemplate } from "../utils/emailTemplate";
 import { createAdminNotification } from "./notification.service";
-import{Request} from "express"
+import { Request } from "express";
 
 interface RegisterInput {
   fullName: string;
@@ -179,8 +179,10 @@ export const loginUser = async (
       email: user.email,
       role: user.role,
     });
-     // ✅ Get userAgent from request
-    logger.info(`Login attempt from ${userAgent} with clientType: ${clientType}`);
+    // ✅ Get userAgent from request
+    logger.info(
+      `Login attempt from ${userAgent} with clientType: ${clientType}`
+    );
 
     // ✅ Store clientType and userAgent in session
     const session = await prisma.session.create({
@@ -210,8 +212,8 @@ export const loginUser = async (
 
 export const refreshTokenService = async (
   refreshToken: string,
-   clientType: 'web' | 'mobile',  // ✅ Add this parameter
-  userAgent: string  // ✅ Add this parameter
+  clientType: "web" | "mobile", // ✅ Add this parameter
+  userAgent: string // ✅ Add this parameter
 ): Promise<RefreshTokenResult> => {
   try {
     if (!refreshToken) throw new Error("No Refresh Token");
@@ -227,12 +229,12 @@ export const refreshTokenService = async (
     });
 
     if (!session) throw new Error("Invalid refresh token");
-      //  NEW: Verify clientType matches
+    //  NEW: Verify clientType matches
     if (session.clientType !== clientType) {
       logger.warn(
         `[SECURITY] ClientType mismatch: session=${session.clientType}, request=${clientType}`
       );
-      throw new Error('Invalid device type');
+      throw new Error("Invalid device type");
     }
 
     //  NEW: Verify userAgent hasn't changed
@@ -320,7 +322,7 @@ export const forgotPasswordService = async (email: string) => {
       isActive: user.isActive,
     });
     logger.info(`[Forgot Password Service] Token: ${token}`);
-    const resetLink = `http://localhost:${process.env.PORT}/api/auth/reset-password?token=${token}`;
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",
       body: `
@@ -337,9 +339,9 @@ export const forgotPasswordService = async (email: string) => {
       ctaUrl: resetLink,
       showButton: true,
     });
-    const result = await sendStyledEmail(
-      user.email,
-      "Reset your password",
+    await sendStyledEmail(
+      email,
+      "Welcome to Avante Dental Solutions - Registration Received",
       htmlTemplate
     );
     const secToken = await prisma.security_Token.create({
@@ -351,7 +353,7 @@ export const forgotPasswordService = async (email: string) => {
       },
     });
 
-    return { emailSent: result, tokenId: secToken.id };
+    return { emailSent: true, tokenId: secToken.id };
   } catch (error: any) {
     logger.error(`[forgot Password Service  Error]: ${error.message}`);
     throw error;
