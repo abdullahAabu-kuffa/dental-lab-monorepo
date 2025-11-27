@@ -14,6 +14,7 @@ import {
   Crown,
   FileText,
 } from "../../utils/UnifiedIcons";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 // ORDERS DATA
 export enum ProcessStatus {
@@ -322,60 +323,107 @@ export const filterOrdersByStatus = (
 };
 
 // Get detailed stage information for an order
+// export const getOrderStages = (order: Order) => {
+//   const stages = [
+//     {
+//       key: "orderPlaced",
+//       label: "Order Placed",
+//       icon: Package,
+//       status: order?.status === "PENDING" ,
+//       date: order.stages?.orderPlaced?.completedAt || "---",
+//     },
+//     {
+//       key: "digitalDesign",
+//       label: "Digital Design & Planning",
+//       icon: Eye,
+//       status: order.stages?.digitalDesign?.completed
+//         ? "completed"
+//         : order.stages?.orderPlaced?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.digitalDesign?.completedAt || "---",
+//     },
+//     {
+//       key: "manufacturing",
+//       label: "Manufacturing & Fabrication",
+//       icon: Settings,
+//       status: order.stages?.manufacturing?.completed
+//         ? "completed"
+//         : order.stages?.digitalDesign?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.manufacturing?.completedAt || "---",
+//     },
+//     {
+//       key: "qualityControl",
+//       label: "Quality Control & Inspection",
+//       icon: Microscope,
+//       status: order.stages?.qualityControl?.completed
+//         ? "completed"
+//         : order.stages?.manufacturing?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.qualityControl?.completedAt || "---",
+//     },
+//     {
+//       key: "shipped",
+//       label: "Packaged & Shipped",
+//       icon: Truck,
+//       status: order.stages?.shipped?.completed
+//         ? "completed"
+//         : order.stages?.qualityControl?.completed
+//         ? "active"
+//         : "pending",
+//       date: order.stages?.shipped?.completedAt || "---",
+//     },
+//   ];
+
+//   return stages;
+// };
+
 export const getOrderStages = (order: Order) => {
-  const stages = [
-    {
-      key: "orderPlaced",
-      label: "Order Placed",
-      icon: Package,
-      status: order.stages?.orderPlaced?.completed ? "completed" : "pending",
-      date: order.stages?.orderPlaced?.completedAt || "---",
-    },
-    {
-      key: "digitalDesign",
-      label: "Digital Design & Planning",
-      icon: Eye,
-      status: order.stages?.digitalDesign?.completed
-        ? "completed"
-        : order.stages?.orderPlaced?.completed
+  const rawStatus = order.status;
+  const status = order.status;
+
+const stages = [
+  {
+    key: "orderPlaced",
+    label: "Order Placed",
+    icon: Package,
+    status: "completed",
+    date: order.createdAt,
+  },
+  {
+    key: "inProgress",
+    label: "In Progress",
+    icon: Settings,
+    status:
+      status === "IN_PROGRESS"
         ? "active"
-        : "pending",
-      date: order.stages?.digitalDesign?.completedAt || "---",
-    },
-    {
-      key: "manufacturing",
-      label: "Manufacturing & Fabrication",
-      icon: Settings,
-      status: order.stages?.manufacturing?.completed
+        : status === "COMPLETED"
         ? "completed"
-        : order.stages?.digitalDesign?.completed
-        ? "active"
         : "pending",
-      date: order.stages?.manufacturing?.completedAt || "---",
-    },
-    {
-      key: "qualityControl",
-      label: "Quality Control & Inspection",
-      icon: Microscope,
-      status: order.stages?.qualityControl?.completed
-        ? "completed"
-        : order.stages?.manufacturing?.completed
-        ? "active"
-        : "pending",
-      date: order.stages?.qualityControl?.completedAt || "---",
-    },
-    {
-      key: "shipped",
-      label: "Packaged & Shipped",
-      icon: Truck,
-      status: order.stages?.shipped?.completed
-        ? "completed"
-        : order.stages?.qualityControl?.completed
-        ? "active"
-        : "pending",
-      date: order.stages?.shipped?.completedAt || "---",
-    },
-  ];
+    date:
+      status === "IN_PROGRESS" || status === "COMPLETED"
+        ? order.updatedAt
+        : "---",
+  },
+  {
+    key: "finished",
+    label: "Finished",
+    icon: CheckCircle2,
+    status: status === "COMPLETED" ? "completed" : "pending",
+    date: status === "COMPLETED" ? order.updatedAt : "---",
+  },
+  {
+    key: "canceled",
+    label: "Canceled",
+    icon: XCircle,
+    status: status === "CANCELLED" ? "active" : "pending",
+    date: status === "CANCELLED" ? order.updatedAt : "---",
+  },
+];
+
 
   return stages;
 };

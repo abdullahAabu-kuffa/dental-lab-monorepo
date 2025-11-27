@@ -86,17 +86,17 @@ export default function UploadPage() {
     }
 
     try {
-      // 2) رفع كل الملفات وانتظار كل واحدة
+
       const fileIds = [];
       for (const file of uploadedFiles) {
-        const resp = await uploadMutation.mutateAsync(file); // await mutateAsync
+        const resp = await uploadMutation.mutateAsync(file); 
         fileIds.push(resp?.data?.id);
       }
 
-      // 3) إنشاء الأوردر بعد رفع الملفات
+
       await orderMutation.mutateAsync({
         ...formData,
-        fileIds, // جميع الملفات
+        fileIds,  
         totalPrice: totalAmount,
         options: {
           patientName: formData?.patientName,

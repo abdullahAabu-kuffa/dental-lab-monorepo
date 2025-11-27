@@ -20,6 +20,7 @@ cron.schedule("0 2 * * *", async () => {
     },
   });
   for (const client of clients) {
+
     const orders = await prisma.order.findMany({
       where: {
         userId: client.id,
@@ -33,6 +34,7 @@ cron.schedule("0 2 * * *", async () => {
     if (orders.length === 0) continue;
 
     const totalPrice = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+    const totalOrders = orders.length
     const invoice = await prisma.invoice.create({
       data: {
         clientId: client.id,

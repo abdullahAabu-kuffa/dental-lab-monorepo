@@ -1,9 +1,10 @@
 export const NAV_LINKS = [
   { name: 'Home', href: '/' },
   { name: 'About Us', href: '/aboutUs' },
+  { name: 'Order', href: '/User/Order' },
   { name: 'Cases', href: '/cases' },
   { name: 'Blogs', href: '/blogs' },
-  { name: 'Gallery and Videos', href: '/gallery' },
+  // { name: 'Gallery and Videos', href: '/gallery' },
   { name: 'Contact Us', href: '/contact' },
   { name: "Orders", href: `/Orders` }
 ] as const;

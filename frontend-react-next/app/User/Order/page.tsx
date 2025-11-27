@@ -6,6 +6,7 @@ import { User, Crown } from '../../src/utils/UnifiedIcons';
 import { USER_PROCESS_STEPS } from '../../src/config/UserData/orderDataService';
 import { WelcomePageProps } from '../../src/types';
 import { useNavigation } from '../../src/utils/pageUtils';
+import { useAuth } from '@/app/src/hooks/useAuth';
 
 const PROCESS_STEPS = USER_PROCESS_STEPS;
 
@@ -18,6 +19,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 }) => {
   const { navigateToForm, navigateToOrdersList } = useNavigation();
   const doctorName = "Dr. Ahmed Hassan";
+    const { user, loading, isAuthenticated } = useAuth();
 
   const handleNewOrder = () => {
     navigateToForm();
@@ -59,7 +61,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
                 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4"
                 {...welcomePageAnimations.heroTitle}
               >
-                {doctorName}
+                {user?.data.user.fullName}
               </motion.h2>
               <motion.p
                 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed"

@@ -1,92 +1,109 @@
 "use client";
 
-import React, { useState } from "react";
-import { Wallet, DollarSign, FileText, TrendingUp } from "lucide-react";
-import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
-import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
-import { PaymentStatus } from "../components/invoic/PaymentInformation";
+import React, { useState, useEffect } from "react";
+import { Wallet } from "lucide-react";
+// import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
+// import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
+// import { PaymentStatus } from "../components/invoic/PaymentInformation";
 import { InvoiceModal } from "../components/invoic/InvoiceModal";
-import { staticInvoiceOrders, getInvoiceStats } from "../staticData";
-import { Order} from "../../../src/types";
+import { useAuth } from "@/app/src/hooks/useAuth";
+import { DetailsOrder } from "./DetailsOrder";
+import { PaymentStatus } from "./PaymentStatus";
+import { OrderCardInvoices } from "./OrderCardInvoices";
+
+export interface Invoice {
+  id: number;
+  clientId: number;
+  createdAt: string;
+  dueDate: string;
+  status: string;
+  totalPrice: number;
+  paidAt: string | null;
+  paymentMethod?: string;
+  transactionId?: string;
+  paymentDate?: Date;
+}
 
 export default function PaymentPage() {
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const { user, loading } = useAuth();
+  const [ordersState, setOrdersState] = useState<Invoice[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  // Use static data instead of API
-  const orders: Order[] = staticInvoiceOrders;
-  
-  // Get stats for potential use in UI
-  const stats = getInvoiceStats();
+  // Initialize ordersState when user data loads
+  useEffect(() => {
+    if (user?.data?.user?.invoices) {
+      setOrdersState(user.data.user.invoices);
+    }
+  }, [user]);
 
-  const handleDetailsClick = (order: Order) => {
-    setSelectedOrder(order);
+  const handleDetailsClick = (invoice: Invoice) => {
+    setSelectedOrder(invoice);
   };
 
-  const handlePayClick = (order: Order) => {
-    setSelectedOrder(order);
+  const handlePayClick = (invoice: Invoice) => {
+    setSelectedOrder(invoice);
     setShowModal(true);
   };
 
-  const handleConfirmPayment = (orderId: string) => {
-    // Simple UI update without API calls
-    const orderIndex = orders.findIndex(o => o.id === orderId);
-    if (orderIndex !== -1) {
-      orders[orderIndex].paymentStatus = "paid";
-      orders[orderIndex].paymentMethod = "Credit Card";
-      orders[orderIndex].transactionId = "TXN" + Date.now();
-      orders[orderIndex].paymentDate = new Date();
-    }
-    
+  const handleConfirmPayment = (invoiceId: number) => {
+    const updatedOrders = ordersState.map((order) =>
+      order.id === invoiceId
+        ? {
+            ...order,
+            status: "PAID",
+            paymentMethod: "Credit Card",
+            transactionId: "TXN" + Date.now(),
+            paidAt: new Date().toISOString(),
+          }
+        : order
+    );
+
+    setOrdersState(updatedOrders);
     setShowModal(false);
-    
-    // Refresh the selected order to reflect changes
-    if (selectedOrder?.id === orderId) {
-      setSelectedOrder({...orders[orderIndex]});
+
+    if (selectedOrder?.id === invoiceId) {
+      setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
     }
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="w-full min-h-screen">
       <div className="relative max-w-[1800px] mx-auto p-3 sm:p-4 lg:p-6 space-y-3">
-        
-     
-
-        {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-          
           {/* LIST */}
           <div className="lg:col-span-4 xl:col-span-3">
             <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-              {orders?.map((order: Order, index) => (
-                <div key={order.id} style={{ animationDelay: `${0.05 * index}ms` }}>
+              {ordersState.map((invoice, index) => (
+                <div
+                  key={invoice.id}
+                  style={{ animationDelay: `${0.05 * index}ms` }}
+                >
                   <OrderCardInvoices
-                    order={order}
-                    isSelected={selectedOrder?.id === order.id}
-                    onClick={() => handleDetailsClick(order)}
+                    invoices={invoice}
+                    isSelected={selectedOrder?.id === invoice.id}
+                    onClick={() => handleDetailsClick(invoice)}
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* DETAILS + PAYMENT SIDE BY SIDE */}
+          {/* DETAILS + PAYMENT */}
           <div className="lg:col-span-8 xl:col-span-9 flex gap-6">
             {selectedOrder ? (
               <>
-                {/* Order Details */}
                 <div className="w-1/2">
-                  <DetailsOrder order={selectedOrder} />
+                  <DetailsOrder invoice={selectedOrder} />
                 </div>
-
-                {/* Payment Information */}
                 <div className="w-1/2">
-                  <PaymentStatus 
-                    order={selectedOrder} 
+                  <PaymentStatus
+                    order={selectedOrder}
                     onPay={() => handlePayClick(selectedOrder)}
                   />
                 </div>
-
               </>
             ) : (
               <div className="w-full bg-white/50 rounded-2xl p-16 text-center border-2 border-dashed border-gray-200">
@@ -100,7 +117,6 @@ export default function PaymentPage() {
         </div>
       </div>
 
-      {/* Invoice Modal */}
       {selectedOrder && (
         <InvoiceModal
           order={selectedOrder}

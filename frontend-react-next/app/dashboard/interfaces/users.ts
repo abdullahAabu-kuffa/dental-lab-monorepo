@@ -3,6 +3,7 @@ interface Invoice {
     total: number;
     status: string;
     createdAt: string; // ISO date string
+    totalPrice:number
 }
 
 interface Order {
