@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
+
 const HostIp = process.env.NEXT_PUBLIC_AUTH_LOCAL_IP;
+
 interface ApiNotification {
 	id: number;
 	userId: number;
@@ -40,18 +42,14 @@ export default function NotificationsMenu({
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [onClose]);
+
 	useEffect(() => {
-		const unread = items.filter((n) => !n.isRead).length;
-		onUnreadChange?.(unread);
 		async function fetchNotifications() {
 			try {
-				const res = await fetch(
-					`${HostIp}/api/notifications-test/send-welcome`,
-					{
-						method: "POST",
-						credentials: "include",
-					}
-				);
+				const res = await fetch(`${HostIp}/api/notifications`, {
+					method: "GET",
+					credentials: "include",
+				});
 
 				if (!res.ok) {
 					setLoading(false);
@@ -62,10 +60,8 @@ export default function NotificationsMenu({
 				const data = Array.isArray(json.data) ? json.data : [json.data];
 
 				setItems(data);
-				const unread = data.filter((n: ApiNotification) => !n.isRead).length;
-				onUnreadChange?.(unread);
-			} catch (error) {
-				console.error("Failed to load notifications", error);
+			} catch (err) {
+				console.error("Failed to load notifications:", err);
 			} finally {
 				setLoading(false);
 			}
@@ -73,26 +69,53 @@ export default function NotificationsMenu({
 
 		fetchNotifications();
 	}, []);
+
+	useEffect(() => {
+		const sseUrl = `${HostIp}/api/notifications/stream`;
+
+		const eventSource = new EventSource(sseUrl, { withCredentials: true });
+
+		eventSource.onmessage = (event) => {
+			try {
+				const newNotification: ApiNotification = JSON.parse(event.data);
+
+				// Avoid duplicates
+				setItems((prev) => {
+					if (prev.some((n) => n.id === newNotification.id)) return prev;
+					return [newNotification, ...prev];
+				});
+			} catch (err) {
+				console.error("Failed to parse SSE message:", err);
+			}
+		};
+
+		eventSource.onerror = (err) => {
+			console.error("SSE error:", err);
+			eventSource.close();
+		};
+
+		return () => {
+			eventSource.close();
+		};
+	}, []);
+
 	useEffect(() => {
 		const unread = items.filter((n) => !n.isRead).length;
 		onUnreadChange?.(unread);
 	}, [items, onUnreadChange]);
 
 	async function markAsRead(id: number) {
-		setItems((prev) => {
-			const target = prev.find((n) => n.id === id);
-			if (!target || target.isRead) return prev;
-
-			return prev.map((n) => (n.id === id ? { ...n, isRead: true } : n));
-		});
+		setItems((prev) =>
+			prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+		);
 
 		try {
 			await fetch(`${HostIp}/api/notifications/${id}/read/`, {
 				method: "PATCH",
 				credentials: "include",
 			});
-		} catch (error) {
-			console.error("Failed to mark as read", error);
+		} catch (err) {
+			console.error("Failed to mark as read:", err);
 		}
 	}
 
@@ -104,8 +127,8 @@ export default function NotificationsMenu({
 				method: "DELETE",
 				credentials: "include",
 			});
-		} catch (error) {
-			console.error("Failed to delete notification", error);
+		} catch (err) {
+			console.error("Failed to delete notification:", err);
 		}
 	}
 
@@ -121,6 +144,7 @@ export default function NotificationsMenu({
 					: "scale-95 opacity-0 pointer-events-none",
 			].join(" ")}
 		>
+			{/* Header */}
 			<div className="flex items-center justify-between px-4 py-3 border-b border-[#3A3A3A]">
 				<div>
 					<p className="text-sm font-semibold text-[#FFD700] tracking-wide">
@@ -137,6 +161,7 @@ export default function NotificationsMenu({
 				</button>
 			</div>
 
+			{/* Body */}
 			<div className="max-h-80 overflow-y-auto p-3 custom-scroll">
 				{loading ? (
 					<div className="py-6 text-center text-xs text-[#A9A9A9]">
@@ -150,7 +175,7 @@ export default function NotificationsMenu({
 					<div className="flex flex-col gap-3">
 						{items.map((item) => (
 							<NotificationCard
-								key={item.id}
+								key={`${item.id}-${item.createdAt}`}
 								title={item.title}
 								message={item.message}
 								createdAt={item.createdAt}
