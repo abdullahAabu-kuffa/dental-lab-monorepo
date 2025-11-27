@@ -22,12 +22,14 @@ export async function verifyAccessToken(
   next: NextFunction
 ) {
   try {
-        const userAgent = req.headers['user-agent'] || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+    
     let token: string;
     let clientType: 'web' | 'mobile';
-
+    
     const hasCookies = !!req.cookies.accessToken;
     const hasBearer = req.headers.authorization?.startsWith('Bearer ');
+    logger.info(`Verify access token middleware called for ${JSON.stringify(req.body)} , cookies=${hasCookies}, bearer=${hasBearer} , userAgent=${userAgent}`);
 
     if (hasCookies && !hasBearer) {
       // WEB
@@ -75,6 +77,8 @@ export async function verifyAccessToken(
       );
       return res.status(401).json(errorResponse("Invalid device type", 401));
     }
+
+    logger.info(`Session verified for ${decoded.email}: ${clientType} - ${userAgent} - with session : ${session}`);
 
     // Attach decoded user data to request
     req.user = {
