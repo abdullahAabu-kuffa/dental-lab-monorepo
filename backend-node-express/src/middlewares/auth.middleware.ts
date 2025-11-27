@@ -22,23 +22,25 @@ export async function verifyAccessToken(
   next: NextFunction
 ) {
   try {
-    const userAgent = req.headers['user-agent'] || 'unknown';
-    
+    const userAgent = req.headers["user-agent"] || "unknown";
+
     let token: string;
-    let clientType: 'web' | 'mobile';
-    
+    let clientType: "web" | "mobile";
+
     const hasCookies = !!req.cookies.accessToken;
-    const hasBearer = req.headers.authorization?.startsWith('Bearer ');
-    logger.info(`Verify access token middleware called for ${JSON.stringify(req.body)} , cookies=${hasCookies}, bearer=${hasBearer} , userAgent=${userAgent}`);
+    const hasBearer = req.headers.authorization?.startsWith("Bearer ");
+    logger.info(
+      `Verify access token middleware called for ${JSON.stringify(req.body)} , cookies=${hasCookies}, bearer=${hasBearer} , userAgent=${userAgent}`
+    );
 
     if (hasCookies && !hasBearer) {
       // WEB
       token = req.cookies.accessToken;
-      clientType = 'web';
+      clientType = "web";
     } else if (!hasCookies && hasBearer) {
       // MOBILE
       token = req.headers.authorization!.substring(7);
-      clientType = 'mobile';
+      clientType = "mobile";
     } else {
       // Invalid request
       return res.status(401).json(errorResponse("Unauthorized", 401));
@@ -53,9 +55,9 @@ export async function verifyAccessToken(
     const decoded = Jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
 
     // ✅ NEW: Find session and verify clientType + userAgent
-    const session = await prisma.session.findFirst({
+    const session = await prisma.session.findMany({
       where: { userId: decoded.id },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     if (!session) {
@@ -63,22 +65,31 @@ export async function verifyAccessToken(
     }
 
     //  NEW: Verify clientType matches
-    if (session.clientType !== clientType) {
+    logger.info(
+      `Sessions for ${decoded.email}: ${session.map((s) => s.clientType)}`
+    );
+    logger.info(`Request clientType: ${clientType}`);
+    logger.info(
+      "some answer: ",
+      session.some((s) => s.clientType == clientType) === true
+    );
+    if (!session.some((s) => s.clientType === clientType)) {
       logger.warn(
-        `[SECURITY] ClientType mismatch: session=${session.clientType}, request=${clientType}`
+        `[SECURITY] ClientType mismatch: sessions=${session.map((s) => s.clientType)}, request=${clientType}`
       );
       return res.status(401).json(errorResponse("Invalid device type", 401));
     }
 
-    //  NEW: Verify userAgent matches
-    if (session.userAgent !== userAgent) {
+    if (!session.some((s) => s.userAgent === userAgent)) {
       logger.warn(
-        `[SECURITY] UserAgent mismatch for ${decoded.email}: stored=${session.userAgent}, current=${userAgent}`
+        `[SECURITY] UserAgent mismatch for ${decoded.email}: stored agents=${session.map((s) => s.userAgent)}, current=${userAgent}`
       );
       return res.status(401).json(errorResponse("Invalid device type", 401));
     }
 
-    logger.info(`Session verified for ${decoded.email}: ${clientType} - ${userAgent} - with session : ${session}`);
+    logger.info(
+      `Session verified for ${decoded.email}: ${clientType} - ${userAgent} - with session : ${session}`
+    );
 
     // Attach decoded user data to request
     req.user = {
