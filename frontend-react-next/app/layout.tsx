@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display } from "next/font/google";
-import "./globals.css";
+import './globals.css'
 import { QueryProvider } from "@/QueryProvider";
 import { AuthProvider } from "./src/context/AuthContext";
 import Provider from "./provider";
@@ -33,7 +33,7 @@ export default async function RootLayout({
 	console.log("user session : ", session);
 	return (
 		<html lang="en">
-			<body className={`${playfair.variable} antialiased`}>
+			<body>
 				<Provider>
 					<QueryProvider>
 						<Navbar />
