@@ -211,7 +211,7 @@ export default function OrderDetails({
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
               <h3 className="text-gray-900 font-bold mb-8">Order Progress</h3>
               <div className="relative flex justify-between">
-                <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-1/2 rounded-full -z-0"></div>
+                <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-1/2 rounded-full z-0"></div>
 
                 {orderSteps.map((step, index) => {
                   const stepStatus = getStepStatus(index);
@@ -308,7 +308,7 @@ export default function OrderDetails({
             {/* ACTION CARD */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 relative overflow-hidden">
               <div
-                className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${currentTheme.gradient}`}
+                className={`absolute top-0 left-0 w-1 h-full bg-linear-to-b ${currentTheme.gradient}`}
               ></div>
               <h2 className="text-lg font-bold text-gray-900 mb-6">
                 Update Status
