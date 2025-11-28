@@ -1,0 +1,7 @@
+title,category,content,metadata
+"Zirconia Crown","Materials","Premium tooth-colored ceramic crown. Highly biocompatible and durable. Suitable for front and back teeth. Excellent esthetics.","{""lifespan_years"":10,""strength_mpa"":800,""price"":150}"
+"Composite Filling","Materials","Tooth-colored resin filling. Aesthetic option. Mercury-free. UV-cured for immediate hardening.","{""lifespan_years"":7,""aesthetic"":true,""price"":45}"
+"Titanium Implant","Materials","Medical-grade titanium implant. Osseointegration-ready. Standard size 10mm length and 4mm diameter.","{""lifespan_years"":20,""biocompatible"":true,""price"":280}"
+"Crown Preparation","Procedures","Steps for crown preparation: 1) Local anesthesia 2) Remove decayed area 3) Prepare tooth structure 4) Take impression 5) Temporary crown placement","{}"
+"Dental Implant Placement","Procedures","Steps for implant placement: 1) Local anesthesia 2) Incision 3) Implant placement 4) Closure 5) Healing period","{}"
+"Patient Education","Guidelines","Always educate patients about proper oral hygiene and maintenance. Crowns typically last 10-15 years with proper care.","{}"
