@@ -320,7 +320,7 @@ export const forgotPasswordService = async (email: string) => {
       isActive: user.isActive,
     });
     logger.info(`[Forgot Password Service] Token: ${token}`);
-    const resetLink = `http://localhost:${process.env.PORT}/api/auth/reset-password?token=${token}`;
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",
       body: `
