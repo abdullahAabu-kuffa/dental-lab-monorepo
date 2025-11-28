@@ -9,11 +9,12 @@ import {
   Mail,
   Phone,
   MapPin,
-  CheckCircle,   // Added
-  Clock,         // Added
-  Package,       // Added
-  AlertCircle,   // Added
+  CheckCircle, // Added
+  Clock, // Added
+  Package, // Added
+  AlertCircle, // Added
 } from "lucide-react";
+import { Order, SelectedService } from "../interfaces/orders";
 
 export default function OrderDetails({
   params,
@@ -22,7 +23,7 @@ export default function OrderDetails({
 }) {
   const router = useRouter(); // For navigation
   const { data: me } = useGetProfileInfo();
-  
+
   // Un-commented and Fixed orderSteps
   const orderSteps = [
     { label: "Pending", icon: Clock },
@@ -59,28 +60,38 @@ export default function OrderDetails({
 
   const mapBackendStatusToUI = (status: string) => {
     switch (status) {
-      case "PENDING": return "Pending";
-      case "IN_PROGRESS": return "In Progress";
-      case "COMPLETED": return "Completed";
-      case "CANCELLED": return "Cancelled";
-      default: return "Pending";
+      case "PENDING":
+        return "Pending";
+      case "IN_PROGRESS":
+        return "In Progress";
+      case "COMPLETED":
+        return "Completed";
+      case "CANCELLED":
+        return "Cancelled";
+      default:
+        return "Pending";
     }
   };
 
   const mapUIStatusToBackend = (status: string) => {
     switch (status) {
-      case "Pending": return "PENDING";
-      case "In Progress": return "IN_PROGRESS";
-      case "Completed": return "COMPLETED";
-      case "Cancelled": return "CANCELLED";
-      default: return "PENDING";
+      case "Pending":
+        return "PENDING";
+      case "In Progress":
+        return "IN_PROGRESS";
+      case "Completed":
+        return "COMPLETED";
+      case "Cancelled":
+        return "CANCELLED";
+      default:
+        return "PENDING";
     }
   };
 
   const handleConfirm = () => {
     if (!selectedStatus) return;
 
-    setOrder((prev: any) => ({
+    setOrder((prev: Order) => ({
       ...prev,
       status: mapUIStatusToBackend(selectedStatus),
     }));
@@ -103,8 +114,9 @@ export default function OrderDetails({
           gradient: "from-emerald-500 to-teal-600",
           stepColor: "bg-emerald-500 border-emerald-500 text-emerald-600",
           ring: "ring-emerald-100",
-          buttonActive: "bg-emerald-100 border-emerald-200 text-emerald-700 ring-emerald-200",
-          dot: "bg-emerald-500"
+          buttonActive:
+            "bg-emerald-100 border-emerald-200 text-emerald-700 ring-emerald-200",
+          dot: "bg-emerald-500",
         };
       case "cancelled":
         return {
@@ -112,25 +124,27 @@ export default function OrderDetails({
           stepColor: "bg-red-500 border-red-500 text-red-600",
           ring: "ring-red-100",
           buttonActive: "bg-red-50 border-red-200 text-red-700 ring-red-200",
-          dot: "bg-red-500"
+          dot: "bg-red-500",
         };
       case "processing":
       case "in_progress": // Fixed to match backend
-      case "in progress": 
+      case "in progress":
         return {
           gradient: "from-blue-500 to-indigo-600",
           stepColor: "bg-blue-500 border-blue-500 text-blue-600",
           ring: "ring-blue-100",
-          buttonActive: "bg-blue-50 border-blue-200 text-blue-700 ring-blue-200",
-          dot: "bg-blue-500"
+          buttonActive:
+            "bg-blue-50 border-blue-200 text-blue-700 ring-blue-200",
+          dot: "bg-blue-500",
         };
       default: // Pending
         return {
           gradient: "from-amber-400 to-orange-500",
           stepColor: "bg-amber-500 border-amber-500 text-amber-600",
           ring: "ring-amber-100",
-          buttonActive: "bg-amber-50 border-amber-200 text-amber-700 ring-amber-200",
-          dot: "bg-amber-500"
+          buttonActive:
+            "bg-amber-50 border-amber-200 text-amber-700 ring-amber-200",
+          dot: "bg-amber-500",
         };
     }
   };
@@ -143,7 +157,7 @@ export default function OrderDetails({
     const statusOrder = ["Pending", "In Progress", "Completed"];
     // Note: Cancelled is tricky in a linear stepper, usually treated as an edge case
     if (uiStatus === "Cancelled") return index === 0 ? "completed" : "inactive";
-    
+
     const currentIndex = statusOrder.indexOf(uiStatus);
     if (index < currentIndex) return "completed";
     if (index === currentIndex) return "current";
@@ -155,7 +169,9 @@ export default function OrderDetails({
   return (
     <div className="min-h-screen bg-gray-50/50 pb-12 font-sans">
       {/* HEADER BANNER */}
-      <div className={`w-full h-48 bg-gradient-to-r ${currentTheme.gradient} relative overflow-hidden shadow-lg transition-all duration-500`}>
+      <div
+        className={`w-full h-48 bg-linear-to-r ${currentTheme.gradient} relative overflow-hidden shadow-lg transition-all duration-500`}
+      >
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/4 blur-2xl"></div>
 
@@ -164,16 +180,23 @@ export default function OrderDetails({
             onClick={() => router.back()}
             className="absolute top-6 left-6 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm"
           >
-            <ArrowLeft size={16} /> <span className="text-sm font-medium">Back</span>
+            <ArrowLeft size={16} />{" "}
+            <span className="text-sm font-medium">Back</span>
           </button>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-8">
             <div className="text-white">
               <p className="text-blue-100 font-medium mb-1">Order ID</p>
-              <h1 className="text-4xl font-extrabold tracking-tight">#{order.id}</h1>
+              <h1 className="text-4xl font-extrabold tracking-tight">
+                #{order.id}
+              </h1>
             </div>
             <div className="bg-white/20 backdrop-blur-md px-5 py-2 rounded-2xl border border-white/30 text-white flex items-center gap-2 shadow-sm">
-              {uiStatus === "Completed" ? <CheckCircle size={20} /> : <Clock size={20} />}
+              {uiStatus === "Completed" ? (
+                <CheckCircle size={20} />
+              ) : (
+                <Clock size={20} />
+              )}
               <span className="font-bold text-lg">{uiStatus}</span>
             </div>
           </div>
@@ -182,35 +205,51 @@ export default function OrderDetails({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-10 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           {/* LEFT SECTION */}
           <div className="lg:col-span-2 space-y-6">
-            
             {/* PROGRESS STEPPER */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
               <h3 className="text-gray-900 font-bold mb-8">Order Progress</h3>
               <div className="relative flex justify-between">
                 <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-1/2 rounded-full -z-0"></div>
-                
+
                 {orderSteps.map((step, index) => {
                   const stepStatus = getStepStatus(index);
                   const isCompleted = stepStatus === "completed";
                   const isCurrent = stepStatus === "current";
 
                   return (
-                    <div key={index} className="relative z-10 flex flex-col items-center group">
-                      <div className={`
+                    <div
+                      key={index}
+                      className="relative z-10 flex flex-col items-center group"
+                    >
+                      <div
+                        className={`
                         w-10 h-10 rounded-full flex items-center justify-center border-4 transition-all duration-500
-                        ${isCompleted 
-                          ? `${currentTheme.stepColor.split(' ')[0]} border-transparent text-white scale-110 shadow-lg` // Solid color for completed
-                          : isCurrent 
-                            ? `bg-white ${currentTheme.stepColor.split(' ')[1]} ${currentTheme.stepColor.split(' ')[2]} animate-pulse ring-4 ${currentTheme.ring}`
+                        ${
+                          isCompleted
+                            ? `${
+                                currentTheme.stepColor.split(" ")[0]
+                              } border-transparent text-white scale-110 shadow-lg` // Solid color for completed
+                            : isCurrent
+                            ? `bg-white ${
+                                currentTheme.stepColor.split(" ")[1]
+                              } ${
+                                currentTheme.stepColor.split(" ")[2]
+                              } animate-pulse ring-4 ${currentTheme.ring}`
                             : "bg-white border-gray-200 text-gray-300"
                         }
-                      `}>
+                      `}
+                      >
                         <step.icon size={18} strokeWidth={2.5} />
                       </div>
-                      <span className={`mt-3 text-xs font-bold uppercase tracking-wider transition-colors ${isCompleted || isCurrent ? "text-gray-800" : "text-gray-400"}`}>
+                      <span
+                        className={`mt-3 text-xs font-bold uppercase tracking-wider transition-colors ${
+                          isCompleted || isCurrent
+                            ? "text-gray-800"
+                            : "text-gray-400"
+                        }`}
+                      >
                         {step.label}
                       </span>
                     </div>
@@ -226,22 +265,38 @@ export default function OrderDetails({
               </div>
               <div className="p-6">
                 <div className="space-y-4">
-                  {order.options.selectedServices.map((service: any, idx: number) => (
-                    <div key={idx} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm text-gray-400 group-hover:text-blue-600 transition-colors">
-                          <Package size={20} />
+                  {order.options.selectedServices.map(
+                    (service: SelectedService, idx: number) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm text-gray-400 group-hover:text-blue-600 transition-colors">
+                            <Package size={20} />
+                          </div>
+                          <span className="font-semibold text-gray-700">
+                            {service.label}
+                          </span>
                         </div>
-                        <span className="font-semibold text-gray-700">{service.label}</span>
+                        <span className="font-bold text-gray-900 text-lg">
+                          {service.price} EGP
+                        </span>
                       </div>
-                      <span className="font-bold text-gray-900 text-lg">{service.price} EGP</span>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
                 <div className="mt-8 flex justify-end">
                   <div className="bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-xl flex flex-col items-end">
-                    <span className="text-gray-400 text-sm mb-1">Total Amount</span>
-                    <span className="text-3xl font-bold">{order.price} <span className="text-lg text-gray-500 font-medium">EGP</span></span>
+                    <span className="text-gray-400 text-sm mb-1">
+                      Total Amount
+                    </span>
+                    <span className="text-3xl font-bold">
+                      {order.price}{" "}
+                      <span className="text-lg text-gray-500 font-medium">
+                        EGP
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -250,11 +305,14 @@ export default function OrderDetails({
 
           {/* RIGHT SECTION */}
           <div className="space-y-6">
-            
             {/* ACTION CARD */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 relative overflow-hidden">
-              <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${currentTheme.gradient}`}></div>
-              <h2 className="text-lg font-bold text-gray-900 mb-6">Update Status</h2>
+              <div
+                className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${currentTheme.gradient}`}
+              ></div>
+              <h2 className="text-lg font-bold text-gray-900 mb-6">
+                Update Status
+              </h2>
               <div className="space-y-2">
                 {statuses.map((s) => {
                   const isActive = uiStatus === s.label;
@@ -268,14 +326,21 @@ export default function OrderDetails({
                       disabled={isActive}
                       className={`
                         w-full flex items-center justify-between p-3 rounded-xl border text-sm font-semibold transition-all duration-200
-                        ${isActive 
-                          ? `${currentTheme.buttonActive} ring-1` 
-                          : "bg-white border-transparent hover:bg-gray-50 hover:border-gray-200 text-gray-600"
+                        ${
+                          isActive
+                            ? `${currentTheme.buttonActive} ring-1`
+                            : "bg-white border-transparent hover:bg-gray-50 hover:border-gray-200 text-gray-600"
                         }
                       `}
                     >
                       <span className="flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${isActive ? `${currentTheme.dot} animate-pulse` : "bg-gray-300"}`}></span>
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            isActive
+                              ? `${currentTheme.dot} animate-pulse`
+                              : "bg-gray-300"
+                          }`}
+                        ></span>
                         {s.label}
                       </span>
                       {isActive && <CheckCircle size={16} />}
@@ -301,27 +366,34 @@ export default function OrderDetails({
                   <Mail className="text-gray-400" size={18} />
                   <div className="flex-1 overflow-hidden">
                     <p className="text-xs text-gray-500">Email Address</p>
-                    <p className="text-sm font-semibold text-gray-900 truncate">{order.user.email}</p>
+                    <p className="text-sm font-semibold text-gray-900 truncate">
+                      {order.user.email}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                   <Phone className="text-gray-400" size={18} />
                   <div>
                     <p className="text-xs text-gray-500">Phone Number</p>
-                    <p className="text-sm font-semibold text-gray-900">{order.user.phoneNumber}</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {order.user.phoneNumber}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
                   <MapPin className="text-gray-400 mt-1" size={18} />
                   <div>
                     <p className="text-xs text-gray-500">Clinic Address</p>
-                    <p className="text-sm font-semibold text-gray-900 leading-snug">{order.user.clinicAddress}</p>
-                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded mt-1 inline-block">{order.user.clinicName}</span>
+                    <p className="text-sm font-semibold text-gray-900 leading-snug">
+                      {order.user.clinicAddress}
+                    </p>
+                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded mt-1 inline-block">
+                      {order.user.clinicName}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -333,9 +405,16 @@ export default function OrderDetails({
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-50 mb-6">
                   <AlertCircle className="h-8 w-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Update Status</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Update Status
+                </h3>
                 <p className="text-sm text-gray-500 mt-2">
-                  Change order status from <span className="font-bold text-gray-800">{uiStatus}</span> to <span className="font-bold text-blue-600">{selectedStatus}</span>?
+                  Change order status from{" "}
+                  <span className="font-bold text-gray-800">{uiStatus}</span> to{" "}
+                  <span className="font-bold text-blue-600">
+                    {selectedStatus}
+                  </span>
+                  ?
                 </p>
               </div>
               <div className="mt-8 flex gap-3">
