@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -198,4 +198,19 @@ enum NotificationType {
   INFO
   WARNING
   ERROR
+}
+
+model KnowledgeBaseEntry {
+  id           Int      @id @default(autoincrement())
+  title        String
+  category     String
+  content      String
+  metadata     Json?    @default("{}")
+  // pgvector column – Prisma can map it as Unsupported("vector")
+ embedding    Unsupported("vector(384)")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+  @@index([createdAt])
 }

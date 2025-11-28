@@ -16,7 +16,8 @@ export default function OrdersListPage() {
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
   const { data, isLoading } = useOrders();
   const orders = data;
-
+  console.log(selectedOrder);
+  
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders || []);
 
   const handleDetailsClick = (order: Order) => {

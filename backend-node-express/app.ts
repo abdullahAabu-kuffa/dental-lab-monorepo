@@ -15,6 +15,8 @@ import downloadRoutes from "./src/routes/download.routes";
 import notificationRoutes from "./src/routes/notification.routes";
 import notificationTestRoutes from "./src/routes/notification-test.routes";
 import fileRoutes from "./src/routes/file.routes";
+import ragRoutes from "./src/routes/rag.routes";
+
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
 import { captureUserAgent } from "./src/middlewares/captureUserAgent";
@@ -70,6 +72,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/notifications-test", notificationTestRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use('/api/files', fileRoutes);
+
+app.use("/api/rag", ragRoutes);
 
 // TODO: 404 handler
 app.use((req, res) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import animationData from "@/assets/lotties/Loading.json";
+import animationData from "@/assets/lotties/Drag & Drop Upload.json";
 import { useLoading } from "../contexts/LoadingContext";
 
 export default function GlobalLoader() {
