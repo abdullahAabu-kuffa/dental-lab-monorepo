@@ -36,15 +36,15 @@ export default async function RootLayout({
 			<body className={`${playfair.variable} antialiased`}>
 				<Provider>
 					<QueryProvider>
-						<Navbar />
 						<TokenRefreshInitializer />
-						<AuthProvider>
+						<Navbar />
+						{/* <AuthProvider> */}
 							<LoadingProvider>
 								<GlobalLoader />
 								{children}
 								<Footer />
 							</LoadingProvider>
-						</AuthProvider>
+						{/* </AuthProvider> */}
 					</QueryProvider>
 				</Provider>
 			</body>

@@ -1,5 +1,5 @@
 generator client {
-provider = "prisma-client-js"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -156,6 +156,20 @@ model Notification {
   @@index([userId, isRead])
 }
 
+model KnowledgeBaseEntry {
+  id        Int                   @id @default(autoincrement())
+  title     String
+  category  String
+  content   String
+  metadata  Json?                 @default("{}")
+  embedding Unsupported("vector")
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@index([category])
+  @@index([createdAt])
+}
+
 enum Role {
   CLIENT
   OWNER
@@ -198,19 +212,4 @@ enum NotificationType {
   INFO
   WARNING
   ERROR
-}
-
-model KnowledgeBaseEntry {
-  id           Int      @id @default(autoincrement())
-  title        String
-  category     String
-  content      String
-  metadata     Json?    @default("{}")
-  // pgvector column – Prisma can map it as Unsupported("vector")
- embedding    Unsupported("vector(384)")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@index([category])
-  @@index([createdAt])
 }
