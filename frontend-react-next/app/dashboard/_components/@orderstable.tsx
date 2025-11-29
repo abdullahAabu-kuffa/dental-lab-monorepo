@@ -1,5 +1,5 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, View } from "lucide-react";
 import { FcCancel } from "react-icons/fc";
 import { MdDone } from "react-icons/md";
@@ -10,11 +10,12 @@ import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
 import Loading from "./@loading";
 import useOrderStore from "@/stores/orders-store";
+import { useLoading } from "@/app/src/contexts/LoadingContext";
 
 const ACTION_MAP: Record<string, "IN_PROGRESS" | "CANCELLED"> = {
   approve: "IN_PROGRESS",
   reject: "CANCELLED",
-};  
+};
 
 const statusColors = {
   CANCELLED: "bg-gray-100 text-gray-700",
@@ -22,12 +23,19 @@ const statusColors = {
   COMPLETED: "bg-green-100 text-green-700",
   "In Progress": "bg-blue-100 text-blue-700",
   REJECTED: "bg-red-100 text-red-700",
-  "IN_PROGRESS": "bg-blue-100 text-blue-700",
+  IN_PROGRESS: "bg-blue-100 text-blue-700",
 };
 
 const filters = ["All", "PENDING", "IN_PROGRESS", "COMPLETED", "REJECTED"];
 
-const OrdersTable = ({ overview, currentPage }: { overview?: boolean, currentPage: number }) => {
+const OrdersTable = ({
+  overview,
+  currentPage,
+}: {
+  overview?: boolean;
+  currentPage: number;
+}) => {
+  const { setLoading } = useLoading();
   const getOrders = useOrderStore((state) => state.getOrders);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
@@ -39,13 +47,10 @@ const OrdersTable = ({ overview, currentPage }: { overview?: boolean, currentPag
   const [action, setAction] = useState("");
   const { data, isLoading, error, isError } = useGetAllOrders(currentPage);
   const apiOrders = data?.data?.orders ?? [];
-  if (isLoading) {
-    return (
-      <div className="flex justify-center">
-        <Loading/>
-      </div>
-    );
-  }
+    useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
+
 
   if (isError) {
     return (
@@ -55,13 +60,12 @@ const OrdersTable = ({ overview, currentPage }: { overview?: boolean, currentPag
     );
   }
 
-
   const mappedOrders: Order[] = (apiOrders as ApiOrder[]).map((o) => ({
     id: Number(o.id),
     userId: o.user.id,
     type: o.type ?? "Unknown",
     date: o.createdAt.split("T")[0],
-    status: o.status==="CANCELLED" ? "REJECTED" : o.status,
+    status: o.status === "CANCELLED" ? "REJECTED" : o.status,
     price: `${o.totalPrice} EGP`,
     approvedBy: o.approvedBy,
     createdAt: o.createdAt,

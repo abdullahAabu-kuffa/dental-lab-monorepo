@@ -11,9 +11,9 @@ console.log(token);
 
 
 
-/* ===========================================
-   GET ALL ORDERS
-=========================================== */
+// /* ===========================================
+//    GET ALL ORDERS
+// =========================================== */
 export const getAllOrders = async ({ page }: { page: number }) => {
   const res = await axios.get(`/orders`, {
     params: { page },

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import { OrderCard } from "../components/OrderComponent/OrderCard";
 import { OrderProgress } from "../components/OrderComponent/OrderProgress";
@@ -8,15 +8,18 @@ import { useRouter } from "next/navigation";
 import { filterOrdersByStatus } from "../../../src/config/UserData/orderDataService";
 import { Order } from "../../../src/types";
 import { useOrders } from "@/app/src/lib/orders";
+import { useLoading } from "@/app/src/contexts/LoadingContext";
 
 export default function OrdersListPage() {
   const router = useRouter();
+    const { setLoading } = useLoading();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
   const { data, isLoading } = useOrders();
-  const orders = data;
-  console.log(selectedOrder);
+  const orders = data?.data?.orders;
+  // console.log(selectedOrder);
+  // console.log(orders);
   
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders || []);
 
@@ -41,6 +44,9 @@ export default function OrdersListPage() {
       }
     }
   };
+    useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
 
   return (
     <div className="w-full min-h-screen relative">

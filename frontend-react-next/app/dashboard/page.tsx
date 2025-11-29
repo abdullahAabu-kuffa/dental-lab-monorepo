@@ -10,12 +10,14 @@ import Loading from "./_components/@loading";
 import ErrorMessage from "./_components/@displayerrors";
 import { useUsers } from "./services/hookes/fetch_all_users";
 import { Pagination } from "./_components/@pagination";
+import { useLoading } from "../src/contexts/LoadingContext";
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const goNext = () => currentPage < pages && setCurrentPage(currentPage + 1);
   const goPrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const { data: me } = useGetProfileInfo();
+    const { setLoading } = useLoading();
   useEffect(() => {
     if (me) {
       if (me?.data?.user?.role !== "ADMIN") window.location.href = "/User";
@@ -24,7 +26,10 @@ const Dashboard = () => {
   const { data, isLoading, isError, error } = useGetAllOrders(currentPage);
   const pages = data?.data?.totalPages || 1;
   const { data: users } = useUsers(currentPage, 10);
-  if (isLoading) return <Loading />;
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
+
   if (isError) return <ErrorMessage message={error.message} />;
   const totalOrders = data?.data?.totalOrders || 0;
   const totalUsers = users?.data?.pagination?.total || 0;

@@ -26,7 +26,7 @@ export function useOrders(page = 1) {
     queryKey: ["orders", page],
     queryFn: async () => {
       const res = await fetchOrders(page);
-      return res.data?.orders ?? [];
+      return res;
     },
     staleTime: Infinity,
     refetchOnWindowFocus: false,

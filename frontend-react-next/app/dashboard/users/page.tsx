@@ -12,16 +12,19 @@ import Loading from "../_components/@loading";
 import ErrorMessage from "../_components/@displayerrors";
 
 import { useUsers } from "../services/hookes/fetch_all_users";
+import { useLoading } from "@/app/src/contexts/LoadingContext";
 
 const usersList = () => {
-
   const [page, setPage] = useState(1);
+  const { setLoading } = useLoading();
   const limit = 10;
 
-  const { data:respose, isLoading, isError, error } = useUsers(page, limit);
+  const { data: respose, isLoading, isError, error } = useUsers(page, limit);
 
   // Handle loading state
-  if (isLoading) return <Loading />;
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
 
   // Handle error state
   if (isError) return <ErrorMessage message={error.message} />;

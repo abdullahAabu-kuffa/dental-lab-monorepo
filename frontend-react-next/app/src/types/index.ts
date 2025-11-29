@@ -237,9 +237,10 @@ export interface WorkflowCard {
 
 export interface FormField {
   id: string;
-  type: "text" | "checkbox" | "textarea" | "file";
+  type: "text" | "checkbox" | "textarea" | "file" | "date";
   label: string;
   required?: boolean;
+  validation?:object
 }
 
 // COMPONENT-SPECIFIC TYPES
