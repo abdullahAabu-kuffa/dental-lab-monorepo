@@ -13,6 +13,13 @@ import {
   CheckCircle,
   Crown,
   FileText,
+  User,
+  Layers,
+  Upload,
+  Edit,
+  Search,
+  Cog,
+  Wrench,
 } from "../../utils/UnifiedIcons";
 import { CheckCircle2, XCircle } from "lucide-react";
 
@@ -428,56 +435,77 @@ const stages = [
   return stages;
 };
 
-// Enhanced user process steps for landing page
+// Enhanced user process steps for landing page - Real dental lab workflow
 export const USER_PROCESS_STEPS = [
   {
     id: 1,
-    title: "Upload Case",
+    title: "New Order",
     icon: Package,
     completed: true,
-    description: "Upload dental impressions and specifications",
+    description: "Create and submit new dental case order",
   },
   {
     id: 2,
     title: "Material Selection",
-    icon: Crown,
+    icon: Layers,
     completed: true,
-    description: "Choose from premium dental materials",
+    description: "Choose from premium dental materials (Zirconia, PFM, E-max)",
   },
   {
     id: 3,
-    title: "Design Process",
-    icon: Settings,
-    completed: false,
-    description: "Custom design and manufacturing",
+    title: "Upload Case",
+    icon: Upload,
+    completed: true,
+    description: "Upload dental impressions, photos, and specifications",
   },
   {
     id: 4,
-    title: "Quality Check",
-    icon: Eye,
-    completed: false,
-    description: "Thorough quality assurance",
+    title: "Accept Case",
+    icon: CheckCircle,
+    completed: true,
+    description: "Case review and acceptance confirmation",
   },
   {
     id: 5,
-    title: "Documentation",
-    icon: FileText,
+    title: "Scan or Cast",
+    icon: Search,
     completed: false,
-    description: "Case documentation and reports",
+    description: "Digital scanning or physical cast preparation",
   },
   {
     id: 6,
-    title: "Shipping",
-    icon: Truck,
+    title: "Design",
+    icon: Edit,
     completed: false,
-    description: "Secure delivery to your clinic",
+    description: "CAD/CAM design and planning using ExoCAD",
   },
   {
     id: 7,
-    title: "Completion",
-    icon: CheckCircle,
+    title: "Try in",
+    icon: User,
     completed: false,
-    description: "Order completed successfully",
+    description: "Initial fit verification and adjustments",
+  },
+  {
+    id: 8,
+    title: "Milling",
+    icon: Cog,
+    completed: false,
+    description: "Precision milling of the dental restoration",
+  },
+  {
+    id: 9,
+    title: "Finishing and Glazing",
+    icon: Wrench,
+    completed: false,
+    description: "Surface finishing, staining, and glazing",
+  },
+  {
+    id: 10,
+    title: "Delivery",
+    icon: Truck,
+    completed: false,
+    description: "Secure packaging and shipment to clinic",
   },
 ] as const;
 

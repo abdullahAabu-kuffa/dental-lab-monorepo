@@ -39,12 +39,13 @@ const Navbar = () => {
   // const loading = useAuthStore((s) => s.isLoading);
   // const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
-  //   console.log(user);
 
-  // Notification toggle
-  function toggleMenu() {
-    setOpen((prev) => !prev);
-  }
+//   console.log(user);
+  
+	// Notification toggle
+	function toggleMenu() {
+		setOpen((prev) => !prev);
+	}
 
   // Scroll effect
   useEffect(() => {
