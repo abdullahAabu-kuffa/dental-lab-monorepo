@@ -17,17 +17,16 @@ export default function AutoScrollCarousel({ items, speed = 3000 }: CarouselProp
     return () => clearInterval(interval);
   }, [items.length, speed]);
 
-  const goToPrevious = () => setIndex((prev) => (prev - 1 + items.length) % items.length);
-  const goToNext = () => setIndex((prev) => (prev + 1) % items.length);
-  const goToSlide = (slideIndex: number) => setIndex(slideIndex);
-
   return (
-    <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl bg-gray-900">
+    <div className="relative w-full h-80 md:h-[28rem] lg:h-[32rem] bg-gray-900 rounded-lg">
+
+
+      {/* Carousel slides */}
       {items.map((item, i) => (
         <div
           key={i}
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            i === index ? "opacity-100" : "opacity-0"
+          className={`absolute inset-0 transition-all duration-700 ${
+            i === index ? "opacity-100 scale-100" : "opacity-0 scale-105"
           }`}
         >
           <img
@@ -40,54 +39,52 @@ export default function AutoScrollCarousel({ items, speed = 3000 }: CarouselProp
               const parent = target.parentElement;
               if (parent) {
                 parent.innerHTML = `
-                  <div class="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                    <div class="text-gray-400 text-center">
-                      <div class="text-6xl mb-4">🦷</div>
-                      <p class="text-xl">${item.title}</p>
-                      <p class="text-sm mt-2">Dental lab excellence</p>
+                  <div class="w-full h-full bg-gradient-to-br from-gray-800 via-[#1a1d2e] to-gray-900 flex items-center justify-center">
+                    <div class="text-center px-8">
+                      <div class="text-7xl mb-6 animate-pulse">🦷</div>
+                      <p class="text-2xl font-bold text-[#d4a574] mb-2">${item.title}</p>
+                      <div class="w-24 h-1 bg-[#d4a574] mx-auto mb-4"></div>
+                      <p class="text-gray-400">Dental Lab Excellence</p>
                     </div>
                   </div>
                 `;
               }
             }}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-4 text-center">
-            <h3 className="text-white font-semibold text-lg">{item.title}</h3>
-            <p className="text-white/80 text-sm mt-1">Dental lab excellence</p>
+          
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#d4a574]/5 to-transparent"></div>
+          
+          {/* Title section */}
+          <div className="absolute bottom-0 left-0 right-0 p-10 bg-gradient-to-t from-black/95 via-black/80 to-black/40 z-40">
+            <div className="relative">
+              <div className="w-20 h-1 bg-[#d4a574] mb-4 shadow-lg"></div>
+              <h3 className="text-white font-bold text-3xl mb-3 tracking-wide drop-shadow-lg">{item.title}</h3>
+              <p className="text-[#d4a574] text-base uppercase tracking-widest font-semibold drop-shadow-md">
+                Premium Dental Solutions
+              </p>
+            </div>
           </div>
         </div>
       ))}
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-10"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button
-        onClick={goToNext}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full z-10"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+      {/* Navigation dots */}
+      <div className="absolute top-6 right-6 flex gap-2 bg-black/40 backdrop-blur-sm px-3 py-2 rounded-full z-30">
         {items.map((_, i) => (
           <button
             key={i}
-            onClick={() => goToSlide(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-              i === index ? "bg-white" : "bg-white/50 hover:bg-white/70"
+            onClick={() => setIndex(i)}
+            className={`transition-all duration-300 rounded-full ${
+              i === index 
+                ? "w-10 h-3 bg-[#d4a574]" 
+                : "w-4 h-4 bg-white/70 hover:bg-white/90"
             }`}
+            aria-label={`Go to slide ${i + 1}`}
           />
         ))}
       </div>
+
     </div>
   );
 }

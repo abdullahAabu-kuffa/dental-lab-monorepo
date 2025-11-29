@@ -18,8 +18,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   onShowOrdersTable
 }) => {
   const { navigateToForm, navigateToOrdersList } = useNavigation();
-  const doctorName = "Dr. Ahmed Hassan";
-    const { user, loading, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   const handleNewOrder = () => {
     navigateToForm();
@@ -39,20 +38,22 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   return (
     <div className="w-full min-h-screen relative">
       <div className="relative w-full p-6 space-y-16">
+
         <motion.div
           {...welcomePageAnimations.mainContainer}
-          className="w-full flex flex-col md:flex-row items-start gap-12"
+          className="w-full flex flex-col md:flex-row md:items-center items-start gap-12"
         >
-          {/* Left Column: Text & Buttons */}
+          {/* Left Column */}
           <motion.div className="flex-1 text-left space-y-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800">
               Welcome back,
             </h1>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
-              {user?.data.user.fullName}
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800" >
+              {user?.data?.user?.fullName}
             </h2>
-            <p className="text-xl text-gray-600 max-w-lg leading-relaxed text-lg" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <p className="text-xl text-black max-w-lg leading-relaxed text-xxl">
               Your personalized dental lab management system is ready to streamline your practice.
+              All updates appear live in your client dashboard — giving you full transparency and control over your cases.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -66,6 +67,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
                 </div>
                 <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               </button>
+
               <button
                 onClick={handleViewOrders}
                 className={`group relative overflow-hidden ${componentStyles.buttons.whiteBlackHover} rounded-xl`}
@@ -79,64 +81,78 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
             </div>
           </motion.div>
 
-          {/* Right Column: Steps / Icons */}
+          {/* Right Column */}
           <motion.div className="flex-1 space-y-12">
-            {/* First Section - First 3 Icons */}
-            <div className="p-6 space-y-4 bg-white  ">
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>1-Choose Material & Upload File</h3>
-              <p className="text-gray-600 text-center mb-6 text-lg">Select from our premium materials and upload your case file.</p>
-              <div className="flex justify-center gap-8 relative">
-                {/* Connecting line behind icons */}
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-48 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+
+            {/* Section 1 */}
+            <div className="p-6 space-y-4 bg-white border border-gray-200 rounded-lg">
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 text-left">
+                1-Choose Material & Upload File
+              </h3>
+              <p className="text-gray-600 text-left mb-6 text-lg">
+                Select from our premium materials and upload your case file.
+              </p>
+
+              <div className="flex gap-12 justify-start relative">
+             
+                <div className="absolute top-8 left-8 w-1/3 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+
                 {PROCESS_STEPS.slice(0, 3).map((process, index) => (
                   <motion.div
                     key={index}
-                    className="text-center group cursor-pointer relative z-10"
+                    className="text-left group cursor-pointer relative z-10 space-y-2"
                     variants={motionVariants.processStep(index)}
                   >
-                    <div className="mx-auto rounded-full w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-500 to-green-500">
+                    <div className="mx-auto rounded-full w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-gradient-to-br from-emerald-500 to-green-500 transition-all duration-300">
                       <process.icon className="text-white w-8 h-8" />
                     </div>
-                    <h4 className="text-sm font-semibold text-gray-800 mt-3">{process.title}</h4>
+                    <h4 className="text-sm font-semibold text-gray-800">{process.title}</h4>
                   </motion.div>
                 ))}
               </div>
             </div>
-            ,
-            {/* Second Section - Remaining Icons */}
-            <div className="p-6 space-y-4 bg-white ">
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>2-Track Your Order Online</h3>
-              <p className="text-gray-600 text-center mb-6 text-lg">Follow your dental case from upload to delivery — every stage, visible in real-time.</p>
-              <div className="flex justify-center gap-8 relative">
-                {/* Connecting line behind icons */}
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-48 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+
+            {/* Section 2 */}
+            <div className="p-6 space-y-4 bg-white border border-gray-200 rounded-lg">
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 text-left">
+                2-Track Your Order Online
+              </h3>
+              <p className="text-gray-600 text-left mb-6 text-lg">
+                Follow your dental case from upload to delivery — every stage, visible in real-time.
+              </p>
+
+              <div className="flex gap-12 justify-start relative">
+          
+                <div className="absolute top-8 left-8 w-11/12 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+
                 {PROCESS_STEPS.slice(3).map((process, index) => (
                   <motion.div
                     key={index + 3}
-                    className="text-center group cursor-pointer relative z-10"
+                    className="text-left group cursor-pointer relative z-10 space-y-2"
                     variants={motionVariants.processStep(index + 3)}
                   >
-                    <div className="mx-auto rounded-full w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-500 to-cyan-500">
+                    <div className="mx-auto rounded-full w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-gradient-to-br from-blue-500 to-cyan-500 transition-all duration-300">
                       <process.icon className="text-white w-8 h-8" />
                     </div>
-                    <h4 className="text-sm font-semibold text-gray-800 mt-3">{process.title}</h4>
+                    <h4 className="text-sm font-semibold text-gray-800">{process.title}</h4>
                   </motion.div>
                 ))}
               </div>
+              
             </div>
+
+            
+     
           </motion.div>
         </motion.div>
 
-        {/* Footer note */}
-        <motion.div className="text-center mt-8" {...welcomePageAnimations.footerNote}>
-          <p className="text-gray-600 mb-4 text-lg">
-            All updates appear live in your client dashboard — giving you full transparency and control over your cases.
-          </p>
-        </motion.div>
+
+
+
+
       </div>
     </div>
   );
 };
 
 export default WelcomePage;
-
