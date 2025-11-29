@@ -36,13 +36,13 @@ export default async function RootLayout({
 			<body>
 				<Provider>
 					<QueryProvider>
-						<Navbar />
+						{/* <Navbar /> */}
 						<TokenRefreshInitializer />
 						<AuthProvider>
 							<LoadingProvider>
 								<GlobalLoader />
 								{children}
-								<Footer />
+								{/* <Footer /> */}
 							</LoadingProvider>
 						</AuthProvider>
 					</QueryProvider>

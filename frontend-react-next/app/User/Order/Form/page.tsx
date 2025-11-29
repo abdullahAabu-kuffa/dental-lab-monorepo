@@ -48,10 +48,10 @@ export default function NewOrderPage() {
 			setIsProcessingPayment(false);
 		}
 	};
-
+	
 
   useEffect(() => {
-    if (!userLoading && userData && !userData.isActive) {
+    if (!userLoading && user && !user.data.user?.isActive) {
       Swal.fire({
         icon: "info",
         title: "Account Not Active",
@@ -63,7 +63,7 @@ export default function NewOrderPage() {
         router.replace("/");
       });
     }
-  }, [userData, userLoading, router]);
+  }, [user, userLoading, router]);
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
   
   return (
