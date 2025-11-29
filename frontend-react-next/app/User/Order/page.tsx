@@ -47,7 +47,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
               Welcome back,
             </h1>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
               {user?.data.user.fullName}
             </h2>
             <p className="text-xl text-gray-600 max-w-lg leading-relaxed text-lg" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -87,15 +87,15 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
               <p className="text-gray-600 text-center mb-6 text-lg">Select from our premium materials and upload your case file.</p>
               <div className="flex justify-center gap-8 relative">
                 {/* Connecting line behind icons */}
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-32 sm:w-48 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-48 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
                 {PROCESS_STEPS.slice(0, 3).map((process, index) => (
                   <motion.div
                     key={index}
                     className="text-center group cursor-pointer relative z-10"
                     variants={motionVariants.processStep(index)}
                   >
-                    <div className="mx-auto rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-500 to-green-500">
-                      <process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
+                    <div className="mx-auto rounded-full w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-500 to-green-500">
+                      <process.icon className="text-white w-8 h-8" />
                     </div>
                     <h4 className="text-sm font-semibold text-gray-800 mt-3">{process.title}</h4>
                   </motion.div>
@@ -109,15 +109,15 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
               <p className="text-gray-600 text-center mb-6 text-lg">Follow your dental case from upload to delivery — every stage, visible in real-time.</p>
               <div className="flex justify-center gap-8 relative">
                 {/* Connecting line behind icons */}
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-32 sm:w-48 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-48 h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
                 {PROCESS_STEPS.slice(3).map((process, index) => (
                   <motion.div
                     key={index + 3}
                     className="text-center group cursor-pointer relative z-10"
                     variants={motionVariants.processStep(index + 3)}
                   >
-                    <div className="mx-auto rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-500 to-cyan-500">
-                      <process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
+                    <div className="mx-auto rounded-full w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-500 to-cyan-500">
+                      <process.icon className="text-white w-8 h-8" />
                     </div>
                     <h4 className="text-sm font-semibold text-gray-800 mt-3">{process.title}</h4>
                   </motion.div>
