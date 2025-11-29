@@ -75,8 +75,8 @@ function createRateLimitMiddleware(
   customMessage?: string
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    logger.info(`Rate limit check for ${JSON.stringify(req.body)}`);
     const key = keyExtractor(req);
+    logger.info(`Rate limit check for key=${key}`);
 
     if (!key) {
       logger.warn("Rate limit key extractor returned empty key");

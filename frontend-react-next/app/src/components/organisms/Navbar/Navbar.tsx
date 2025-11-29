@@ -38,7 +38,7 @@ const Navbar = () => {
 const loading = useAuthStore((s) => s.isLoading);
 const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
-  console.log(user);
+//   console.log(user);
   
 	// Notification toggle
 	function toggleMenu() {

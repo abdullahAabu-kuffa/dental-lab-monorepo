@@ -32,11 +32,11 @@ subscriberClient.on('error', (err) => {
 });
 
 publisherClient.on('connect', () => {
-  logger.info('[Redis Publisher] Connected');
+  // logger.info('[Redis Publisher] Connected');
 });
 
 subscriberClient.on('connect', () => {
-  logger.info('[Redis Subscriber] Connected');
+  // logger.info('[Redis Subscriber] Connected');
 });
 
 /**
@@ -66,7 +66,7 @@ export async function publishNotification(
     const message = JSON.stringify(notificationData);
     
     const result = await publisherClient.publish(channel, message);
-    logger.info(`[PubSub] Published notification to channel ${channel}, subscribers: ${result}`);
+    // logger.info(`[PubSub] Published notification to channel ${channel}, subscribers: ${result}`);
   } catch (error: any) {
     logger.error(`[PubSub] Failed to publish notification:`, error);
     throw error;
@@ -101,7 +101,7 @@ export function subscribeToNotifications(
     if (err) {
       logger.error(`[PubSub] Failed to subscribe to ${channel}:`, err);
     } else {
-      logger.info(`[PubSub] Subscribed to channel ${channel}`);
+      // logger.info(`[PubSub] Subscribed to channel ${channel}`);
     }
   });
 
@@ -109,7 +109,7 @@ export function subscribeToNotifications(
   return async () => {
     await subscriberClient.unsubscribe(channel);
     subscriberClient.removeListener('message', messageHandler);
-    logger.info(`[PubSub] Unsubscribed from channel ${channel}`);
+    // logger.info(`[PubSub] Unsubscribed from channel ${channel}`);
   };
 }
 
@@ -125,7 +125,7 @@ export async function publishAdminNotification(
     const message = JSON.stringify(notificationData);
     
     const result = await publisherClient.publish(channel, message);
-    logger.info(`[PubSub] Published admin notification to channel ${channel}, subscribers: ${result}`);
+    // logger.info(`[PubSub] Published admin notification to channel ${channel}, subscribers: ${result}`);
   } catch (error: any) {
     logger.error(`[PubSub] Failed to publish admin notification:`, error);
     throw error;
@@ -158,7 +158,7 @@ export function subscribeToAdminNotifications(
     if (err) {
       logger.error(`[PubSub] Failed to subscribe to ${channel}:`, err);
     } else {
-      logger.info(`[PubSub] Admin subscribed to channel ${channel}`);
+      // logger.info(`[PubSub] Admin subscribed to channel ${channel}`);
     }
   });
 
@@ -166,7 +166,7 @@ export function subscribeToAdminNotifications(
   return async () => {
     await subscriberClient.unsubscribe(channel);
     subscriberClient.removeListener('message', messageHandler);
-    logger.info(`[PubSub] Admin unsubscribed from channel ${channel}`);
+    // logger.info(`[PubSub] Admin unsubscribed from channel ${channel}`);
   };
 }
 
@@ -191,7 +191,7 @@ export async function getChannelSubscriberCount(userId: number): Promise<number>
 export async function closePubSub(): Promise<void> {
   await publisherClient.quit();
   await subscriberClient.quit();
-  logger.info('[PubSub] Redis connections closed');
+  // logger.info('[PubSub] Redis connections closed');
 }
 
 export default {
