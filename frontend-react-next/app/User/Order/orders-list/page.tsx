@@ -14,7 +14,7 @@ export default function OrdersListPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
-  const { data } = useOrders();
+  const { data, isLoading } = useOrders();
   const orders = data;
   console.log(selectedOrder);
   
@@ -137,7 +137,6 @@ export default function OrdersListPage() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>

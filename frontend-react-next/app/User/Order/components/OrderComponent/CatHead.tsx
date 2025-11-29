@@ -34,7 +34,6 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
   return (
     <motion.div className="flex items-center gap-2"> 
 
-
       {/* Status Icons */}
       <div className="flex items-center gap-2">
         {statusItemsWithDraft.map((item) => (
