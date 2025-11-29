@@ -1,0 +1,36 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0" # use your Flutter version
+          channel: "stable"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      # Optional: Distribute via Firebase App Distribution
+      #- name: Upload to Firebase App Distribution
+      # run: |
+      #  firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+      #   --app "<your_app_id>" \
+      #  --groups "testers" \
+
+      #--release-notes "Automated build from GitHub Actions"

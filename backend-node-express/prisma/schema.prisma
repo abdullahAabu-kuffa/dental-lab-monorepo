@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
+  password       String
+  role           Role             @default(CLIENT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  clinicAddress  String
+  clinicName     String
+  fullName       String?
+  isActive       Boolean          @default(false)
+  phoneNumber    String
+  isVerified     Boolean          @default(false)
+  auditLogs      AuditLog[]
+  invoices       Invoice[]
+  notifications  Notification[]
+  approvedOrders Order[]          @relation("ApprovedOrders")
+  orders         Order[]          @relation("UserOrders")
+  orderTrackings OrderTracking[]
+  Security_Token Security_Token[]
+  sessions       Session[]
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  refreshToken String   @unique
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  devices      Json     @default("[]")
+  clientType   String   @default("web")
+  userAgent    String?
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Security_Token {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  isUsed    Boolean  @default(false)
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Order {
+  id             Int             @id @default(autoincrement())
+  userId         Int
+  fileId         Int?            @unique
+  status         ProcessStatus   @default(PENDING)
+  invoiceId      Int?
+  options        Json
+  totalPrice     Int
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  approvedBy     Int?
+  rejectReasons  String?
+  approvedByUser User?           @relation("ApprovedOrders", fields: [approvedBy], references: [id])
+  file           File?           @relation(fields: [fileId], references: [id])
+  invoice        Invoice?        @relation("InvoiceOrders", fields: [invoiceId], references: [id])
+  user           User            @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  orderTrackings OrderTracking[]
+
+  @@index([userId])
+  @@index([invoiceId])
+  @@index([approvedBy])
+}
+
+model OrderTracking {
+  id        Int            @id @default(autoincrement())
+  orderId   Int
+  process   String
+  startDate DateTime?
+  endDate   DateTime?
+  note      String?
+  createdAt DateTime       @default(now())
+  actorId   Int
+  stepOrder Int
+  status    TrackingStatus @default(PENDING)
+  actor     User           @relation(fields: [actorId], references: [id])
+  order     Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([orderId, createdAt])
+}
+
+model Invoice {
+  id         Int           @id @default(autoincrement())
+  clientId   Int
+  totalPrice Int
+  status     PaymentStatus @default(PENDING)
+  dueDate    DateTime
+  paidAt     DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  isSummary  Boolean       @default(false)
+  client     User          @relation(fields: [clientId], references: [id])
+  orders     Order[]       @relation("InvoiceOrders")
+
+  @@index([clientId])
+  @@index([status])
+}
+
+model File {
+  id           Int      @id @default(autoincrement())
+  fileSize     Int
+  fileType     String
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  originalName String
+  b2FileId     String
+  b2FileName   String
+  order        Order?
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  action    String
+  model     String
+  recordId  Int
+  oldData   Json?
+  newData   Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id          Int              @id @default(autoincrement())
+  userId      Int
+  type        NotificationType
+  title       String
+  message     String
+  data        Json?            @default("{}")
+  isRead      Boolean          @default(false)
+  readAt      DateTime?
+  emailSent   Boolean          @default(false)
+  emailSentAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead])
+}
+
+model KnowledgeBaseEntry {
+  id        Int                   @id @default(autoincrement())
+  title     String
+  category  String
+  content   String
+  metadata  Json?                 @default("{}")
+  embedding Unsupported("vector")
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@index([category])
+  @@index([createdAt])
+}
+
+enum Role {
+  CLIENT
+  OWNER
+  ADMIN
+}
+
+enum TrackingStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ProcessStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIAL
+}
+
+enum NotificationType {
+  WELCOME
+  ACCOUNT_ACTIVATED
+  PASSWORD_RESET
+  UPLOAD_SUCCESS
+  UPLOAD_FAILED
+  APPROVAL_PENDING
+  APPROVED
+  REJECTED
+  FILE_APPROVED
+  FILE_REJECTED
+  ORDER_CREATED
+  ORDER_UPDATED
+  ORDER_CANCELLED
+  INFO
+  WARNING
+  ERROR
+}
