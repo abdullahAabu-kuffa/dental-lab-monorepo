@@ -14,7 +14,7 @@ export default function OrdersListPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
-  const { data, isLoading } = useOrders();
+  const { data } = useOrders();
   const orders = data;
   console.log(selectedOrder);
   
@@ -43,75 +43,56 @@ export default function OrdersListPage() {
   };
 
   return (
-    <div className="w-full min-h-screen relative">
-      <div className="relative max-w-[1800px] mx-auto p-3 sm:p-4 lg:p-6 space-y-3">
-
-        {/* HEADER - all aligned left */}
-        <ScrollAnimation
-          animation="fadeInFromTop"
-          className="px-2 py-1 rounded-3xl transition-all duration-300"
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-       
-            <div className="flex items-center gap-3">
-              {/* STATUS ICONS */}
-              <StatusIcons
-                onNewOrder={() => router.push("/User/Order/Form")}
-                onShowStatusOrders={handleShowStatusOrders}
-                orders={orders}
-              />
-
-              {/* SEARCH */}
-              <div className="relative group flex items-center ml-4">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg
-                    className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 1114 0 7 7 0 01-14 0z"
-                    />
-                  </svg>
-                </div>
-
-                <input
-                  type="text"
-                  placeholder="Search by patient, type, or material..."
-                  className="block w-64 pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
-                  onChange={(e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const filtered = orders?.filter(
-                      (order) =>
-                        order.patientName.toLowerCase().includes(searchTerm) ||
-                        order.orderType.toLowerCase().includes(searchTerm) ||
-                        order.material.toLowerCase().includes(searchTerm)
-                    );
-                    setFilteredOrders(filtered);
-
-                    if (
-                      selectedOrder &&
-                      !filtered?.find((o) => o.id === selectedOrder.id)
-                    ) {
-                      setSelectedOrder(null);
-                      setShowDetails(false);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </ScrollAnimation>
+    <div className="min-h-screen relative">
+      <div className="px-2 pt-4 space-y-3">
+        <ScrollAnimation></ScrollAnimation>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-          {/* LIST */}
-          <div className="lg:col-span-4 xl:col-span-3">
-            <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+
+          {/* LEFT SIDE: Status Icons + Search + Orders List */}
+          <div className="lg:col-span-4 xl:col-span-3 flex flex-col gap-3">
+
+            {/* STATUS ICONS */}
+            <div className="inline-block bg-gray-50 dark:bg-gray-900 rounded-xl p-[2px]">
+              <div className="flex items-center gap-1">
+                <StatusIcons
+                  onNewOrder={() => router.push("/User/Order/Form")}
+                  onShowStatusOrders={handleShowStatusOrders}
+                  orders={orders}
+                />
+              </div>
+            </div>
+
+            {/* SEARCH */}
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-3 group flex items-center">
+              <input
+                type="text"
+                placeholder="Search by patient or material..."
+                className="block w-full max-w-sm pl-12 pr-4 py-3 bg-transparent border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
+                onChange={(e) => {
+                  const searchTerm = e.target.value.toLowerCase();
+                  const filtered = orders?.filter(
+                    (order) =>
+                      order.patientName.toLowerCase().includes(searchTerm) ||
+                      order.orderType.toLowerCase().includes(searchTerm) ||
+                      order.material.toLowerCase().includes(searchTerm)
+                  );
+                  setFilteredOrders(filtered);
+
+                  if (
+                    selectedOrder &&
+                    !filtered?.find((o) => o.id === selectedOrder.id)
+                  ) {
+                    setSelectedOrder(null);
+                    setShowDetails(false);
+                  }
+                }}
+              />
+            </div>
+
+            {/* ORDERS LIST - under search */}
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-3 space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {filteredOrders?.map((order, index) => (
                 <ScrollAnimation
                   key={order.id}
@@ -126,16 +107,17 @@ export default function OrdersListPage() {
                 </ScrollAnimation>
               ))}
             </div>
+
           </div>
 
-          {/* DETAILS */}
+          {/* RIGHT SIDE: Order Details */}
           <div className="lg:col-span-5 xl:col-span-8">
             {selectedOrder ? (
               <ScrollAnimation animation="fadeInFromBottom" delay={0.2}>
                 <OrderProgress order={selectedOrder} />
               </ScrollAnimation>
             ) : (
-              <div className="bg-white/50  rounded-2xl p-16 text-center border-2 border-dashed border-gray-200">
+              <div className="bg-white/50 rounded-2xl p-16 text-center border-2 border-dashed border-gray-200">
                 <svg
                   className="mx-auto h-16 w-16 text-gray-300 mb-4"
                   fill="none"
@@ -155,6 +137,7 @@ export default function OrdersListPage() {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
 
   return (
     <motion.div className="flex items-center gap-2"> 
-      <h2 className="text-xl font-bold text-gray-700">Orders</h2>
+
 
       {/* Status Icons */}
       <div className="flex items-center gap-2">
