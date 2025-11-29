@@ -1,4 +1,3 @@
-// app/api/refreshToken/route.ts
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -24,6 +23,7 @@ export async function POST(req: Request) {
         'user-agent': userAgent,
         'Cookie': `refreshToken=${refreshToken}`,
       },
+      credentials:"include",
       body: JSON.stringify({ clientType: 'web' }),
     });
 

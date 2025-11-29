@@ -380,6 +380,6 @@ router.post("/refreshToken", refreshToken);
 router.post("/logout", logout);
 
 router.post('/forgot-password' , forgotPassword)
-router.get('/reset-password' , resetPassword)
+router.post('/reset-password' , resetPassword)
 
 export default router;

@@ -257,8 +257,9 @@ export const resetPassword = async (
 ) => {
   try {
     //extract token query param token
-    const token = req.query.token as string;
-    const { newPassword } = req.body;
+    // const token = req.query.token as string;
+    const { token,newPassword } = req.body;
+    logger.info(`reset password token: ${token}`);
     const result = await resetPasswordService(token, newPassword);
     return res
       .status(200)
@@ -266,7 +267,7 @@ export const resetPassword = async (
         successResponse({ passwordReset: true }, "Password reset successfully")
       );
   } catch (err: any) {
-    logger.error(`forget password errror: ${err.message}`);
+    logger.error(`reset password errror: ${err.message}`);
     return res
       .status(500)
       .json(errorResponse("Internal server error", 500, err));

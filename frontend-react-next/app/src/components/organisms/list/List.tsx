@@ -106,7 +106,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         text: "You have been logged out successfully.",
         confirmButtonColor: "#3085d6",
       }).then(() => {
-        router.replace("./login");
+        router.replace("/login");
         // window.location.reload();
       });
     } catch (error) {
