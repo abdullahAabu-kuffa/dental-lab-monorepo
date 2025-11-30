@@ -8,7 +8,7 @@ import { verifyAccessToken } from '../middlewares/auth.middleware';
 import { createAndPublishNotification } from '../services/notification.service';
 import logger from '../utils/logger.util';
 import { successResponse, errorResponse } from '../utils/response.util';
-import { NotificationType } from '../../generated/prisma/enums';
+import { NotificationType } from '@prisma/client';
 
 const router = Router();
 

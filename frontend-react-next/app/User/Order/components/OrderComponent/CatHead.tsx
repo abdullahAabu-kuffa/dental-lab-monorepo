@@ -27,7 +27,9 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
       label: "Draft",
       Icon: FileText,
       gradient: ["#FFD700", "#FFA500"], 
-      count: orders.filter(o => o.status === "draft").length,
+      // count: orders.filter(o => o.status === "draft").length,
+      count: orders.length,
+      
     },
   ];
 

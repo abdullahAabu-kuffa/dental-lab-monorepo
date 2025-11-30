@@ -1,6 +1,5 @@
 import Jwt  from "jsonwebtoken";
-import logger from "./logger.util";
-import { Role } from "../../generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 interface AccessTokenPayload {
   fullName: string;

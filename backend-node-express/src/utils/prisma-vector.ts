@@ -1,5 +1,4 @@
 import { prisma } from "../lib/prisma";
-import { Prisma } from "../../generated/prisma/client";
 
 /**
  * Perform vector similarity search using raw SQL
