@@ -1,5 +1,5 @@
 // Services configuration
-import { Crown, Activity, Smile, Microscope } from '../../utils/UnifiedIcons';
+import { Crown, Activity, Smile, Microscope, CreditCard } from '../../utils/UnifiedIcons';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Service {
@@ -8,7 +8,7 @@ export interface Service {
   title: string;
   description: string;
   icon: {
-    name: 'crown' | 'tooth' | 'smile' | 'microscope';
+    name: 'crown' | 'tooth' | 'smile' | 'microscope' | 'creditCard';
     component: LucideIcon;
   };
   features: string[];

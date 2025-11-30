@@ -15,22 +15,18 @@ export const NEW_ORDER_FORM_FIELDS: (FormField & { price?: number })[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^[A-Za-z\s]+$/,
-        message: "Name can only contain letters and spaces",
+        value: "^[A-Za-z\\s]+$",
+        message: "Name can only contain letters and spaces.",
       },
+      minLength: 3,
     },
   },
   {
-    id: "date",
-    type: "text",
-    label: "Date",
+    id: "age",
+    type: "select",
+    label: "Age",
     required: true,
-    validation: {
-      validate: (value: string) => {
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        return regex.test(value) || "Date must be in YYYY-MM-DD format";
-      },
-    },
+    options: Array.from({ length: 78 }, (_, i) => (18 + i).toString()),
   },
 
   // Zircon Services with Prices
@@ -181,6 +177,9 @@ export const NEW_ORDER_FORM_FIELDS: (FormField & { price?: number })[] = [
     type: "textarea",
     label: "Notes",
     required: false,
+    validation: {
+      minLength: 10,
+    },
   },
 ];
 
@@ -191,7 +190,7 @@ export const FORM_SECTIONS = [
     icon: User,
     color: "from-blue-500 to-blue-600",
     fields: NEW_ORDER_FORM_FIELDS.filter((f) =>
-      ["patientName", "date"].includes(f.id)
+      ["patientName", "age"].includes(f.id)
     ),
   },
   {

@@ -28,13 +28,56 @@ export default function OrderForm({
   onContinueToUpload,
 }: OrderFormProps) {
   const [formData, setFormData] = useState<Record<string, unknown>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { selectedServices, totalAmount } = calculateSelectedServices(formData);
+
+  const validateForm = () => {
+    if (!formData.patientName || !formData.age) {
+      return {
+        title: "Missing Information",
+        text: "Please fill in the patient's name and age before continuing.",
+        icon: "warning",
+        confirmButtonColor: "#E4B441",
+      };
+    }
+    if (!selectedServices || selectedServices.length === 0) {
+      return {
+        title: "No Materials Selected",
+        text: "Please choose at least one material before continuing.",
+        icon: "warning",
+        confirmButtonColor: "#E4B441",
+      };
+    }
+    return null;
+  };
+
   const handleChange = (fieldId: string, value: string | boolean) => {
     const newFormData = { ...formData, [fieldId]: value };
     setFormData(newFormData);
     if (onFormDataChange) {
       onFormDataChange(newFormData);
+    }
+
+    // Real-time validation
+    if (fieldId === 'patientName') {
+      const strValue = value as string;
+      if (!strValue.trim()) {
+        setErrors({ ...errors, patientName: 'Name is required.' });
+      } else if (strValue.length < 3) {
+        setErrors({ ...errors, patientName: 'Name must be at least 3 characters.' });
+      } else if (!/^[A-Za-z\s]+$/.test(strValue)) {
+        setErrors({ ...errors, patientName: 'Name can only contain letters and spaces.' });
+      } else {
+        setErrors({ ...errors, patientName: '' });
+      }
+    } else if (fieldId === 'notes') {
+      const strValue = value as string;
+      if (strValue.trim() && strValue.length < 10) {
+        setErrors({ ...errors, notes: 'Notes must be at least 10 characters.' });
+      } else {
+        setErrors({ ...errors, notes: '' });
+      }
     }
   };
 
@@ -46,8 +89,17 @@ export default function OrderForm({
     );
     onSubmit(data);
   };
-
+// handle continue date and name validation
   const handleContinueClick = () => {
+    if (!formData.patientName || !formData.age) {
+      return Swal.fire({
+        title: "Missing Information",
+        text: "Please fill in the patient's name and age before continuing.",
+        icon: "warning",
+        confirmButtonColor: "#E4B441",
+      });
+    }
+// handle selected services validation
     if (!selectedServices || selectedServices.length === 0) {
       return Swal.fire({
         title: "No Materials Selected",
@@ -141,11 +193,12 @@ export default function OrderForm({
   useNavigationGuard(orderLocked);
   const renderField = (field: FormField & { price?: number }) => {
     const isText = field.type === "text";
+    const isSelect = field.type === "select";
     return (
       <div
         key={field.id}
         className={
-          isText
+          isText || isSelect
             ? "space-y-2"
             : "flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
         }
@@ -160,8 +213,41 @@ export default function OrderForm({
               type="text"
               value={(formData[field.id] as string) || ""}
               onChange={(e) => handleChange(field.id, e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E4B441] focus:border-[#E4B441]"
+              onInvalid={(e) => {
+                e.preventDefault();
+                setErrors({ ...errors, [field.id]: field.validation?.pattern?.message || 'Invalid input' });
+              }}
+              onInput={() => setErrors({ ...errors, [field.id]: '' })}
+              required={field.required}
+              pattern={field.validation?.pattern?.value}
+              title={field.validation?.pattern?.message}
+              minLength={field.validation?.minLength}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#E4B441] focus:border-[#E4B441] ${
+                errors[field.id] ? 'border-red-500' : 'border-gray-300'
+              }`}
             />
+            {errors[field.id] && (
+              <p className="text-red-500 text-sm mt-1">{errors[field.id]}</p>
+            )}
+          </>
+        ) : isSelect ? (
+          <>
+            <label className="block text-sm font-medium text-gray-700">
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
+            <select
+              value={(formData[field.id] as string) || ""}
+              onChange={(e) => handleChange(field.id, e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E4B441] focus:border-[#E4B441]"
+            >
+              <option value="">Select {field.label}</option>
+              {field.options?.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </>
         ) : (
           <>
@@ -263,3 +349,4 @@ export default function OrderForm({
     </div>
   );
 }
+
