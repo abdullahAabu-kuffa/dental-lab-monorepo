@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
 
-const HostIp = process.env.NEXT_PUBLIC_AUTH_LOCAL_IP;
+const HostIp = process.env.NEXT_PUBLIC_API_URL;
 
 interface ApiNotification {
 	id: number;
