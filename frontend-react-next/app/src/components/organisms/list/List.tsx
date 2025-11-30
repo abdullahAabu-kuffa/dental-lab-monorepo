@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 import { logoutRequest } from "@/app/src/services/auth";
 import { useRouter } from "next/navigation";
-  import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { useAuth } from "@/app/src/hooks/useAuth";
-
+import { AnimatePresence, motion } from "framer-motion";
 
 interface ListProps {
   username?: string;
@@ -72,7 +72,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onEvent,
 }) => {
   const router = useRouter();
-    const { user, loading, isAuthenticated } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
 
   async function handleLogout() {
     const result = await Swal.fire({
@@ -125,78 +125,60 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   };
 
   return (
-    <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-lg shadow-xl borderoverflow-hidden z-50">
-      {/* User Info */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <ProfileIcon size="lg" username={username} />
-          <div className="flex-1">
-            <h3 className="font-semibold text-gray-900">{user?.data.user.fullName}</h3>
-            <p className="text-sm text-gray-500 truncate">{user?.data.user.email}</p>
-          </div>
+<AnimatePresence>
+  <motion.div
+    key="dropdown-menu"
+    initial={{ opacity: 0, y: -20, scale: 0.97 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: -20, scale: 0.97 }}
+    transition={{ duration: 0.35, ease: "easeInOut" }}
+    className="absolute right-0 top-full mt-2 w-72 bg-gradient-to-br from-white/90 to-gray-50/90 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden z-50 border border-gray-200"
+  >
+    {/* User Info */}
+    <div className="p-4 border-b border-gray-200">
+      <div className="flex items-center gap-3">
+        <ProfileIcon size="lg" username={username} />
+        <div className="flex-1">
+          <h3 className="font-semibold text-gray-900">{user?.data.user.fullName}</h3>
+          <p className="text-sm text-gray-500 truncate">{user?.data.user.email}</p>
         </div>
       </div>
-
-      {/* Menu Options */}
-      <div className="py-2">
-        <Link
-          href="/User/Order/orders-list"
-          onClick={() => handleClick("order")}
-          className="w-full px-4 py-3 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700"
-        >
-          <Package className="w-5 h-5" />
-          <span>My Order</span>
-        </Link>
-
-        <Link
-          href="/User/Order/Setting"
-          onClick={() => handleClick("settings")}
-          className="w-full px-4 py-3 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700"
-        >
-          <Settings className="w-5 h-5" />
-          <span>Settings</span>
-        </Link>
-
-        <Link
-          href="/User/Order/invoice"
-          onClick={() => handleClick("invoice")}
-          className="w-full px-4 py-3 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700"
-        >
-          <FileText className="w-5 h-5" />
-          <span>Invoice</span>
-        </Link>
-
-        <Link
-          href="/User/Order/Event"
-          onClick={() => handleClick("event")}
-          className="w-full px-4 py-3 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700"
-        >
-          <Calendar className="w-5 h-5" />
-          <span>Event</span>
-        </Link>
-
-        {/* ADD ORDER */}
-        <Link
-          href="/User/Order/Form"
-          onClick={() => handleClick("add-order")}
-          className="w-full px-4 py-3 hover:bg-gray-50 flex items-center gap-3 transition-colors text-gray-700"
-        >
-          <FilePlus className="w-5 h-5" />
-          <span>Add Order</span>
-        </Link>
-
-        {/* Logout */}
-        <button
-          onClick={() => {
-            handleClick("logout");
-            handleLogout();
-          }}
-          className="w-full px-4 py-3 hover:bg-red-50 text-red-600 flex items-center gap-3 transition-colors font-medium"
-        >
-          <span>Logout</span>
-        </button>
-      </div>
     </div>
+
+    {/* Menu Options */}
+    <div className="py-2 flex flex-col divide-y divide-gray-200">
+      {[
+        { name: "My Order", icon: Package, link: "/User/Order/orders-list", type: "order" },
+        { name: "Settings", icon: Settings, link: "/User/Order/Setting", type: "settings" },
+        { name: "Invoice", icon: FileText, link: "/User/Order/invoice", type: "invoice" },
+        { name: "Event", icon: Calendar, link: "/User/Order/Event", type: "event" },
+        { name: "Add Order", icon: FilePlus, link: "/User/Order/Form", type: "add-order" },
+      ].map((item, index) => (
+        <Link
+          key={index}
+          href={item.link}
+          onClick={() => handleClick(item.type)}
+          className="w-full px-4 py-3 flex items-center gap-3 text-gray-700 transition-all duration-200 rounded-lg hover:bg-gradient-to-r hover:from-yellow-100 hover:to-yellow-50 hover:scale-105"
+        >
+          <item.icon className="w-5 h-5 text-gray-500 group-hover:text-yellow-500 transition-colors" />
+          <span>{item.name}</span>
+        </Link>
+      ))}
+
+      {/* Logout */}
+      <button
+        onClick={() => {
+          handleClick("logout");
+          handleLogout();
+        }}
+        className="w-full px-4 py-3 flex items-center gap-3 text-red-600 transition-all duration-200 rounded-lg hover:bg-red-50 hover:scale-105 font-medium"
+      >
+        <span>Logout</span>
+      </button>
+    </div>
+  </motion.div>
+</AnimatePresence>
+
   );
 };
 

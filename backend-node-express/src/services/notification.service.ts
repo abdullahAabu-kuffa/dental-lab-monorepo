@@ -12,7 +12,7 @@ import {
 import logger from "../utils/logger.util";
 import { sendStyledEmail } from "../utils/email";
 import { buildEmailTemplate } from "../utils/emailTemplate";
-import { NotificationType } from "../../generated/prisma/enums";
+import { Notification, NotificationType } from "@prisma/client";
 
 /**
  * Input parameters for creating a notification
@@ -378,7 +378,7 @@ export const createAdminNotification = async (
     }
 
     // Save notification to DB for each admin
-    const notifications = await Promise.all(
+    const notifications: Notification[] = await Promise.all(
       adminIds.map((adminId) =>
         prisma.notification.create({
           data: {

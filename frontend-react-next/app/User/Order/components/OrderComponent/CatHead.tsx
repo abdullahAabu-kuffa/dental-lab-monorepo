@@ -27,13 +27,14 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
       label: "Draft",
       Icon: FileText,
       gradient: ["#FFD700", "#FFA500"], 
-      count: orders.filter(o => o.status === "draft").length,
+      // count: orders.filter(o => o.status === "draft").length,
+      count: orders.length,
+      
     },
   ];
 
   return (
     <motion.div className="flex items-center gap-2"> 
-      <h2 className="text-xl font-bold text-gray-700">Orders</h2>
 
       {/* Status Icons */}
       <div className="flex items-center gap-2">

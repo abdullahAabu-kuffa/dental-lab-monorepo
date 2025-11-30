@@ -8,8 +8,7 @@ import {
   SECTION_DESCRIPTIONS,
 } from "../../../../src/config/UserData/formFieldsData";
 import { FormField } from "../../../../src/types";
-import { useCreateOrder } from "../../Form/quere";
-import { useOrders } from "../../orders-list/quere";
+
 import toast from "react-hot-toast";
 import { useNavigationGuard } from "@/app/src/hooks/useNavigationGuard";
 import { calculateSelectedServices } from "@/app/src/utils/pricingService";

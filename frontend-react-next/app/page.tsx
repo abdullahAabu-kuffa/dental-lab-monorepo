@@ -9,19 +9,17 @@ import ChooseMaterialSection from "./src/components/organisms/landing/ChooseMate
 import EducationalResourcesSection from "./src/components/organisms/landing/EducationalResourcesSection/EducationalResourcesSection";
 import EventsSection from "./src/components/organisms/landing/EventsSection/EventsSection";
 
-
 export default function Home() {
 	return (
 		<main>
-		   <HeroSec />
-			<ServicesSection />
-			<WorkflowSection />
-			<ManufacturingProcessSection />
-			<ChooseMaterialSection />
-			{/* <StatsSection /> */}
-			<EducationalResourcesSection />
-			<EventsSection />
-	
+		<HeroSec />
+		<ServicesSection />
+		<WorkflowSection />
+		<ManufacturingProcessSection />
+		<ChooseMaterialSection />
+		{/* <StatsSection /> */}
+		<EducationalResourcesSection />
+		<EventsSection />
 		</main>
 	);
 }

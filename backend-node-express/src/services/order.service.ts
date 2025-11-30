@@ -2,6 +2,7 @@ import logger from "../utils/logger.util";
 import { prisma } from "../lib/prisma";
 import { checkUser, parseId } from "../utils/helper/checkUser";
 import { checkOrder } from "../utils/helper/checkOrder";
+import { OrderTracking } from "@prisma/client";
 // TODO: Order Service
 // Purpose: Handle order business logic
 // Usage: Called by order controller

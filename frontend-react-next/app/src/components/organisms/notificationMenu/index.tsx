@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
 
-const HostIp = process.env.NEXT_PUBLIC_AUTH_LOCAL_IP;
+const HostIp = process.env.NEXT_PUBLIC_API_URL;
 
 interface ApiNotification {
 	id: number;
@@ -59,8 +59,10 @@ export default function NotificationsMenu({
 
 				const json = await res.json();
 				const data = Array.isArray(json.data) ? json.data : [json.data];
+				const notifications = json.data.notifications as ApiNotification[];
+				console.log("retrieved Notifications:",);
 
-				setItems(data);
+				setItems(notifications);
 			} catch (err) {
 				console.error("Failed to load notifications:", err);
 			} finally {
@@ -102,8 +104,8 @@ export default function NotificationsMenu({
 				es.close();
 				eventSourceRef.current = null;
 
-				console.log("[SSE] Reconnecting in 2 seconds...");
-				setTimeout(connectSSE, 2000);
+				console.log("[SSE] Reconnecting in 15 minutes...");
+				setTimeout(connectSSE, 15 * 60 * 1000);
 			};
 		}
 

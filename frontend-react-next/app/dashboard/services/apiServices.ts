@@ -2,7 +2,7 @@ import { getAccessToken } from "@/app/src/auth/tokenStore";
 import axios from "axios";
 import { FetchUsersResponse } from "../interfaces/users";
 
-axios.defaults.baseURL = "http://localhost:3001/api";
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
 
 const token =
   getAccessToken();
@@ -11,9 +11,9 @@ console.log(token);
 
 
 
-/* ===========================================
-   GET ALL ORDERS
-=========================================== */
+// /* ===========================================
+//    GET ALL ORDERS
+// =========================================== */
 export const getAllOrders = async ({ page }: { page: number }) => {
   const res = await axios.get(`/orders`, {
     params: { page },

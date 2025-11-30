@@ -22,4 +22,4 @@ export type { Typography } from './typography';
 export type { ComponentStyles } from './components';
 export type { AnimationConfig, ScrollAnimationType, MotionVariantType } from './animations';
 export type { Gradients } from './gradients';
-export type { Colors } from './colors';
+export type { Colors } from './colors'

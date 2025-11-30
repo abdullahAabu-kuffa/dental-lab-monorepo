@@ -4,7 +4,7 @@ import Navbar from "../src/components/organisms/Navbar/Navbar";
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<>
-			<Navbar />
+			{/* <Navbar /> */}
 			<main>{children}</main>
 		</>
 	);

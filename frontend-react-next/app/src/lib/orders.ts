@@ -11,7 +11,7 @@ import {
   ApiOrder,
 } from "@/app/dashboard/interfaces/orders";
 async function fetchOrders(page = 1) {
-  const res = await fetch(`http://localhost:3001/api/orders?page=${page}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders?page=${page}`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -26,7 +26,7 @@ export function useOrders(page = 1) {
     queryKey: ["orders", page],
     queryFn: async () => {
       const res = await fetchOrders(page);
-      return res.data?.orders ?? [];
+      return res;
     },
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -34,7 +34,7 @@ export function useOrders(page = 1) {
 }
 
 export async function fetchCreateOrder(body: object) {
-  const res = await fetch("http://localhost:3001/api/orders", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export function useCreateOrder() {
 export async function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await fetch("http://localhost:3001/api/upload", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
     method: "POST",
     body: formData,
     credentials: "include",

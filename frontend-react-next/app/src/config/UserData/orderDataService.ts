@@ -7,12 +7,15 @@ import {
   Truck,
   AlertCircle,
   Package,
-  Eye,
   Settings,
-  Microscope,
   CheckCircle,
-  Crown,
-  FileText,
+  User,
+  Layers,
+  Upload,
+  Edit,
+  Search,
+  Cog,
+  Wrench,
 } from "../../utils/UnifiedIcons";
 import { CheckCircle2, XCircle } from "lucide-react";
 
@@ -29,7 +32,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-001",
     patientName: "Ahmed Hassan",
     orderType: "Crown",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-15",
     totalAmount: 2500,
     urgency: "Medium",
@@ -56,7 +59,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-002",
     patientName: "Fatima Ali",
     orderType: "Bridge",
-    status: "In Progress",
+    status: "IN_PROGRESS",
     date: "2024-01-16",
     totalAmount: 4200,
     urgency: "High",
@@ -81,7 +84,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-003",
     patientName: "Mohamed Khaled",
     orderType: "Implant",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-17",
     totalAmount: 3500,
     urgency: "Low",
@@ -108,7 +111,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-004",
     patientName: "Sara Mahmoud",
     orderType: "Denture",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-18",
     totalAmount: 1800,
     urgency: "Medium",
@@ -135,7 +138,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-005",
     patientName: "Omar Ahmed",
     orderType: "Crown",
-    status: "In Progress",
+    status: "IN_PROGRESS",
     date: "2024-01-19",
     totalAmount: 2200,
     urgency: "High",
@@ -157,7 +160,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-006",
     patientName: "Layla Mohamed",
     orderType: "Bridge",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-20",
     totalAmount: 3800,
     urgency: "Medium",
@@ -184,7 +187,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-007",
     patientName: "Youssef Ibrahim",
     orderType: "Crown",
-    status: "Pending",
+    status: "PENDING",
     date: "2024-01-21",
     totalAmount: 1900,
     urgency: "Low",
@@ -206,7 +209,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-008",
     patientName: "Nadia Sayed",
     orderType: "Veneers",
-    status: "Pending",
+    status: "PENDING",
     date: "2024-01-22",
     totalAmount: 3200,
     urgency: "High",
@@ -382,7 +385,7 @@ export const filterOrdersByStatus = (
 // };
 
 export const getOrderStages = (order: Order) => {
-  const rawStatus = order.status;
+  // const rawStatus = order.status;
   const status = order.status;
 
 const stages = [
@@ -391,7 +394,7 @@ const stages = [
     label: "Order Placed",
     icon: Package,
     status: "completed",
-    date: order.createdAt,
+    date: order.createdAt.toString(),
   },
   {
     key: "inProgress",
@@ -405,7 +408,7 @@ const stages = [
         : "pending",
     date:
       status === "IN_PROGRESS" || status === "COMPLETED"
-        ? order.updatedAt
+        ? order.updatedAt.toString()
         : "---",
   },
   {
@@ -413,14 +416,14 @@ const stages = [
     label: "Finished",
     icon: CheckCircle2,
     status: status === "COMPLETED" ? "completed" : "pending",
-    date: status === "COMPLETED" ? order.updatedAt : "---",
+    date: status === "COMPLETED" ? order.updatedAt.toString() : "---",
   },
   {
     key: "canceled",
     label: "Canceled",
     icon: XCircle,
     status: status === "CANCELLED" ? "active" : "pending",
-    date: status === "CANCELLED" ? order.updatedAt : "---",
+    date: status === "CANCELLED" ? order.updatedAt.toString() : "---",
   },
 ];
 
@@ -428,56 +431,77 @@ const stages = [
   return stages;
 };
 
-// Enhanced user process steps for landing page
+// Enhanced user process steps for landing page - Real dental lab workflow
 export const USER_PROCESS_STEPS = [
   {
     id: 1,
-    title: "Upload Case",
+    title: "New Order",
     icon: Package,
     completed: true,
-    description: "Upload dental impressions and specifications",
+    description: "Create and submit new dental case order",
   },
   {
     id: 2,
     title: "Material Selection",
-    icon: Crown,
+    icon: Layers,
     completed: true,
-    description: "Choose from premium dental materials",
+    description: "Choose from premium dental materials (Zirconia, PFM, E-max)",
   },
   {
     id: 3,
-    title: "Design Process",
-    icon: Settings,
-    completed: false,
-    description: "Custom design and manufacturing",
+    title: "Upload Case",
+    icon: Upload,
+    completed: true,
+    description: "Upload dental impressions, photos, and specifications",
   },
   {
     id: 4,
-    title: "Quality Check",
-    icon: Eye,
-    completed: false,
-    description: "Thorough quality assurance",
+    title: "Accept Case",
+    icon: CheckCircle,
+    completed: true,
+    description: "Case review and acceptance confirmation",
   },
   {
     id: 5,
-    title: "Documentation",
-    icon: FileText,
+    title: "Scan or Cast",
+    icon: Search,
     completed: false,
-    description: "Case documentation and reports",
+    description: "Digital scanning or physical cast preparation",
   },
   {
     id: 6,
-    title: "Shipping",
-    icon: Truck,
+    title: "Design",
+    icon: Edit,
     completed: false,
-    description: "Secure delivery to your clinic",
+    description: "CAD/CAM design and planning using ExoCAD",
   },
   {
     id: 7,
-    title: "Completion",
-    icon: CheckCircle,
+    title: "Try in",
+    icon: User,
     completed: false,
-    description: "Order completed successfully",
+    description: "Initial fit verification and adjustments",
+  },
+  {
+    id: 8,
+    title: "Milling",
+    icon: Cog,
+    completed: false,
+    description: "Precision milling of the dental restoration",
+  },
+  {
+    id: 9,
+    title: "Finishing and Glazing",
+    icon: Wrench,
+    completed: false,
+    description: "Surface finishing, staining, and glazing",
+  },
+  {
+    id: 10,
+    title: "Delivery",
+    icon: Truck,
+    completed: false,
+    description: "Secure packaging and shipment to clinic",
   },
 ] as const;
 

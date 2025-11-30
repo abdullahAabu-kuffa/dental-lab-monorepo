@@ -6,7 +6,6 @@ export const NAV_LINKS = [
   { name: 'Blogs', href: '/blogs' },
   // { name: 'Gallery and Videos', href: '/gallery' },
   { name: 'Contact Us', href: '/contact' },
-  { name: "Orders", href: `/Orders` }
 ] as const;
 
 export const NAVBAR_CONFIG = {

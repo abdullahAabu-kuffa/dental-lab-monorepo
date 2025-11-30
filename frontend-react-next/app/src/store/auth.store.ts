@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ initialized: true, isLoading: true });
 
     try {
-      const res = await fetch("/api/refreshToken", {
+      const res = await fetch("/app-api/refreshToken", {
         method: "POST",
         credentials: "include",
       });
@@ -82,7 +82,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return;
       }
 
-      const sessionRes = await fetch("/api/session", {
+      const sessionRes = await fetch("/app-api/session", {
         credentials: "include",
       });
 
@@ -118,7 +118,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (old) clearInterval(old);
 
     const id = setInterval(async () => {
-      const res = await fetch("/api/refreshToken", {
+      const res = await fetch("/app-api/refreshToken", {
         method: "POST",
         credentials: "include",
       });
