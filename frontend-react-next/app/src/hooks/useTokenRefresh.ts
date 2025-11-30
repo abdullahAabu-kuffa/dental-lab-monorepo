@@ -18,7 +18,7 @@ export function useTokenRefresh() {
 
       try {
         // Call the Next.js Route Handler, NOT the Server Action
-        const response = await fetch('/api/refreshToken', {
+        const response = await fetch('/app-api/refreshToken', {
           method: 'POST',
           credentials: 'include', // So browser sends cookies
         });
