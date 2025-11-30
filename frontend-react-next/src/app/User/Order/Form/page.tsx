@@ -62,7 +62,7 @@ export default function NewOrderPage() {
 	const { selectedServices, totalAmount } = calculateSelectedServices(formData);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-4 sm:p-6">
+		<div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 p-4 sm:p-6">
 			<div className="max-w-7xl mx-auto">
 				<motion.div
 					{...animations.fadeInUp}
@@ -89,7 +89,7 @@ export default function NewOrderPage() {
 					</div>
 
 					{/* Payment Summary - Sticky on desktop, normal on mobile */}
-					<div className="w-full lg:w-80 xl:w-96 flex-shrink-0 order-1 lg:order-2">
+					<div className="w-full lg:w-80 xl:w-96 shrink-0 order-1 lg:order-2">
 						<div className="lg:sticky lg:top-6">
 							<PaymentSummary
 								title="Order Summary"

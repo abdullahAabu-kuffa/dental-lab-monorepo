@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import Lottie from 'lottie-react';
 import HeroHeading from '@/app/design-system/components/HeroHeading';
 import HeroSubtitle from '@/app/design-system/components/HeroSubtitle';
 
@@ -22,7 +21,7 @@ export default function AboutPage() {
             priority
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1C]/80"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-[#1C1C1C]/80"></div>
         </div>
         
         {/* Content */}
@@ -31,12 +30,12 @@ export default function AboutPage() {
             primaryText="About"
             gradientText=" Us"
             variant="white"
-            className="!mb-2 drop-shadow-lg"
+            className="mb-2! drop-shadow-lg"
           />
           <HeroSubtitle
             text="Egypt's first fully digital dental laboratory, revolutionizing dental restorations with advanced ExoCAD integration, real-time tracking, and seamless online services."
             variant="white"
-            className="!mb-2 !text-3xl drop-shadow-md"
+            className="mb-2! text-3xl! drop-shadow-md"
             delay={0.3}
           />
           <motion.div 

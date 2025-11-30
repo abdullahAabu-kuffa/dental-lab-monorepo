@@ -1,4 +1,4 @@
-import { getAccessToken } from "@/app/src/auth/tokenStore";
+import { getAccessToken } from "@/auth/tokenStore";
 import axios from "axios";
 import { FetchUsersResponse } from "../interfaces/users";
 

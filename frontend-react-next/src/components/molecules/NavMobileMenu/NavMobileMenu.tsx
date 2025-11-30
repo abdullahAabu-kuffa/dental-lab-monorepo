@@ -25,7 +25,7 @@ const NavMobileMenu: React.FC<NavMobileMenuProps> = ({
 				isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"
 			}`}
 		>
-			<div className="px-4 pt-2 pb-6 space-y-3 bg-gradient-to-br from-[#1C1C1C] to-[#2A2A2A] border-t border-[#E4B441]/20">
+			<div className="px-4 pt-2 pb-6 space-y-3 bg-linear-to-br from-[#1C1C1C] to-[#2A2A2A] border-t border-[#E4B441]/20">
 				{/* Navigation Links */}
 				{NAVBAR_CONFIG.links.map((link, index) => (
 					<Link
@@ -69,7 +69,7 @@ const NavMobileMenu: React.FC<NavMobileMenuProps> = ({
 
 								<Link
 									href={NAVBAR_CONFIG.authButtons.register.href}
-									className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg text-center"
+									className="block w-full px-4 py-3 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg text-center"
 									onClick={onClose}
 								>
 									{NAVBAR_CONFIG.authButtons.register.text}

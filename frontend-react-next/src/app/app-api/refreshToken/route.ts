@@ -15,7 +15,7 @@ export async function POST(req: Request) {
           const userAgent = req.headers.get('user-agent') || 'unknown';
 
 
-    // 2. Forward to Express (WITHOUT credentials: 'include')
+    // 2. Forward to Express
     const upstream = await fetch(`${HostIP}/api/auth/refreshToken`, {
       method: 'POST',
       headers: {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
 	registerSchema,
 	type RegisterInput,
@@ -13,10 +12,8 @@ import animationData from "../../../../assets/lotties/teeth.json";
 
 import PendingPage from "./pending";
 
-//import Button from "@/app/src/components/atoms/Button/Button";
 
 export default function RegisterPage() {
-	const router = useRouter();
 	const [form, setForm] = useState<RegisterInput>({
 		fullName: "",
 		email: "",
@@ -86,11 +83,11 @@ export default function RegisterPage() {
 	}
 	return (
 		<main className=" flex items-center justify-center p-4 sm:p-6 bg-gray-50/50 overflow-hidden">
-			<div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/50 -z-10"></div>
+			<div className="absolute inset-0 bg-linear-to-br from-indigo-50/50 via-white to-blue-50/50 -z-10"></div>
 
 			<div className="w-full max-w-5xl h-[90%] grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
 				<div className="p-4 sm:p-6 space-y-3 overflow-hidden flex flex-col justify-between">
-					<div className="flex-shrink-0 space-y-2">
+					<div className="shrink-0 space-y-2">
 						<h1 className="text-3xl font-extrabold text-gray-900">
 							Create Your <span className="text-[#d8a832]">Account</span>
 						</h1>
@@ -110,7 +107,7 @@ export default function RegisterPage() {
 
 					<form
 						onSubmit={handleSubmit}
-						className="space-y-2 flex-grow overflow-y-auto pr-2"
+						className="space-y-2 grow overflow-y-auto pr-2"
 						noValidate
 					>
 						<div className="space-y-1">
@@ -255,7 +252,7 @@ export default function RegisterPage() {
 								</p>
 							)}
 						</div>
-						<div className="flex-shrink-0 pt-4">
+						<div className="shrink-0 pt-4">
 							<button
 								type="submit"
 								className="w-full flex justify-center items-center rounded-lg px-4 py-3 border border-transparent text-lg font-semibold bg-[#d8a832] text-white shadow-md hover:bg-yellow-700 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"

@@ -32,7 +32,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-001",
     patientName: "Ahmed Hassan",
     orderType: "Crown",
-    status: "COMPLETED",
+    status: "Completed",
     date: "2024-01-15",
     totalAmount: 2500,
     urgency: "Medium",
@@ -59,7 +59,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-002",
     patientName: "Fatima Ali",
     orderType: "Bridge",
-    status: "IN_PROGRESS",
+    status: "In Progress",
     date: "2024-01-16",
     totalAmount: 4200,
     urgency: "High",
@@ -84,7 +84,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-003",
     patientName: "Mohamed Khaled",
     orderType: "Implant",
-    status: "COMPLETED",
+    status: "Completed",
     date: "2024-01-17",
     totalAmount: 3500,
     urgency: "Low",
@@ -111,7 +111,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-004",
     patientName: "Sara Mahmoud",
     orderType: "Denture",
-    status: "COMPLETED",
+    status: "Completed",
     date: "2024-01-18",
     totalAmount: 1800,
     urgency: "Medium",
@@ -138,7 +138,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-005",
     patientName: "Omar Ahmed",
     orderType: "Crown",
-    status: "IN_PROGRESS",
+    status: "In Progress",
     date: "2024-01-19",
     totalAmount: 2200,
     urgency: "High",
@@ -160,7 +160,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-006",
     patientName: "Layla Mohamed",
     orderType: "Bridge",
-    status: "COMPLETED",
+    status: "Completed",
     date: "2024-01-20",
     totalAmount: 3800,
     urgency: "Medium",
@@ -187,7 +187,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-007",
     patientName: "Youssef Ibrahim",
     orderType: "Crown",
-    status: "PENDING",
+    status: "Pending",
     date: "2024-01-21",
     totalAmount: 1900,
     urgency: "Low",
@@ -209,7 +209,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-008",
     patientName: "Nadia Sayed",
     orderType: "Veneers",
-    status: "PENDING",
+    status: "Pending",
     date: "2024-01-22",
     totalAmount: 3200,
     urgency: "High",
@@ -401,13 +401,13 @@ const stages = [
     label: "In Progress",
     icon: Settings,
     status:
-      status === "IN_PROGRESS"
+      status === "In Progress"
         ? "active"
-        : status === "COMPLETED"
+        : status === "Completed"
         ? "completed"
         : "pending",
     date:
-      status === "IN_PROGRESS" || status === "COMPLETED"
+      status === "In Progress" || status === "Completed"
         ? order.updatedAt.toString()
         : "---",
   },
@@ -415,15 +415,15 @@ const stages = [
     key: "finished",
     label: "Finished",
     icon: CheckCircle2,
-    status: status === "COMPLETED" ? "completed" : "pending",
-    date: status === "COMPLETED" ? order.updatedAt.toString() : "---",
+    status: status === "Completed" ? "completed" : "pending",
+    date: status === "Completed" ? order.updatedAt.toString() : "---",
   },
   {
     key: "canceled",
     label: "Canceled",
     icon: XCircle,
-    status: status === "CANCELLED" ? "active" : "pending",
-    date: status === "CANCELLED" ? order.updatedAt.toString() : "---",
+    status: status === "Cancelled" ? "active" : "pending",
+    date: status === "Cancelled" ? order.updatedAt.toString() : "---",
   },
 ];
 

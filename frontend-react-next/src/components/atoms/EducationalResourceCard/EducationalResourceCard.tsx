@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ExternalLink } from 'lucide-react';
 import { EducationalResource } from '../../../config/LandingData/educational-resources.data';
 

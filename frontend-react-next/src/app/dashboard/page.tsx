@@ -6,7 +6,6 @@ import Link from "next/link";
 import OrdersTable from "./_components/@orderstable";
 import { useGetProfileInfo } from "./services/hookes/get_profile_info";
 import { useGetAllOrders } from "./services/hookes/get_all_orders";
-import Loading from "./_components/@loading";
 import ErrorMessage from "./_components/@displayerrors";
 import { useUsers } from "./services/hookes/fetch_all_users";
 import { Pagination } from "./_components/@pagination";

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Service } from '../../../config/LandingData/services.data';
-import { componentStyles } from '../../../../design-system';
+import { Service } from '@/config/LandingData/services.data';
+import { componentStyles } from '@/app/design-system';
 
 interface SimpleServiceCardProps {
   service: Service;

@@ -58,7 +58,6 @@ export default function NotificationsMenu({
 				}
 
 				const json = await res.json();
-				const data = Array.isArray(json.data) ? json.data : [json.data];
 				const notifications = json.data.notifications as ApiNotification[];
 				console.log("retrieved Notifications:",);
 

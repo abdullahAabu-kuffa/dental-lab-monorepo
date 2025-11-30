@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState } from "react";
 
@@ -18,7 +19,7 @@ export default function AutoScrollCarousel({ items, speed = 3000 }: CarouselProp
   }, [items.length, speed]);
 
   return (
-    <div className="relative w-full h-80 md:h-[28rem] lg:h-[32rem] bg-gray-900 rounded-lg">
+    <div className="relative w-full h-80 md:h-112 lg:h-128 bg-gray-900 rounded-lg">
 
 
       {/* Carousel slides */}
@@ -39,7 +40,7 @@ export default function AutoScrollCarousel({ items, speed = 3000 }: CarouselProp
               const parent = target.parentElement;
               if (parent) {
                 parent.innerHTML = `
-                  <div class="w-full h-full bg-gradient-to-br from-gray-800 via-[#1a1d2e] to-gray-900 flex items-center justify-center">
+                  <div class="w-full h-full bg-linear-to-br from-gray-800 via-[#1a1d2e] to-gray-900 flex items-center justify-center">
                     <div class="text-center px-8">
                       <div class="text-7xl mb-6 animate-pulse">🦷</div>
                       <p class="text-2xl font-bold text-[#d4a574] mb-2">${item.title}</p>
@@ -53,11 +54,11 @@ export default function AutoScrollCarousel({ items, speed = 3000 }: CarouselProp
           />
           
           {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#d4a574]/5 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-[#d4a574]/5 to-transparent"></div>
           
           {/* Title section */}
-          <div className="absolute bottom-0 left-0 right-0 p-10 bg-gradient-to-t from-black/95 via-black/80 to-black/40 z-40">
+          <div className="absolute bottom-0 left-0 right-0 p-10 bg-linear-to-t from-black/95 via-black/80 to-black/40 z-40">
             <div className="relative">
               <div className="w-20 h-1 bg-[#d4a574] mb-4 shadow-lg"></div>
               <h3 className="text-white font-bold text-3xl mb-3 tracking-wide drop-shadow-lg">{item.title}</h3>

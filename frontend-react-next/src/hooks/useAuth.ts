@@ -2,18 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { SessionPayload } from "../lib/dal/session";
 import { apiFetch } from "../lib/apiClient";
-type UserRole = "CLIENT" | "ADMIN" | "OWNER";
-
-// interface User {
-//   id: number;
-//   email: string;
-//   role: UserRole;
-//   isVerified: boolean;
-//   isActive: boolean;
-//   name: string;
-// }
 
 export interface Invoice {
   id: number;

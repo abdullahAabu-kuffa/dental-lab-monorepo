@@ -22,7 +22,7 @@ const WorkflowGrid = memo(function WorkflowGrid({ steps }: WorkflowGridProps) {
             >
               <div
                 className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl
-                          bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"
+                          bg-linear-to-r from-yellow-400 via-yellow-500 to-yellow-600"
                 aria-label={`Step ${index + 1}: ${step.title}`}
               >
                 <IconComponent
@@ -35,12 +35,12 @@ const WorkflowGrid = memo(function WorkflowGrid({ steps }: WorkflowGridProps) {
       </div>
 
       {/* Connection Line */}
-      <div className="hidden md:block absolute top-7 sm:top-8 left-8 right-8 h-[1px] opacity-60 
-      bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600" />
+      <div className="hidden md:block absolute top-7 sm:top-8 left-8 right-8 h-px opacity-60 
+      bg-linear-to-r from-yellow-400 via-yellow-500 to-yellow-600" />
 
       {/* Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {steps.map((step, index) => (
+        {steps.map((step) => (
           <div key={step.id}>
             <WorkflowCard step={step} />
           </div>

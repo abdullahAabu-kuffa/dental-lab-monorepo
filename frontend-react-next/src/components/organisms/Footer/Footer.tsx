@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
                 const IconComponent = getIcon(contact.icon);
                 return (
                   <div key={index} className="flex items-center gap-2.5">
-                    <IconComponent className="w-4 h-4 text-[#D4AF37] flex-shrink-0" />
+                    <IconComponent className="w-4 h-4 text-[#D4AF37] shrink-0" />
                     {contact.link ? (
                       <a
                         href={contact.link}

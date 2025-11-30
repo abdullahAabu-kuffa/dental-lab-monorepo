@@ -110,6 +110,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 				// window.location.reload();
 			});
 		} catch (error) {
+			console.error("Logout failed:", error);
 			Swal.fire({
 				icon: "error",
 				title: "Logout Failed",
@@ -132,7 +133,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 				animate={{ opacity: 1, y: 0, scale: 1 }}
 				exit={{ opacity: 0, y: -20, scale: 0.97 }}
 				transition={{ duration: 0.35, ease: "easeInOut" }}
-				className="absolute right-0 top-full mt-2 w-72 bg-gradient-to-br from-white/90 to-gray-50/90 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden z-50 border border-gray-200"
+				className="absolute right-0 top-full mt-2 w-72 bg-linear-to-br from-white/90 to-gray-50/90 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden z-50 border border-gray-200"
 			>
 				{/* User Info */}
 				<div className="p-4 border-b border-gray-200">
@@ -187,7 +188,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 							key={index}
 							href={item.link}
 							onClick={() => handleClick(item.type)}
-							className="w-full px-4 py-3 flex items-center gap-3 text-gray-700 transition-all duration-200 rounded-lg hover:bg-gradient-to-r hover:from-yellow-100 hover:to-yellow-50 hover:scale-105"
+							className="w-full px-4 py-3 flex items-center gap-3 text-gray-700 transition-all duration-200 rounded-lg hover:bg-linear-to-r hover:from-yellow-100 hover:to-yellow-50 hover:scale-105"
 						>
 							<item.icon className="w-5 h-5 text-gray-500 group-hover:text-yellow-500 transition-colors" />
 							<span>{item.name}</span>

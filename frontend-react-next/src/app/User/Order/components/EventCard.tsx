@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
 import { Event } from "@/types";
@@ -7,7 +8,7 @@ interface EventCardProps {
 	index?: number;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, index = 0 }) => {
+const EventCard: React.FC<EventCardProps> = ({ event }) => {
 	// Color mapping for event categories
 	const getCategoryColor = (category: string) => {
 		switch (category.toLowerCase()) {

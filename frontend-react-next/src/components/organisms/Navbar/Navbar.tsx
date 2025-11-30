@@ -29,7 +29,8 @@ const Navbar = () => {
 
 	const pathname = usePathname();
 	const router = useRouter();
-	const { user, loading, isAuthenticated } = useAuth();
+	const { user: clientDashboardResponse, loading, isAuthenticated } = useAuth();
+	const user = clientDashboardResponse?.data?.user;
 	// const { user, loading, isAuthenticated } = useAuthStore(s => ({
 	// 	user: s.user,
 	// 	loading: s.isLoading,
@@ -60,6 +61,7 @@ const Navbar = () => {
 		try {
 			await logoutRequest();
 		} catch (error) {
+			console.error("Logout failed:", error);
 		} finally {
 			router.push("/");
 			router.refresh();
@@ -93,16 +95,15 @@ const Navbar = () => {
 	return (
 		<>
 			<nav
-				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-					isScrolled
-						? "bg-gradient-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl"
-						: "bg-gradient-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
-				}`}
+				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+						? "bg-linear-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl"
+						: "bg-linear-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
+					}`}
 			>
 				<div className="max-w-7xl mx-auto px-4 sm:px-6">
 					<div className="flex items-center justify-between h-20">
 						{/* Logo */}
-						<div className="flex-shrink-0">
+						<div className="shrink-0">
 							<Link href="/" className="flex items-center gap-3">
 								<Image
 									src={NAVBAR_CONFIG.logo.src}
@@ -127,19 +128,17 @@ const Navbar = () => {
 										key={index}
 										href={link.href}
 										onClick={
-											link.name == "Orders" ? handleOrdersClick : undefined
+											link.name == "Order" ? handleOrdersClick : undefined
 										}
-										className={`font-semibold text-base transition-all duration-200 relative group ${
-											isActive
+										className={`font-semibold text-base transition-all duration-200 relative group ${isActive
 												? "text-[#FFD700] border-b-2 border-[#E4B441]"
 												: "text-[#CABEB2] hover:text-[#FFD700]"
-										}`}
+											}`}
 									>
 										{link.name}
 										<span
-											className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${
-												isActive ? "w-full" : "w-0 group-hover:w-full"
-											}`}
+											className={`absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
+												}`}
 										/>
 									</Link>
 								);
@@ -154,9 +153,9 @@ const Navbar = () => {
 							transition={{ duration: 0.7, ease: "easeOut" }}
 						>
 							{loading ? (
-								<div className="relative min-w-[40px] h-10 bg-gray-700 rounded-full animate-pulse" />
+								<div className="relative min-w-10 h-10 bg-gray-700 rounded-full animate-pulse" />
 							) : user ? (
-								<div className="relative min-w-[40px]">
+								<div className="relative min-w-10">
 									<NotificationBell unreadCount={unread} onClick={toggleMenu} />
 									<NotificationsMenu
 										isOpen={open}
@@ -165,7 +164,7 @@ const Navbar = () => {
 									/>
 								</div>
 							) : (
-								<div className="min-w-[40px] h-10" />
+								<div className="min-w-10 h-10" />
 							)}
 						</motion.div>
 
@@ -184,7 +183,7 @@ const Navbar = () => {
 							) : user ? (
 								<>
 									<span className="text-[#CABEB2] text-sm font-medium min-w-[120px]">
-										{user.data.user?.fullName}
+										{user.fullName}
 									</span>
 									<List />
 								</>
@@ -192,14 +191,14 @@ const Navbar = () => {
 								<>
 									<Link
 										href={NAVBAR_CONFIG.authButtons.login.href}
-										className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm min-w-[80px] transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
+										className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm min-w-20 transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
 									>
 										{NAVBAR_CONFIG.authButtons.login.text}
 									</Link>
 
 									<Link
 										href={NAVBAR_CONFIG.authButtons.register.href}
-										className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm min-w-[90px] transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
+										className="px-4 py-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm min-w-[90px] transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
 									>
 										{NAVBAR_CONFIG.authButtons.register.text}
 									</Link>
@@ -210,7 +209,7 @@ const Navbar = () => {
 						{/* Mobile Menu Button */}
 						<button
 							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-							className="md:hidden p-2 rounded-lg bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
+							className="md:hidden p-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
 						>
 							{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
 						</button>
@@ -220,7 +219,7 @@ const Navbar = () => {
 				<NavMobileMenu
 					isOpen={isMobileMenuOpen}
 					onClose={() => setIsMobileMenuOpen(false)}
-					user={user?.data.user}
+					user={user}
 					loading={loading}
 					onLogout={handleLogout}
 				/>

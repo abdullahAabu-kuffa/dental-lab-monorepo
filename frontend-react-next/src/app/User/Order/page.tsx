@@ -17,7 +17,7 @@ const PROCESS_STEPS = USER_PROCESS_STEPS;
 const WelcomePage: React.FC<WelcomePageProps> = ({
 	onStartOrder,
 	onViewOrders,
-	onNewOrder,
+	
 }) => {
 	const { navigateToForm, navigateToOrdersList } = useNavigation();
 	const { user } = useAuth();
@@ -77,7 +77,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 										View My Orders
 									</span>
 								</div>
-								<div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/10 to-[#E4B441]/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+								<div className="absolute inset-0 bg-linear-to-r from-[#D4AF37]/10 to-[#E4B441]/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
 							</button>
 						</div>
 					</motion.div>
@@ -94,7 +94,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 							</p>
 
 							<div className="flex gap-6 sm:gap-8 md:gap-12 justify-start relative">
-								<div className="absolute top-7 left-6 sm:left-8 md:left-8 w-1/3 h-[4px] sm:h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+								<div className="absolute top-7 left-6 sm:left-8 md:left-8 w-1/3 h-1 sm:h-[5px] bg-linear-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
 
 								{PROCESS_STEPS.slice(0, 3).map((process, index) => (
 									<motion.div
@@ -102,7 +102,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 										className="text-left group cursor-pointer relative z-10 space-y-1 sm:space-y-2"
 										variants={motionVariants.processStep(index)}
 									>
-										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-gradient-to-br from-emerald-500 to-green-500 transition-all duration-300">
+										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-linear-to-br from-emerald-500 to-green-500 transition-all duration-300">
 											<process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
 										</div>
 										<h4 className="text-xs sm:text-sm md:text-sm font-semibold text-gray-800">
@@ -124,7 +124,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 							</p>
 
 							<div className="flex gap-6 sm:gap-8 md:gap-12 justify-start relative">
-								<div className="absolute top-7 left-6 sm:left-8 md:left-8 w-11/12 h-[4px] sm:h-[5px] bg-gradient-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+								<div className="absolute top-7 left-6 sm:left-8 md:left-8 w-11/12 h-1 sm:h-[5px] bg-linear-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
 
 								{PROCESS_STEPS.slice(3).map((process, index) => (
 									<motion.div
@@ -132,7 +132,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 										className="text-left group cursor-pointer relative z-10 space-y-1 sm:space-y-2"
 										variants={motionVariants.processStep(index + 3)}
 									>
-										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-gradient-to-br from-blue-500 to-cyan-500 transition-all duration-300">
+										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-linear-to-br from-blue-500 to-cyan-500 transition-all duration-300">
 											<process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
 										</div>
 										<h4 className="text-xs sm:text-sm md:text-sm font-semibold text-gray-800">

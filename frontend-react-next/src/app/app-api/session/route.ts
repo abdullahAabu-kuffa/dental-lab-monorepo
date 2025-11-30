@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/app/src/lib/dal/session";
+import { getSession } from "@/lib/dal/session";
 
 export async function GET() {
     const session = await getSession();
