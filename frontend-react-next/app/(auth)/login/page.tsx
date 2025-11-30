@@ -78,7 +78,7 @@ export default function LoginPage() {
 				return;
 			}
 
-			const res = await fetch("/api/login", {
+			const res = await fetch("/app-api/login", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(formData),
@@ -97,7 +97,7 @@ export default function LoginPage() {
 			// await queryClient.refetchQueries({ queryKey: ["user"] });
 
 			// const newUser = queryClient.getQueryData<User | null>(["user"]);
-			const sessionRes = await fetch("/api/session", {
+			const sessionRes = await fetch("/app-api/session", {
 				credentials: "include",
 			});
 			const user = await sessionRes.json();
