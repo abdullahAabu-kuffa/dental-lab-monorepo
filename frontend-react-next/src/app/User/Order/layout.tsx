@@ -1,6 +1,6 @@
 // app/User/Order/layout.tsx
 import { Toaster } from "react-hot-toast";
-import List from "@/components/organisms/list";
+
 
 export default function UserOrderLayout({
 	children,

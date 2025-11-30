@@ -1,5 +1,5 @@
-import { apiFetch } from "../lib/apiClient";
-import { useAuthStore } from "../store/auth.store";
+import { apiFetch } from "@/lib/apiClient";
+import { useAuthStore } from "@/store/auth.store";
 //import onlogout from auth store
 
 export async function logoutRequest() {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Upload } from "@/utils/UnifiedIcons";
 import {
@@ -203,7 +203,7 @@ export default function OrderForm({
 					>
 						<div className="flex items-center gap-3 mb-6">
 							<div
-								className={`w-10 h-10 bg-gradient-to-r ${section.color} rounded-full flex items-center justify-center flex-shrink-0`}
+								className={`w-10 h-10 bg-linear-to-r ${section.color} rounded-full flex items-center justify-center shrink-0`}
 							>
 								<section.icon className="w-5 h-5 text-white" />
 							</div>
@@ -218,11 +218,10 @@ export default function OrderForm({
 						</div>
 
 						<div
-							className={`grid ${
-								section.fields.length === 2
+							className={`grid ${section.fields.length === 2
 									? "grid-cols-1 md:grid-cols-2 gap-6"
 									: "grid-cols-1 md:grid-cols-2 gap-4"
-							}`}
+								}`}
 						>
 							{section.fields.map(renderField)}
 						</div>
@@ -251,7 +250,7 @@ export default function OrderForm({
 							handleContinueClick();
 						}}
 						disabled={isSubmitting}
-						className="px-8 py-4 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
+						className="px-8 py-4 bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
 					>
 						<div className="flex items-center gap-2">
 							<Upload className="w-5 h-5" />

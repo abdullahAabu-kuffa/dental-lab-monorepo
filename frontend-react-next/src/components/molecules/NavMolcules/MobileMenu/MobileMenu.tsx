@@ -121,7 +121,7 @@ const MobileMenu = memo(function MobileMenu({ navItems = NAV_ITEMS, isOpen: cont
                           exit={{ x: 50, opacity: 0 }}
                           transition={{ delay: index * 0.05, duration: 0.3 }}
                         >
-                          <div className="transform hover:translate-x-[-4px] transition-transform duration-200" onClick={handleNavClick}>
+                          <div className="transform hover:-translate-x-1 transition-transform duration-200" onClick={handleNavClick}>
                             <NavLink href={item.href} icon={IconComponent}>
                               {item.label}
                             </NavLink>

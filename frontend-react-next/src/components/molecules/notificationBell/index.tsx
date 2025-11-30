@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Bell } from "lucide-react";
 import NotificationBadge from "../../atoms/NotificationBadge";
 

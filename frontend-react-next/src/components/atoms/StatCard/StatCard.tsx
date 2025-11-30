@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { StatItem } from '../../../types/index';
+import { StatItem } from '@/types/index';
 
 interface StatCardProps {
   stat: StatItem;

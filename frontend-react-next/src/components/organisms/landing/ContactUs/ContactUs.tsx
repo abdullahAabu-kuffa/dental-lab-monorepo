@@ -43,7 +43,7 @@ const ContactSection: React.FC = () => {
 										delay={0.2 + index * 0.1}
 										className="flex items-center gap-4"
 									>
-										<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
+										<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center shrink-0">
 											<IconComponent className="w-6 h-6 text-[#D4AF37]" />
 										</div>
 										<div>

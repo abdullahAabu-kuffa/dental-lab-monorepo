@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Service } from "../../../config/LandingData/services.data";
+import { Service } from "@/config/LandingData/services.data";
 import { gradients } from "@/app/design-system/gradients";
 
 interface ServiceCardProps {
@@ -9,7 +9,7 @@ interface ServiceCardProps {
 	delay?: number;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ service, delay = 0 }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
 	const IconComponent = service.icon.component;
 
 	return (
@@ -24,7 +24,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, delay = 0 }) => {
 
 			{/* Icon */}
 			<div className="relative mb-4">
-				<div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#E4B441] to-[#D4AF37] flex items-center justify-center shadow-md">
+				<div className="w-12 h-12 rounded-full bg-linear-to-r from-[#E4B441] to-[#D4AF37] flex items-center justify-center shadow-md">
 					<IconComponent className="w-6 h-6 text-white" />
 				</div>
 			</div>

@@ -8,9 +8,8 @@ import { ApiOrder, Order } from "../interfaces/orders";
 import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
-import Loading from "./@loading";
-import useOrderStore from "@/stores/orders-store";
-import { useLoading } from "@/app/src/contexts/LoadingContext";
+import useOrderStore from "@/store/orders-store copy";
+import { useLoading } from "@/contexts/LoadingContext";
 
 const ACTION_MAP: Record<string, "IN_PROGRESS" | "CANCELLED"> = {
   approve: "IN_PROGRESS",

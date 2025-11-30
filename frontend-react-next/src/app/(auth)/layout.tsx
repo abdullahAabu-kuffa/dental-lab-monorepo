@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "@/components/organisms/Navbar/Navbar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (

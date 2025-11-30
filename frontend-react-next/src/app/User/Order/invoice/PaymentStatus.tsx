@@ -26,7 +26,7 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({ order, onPay }) =>
       ) : (
         <div className="text-center space-y-4">
           {/* Payment Amount Display */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-6 border border-blue-200">
+          <div className="bg-linear-to-br from-blue-50 to-indigo-100 rounded-2xl p-6 border border-blue-200">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <CreditCard className="h-6 w-6 text-blue-600" />
               <span className="text-blue-800 font-semibold text-lg">Payment Required</span>
@@ -40,13 +40,13 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({ order, onPay }) =>
           {/* Pay Now Button */}
           <button
             onClick={onPay}
-            className="group relative w-full bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out"
+            className="group relative w-full bg-linear-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out"
           >
             <div className="flex items-center justify-center space-x-3">
               <CreditCard className="h-5 w-5 group-hover:animate-bounce" />
               <span className="text-lg">Pay Now</span>
             </div>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
+            <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
           </button>
 
           {/* Payment Security Text */}

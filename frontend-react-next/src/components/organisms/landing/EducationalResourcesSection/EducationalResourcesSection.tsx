@@ -7,7 +7,7 @@ import {
 	componentStyles,
 	HeroSubtitle,
 } from "@/app/design-system";
-import { ScrollAnimation, StaggeredAnimation } from "@/app/design-system";
+import { ScrollAnimation } from "@/app/design-system";
 import { EDUCATIONAL_RESOURCES } from "@/config/LandingData/educational-resources.data";
 
 const EducationalResourcesSection: React.FC = () => {

@@ -2,7 +2,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { LoadingProvider, useLoading } from "../contexts/LoadingContext";
+import { LoadingProvider } from "../contexts/LoadingContext";
 import { usePageLoading } from "../hooks/usePageLoading";
 import GlobalLoader from "../components/GlobalLoader";
 

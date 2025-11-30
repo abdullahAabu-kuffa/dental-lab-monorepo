@@ -20,7 +20,7 @@ export default function PendingPage() {
 
 				<div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg text-left">
 					<div className="flex items-start">
-						<div className="flex-shrink-0">
+						<div className="shrink-0">
 							<CheckCircle className="h-5 w-5 text-yellow-400 mt-1" />
 						</div>
 						<div className="ml-3">
