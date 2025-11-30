@@ -1,0 +1,16 @@
+"use client";
+import React from "react";
+
+import Navbar from "@/components/organisms/Navbar/Navbar";
+
+export default function UserLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return (
+		<div className="flex flex-col min-h-screen">
+			<main className="flex-1 w-full pt-20">{children}</main>
+		</div>
+	);
+}
