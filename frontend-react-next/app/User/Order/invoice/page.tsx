@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Wallet } from "lucide-react";
 // import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
 // import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
@@ -26,16 +26,19 @@ export interface Invoice {
 
 export default function PaymentPage() {
   const { user, loading } = useAuth();
-  const [ordersState, setOrdersState] = useState<Invoice[]>([]);
+  // const [ordersState, setOrdersState] = useState<Invoice[]>([]);
+  const [ordersState, setOrdersState] = useState<Invoice[]>(
+  () => user?.data?.user?.invoices ?? []
+);
   const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   // Initialize ordersState when user data loads
-  useEffect(() => {
-    if (user?.data?.user?.invoices) {
-      setOrdersState(user.data.user.invoices);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.data?.user?.invoices) {
+  //     setOrdersState(user.data.user.invoices);
+  //   }
+  // }, [user]);
 
   const handleDetailsClick = (invoice: Invoice) => {
     setSelectedOrder(invoice);
@@ -119,7 +122,7 @@ export default function PaymentPage() {
 
       {selectedOrder && (
         <InvoiceModal
-          order={selectedOrder}
+          invoice={selectedOrder}
           isOpen={showModal}
           onClose={() => setShowModal(false)}
           onConfirmPayment={handleConfirmPayment}
