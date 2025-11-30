@@ -7,6 +7,7 @@ import Jwt from "jsonwebtoken";
 import { errorResponse } from "../utils/response.util";
 import logger from "../utils/logger.util";
 import { prisma } from "../lib/prisma";
+import { Session } from "@prisma/client";
 
 /**
  * Middleware to verify JWT access token and attach user to request
@@ -55,12 +56,12 @@ export async function verifyAccessToken(
     const decoded = Jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
 
     // ✅ NEW: Find session and verify clientType + userAgent
-    const session = await prisma.session.findMany({
+    const sessions:Session[] = await prisma.session.findMany({
       where: { userId: decoded.id },
       orderBy: { createdAt: "desc" },
     });
 
-    if (!session) {
+    if (!sessions) {
       return res.status(401).json(errorResponse("Session not found", 401));
     }
 
@@ -73,14 +74,14 @@ export async function verifyAccessToken(
     //   "some answer: ",
     //   session.some((s) => s.clientType == clientType) === true
     // );
-    if (!session.some((s) => s.clientType === clientType)) {
+    if (!sessions.some((s) => s.clientType === clientType)) {
       // logger.warn(
       //   `[SECURITY] ClientType mismatch: sessions=${session.map((s) => s.clientType)}, request=${clientType}`
       // );
       return res.status(401).json(errorResponse("Invalid device type", 401));
     }
 
-    if (!session.some((s) => s.userAgent === userAgent)) {
+    if (!sessions.some((s) => s.userAgent === userAgent)) {
       // logger.warn(
       //   `[SECURITY] UserAgent mismatch for ${decoded.email}: stored agents=${session.map((s) => s.userAgent)}, current=${userAgent}`
       // );

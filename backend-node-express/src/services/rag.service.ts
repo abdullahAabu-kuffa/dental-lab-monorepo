@@ -29,7 +29,6 @@
 // }
 // const hfClient = new InferenceClient(HF_TOKEN);
 
-
 // console.log("🔧 RAG Service initialized with Firebase Firestore");
 
 // /**
@@ -471,17 +470,13 @@
 //   }
 // }
 
-
-import axios, { AxiosError } from "axios";
 import Redis from "ioredis";
-import { PrismaClient } from "../../generated/prisma";
 import { SimilarDocument } from "../types/rag.types";
 import dotenv from "dotenv";
 import { InferenceClient } from "@huggingface/inference";
-
+import { prisma } from "../lib/prisma";
 dotenv.config();
-
-const prisma = new PrismaClient();
+const databaseUrl = process.env.DATABASE_URL;
 const redis: Redis = new Redis(
   process.env.REDIS_URL || "redis://localhost:6379"
 );
@@ -577,8 +572,7 @@ Answer based ONLY on the provided data. If the information is not available, say
         temperature: 0.7,
       });
 
-      const answer =
-        completion.choices?.[0]?.message?.content?.trim() || "";
+      const answer = completion.choices?.[0]?.message?.content?.trim() || "";
 
       if (!answer) {
         throw new Error("Empty response from HF chatCompletion");
@@ -599,7 +593,12 @@ Answer based ONLY on the provided data. If the information is not available, say
       );
 
       // Auth / quota / permission errors – don't keep retrying
-      if (status === 400 || status === 401 || status === 402 || status === 403) {
+      if (
+        status === 400 ||
+        status === 401 ||
+        status === 402 ||
+        status === 403
+      ) {
         throw new Error(
           `HF error ${status}: ${JSON.stringify(data) || error?.message || "Unknown error"}`
         );
@@ -718,8 +717,7 @@ export async function ragQuery(userQuestion: string): Promise<{
 
     // 2. Generate embedding
     console.log("  ⏱️ Generating embedding...");
-    const questionEmbedding: number[] =
-      await generateEmbedding(userQuestion);
+    const questionEmbedding: number[] = await generateEmbedding(userQuestion);
 
     // 3. Find similar documents using pgvector (now O(log n) with ivfflat index)
     const similarDocs = await findSimilarDocuments(questionEmbedding, 3);
@@ -807,15 +805,13 @@ export async function storeKnowledgeBaseItem(data: {
     const embedding: number[] = await generateEmbedding(textToEmbed);
 
     // Insert into Postgres with pgvector
-      const result = await prisma.$executeRaw`
+    const result = await prisma.$executeRaw`
       INSERT INTO "KnowledgeBaseEntry" (title, category, content, metadata, embedding, "updatedAt")
       VALUES (${data.title}, ${data.category}, ${data.content}, ${JSON.stringify(
         data.metadata || {}
       )}::jsonb, ${JSON.stringify(embedding)}::vector, NOW())
       RETURNING id
     `;
-
-
 
     console.log(`  ✅ Stored: ${data.title}`);
 
