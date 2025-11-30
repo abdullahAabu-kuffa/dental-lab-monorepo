@@ -17,7 +17,7 @@ export default function OrdersListPage() {
   const [showDetails, setShowDetails] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("all-orders");
   const { data, isLoading } = useOrders();
-  const orders = data?.data?.orders;
+  const orders = data;
   // console.log(selectedOrder);
   // console.log(orders);
   
@@ -51,7 +51,7 @@ export default function OrdersListPage() {
   return (
     <div className="min-h-screen relative">
       <div className="px-2 pt-4 space-y-3">
-        <ScrollAnimation></ScrollAnimation>
+        <ScrollAnimation>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
@@ -144,6 +144,7 @@ export default function OrdersListPage() {
             )}
           </div>
         </div>
+        </ScrollAnimation>
       </div>
     </div>
   );

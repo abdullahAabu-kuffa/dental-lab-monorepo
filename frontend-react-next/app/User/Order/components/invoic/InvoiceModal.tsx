@@ -1,25 +1,25 @@
 "use client";
 
 import React from "react";
-import { Order } from "../../../../src/types";
-import { X, DollarSign } from "lucide-react";
+import { X } from "lucide-react";
+import { Invoice } from "../../invoice/page";
 
 interface InvoiceModalProps {
-  order: Order;
+  invoice: Invoice;
   isOpen: boolean;
   onClose: () => void;
-  onConfirmPayment: (orderId: string) => void;
+  onConfirmPayment: (invoiceId: number) => void;
 }
 
 export const InvoiceModal: React.FC<InvoiceModalProps> = ({
-  order,
+  invoice,
   isOpen,
   onClose,
   onConfirmPayment
 }) => {
   if (!isOpen) return null;
 
-  const isPaid = order.paymentStatus === "paid";
+  const isPaid = invoice.status === "PAID";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -49,15 +49,16 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
           <div className="space-y-3">
             <div>
               <p className="text-gray-600 text-sm">Order ID</p>
-              <p className="font-medium">#{order.id}</p>
+              <p className="font-medium">#{invoice.id}</p>
             </div>
             <div>
               <p className="text-gray-600 text-sm">Patient</p>
-              <p className="font-medium">{order.patientName}</p>
+              {/* invoices don't have patient name */}
+              {/* <p className="font-medium">{order.patientName}</p> */}
             </div>
             <div>
               <p className="text-gray-600 text-sm">Total Amount</p>
-              <p className="font-medium text-lg">${order.totalAmount.toFixed(2)}</p>
+              <p className="font-medium text-lg">${invoice.totalPrice.toFixed(2)}</p>
             </div>
             <div>
               <p className="text-gray-600 text-sm">Status</p>
@@ -78,7 +79,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
             
             {!isPaid && (
               <button
-                onClick={() => onConfirmPayment(order.id)}
+                onClick={() => onConfirmPayment(invoice.id)}
                 className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
               >
                 Pay Now

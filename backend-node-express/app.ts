@@ -58,7 +58,7 @@ app.use(captureUserAgent);
 
 // TODO: Health check endpoint
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toUTCString() });
 });
 // TODO: API routes
