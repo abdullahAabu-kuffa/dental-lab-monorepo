@@ -5,111 +5,120 @@ import { motion } from 'framer-motion';
 import HeroHeading from '@/app/design-system/components/HeroHeading';
 import HeroSubtitle from '@/app/design-system/components/HeroSubtitle';
 
-
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="w-full h-96 relative overflow-hidden mt-20">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image 
-            src="/caseback.jpg"
-            alt="Dental Laboratory"
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-linear-to-br from-[#1C1C1C]/80"></div>
-        </div>
-        
-        {/* Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-          <HeroHeading
-            primaryText="About"
-            gradientText=" Us"
-            variant="white"
-            className="mb-2! drop-shadow-lg"
-          />
-          <HeroSubtitle
-            text="Egypt's first fully digital dental laboratory, revolutionizing dental restorations with advanced ExoCAD integration, real-time tracking, and seamless online services."
-            variant="white"
-            className="mb-2! text-3xl! drop-shadow-md"
-            delay={0.3}
-          />
+    <div className="relative flex flex-col min-h-screen overflow-hidden">
+      
+  
+   
+      <div className="absolute inset-0 -z-10 bg-white"></div>
+
+      {/* Single Combined Section */}
+      <section className="relative w-full py-16">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+          {/* Left Side - Hero Text + Content */}
           <motion.div 
-            className="w-32 h-32 mx-auto"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
+            className="space-y-10"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-        
-          </motion.div>
-        </div>
-      </section>
 
-      {/* Main Content */}
-      <main className="flex-1 bg-[#F5F5F5]">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <section className="grid md:grid-cols-2 gap-8 items-start">
-            <div className="space-y-6">
-              <h3 
-                className="text-4xl font-bold text-black font-serif tracking-tight mb-6"
-              >
-                Who We Are
-              </h3>
-              <p 
-                className="text-lg leading-snug text-[#4A4A4A] font-sans mb-6"
-              >
-                We are Egypt&apos;s first fully digital dental laboratory, combining expert craftsmanship with cutting-edge digital technologies. Our team of highly skilled technicians uses ExoCAD and CAD/CAM systems to deliver flawless dental restorations with unmatched precision and speed.
-              </p>
+            {/* Hero Heading */}
+            <div className="text-center md:text-left">
+              <HeroHeading
+                primaryText="About"
+                gradientText=" Us"
+                variant="black"
+                className="!mb-3 drop-shadow-sm"
+              />
 
-              <h3 
-               className="text-4xl font-bold text-black font-serif tracking-tight mb-6"
-              >
-                What Makes Us Unique
-              </h3>
-              <p 
-                className="text-lg leading-snug text-[#4A4A4A] font-sans mb-6"
-              >
-                Our digital workflow allows you to easily choose services and materials and track every stage of your case online. From upload to delivery, we ensure full transparency, efficiency, and peace of mind for dental professionals.
-              </p>
-
-              <h3 
-               className="text-4xl font-bold text-black font-serif tracking-tight mb-6"
-              >
-                Educational Resources
-              </h3>
-              <p 
-                className="text-lg leading-snug text-[#4A4A4A] font-sans mb-6"
-              >
-                We provide comprehensive guides, workshops, and tutorials on ExoCAD best practices, digital implant planning, and material selection — helping dental professionals stay ahead in their practice.
-              </p>
+              <HeroSubtitle
+                text="Egypt's first fully digital dental laboratory."
+                variant="black"
+                className="!mb-0 !text-2xl md:!text-3xl !font-medium"
+                delay={0.3}
+              />
             </div>
-            
-            <div className="flex justify-center items-start">
-              <Image 
+
+            {/* Info Blocks */}
+            <div className="space-y-8">
+              
+              {/* Block 1 */}
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+                  Who We Are
+                </h3>
+                <p className="text-base md:text-lg text-gray-700 leading-relaxed font-light">
+                  We are Egypt&apos;s first fully digital dental laboratory, combining expert
+                  craftsmanship with cutting-edge digital technologies. Our team uses ExoCAD
+                  and CAD/CAM systems to deliver flawless dental restorations with unmatched
+                  precision and speed.
+                </p>
+              </motion.div>
+
+              {/* Block 2 */}
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+                  What Makes Us Unique
+                </h3>
+                <p className="text-base md:text-lg text-gray-700 leading-relaxed font-light">
+                  Our digital workflow allows you to easily choose services and materials
+                  and track every stage of your case online — providing transparency and
+                  peace of mind.
+                </p>
+              </motion.div>
+
+              {/* Block 3 */}
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+                  Educational Resources
+                </h3>
+                <p className="text-base md:text-lg text-gray-700 leading-relaxed font-light">
+                  We offer guides, workshops, and tutorials on ExoCAD best practices,
+                  digital implant planning, and material selection — helping dental
+                  professionals stay ahead.
+                </p>
+              </motion.div>
+
+            </div>
+          </motion.div>
+
+          {/* Right Side - Image */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="flex justify-center"
+          >
+            <div className="relative">
+              <Image
                 src="/aboutUspic.jpg"
                 alt="Dental Lab"
-                width={500}
-                height={400}
-                className="w-full h-auto rounded-xl shadow-lg sticky top-8"
+                width={550}
+                height={450}
+                className="relative rounded-2xl shadow-2xl ring-1 ring-white/50"
                 priority
               />
             </div>
-          </section>
-          
-          {/* Call to Action - Full Width */}
-          <div className="mt-12 text-center">
-            <p 
-              className="text-2xl font-semibold text-[#E4B441] font-serif"
-            >
-              Partner with us and experience seamless digital dentistry — where technology, craftsmanship, and professional support come together.
-            </p>
-          </div>
+          </motion.div>
+
         </div>
-      </main>
+      </section>
+
     </div>
   );
 }

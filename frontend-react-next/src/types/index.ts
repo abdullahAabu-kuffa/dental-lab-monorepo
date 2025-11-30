@@ -10,7 +10,7 @@ export interface Order {
   orderType: string;
   options?: {
     patientName?: string;
-    date?: string;
+    age?: string;
     material?: string;
     notes?: string;
     [key: string]: unknown;
@@ -71,7 +71,7 @@ export interface ManufacturingStep {
 
 export interface OrderFormData {
   patientName: string;
-  date: string;
+  age: string;
   // Service checkboxes
   zircon_preshaded?: boolean;
   zircon_multilayer?: boolean;
@@ -233,14 +233,23 @@ export interface WorkflowCard {
   iconComponent: React.ComponentType<{ size?: number; color?: string }>;
 }
 
+export interface Validation {
+  pattern?: {
+    value: string;
+    message: string;
+  };
+  minLength?: number;
+}
+
 // FORM FIELD TYPES
 
 export interface FormField {
   id: string;
-  type: "text" | "checkbox" | "textarea" | "file" | "date";
+  type: "text" | "checkbox" | "textarea" | "file" | "date" | "select";
   label: string;
   required?: boolean;
-  validation?:object
+  validation?: Validation;
+  options?: string[];
 }
 
 // COMPONENT-SPECIFIC TYPES
