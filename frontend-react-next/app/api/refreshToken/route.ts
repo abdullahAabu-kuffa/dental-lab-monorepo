@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-const HostIP = process.env.auth_local_ip;
+const HostIP = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(req: Request) {
   try {
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
 
     // 2. Forward to Express (WITHOUT credentials: 'include')
-    const upstream = await fetch(`${HostIP}api/auth/refreshToken`, {
+    const upstream = await fetch(`${HostIP}/api/auth/refreshToken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const HostIP = process.env.auth_local_ip;
+const HostIP = process.env.NEXT_PUBLIC_API_URL;
 export async function POST(req: Request) {
   if (!HostIP) {
     return NextResponse.json({ error: "Host ip not valid" }, { status: 500 });
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
 
   try {
-    const upstream = await fetch(`${HostIP}api/auth/login`, {
+    const upstream = await fetch(`${HostIP}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" , 'user-agent': userAgent},
       body: JSON.stringify({
