@@ -7,12 +7,8 @@ import {
   Truck,
   AlertCircle,
   Package,
-  Eye,
   Settings,
-  Microscope,
   CheckCircle,
-  Crown,
-  FileText,
   User,
   Layers,
   Upload,
@@ -36,7 +32,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-001",
     patientName: "Ahmed Hassan",
     orderType: "Crown",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-15",
     totalAmount: 2500,
     urgency: "Medium",
@@ -63,7 +59,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-002",
     patientName: "Fatima Ali",
     orderType: "Bridge",
-    status: "In Progress",
+    status: "IN_PROGRESS",
     date: "2024-01-16",
     totalAmount: 4200,
     urgency: "High",
@@ -88,7 +84,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-003",
     patientName: "Mohamed Khaled",
     orderType: "Implant",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-17",
     totalAmount: 3500,
     urgency: "Low",
@@ -115,7 +111,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-004",
     patientName: "Sara Mahmoud",
     orderType: "Denture",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-18",
     totalAmount: 1800,
     urgency: "Medium",
@@ -142,7 +138,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-005",
     patientName: "Omar Ahmed",
     orderType: "Crown",
-    status: "In Progress",
+    status: "IN_PROGRESS",
     date: "2024-01-19",
     totalAmount: 2200,
     urgency: "High",
@@ -164,7 +160,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-006",
     patientName: "Layla Mohamed",
     orderType: "Bridge",
-    status: "Completed",
+    status: "COMPLETED",
     date: "2024-01-20",
     totalAmount: 3800,
     urgency: "Medium",
@@ -191,7 +187,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-007",
     patientName: "Youssef Ibrahim",
     orderType: "Crown",
-    status: "Pending",
+    status: "PENDING",
     date: "2024-01-21",
     totalAmount: 1900,
     urgency: "Low",
@@ -213,7 +209,7 @@ export const SAMPLE_ORDERS: Order[] = [
     id: "ORD-008",
     patientName: "Nadia Sayed",
     orderType: "Veneers",
-    status: "Pending",
+    status: "PENDING",
     date: "2024-01-22",
     totalAmount: 3200,
     urgency: "High",
@@ -389,7 +385,7 @@ export const filterOrdersByStatus = (
 // };
 
 export const getOrderStages = (order: Order) => {
-  const rawStatus = order.status;
+  // const rawStatus = order.status;
   const status = order.status;
 
 const stages = [
@@ -398,7 +394,7 @@ const stages = [
     label: "Order Placed",
     icon: Package,
     status: "completed",
-    date: order.createdAt,
+    date: order.createdAt.toString(),
   },
   {
     key: "inProgress",
@@ -412,7 +408,7 @@ const stages = [
         : "pending",
     date:
       status === "IN_PROGRESS" || status === "COMPLETED"
-        ? order.updatedAt
+        ? order.updatedAt.toString()
         : "---",
   },
   {
@@ -420,14 +416,14 @@ const stages = [
     label: "Finished",
     icon: CheckCircle2,
     status: status === "COMPLETED" ? "completed" : "pending",
-    date: status === "COMPLETED" ? order.updatedAt : "---",
+    date: status === "COMPLETED" ? order.updatedAt.toString() : "---",
   },
   {
     key: "canceled",
     label: "Canceled",
     icon: XCircle,
     status: status === "CANCELLED" ? "active" : "pending",
-    date: status === "CANCELLED" ? order.updatedAt : "---",
+    date: status === "CANCELLED" ? order.updatedAt.toString() : "---",
   },
 ];
 
