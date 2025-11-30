@@ -14,7 +14,7 @@ export default function ChooseMaterialSection() {
 
 	return (
 		<section
-			className="w-full py-12 lg:py-16 bg-gradient-to-br from-gray-50 to-white"
+			className="w-full py-12 lg:py-16 bg-linear-to-br from-gray-50 to-white"
 			style={{ paddingTop: "3rem", paddingBottom: "3rem" }}
 		>
 			<div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">

@@ -42,7 +42,7 @@ export default function NavLink({ href, icon: Icon, children }: NavLinkProps) {
 
       {/* Animated Underline*/}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#D4AF37] to-[#a07916]"
+        className="absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-[#D4AF37] to-[#a07916]"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: isHovered ? 1 : 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}

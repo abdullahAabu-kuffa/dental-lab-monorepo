@@ -15,7 +15,7 @@ export interface Order {
     notes?: string;
     [key: string]: unknown;
   };
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+  status: "Pending" | "In Progress" | "Completed" | "Cancelled";
   date: string;
   totalAmount: number;
   urgency: "Low" | "Medium" | "High";
@@ -274,13 +274,13 @@ export interface WelcomePageProps {
 // RE-EXPORT TYPES FROM DESIGN SYSTEM
 
 // Design system types
-export type Typography = import("../../design-system/typography").Typography;
+export type Typography = import("@/app/design-system/typography").Typography;
 export type ComponentStyles =
-  import("../../design-system/components").ComponentStyles;
+  import("@/app/design-system/components").ComponentStyles;
 export type AnimationConfig =
-  import("../../design-system/animations").AnimationConfig;
-export type Gradients = import("../../design-system/gradients").Gradients;
-export type Colors = import("../../design-system/colors").Colors;
+  import("@/app/design-system/animations").AnimationConfig;
+export type Gradients = import("@/app/design-system/gradients").Gradients;
+export type Colors = import("@/app/design-system/colors").Colors;
 
 // Lucide icon type
 export type { LucideIcon } from "lucide-react";
@@ -289,9 +289,9 @@ export type { LucideIcon } from "lucide-react";
 export type {
   ApiOrder,
   PaginatedOrdersResponse,
-} from "../../dashboard/interfaces/orders";
+} from "@/app/dashboard/interfaces/orders";
 export type {
   OrderOptions,
   SelectedService,
   User,
-} from "../../dashboard/interfaces/orders";
+} from "@/app/dashboard/interfaces/orders";

@@ -9,7 +9,6 @@ import Button from "@/components/atoms/Button/Button";
 import GoldenGlow from "@/components/atoms/GoldenGlow/GoldenGlow";
 import { z } from "zod";
 import animationData from "../../../../assets/lotties/Dentist Hands Cutting Plus Teeth Dental Surgery.json";
-import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth.store";
 // Zod schema for simple validation
@@ -36,8 +35,6 @@ export default function LoginPage() {
 		password?: string;
 	}>({});
 
-	// const { setAccessToken } = useAuthContext();
-	const queryClient = useQueryClient();
 
 	// Validate each field on change
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

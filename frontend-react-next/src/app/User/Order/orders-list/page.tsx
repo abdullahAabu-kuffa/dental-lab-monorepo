@@ -57,7 +57,7 @@ export default function OrdersListPage() {
 						{/* LEFT SIDE: Status Icons + Search + Orders List */}
 						<div className="lg:col-span-4 xl:col-span-3 flex flex-col gap-3">
 							{/* STATUS ICONS */}
-							<div className="inline-block bg-gray-50 dark:bg-gray-900 rounded-xl p-[2px]">
+							<div className="inline-block bg-gray-50 dark:bg-gray-900 rounded-xl p-0.5">
 								<div className="flex items-center gap-1">
 									<StatusIcons
 										onNewOrder={() => router.push("/User/Order/Form")}

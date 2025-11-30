@@ -10,7 +10,7 @@ export default function AboutPage() {
     <div className="relative flex flex-col min-h-screen overflow-hidden">
       
   
-      {/* خلفية بسيطة */}
+   
       <div className="absolute inset-0 -z-10 bg-white"></div>
 
       {/* Single Combined Section */}

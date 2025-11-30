@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { ProcessStep as ProcessStepType } from '../../../types';
+import type { ProcessStep as ProcessStepType } from '@/types';
 
 interface ProcessStepProps { // Define the props for the ProcessStep component
   step: ProcessStepType;
@@ -24,7 +24,7 @@ const ProcessStep = memo(function ProcessStep({ step }: ProcessStepProps) {
     <div className="flex flex-col items-center">
       {/* Step Circle */}
       <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 cursor-pointer ${getStepStyles()}`}>
-        <IconComponent className="w-8 h-8 flex-shrink-0" />
+        <IconComponent className="w-8 h-8 shrink-0" />
       </div>
       
       {/* Step Label */}

@@ -13,7 +13,7 @@ interface OrderProgressProps {
 }
 export const OrderProgress: React.FC<OrderProgressProps> = ({
 	order,
-	useNewDetails = false,
+	
 }) => {
 	// Get progress steps from config based on order stages
 	const progressSteps = getOrderStages(order);
@@ -24,10 +24,10 @@ export const OrderProgress: React.FC<OrderProgressProps> = ({
 				{/* Case Progress */}
 				<div className="lg:col-span-1">
 					<div className="flex items-center gap-3 mb-8">
-						<div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl">
+						<div className="p-2 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl">
 							<FirstIcon className="w-5 h-5 text-white" />
 						</div>
-						<h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+						<h3 className="text-2xl font-bold bg-linear-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
 							Case Progress
 						</h3>
 					</div>

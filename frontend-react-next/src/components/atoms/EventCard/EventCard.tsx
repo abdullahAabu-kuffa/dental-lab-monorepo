@@ -8,7 +8,7 @@ interface EventCardProps {
   index?: number;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, index = 0 }) => {
+const EventCard: React.FC<EventCardProps> = ({ event}) => {
   return (
     <div
       className="group relative bg-white/5 backdrop-blur-xl rounded-2xl border border-[#D4AF37]/20 hover:border-[#D4AF37]/50 transition-all duration-300 overflow-hidden hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]"

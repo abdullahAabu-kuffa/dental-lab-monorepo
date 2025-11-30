@@ -14,7 +14,7 @@ export default function ManufacturingProcessSection() {
 
 	return (
 		<section
-			className={`${componentStyles.layout.spacingSection} bg-gradient-to-br from-gray-50 via-white to-gray-100`}
+			className={`${componentStyles.layout.spacingSection} bg-linear-to-br from-gray-50 via-white to-gray-100`}
 		>
 			<div className={`${componentStyles.layout.containerDefault} text-center`}>
 				{/* Header */}

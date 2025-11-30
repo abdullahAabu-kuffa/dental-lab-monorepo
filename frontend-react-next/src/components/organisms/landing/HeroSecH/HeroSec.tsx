@@ -13,9 +13,9 @@ export default function HeroSec() {
 	];
 
 	return (
-		<section className="relative min-h-screen bg-gradient-to-br from-[#151821] via-[#1a1d2e] to-[#252938] overflow-hidden">
+		<section className="relative min-h-screen bg-linear-to-br from-[#151821] via-[#1a1d2e] to-[#252938] overflow-hidden">
 			{/* Decorative Dots Pattern - Top Left (hidden on mobile) */}
-			<div className="hidden md:block absolute top-8 left-1/4 grid grid-cols-5 gap-2 opacity-30">
+			<div className="hidden md:block absolute top-8 left-1/4 grid-cols-5 gap-2 opacity-30">
 				{[...Array(15)].map((_, i) => (
 					<div
 						key={`dot-tl-${i}`}
@@ -120,7 +120,7 @@ export default function HeroSec() {
 
 						{/* Key Feature Badge */}
 						<div className="flex justify-center items-center w-full h-16 mt-2 mb-2">
-							<div className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-[#d4a574]/10 to-[#d4a574]/5 border border-[#d4a574]/30 rounded-lg backdrop-blur-sm relative">
+							<div className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-linear-to-r from-[#d4a574]/10 to-[#d4a574]/5 border border-[#d4a574]/30 rounded-lg backdrop-blur-sm relative">
 								<span className="text-2xl sm:text-4xl">⚡</span>
 								<p className="text-[#d4a574] text-sm sm:text-lg md:text-xl font-semibold text-center leading-tight">
 									<span className="hidden sm:inline">
@@ -139,11 +139,11 @@ export default function HeroSec() {
 					</div>
 
 					{/* RIGHT COLUMN - 40% */}
-					<div className="hidden lg:block absolute right-[5%] top-1/2 -translate-y-1/2 w-[380px] h-[28rem]">
+					<div className="hidden lg:block absolute right-[5%] top-1/2 -translate-y-1/2 w-[380px] h-112">
 						{/* Carousel Container - Hidden on mobile */}
 						<div className="relative w-full h-full flex items-center justify-end">
 							{/* Rectangular container with carousel - Hidden on mobile */}
-							<div className="absolute right-[5%] top-1/2 -translate-y-1/2 w-[380px] h-[28rem] hidden md:block">
+							<div className="absolute right-[5%] top-1/2 -translate-y-1/2 w-[380px] h-112 hidden md:block">
 								{/* Gold border square */}
 								<div className="absolute inset-0">
 									{/* Inner square with carousel */}

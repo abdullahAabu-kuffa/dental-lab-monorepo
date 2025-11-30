@@ -6,15 +6,13 @@ import { FcCancel } from "react-icons/fc";
 import OrdersTable from "../_components/@orderstable";
 import { useEffect, useState } from "react";
 import { Pagination } from "../_components/@pagination";
-import Loading from "../_components/@loading";
 import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { Order } from "../interfaces/orders";
-import { useOrders } from "@/app/src/lib/orders";
-import { useLoading } from "@/app/src/contexts/LoadingContext";
+import { useLoading } from "@/contexts/LoadingContext";
 
 const Orders = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, isError, error } = useOrders(currentPage);
+  const { data, isLoading, isError, error } = useGetAllOrders(currentPage);
   const { setLoading } = useLoading();
   // const { data:orderData} = useOrders(currentPage);
   console.log(data);

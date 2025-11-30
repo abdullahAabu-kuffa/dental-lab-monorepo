@@ -149,7 +149,7 @@ export default function UploadPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-4 sm:p-6">
+		<div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 p-4 sm:p-6">
 			<div className="max-w-7xl mx-auto">
 				{/* Header */}
 				<motion.div
@@ -158,7 +158,7 @@ export default function UploadPage() {
 				>
 					<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
 						<div className="flex items-center gap-2 sm:gap-3">
-							<div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-[#E4B441] to-[#D4A431] rounded-full flex items-center justify-center flex-shrink-0">
+							<div className="w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-r from-[#E4B441] to-[#D4A431] rounded-full flex items-center justify-center shrink-0">
 								<Upload className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
 							</div>
 							<div>
@@ -192,7 +192,7 @@ export default function UploadPage() {
 							className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-4 sm:p-6"
 						>
 							<div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-								<div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+								<div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-r from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center shrink-0">
 									<Upload className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
 								</div>
 								<div className="min-w-0 flex-1">
@@ -259,7 +259,7 @@ export default function UploadPage() {
 														uploadedFiles.filter((_, i) => i !== index)
 													);
 												}}
-												className="ml-2 text-red-500 hover:text-red-700 text-xs sm:text-sm flex-shrink-0"
+												className="ml-2 text-red-500 hover:text-red-700 text-xs sm:text-sm shrink-0"
 											>
 												Remove
 											</button>
@@ -276,7 +276,7 @@ export default function UploadPage() {
 							className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-4 sm:p-6"
 						>
 							<div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-								<div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+								<div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center shrink-0">
 									<FileText className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
 								</div>
 								<div className="min-w-0 flex-1">
@@ -316,7 +316,7 @@ export default function UploadPage() {
 								onClick={() => {
 									handleSubmitOrder();
 								}}
-								className="w-full sm:w-auto px-4 sm:px-6 py-3 bg-gradient-to-r from-[#E4B441] to-[#D4A431] text-white text-sm sm:text-base font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+								className="w-full sm:w-auto px-4 sm:px-6 py-3 bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white text-sm sm:text-base font-semibold rounded-lg hover:from-[#FFD700] hover:to-[#E4B441] transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								<div className="flex items-center justify-center gap-2">
 									<CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -327,7 +327,7 @@ export default function UploadPage() {
 					</div>
 
 					{/* Payment Summary - Sticky on desktop, normal on mobile */}
-					<div className="w-full lg:w-80 xl:w-96 flex-shrink-0 order-1 lg:order-2">
+					<div className="w-full lg:w-80 xl:w-96 shrink-0 order-1 lg:order-2">
 						<div className="lg:sticky lg:top-6">
 							<motion.div {...animations.fadeInUp} transition={{ delay: 0.4 }}>
 								<PaymentSummary

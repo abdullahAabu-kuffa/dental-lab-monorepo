@@ -8,11 +8,10 @@ import UsersTable from "../_components/@userstable";
 import { useEffect, useState } from "react";
 import { Pagination, User } from "../interfaces/users";
 import { Pagination as PaginationUsers } from "../_components/@pagination";
-import Loading from "../_components/@loading";
 import ErrorMessage from "../_components/@displayerrors";
 
 import { useUsers } from "../services/hookes/fetch_all_users";
-import { useLoading } from "@/app/src/contexts/LoadingContext";
+import { useLoading } from "@/contexts/LoadingContext";
 
 const usersList = () => {
   const [page, setPage] = useState(1);

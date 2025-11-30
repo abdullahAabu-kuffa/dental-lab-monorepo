@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 
-import Navbar from "@/components/organisms/Navbar/Navbar";
 
 export default function UserLayout({
 	children,

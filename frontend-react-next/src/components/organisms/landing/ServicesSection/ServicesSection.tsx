@@ -37,16 +37,16 @@ export default function ServicesSection() {
 								className="relative bg-[#E8E8E8] rounded-2xl p-3 hover:shadow-lg hover:scale-105 hover:border-[#D4AF37] transition-all duration-300 border-2 border-[#D4AF37] cursor-pointer overflow-hidden group min-h-[220px] flex flex-col justify-start items-center"
 							>
 								{/* Golden Glow Effect */}
-								<div className="absolute inset-0 bg-gradient-to-br from-[#E4B441]/20 via-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+								<div className="absolute inset-0 bg-linear-to-br from-[#E4B441]/20 via-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
 								{/* Icon */}
 								<ServiceIcon
 									iconName={service.icon.name}
-									className="mb-[4px] relative z-10"
+									className="mb-1 relative z-10"
 								/>
 
 								{/* Title */}
-								<h3 className="text-lg font-bold text-black text-center mb-[4px] font-sans relative z-10">
+								<h3 className="text-lg font-bold text-black text-center mb-1 font-sans relative z-10">
 									{service.title}
 								</h3>
 
