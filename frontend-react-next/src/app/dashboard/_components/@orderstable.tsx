@@ -8,7 +8,6 @@ import { ApiOrder, Order } from "../interfaces/orders";
 import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
-import useOrderStore from "@/store/orders-store copy";
 import { useLoading } from "@/contexts/LoadingContext";
 
 const ACTION_MAP: Record<string, "IN_PROGRESS" | "CANCELLED"> = {
@@ -35,7 +34,6 @@ const OrdersTable = ({
   currentPage: number;
 }) => {
   const { setLoading } = useLoading();
-  const getOrders = useOrderStore((state) => state.getOrders);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -44,12 +42,12 @@ const OrdersTable = ({
   const [showModal, setShowModal] = useState(false);
   const [orderId, setOrderId] = useState(0);
   const [action, setAction] = useState("");
-  const { data, isLoading, error, isError } = useGetAllOrders(currentPage);
+  const { data, isLoading, error, isError, refetch } =
+    useGetAllOrders(currentPage);
   const apiOrders = data?.data?.orders ?? [];
-    useEffect(() => {
+  useEffect(() => {
     setLoading(isLoading);
   }, [isLoading, setLoading]);
-
 
   if (isError) {
     return (
@@ -216,6 +214,7 @@ const OrdersTable = ({
 
         {showModal && (
           <ConfirmModal
+            isLoading={isLoading}
             message="Are you Sure?"
             onConfirm={() =>
               mutate(
@@ -226,7 +225,7 @@ const OrdersTable = ({
                 {
                   onSuccess: () => {
                     setShowModal(false);
-                    getOrders(currentPage); // 🔹 refresh table after approve/reject
+                    refetch();
                   },
                 }
               )
