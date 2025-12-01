@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion';
 
 interface HeroSubtitleProps {
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   highlightText?: string;
   highlightColor?: string;      
   variant?: 'white' | 'black';
@@ -27,13 +28,35 @@ const textVariants = {
  * Uses Playfair Display font as default to match website branding
  */
 export const HeroSubtitle: React.FC<HeroSubtitleProps> = ({
-  text,
+  text = "",
+  children,
   highlightText = "ExoCAD",
   variant = 'white',
   className = '',
   delay = 0.5,
 }) => {
   const colors = textVariants[variant];
+
+  // If children are provided, use them directly
+  if (children) {
+    return (
+      <motion.p 
+        className={`text-center max-w-2xl mx-auto mb-6 leading-relaxed ${className}`}
+        style={{ 
+          color: colors.color, 
+          fontSize: '1.375rem',
+          fontFamily: 'Playfair Display, serif'
+        }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay, duration: 0.8 }}
+      >
+        {children}
+      </motion.p>
+    );
+  }
+
+  // Otherwise, use the text prop with highlight functionality
   const parts = text.split(highlightText);
 
   return (

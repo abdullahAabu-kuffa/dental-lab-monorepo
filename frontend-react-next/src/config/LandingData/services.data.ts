@@ -8,7 +8,7 @@ export interface Service {
   title: string;
   description: string;
   icon: {
-    name: 'crown' | 'tooth' | 'smile' | 'microscope';
+    name: 'crown' | 'tooth' | 'smile' | 'microscope' | 'creditCard';
     component: LucideIcon;
   };
   features: string[];

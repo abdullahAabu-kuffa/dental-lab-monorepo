@@ -26,9 +26,9 @@ export default function EducationalResourceCard({ resource, onReadMore }: Educat
   };
 
   return (
-    <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200">
+    <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200 hover:border-[#D4AF37]/30">
       {/* Image */}
-      <div className="h-48 overflow-hidden">
+      <div className="h-32 overflow-hidden">
         <img
           src={resource.image}
           alt={resource.title}
@@ -40,7 +40,7 @@ export default function EducationalResourceCard({ resource, onReadMore }: Educat
       {/* Content */}
       <div className="p-6">
         {/* Category Badge */}
-        <span className="inline-block px-3 py-1 bg-gray-100 text-xs font-semibold rounded-full text-gray-700">
+        <span className="inline-block px-3 py-1 bg-[#D4AF37]/10 text-xs font-semibold rounded-full text-[#B8941F]">
           {resource.category}
         </span>
         
@@ -65,10 +65,10 @@ export default function EducationalResourceCard({ resource, onReadMore }: Educat
         {/* Read More Button */}
         <button
           onClick={handleReadMore}
-          className="inline-flex items-center gap-1 text-[#E4B441] font-semibold text-sm hover:underline hover:gap-2 transition-all bg-transparent border-0 cursor-pointer p-0"
+          className="inline-flex items-center gap-1 text-[#D4AF37] font-semibold text-sm hover:text-[#B8941F] hover:gap-2 transition-all bg-transparent border-0 cursor-pointer p-0 group"
         >
           Read More
-          <ExternalLink className="w-3 h-3" />
+          <ExternalLink className="w-3 h-3 group-hover:scale-110 transition-transform duration-200" />
         </button>
       </div>
     </article>

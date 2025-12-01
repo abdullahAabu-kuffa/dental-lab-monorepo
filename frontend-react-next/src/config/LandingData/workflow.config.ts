@@ -15,7 +15,7 @@ export const WORKFLOW_CARDS: WorkflowCard[] = [
   {
     step: "2.",
     title: "Pay Online",
-    description: "Make <strong>secure online payments</strong> with instant digital invoicing.",
+    description: "<strong>secure payments</strong> with instant digital invoicing. Flexible <strong>monthly payment </strong>",
     iconName: 'creditCard',
     iconComponent: CreditCard
   },

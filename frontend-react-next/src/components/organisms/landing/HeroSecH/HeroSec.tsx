@@ -32,14 +32,6 @@ export default function HeroSec() {
 				</svg>
 			</div>
 
-			{/* Medium Cross - Bottom Center (hidden on mobile) */}
-			<div className="hidden lg:block absolute top-1/4 left-1/4 opacity-15">
-				<svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-					<rect x="32" y="0" width="16" height="80" fill="#d4a574" />
-					<rect x="0" y="32" width="80" height="16" fill="#d4a574" />
-				</svg>
-			</div>
-
 			{/* Small Cross - Top Right (hidden on mobile) */}
 			<div className="hidden md:block absolute top-1/3 right-1/3 opacity-10">
 				<svg width="40" height="40" viewBox="0 0 40 40" fill="none">
