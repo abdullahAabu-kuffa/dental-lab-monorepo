@@ -27,9 +27,21 @@ setupSwagger(app);
 
 // TODO: Security middleware
 app.use(helmet());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://avantedentalsolutions.cloud",
+  "https://www.avantedentalsolutions.cloud",
+];
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ( origin, callback ) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
