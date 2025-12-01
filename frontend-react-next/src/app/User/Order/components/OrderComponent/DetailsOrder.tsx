@@ -86,18 +86,19 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
                 </div>
               </div>
 
-              <div className="group">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  Date
-                </label>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
-                  {order?.options?.date
-                    ? String(order?.options?.date)
-                    : order?.date
-                    ? String(order?.date)
-                    : "Not specified"}
-                </p>
-              </div>
+							<div className="group">
+								<label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+									Date
+								</label>
+								<p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
+									{order?.options?.date
+										? String(order?.options?.date)
+										: order?.date
+											? String(order?.date)
+											: "Not specified"
+									}
+								</p>
+							</div>
 
               {/* Urgency - stacked vertical */}
               <div className="group">
