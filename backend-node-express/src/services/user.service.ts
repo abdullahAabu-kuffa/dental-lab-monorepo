@@ -7,6 +7,8 @@ import { error } from "console";
 import { prisma } from "../lib/prisma";
 import logger from "../utils/logger.util";
 import { checkUser } from "../utils/helper/checkUser";
+import { createAndPublishNotification } from "./notification.service";
+import { NotificationType } from "@prisma/client";
 interface UpdateUserProfileDto {
   fullName?: string;
   phoneNumber?: string;
@@ -35,8 +37,8 @@ export const getAllUsersService = async (req: any) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const search = (req.query.search as string)?.trim() || '';
-    const filter = (req.query.filter as string)?.toLowerCase() || '';
+    const search = (req.query.search as string)?.trim() || "";
+    const filter = (req.query.filter as string)?.toLowerCase() || "";
 
     logger.info(
       `[getAllUsersService] Fetching users - page: ${page}, limit: ${limit}, search: ${search}, filter: ${filter}`
@@ -51,13 +53,13 @@ export const getAllUsersService = async (req: any) => {
         {
           fullName: {
             contains: search,
-            mode: 'insensitive', // Case-insensitive search
+            mode: "insensitive", // Case-insensitive search
           },
         },
         {
           email: {
             contains: search,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
         },
       ];
@@ -65,12 +67,16 @@ export const getAllUsersService = async (req: any) => {
     }
 
     // Status filter: pending or approved
-    if (filter === 'pending') {
+    if (filter === "pending") {
       whereClause.isActive = false;
-      logger.info(`[getAllUsersService] Applied filter: pending (isActive = false)`);
-    } else if (filter === 'approved') {
+      logger.info(
+        `[getAllUsersService] Applied filter: pending (isActive = false)`
+      );
+    } else if (filter === "approved") {
       whereClause.isActive = true;
-      logger.info(`[getAllUsersService] Applied filter: approved (isActive = true)`);
+      logger.info(
+        `[getAllUsersService] Applied filter: approved (isActive = true)`
+      );
     }
 
     // Get total count with filters applied
@@ -99,7 +105,7 @@ export const getAllUsersService = async (req: any) => {
         updatedAt: true,
       },
       orderBy: {
-        createdAt: 'desc', // Newest first
+        createdAt: "desc", // Newest first
       },
     });
 
@@ -119,6 +125,16 @@ export const approveUserService = async (userId: number) => {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { isVerified: true, isActive: true },
+    });
+    await createAndPublishNotification({
+      userId,
+      type: NotificationType.ACCOUNT_ACTIVATED,
+      title: "Account Activated!",
+      message: "Your account has been approved by the admin and is now active.",
+      data: {
+        approvedAt: new Date().toISOString(),
+      },
+      sendEmail: true,
     });
     return updatedUser;
   } catch (error: any) {
@@ -153,7 +169,7 @@ export const getUserDataService = async (id: number) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: id },
-      include: {invoices:true},
+      include: { invoices: true },
     });
     return user;
   } catch (error: any) {

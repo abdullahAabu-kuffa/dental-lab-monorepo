@@ -1,12 +1,14 @@
 // app/User/Order/layout.tsx
+import { requireRole } from "@/lib/dal/session";
 import { Toaster } from "react-hot-toast";
 
 
-export default function UserOrderLayout({
+export default async function UserOrderLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	await requireRole(["CLIENT"]);
 	return (
 		<div className="w-full relative min-h-screen">
 			{/* Fixed User Profile Dropdown - positioned at top right with high z-index */}
