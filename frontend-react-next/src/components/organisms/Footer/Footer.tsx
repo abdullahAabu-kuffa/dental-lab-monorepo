@@ -46,12 +46,9 @@ const Footer: React.FC = () => {
             <ul className="space-y-1.5 mt-2">
               {SERVICES_LINKS.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-gray-300 hover:text-[#D4AF37] transition-colors duration-300 inline-block"
-                  >
+                  <span className="text-sm text-gray-300 hover:text-[#D4AF37] transition-colors duration-300 cursor-default">
                     {link.label}
-                  </a>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -78,7 +75,7 @@ const Footer: React.FC = () => {
                         {contact.value}
                       </a>
                     ) : (
-                      <span className="text-sm text-gray-300">{contact.value}</span>
+                      <span className="text-sm text-gray-300 hover:text-[#D4AF37] transition-colors duration-300">{contact.value}</span>
                     )}
                   </div>
                 );

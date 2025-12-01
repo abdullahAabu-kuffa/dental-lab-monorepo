@@ -53,7 +53,7 @@ export default function EducationalCarousel({ items, speed = 500, onReadMore }: 
           animate={{ x: 0, opacity: 1 }}
           transition={{
             duration: 0.55,
-            ease: [0.22, 1, 0.36, 1],           // cubic-bezier smooth
+            ease: [0.22, 1, 0.36, 1], // cubic-bezier smooth
           }}
         >
           {visibleItems.map((item, index) => (
