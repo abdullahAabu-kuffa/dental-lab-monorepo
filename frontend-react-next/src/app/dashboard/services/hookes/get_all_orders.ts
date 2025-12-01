@@ -9,4 +9,4 @@ export const useGetAllOrders = (page: number,search?: string, filter?: string) =
         staleTime: 1000 * 60 * 5,
         refetchInterval: 1000 * 60 * 5,
     })
-};8
+};
