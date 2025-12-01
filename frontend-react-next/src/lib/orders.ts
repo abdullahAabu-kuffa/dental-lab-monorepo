@@ -26,6 +26,7 @@ export function useOrders(page = 1) {
     queryFn: async () => {
       const res = await fetchOrders(page);
       return res.data.orders;
+      return res.data.orders;
     },
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -92,6 +93,7 @@ export function useUploadFile(
     mutationFn: (file: File) => uploadFile(file),
     onSuccess: (data, Error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ["files"] });
+      if (options?.onSuccess) options.onSuccess(data,Error, variables, context);
       if (options?.onSuccess) options.onSuccess(data,Error, variables, context);
     },
     onError: options?.onError,

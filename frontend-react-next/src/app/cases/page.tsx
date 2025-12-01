@@ -1,85 +1,133 @@
-import React from "react";
+'use client';
+
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import HeroHeading from '@/app/design-system/components/HeroHeading';
+
+
 
 export default function CasesPage() {
-  return (
-    <div className="flex flex-col min-h-screen bg-white" style={{ fontFamily: 'var(--font-playfair), serif' }}>
-      
-      {/* IMAGE SECTION */}
-      <section 
-        className="h-96 bg-cover bg-center bg-no-repeat relative mt-20"
-        style={{ 
-          backgroundImage: 'url(https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1920&h=800&fit=crop)'
-        }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 flex items-center justify-center h-full">
-          <div className="text-center">
-            <h1 className="text-5xl font-bold text-white text-center drop-shadow-lg mb-4">
-              Dental Cases Collection
-            </h1>
-            <p className="text-white text-xl drop-shadow-md max-w-2xl mx-auto mb-6">
-              Explore our comprehensive collection of dental cases and treatment examples
-            </p>
-            <div className="flex justify-center">
-              <div className="bg-[#E4B441] text-white px-6 py-3 rounded-lg font-semibold shadow-lg">
-                View Our Work
-              </div>
-            </div>
+return (
+  <>
+
+
+    <div className="absolute inset-0 -z-10 bg-white"></div>
+    <section className="relative w-full pt-4 pb-2 md:pt-6 md:pb-3 text-center">
+      <div className="max-w-4xl mx-auto px-6">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <HeroHeading
+            primaryText="Dental Cases"
+            gradientText=" Collection"
+            variant="black"
+            className="!mb-1 drop-shadow-lg"
+          />
+        
+        </motion.div>
+      </div>
+    </section>
+    
+    <section className="relative w-full py-4 md:py-6">
+      <div className="max-w-7xl mx-auto px-6 grid gap-8 items-start md:grid-cols-2">
+
+        {/* Left Side - Content Blocks */}
+        <motion.div 
+          className="space-y-6"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          {/* Info Blocks */}
+          <div className="space-y-5">
+            
+            {/* Block 1 */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">
+                Restorative Dentistry Cases
+              </h3>
+              <ul className="space-y-2 text-base md:text-lg text-gray-700 leading-relaxed font-light">
+                <li>
+                  <strong>Cavity Restoration:</strong> Treating cavities using dental fillings, crowns, or inlays.
+                </li>
+                <li>
+                  <strong>Endodontic Treatment:</strong> Root canals where students practice removing infected tissue and sealing it.
+                </li>
+                <li>
+                  <strong>Composite Bonding:</strong> Repairing chipped or cracked teeth with tooth-colored resins.
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Block 2 */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">
+                Orthodontic Cases
+              </h3>
+              <ul className="space-y-2 text-base md:text-lg text-gray-700 leading-relaxed font-light">
+                <li>
+                  <strong>Braces and Aligners:</strong> Designing braces or aligners to correct misalignment issues.
+                </li>
+                <li>
+                  <strong>Retention Plans:</strong> Creating retainers for maintaining teeth alignment after braces.
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Block 3 */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.9 }}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">
+                Periodontics Cases
+              </h3>
+              <ul className="space-y-2 text-base md:text-lg text-gray-700 leading-relaxed font-light">
+                <li>
+                  <strong>Gum Disease Treatment:</strong> Scaling and root planning procedures to treat gum disease.
+                </li>
+                <li>
+                  <strong>Soft Tissue Grafting:</strong> Reconstructing gums to treat gum recession.
+                </li>
+              </ul>
+            </motion.div>
+
           </div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* CONTENT SECTION */}
-      <main className="flex-1 pt-12">
-        <div className="max-w-5xl mx-auto px-6 py-12">
+        {/* Right Side - Image */}
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          className="flex justify-center md:justify-end order-first md:order-none" 
+        >
+          <div className="relative">
+            <Image
+              src="/caseback.jpg"     
+              alt="Dental Cases"
+              width={550}
+              height={450}
+              className="relative rounded-2xl shadow-2xl ring-1 ring-white/50"
+              priority
+              unoptimized={true}
+            />
+          </div>
+        </motion.div>
 
-          {/* SECTION: Restorative */}
-          <h2 className="text-3xl font-extrabold text-[#0A2A5E] mb-4">
-            Restorative Dentistry Cases
-          </h2>
-
-          <ul className="space-y-3 text-base text-gray-700 mb-12">
-            <li>
-              <strong>Cavity Restoration:</strong> Treating cavities using dental fillings, crowns, or inlays.
-            </li>
-            <li>
-              <strong>Endodontic Treatment:</strong> Root canals where students practice removing infected tissue and sealing it.
-            </li>
-            <li>
-              <strong>Composite Bonding:</strong> Repairing chipped or cracked teeth with tooth-colored resins.
-            </li>
-          </ul>
-
-          {/* SECTION: Orthodontic */}
-          <h2 className="text-3xl font-extrabold text-[#0A2A5E] mb-4">
-            Orthodontic Cases
-          </h2>
-
-          <ul className="space-y-3 text-base text-gray-700 mb-12">
-            <li>
-              <strong>Braces and Aligners:</strong> Designing braces or aligners to correct misalignment issues.
-            </li>
-            <li>
-              <strong>Retention Plans:</strong> Creating retainers for maintaining teeth alignment after braces.
-            </li>
-          </ul>
-
-          {/* SECTION: Periodontics */}
-          <h2 className="text-3xl font-extrabold text-[#0A2A5E] mb-4">
-            Periodontics Cases
-          </h2>
-
-          <ul className="space-y-3 text-base text-gray-700 mb-12">
-            <li>
-              <strong>Gum Disease Treatment:</strong> Scaling and root planning procedures to treat gum disease.
-            </li>
-            <li>
-              <strong>Soft Tissue Grafting:</strong> Reconstructing gums to treat gum recession.
-            </li>
-          </ul>
-
-        </div>
-      </main>
-    </div>
-  );
+      </div>
+    </section>
+  </>
+);
 }

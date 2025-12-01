@@ -44,10 +44,9 @@ const OrdersTable = ({
   const [action, setAction] = useState("");
   const { data, isLoading, error, isError,refetch } = useGetAllOrders(currentPage);
   const apiOrders = data?.data?.orders ?? [];
-    useEffect(() => {
+  useEffect(() => {
     setLoading(isLoading);
   }, [isLoading, setLoading]);
-
 
   if (isError) {
     return (
@@ -214,6 +213,7 @@ const OrdersTable = ({
 
         {showModal && (
           <ConfirmModal
+            isLoading={isLoading}
             message="Are you Sure?"
             onConfirm={() =>
               mutate(
@@ -224,6 +224,7 @@ const OrdersTable = ({
                 {
                   onSuccess: () => {
                     setShowModal(false);
+                    refetch();
                     refetch();
                   },
                 }

@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import ProcessStep from "../../../atoms/ProcessStep/ProcessStep";
 import {
 	HeroHeading,
@@ -12,13 +11,6 @@ import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
 import { USER_PROCESS_STEPS } from "../../../../config/UserData/orderDataService";
 
 export default function ManufacturingProcessSection() {
-	const [isLoading, setIsLoading] = useState(false);
-
-	const handleTrackCase = async () => {
-		setIsLoading(true);
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-		window.location.href = "/track-case";
-	};
 
 	return (
 		<section
