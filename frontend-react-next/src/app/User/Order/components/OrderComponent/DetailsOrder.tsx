@@ -91,7 +91,12 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
 									Date
 								</label>
 								<p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">
-									{order?.options?.date || order.date || "Not specified"}
+									{order?.options?.date
+										? String(order?.options?.date)
+										: order?.date
+											? String(order?.date)
+											: "Not specified"
+									}
 								</p>
 							</div>
 
