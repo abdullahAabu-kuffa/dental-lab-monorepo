@@ -9,6 +9,9 @@ import { useGetAllOrders } from "../services/hookes/get_all_orders";
 import { useChangeOrderStatus } from "../services/hookes/change_order_status";
 import ConfirmModal from "./@confirmmodel";
 import { useLoading } from "@/contexts/LoadingContext";
+import { useQueryClient } from "@tanstack/react-query";
+import Loading from "../_components/@loading";
+import ErrorMessage from "./@displayerrors";
 
 const ACTION_MAP: Record<string, "IN_PROGRESS" | "CANCELLED"> = {
   approve: "IN_PROGRESS",
@@ -19,12 +22,11 @@ const statusColors = {
   CANCELLED: "bg-gray-100 text-gray-700",
   PENDING: "bg-yellow-100 text-yellow-700",
   COMPLETED: "bg-green-100 text-green-700",
-  "In Progress": "bg-blue-100 text-blue-700",
   REJECTED: "bg-red-100 text-red-700",
   IN_PROGRESS: "bg-blue-100 text-blue-700",
 };
 
-const filters = ["All", "PENDING", "IN_PROGRESS", "COMPLETED", "REJECTED"];
+const filters = ["All", "pending", "in_progress", "completed", "cancelled"];
 
 const OrdersTable = ({
   overview,
@@ -42,11 +44,19 @@ const OrdersTable = ({
   const [showModal, setShowModal] = useState(false);
   const [orderId, setOrderId] = useState(0);
   const [action, setAction] = useState("");
-  const { data, isLoading, error, isError,refetch } = useGetAllOrders(currentPage);
+  const { data, isLoading, error, isError, refetch } = useGetAllOrders(
+    currentPage,
+    search,
+    filter
+  );
   const apiOrders = data?.data?.orders ?? [];
+  const queryClient = useQueryClient();
   useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["orders", currentPage, search, filter],
+    });
     setLoading(isLoading);
-  }, [isLoading, setLoading]);
+  }, [isLoading, setLoading, currentPage, search, filter, queryClient]);
 
   if (isError) {
     return (
@@ -68,15 +78,6 @@ const OrdersTable = ({
     options: o.options,
     user: o.user,
   }));
-
-  const filteredOrders = mappedOrders.filter((order) => {
-    const matchSearch = order?.user?.fullName
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchFilter = filter === "All" || order.status === filter;
-    return matchSearch && matchFilter;
-  });
-
   return (
     <>
       <div className="p-6 bg-white rounded-xl shadow-sm mx-6">
@@ -118,90 +119,108 @@ const OrdersTable = ({
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
-              <tr>
-                <th className="text-left px-4 py-3">Order ID</th>
-                <th className="text-left px-4 py-3">Customer</th>
-                <th className="text-left px-4 py-3">Date Submitted</th>
-                <th className="text-left px-4 py-3">Status</th>
-                <th className="text-left px-4 py-3">Total Price</th>
-                <th className="text-left px-4 py-3">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order, idx) => (
-                <tr
-                  key={order.id}
-                  className={`border-t border-gray-100 hover:bg-gray-200 ${
-                    idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  }`}
-                >
-                  <td className="px-4 py-3 font-semibold text-gray-800">
-                    {order.id}
-                  </td>
-                  <td className="px-4 py-3">{order.user.fullName}</td>
-                  <td className="px-4 py-3 text-gray-600">{order.date}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        statusColors[order.status]
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">{order.price}</td>
-
-                  <td className="px-4 py-3 flex gap-1 text-center">
-                    {!overview && order.status === "PENDING" && (
-                      <>
-                        <button
-                          onClick={() => {
-                            setAction("approve");
-                            setOrderId(Number(order.id));
-                            setShowModal(true);
-                          }}
-                          className="px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 bg-green-100 text-green-700"
-                        >
-                          <div className="flex items-center gap-1">
-                            <MdDone size={16} />
-                            <span>Approve</span>
-                          </div>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setAction("reject");
-                            setOrderId(Number(order.id));
-                            setShowModal(true);
-                          }}
-                          className="px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 bg-red-100 text-red-700"
-                        >
-                          <div className="flex items-center gap-1">
-                            <FcCancel size={16} />
-                            <span>Reject</span>
-                          </div>
-                        </button>
-                      </>
-                    )}
-
-                    <button
-                      onClick={() => setSelectedOrder(order)}
-                      className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300"
-                    >
-                      <div className="flex items-center gap-1">
-                        <View size={16} />
-                        <span>Details</span>
-                      </div>
-                    </button>
-                  </td>
+        {isLoading ? (
+          <Loading />
+        ) : isError ? (
+          <ErrorMessage message={(error as Error).message} />
+        ) : (
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <table className="min-w-full text-sm">
+              <thead className="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
+                <tr>
+                  <th className="text-left px-4 py-3">Order ID</th>
+                  <th className="text-left px-4 py-3">Customer</th>
+                  <th className="text-left px-4 py-3">Date Submitted</th>
+                  <th className="text-left px-4 py-3">Status</th>
+                  <th className="text-left px-4 py-3">Total Price</th>
+                  <th className="text-left px-4 py-3">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {mappedOrders.map((order, idx) => (
+                  <tr
+                    key={order.id}
+                    className={`border-t border-gray-100 hover:bg-gray-200 ${
+                      idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    }`}
+                  >
+                    <td className="px-4 py-3 font-semibold text-gray-800">
+                      {order.id}
+                    </td>
+                    <td className="px-4 py-3">{order.user.fullName}</td>
+                    <td className="px-4 py-3 text-gray-600">{order.date}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          order.status === "COMPLETED"
+                            ? statusColors["COMPLETED"]
+                            : order.status === "CANCELLED"
+                            ? statusColors["CANCELLED"]
+                            : order.status === "IN_PROGRESS"
+                            ? statusColors["IN_PROGRESS"]
+                            : statusColors["PENDING"]
+                        }`}
+                      >
+                        {order.status === "COMPLETED"
+                          ? "Completed"
+                          : order.status === "CANCELLED"
+                          ? "Cancelled"
+                          : order.status === "IN_PROGRESS"
+                          ? "In Progress"
+                          : "Pending"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{order.price}</td>
+
+                    <td className="px-4 py-3 flex gap-1 text-center">
+                      {!overview && order.status === "PENDING" && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setAction("approve");
+                              setOrderId(Number(order.id));
+                              setShowModal(true);
+                            }}
+                            className="px-2 py-1 text-xs font-medium rounded-full hover:bg-green-300 bg-green-100 text-green-700"
+                          >
+                            <div className="flex items-center gap-1">
+                              <MdDone size={16} />
+                              <span>Approve</span>
+                            </div>
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setAction("reject");
+                              setOrderId(Number(order.id));
+                              setShowModal(true);
+                            }}
+                            className="px-2 py-1 text-xs font-medium rounded-full hover:bg-red-300 bg-red-100 text-red-700"
+                          >
+                            <div className="flex items-center gap-1">
+                              <FcCancel size={16} />
+                              <span>Reject</span>
+                            </div>
+                          </button>
+                        </>
+                      )}
+
+                      <button
+                        onClick={() => setSelectedOrder(order)}
+                        className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 hover:bg-blue-300"
+                      >
+                        <div className="flex items-center gap-1">
+                          <View size={16} />
+                          <span>Details</span>
+                        </div>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Modal */}
         {selectedOrder && (

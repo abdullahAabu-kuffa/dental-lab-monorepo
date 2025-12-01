@@ -14,9 +14,9 @@ console.log(token);
 // /* ===========================================
 //    GET ALL ORDERS
 // =========================================== */
-export const getAllOrders = async ({ page }: { page: number }) => {
+export const getAllOrders = async ({ page,search,filter }: { page: number,search?: string,filter?: string }) => {
   const res = await axios.get(`/orders`, {
-    params: { page },
+    params: { page,search,filter },
     // headers: authHeader,
     withCredentials: true,
   });
