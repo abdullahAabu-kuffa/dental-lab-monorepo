@@ -108,7 +108,7 @@ const Navbar = () => {
 								<Image
 									src={NAVBAR_CONFIG.logo.src}
 									alt={NAVBAR_CONFIG.logo.alt}
-									className={`${NAVBAR_CONFIG.logo.width} ${NAVBAR_CONFIG.logo.height} filter brightness-110 contrast-125`}
+									className={`w-32 h-20 sm:w-40 sm:h-24 md:${NAVBAR_CONFIG.logo.width} md:${NAVBAR_CONFIG.logo.height} filter brightness-110 contrast-125`}
 									width={100}
 									height={100}
 									style={{

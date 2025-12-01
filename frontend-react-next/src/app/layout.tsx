@@ -8,6 +8,7 @@ import GlobalLoader from "@/components/GlobalLoader";
 import { TokenRefreshInitializer } from "@/components/TokenRefreshInitializer";
 import NavbarWrapper from "@/components/organisms/Navbar/NavbarWrapper";
 import FooterWrapper from "@/components/organisms/Footer/FooterWrapper";
+import DentalChatButton from "@/app/chatbot/chat";
 
 // const playfair = Playfair_Display({
 // 	variable: "--font-playfair",
@@ -38,6 +39,7 @@ export default async function RootLayout({
 						<LoadingProvider>
 							<GlobalLoader />
 							{children}
+							<DentalChatButton />
 						</LoadingProvider>
 						<FooterWrapper />
 						{/* </AuthProvider> */}

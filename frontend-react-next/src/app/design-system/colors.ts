@@ -47,6 +47,13 @@ export const colors = {
     lighter: '#FFFFFF',   // white
     border: '#E2E8F0',    // simple borders
     shadow: '#F1F5F9',    // subtle shadow color
+  },
+  chatbot: {
+    navy: '#0F1C2E',
+    goldDark: '#E6B800',
+    beige: '#FFFFFF',
+    textLight: '#FFFFFF',
+    textDark: '#0F1C2E',
   }
 } as const;
 
