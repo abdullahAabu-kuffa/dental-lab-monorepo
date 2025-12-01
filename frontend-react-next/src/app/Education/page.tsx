@@ -121,7 +121,7 @@ export default function Education() {
 
         {/* Articles Carousel */}
         <div className="max-w-7xl mx-auto px-6 pb-20">
-          <EducationalCarousel 
+          <EducationalCarousel
             items={resources}
             onReadMore={handleReadMore}
             speed={10000}

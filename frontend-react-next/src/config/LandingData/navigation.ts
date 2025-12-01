@@ -10,8 +10,8 @@ export const NAV_LINKS = [
 
 export const NAVBAR_CONFIG = {
   logo: {
-    src: '/gold.svg',
-    alt: 'Gold Logo',
+    src: '/navbarG.svg',
+    alt: 'Navbar Logo',
 
     width: 'w-55',
     height: 'h-30'

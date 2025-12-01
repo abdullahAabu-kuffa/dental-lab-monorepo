@@ -1,44 +1,44 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { useState } from "react";
 import { Upload } from "lucide-react";
 import SwitchButton from "../../../dashboard/_components/@switchBtn";
 
-interface FormErrors {
-  [key: string]: string | undefined;
-}
 
-interface AccountUIProps {
-  profileImage: string;
-  info: {
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-    city: string;
-    clinicName: string;
+export default function AccountUI() {
+  const [profileImage, setProfileImage] = useState<string>("/default-avatar.png");
+  const [info, setInfo] = useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    city: "",
+    clinicName: "",
+  });
+  const [isEmailOn, setIsEmailOn] = useState(false);
+  const [isThemeOn, setIsThemeOn] = useState(false);
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setProfileImage(reader.result as string);
+      reader.readAsDataURL(file);
+    }
   };
-  basicErrors: FormErrors;
-  isEmailOn: boolean;
-  isThemeOn: boolean;
-  onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onToggleEmail: () => void;
-  onToggleTheme: () => void;
-  onBasicSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-}
 
-export default function AccountUI({
-  profileImage,
-  info,
-  basicErrors,
-  isEmailOn,
-  isThemeOn,
-  onPhotoChange,
-  onToggleEmail,
-  onToggleTheme,
-  onBasicSubmit,
-}: AccountUIProps) {
-  const errorStyle =
-    "!border-red-500 focus:!border-red-500 hover:!border-red-500 focus:!ring-red-500";
+  const handleToggleEmail = () => setIsEmailOn(!isEmailOn);
+  const handleToggleTheme = () => setIsThemeOn(!isThemeOn);
+
+  const handleBasicSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log("Form submitted", info);
+  };
+
+  const updateInfo = (field: keyof typeof info, value: string) => {
+    setInfo(prev => ({ ...prev, [field]: value }));
+  };
   const successStyle =
     "border-[#6B7280] focus:border-blue-500 focus:ring-blue-500 hover:border-[#6B7280]";
 
@@ -57,7 +57,7 @@ export default function AccountUI({
 
         {/* Basic Information */}
         <div className="bg-white shadow p-6 rounded-xl space-y-6">
-          <form onSubmit={onBasicSubmit}>
+          <form onSubmit={handleBasicSubmit}>
             <h2 className="text-lg font-semibold text-gray-700 mb-2">
               Basic Information
             </h2>
@@ -86,7 +86,7 @@ export default function AccountUI({
                     id="photo"
                     type="file"
                     accept="image/*"
-                    onChange={onPhotoChange}
+                    onChange={handlePhotoChange}
                   />
                 </div>
               </div>
@@ -180,11 +180,11 @@ export default function AccountUI({
           <h2 className="text-lg font-semibold text-gray-700">Notifications & Theme</h2>
           <div className="flex items-center justify-between p-2">
             <span>Email Notifications</span>
-            <SwitchButton isOn={isEmailOn} toggleSwitch={onToggleEmail} />
+            <SwitchButton isOn={isEmailOn} toggleSwitch={handleToggleEmail} />
           </div>
           <div className="flex items-center justify-between p-2">
             <span>Dark Mode</span>
-            <SwitchButton isOn={isThemeOn} toggleSwitch={onToggleTheme} />
+            <SwitchButton isOn={isThemeOn} toggleSwitch={handleToggleTheme} />
           </div>
           <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer w-full">
             Save Preferences

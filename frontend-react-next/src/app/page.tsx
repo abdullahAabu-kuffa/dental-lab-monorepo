@@ -12,6 +12,7 @@ import EventsSection from "@/components/organisms/landing/EventsSection/EventsSe
 export default function Home() {
 	return (
 		<main>
+		
 			<HeroSec />
 			<ServicesSection />
 			<WorkflowSection />

@@ -15,6 +15,7 @@
 		"axios": "^1.13.2",
 		"framer-motion": "^12.23.24",
 		"framer-motion-3d": "^12.4.13",
+		"gsap": "^3.13.0",
 		"jose": "^6.1.2",
 		"lightningcss": "^1.30.2",
 		"lottie": "^0.0.1",

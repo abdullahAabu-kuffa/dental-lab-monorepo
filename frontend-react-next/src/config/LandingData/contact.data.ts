@@ -32,11 +32,12 @@ export const CONTACT_INFO: ContactInfo[] = [
 ];
 
 export const QUICK_LINKS = [
-  { label: 'Home', href: '#home' },
-  { label: 'Services', href: '#services' },
-  { label: 'How It Works', href: '#workflow' },
-  { label: 'Technology', href: '#technology' },
-  { label: 'Contact', href: '#contact' }
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/aboutUs' },
+
+  { label: 'Cases', href: '/cases' },
+  { label: 'Education', href: '/Education' },
+  { label: 'Contact Us', href: '/contact' }
 ];
 
 export const SERVICES_LINKS = [
