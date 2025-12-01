@@ -94,15 +94,15 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 							</p>
 
 							<div className="flex gap-6 sm:gap-8 md:gap-12 justify-start relative">
-								<div className="absolute top-7 left-6 sm:left-8 md:left-8 w-1/3 h-1 sm:h-[5px] bg-linear-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
+								<div className="absolute top-7 left-6 sm:left-8 md:left-8 w-2/5 h-1 sm:h-[5px] bg-linear-to-r from-[#E4B441] to-[#D4AF37] rounded-full"></div>
 
 								{PROCESS_STEPS.slice(0, 3).map((process, index) => (
 									<motion.div
 										key={index}
-										className="text-left group cursor-pointer relative z-10 space-y-1 sm:space-y-2"
+										className="text-left relative z-10 space-y-1 sm:space-y-2"
 										variants={motionVariants.processStep(index)}
 									>
-										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-linear-to-br from-emerald-500 to-green-500 transition-all duration-300">
+										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg bg-linear-to-br from-emerald-500 to-green-500 transition-all duration-300">
 											<process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
 										</div>
 										<h4 className="text-xs sm:text-sm md:text-sm font-semibold text-gray-800">
@@ -129,10 +129,10 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 								{PROCESS_STEPS.slice(3).map((process, index) => (
 									<motion.div
 										key={index + 3}
-										className="text-left group cursor-pointer relative z-10 space-y-1 sm:space-y-2"
+										className="text-left relative z-10 space-y-1 sm:space-y-2"
 										variants={motionVariants.processStep(index + 3)}
 									>
-										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl bg-linear-to-br from-blue-500 to-cyan-500 transition-all duration-300">
+										<div className="mx-auto rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg bg-linear-to-br from-blue-500 to-cyan-500 transition-all duration-300">
 											<process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
 										</div>
 										<h4 className="text-xs sm:text-sm md:text-sm font-semibold text-gray-800">

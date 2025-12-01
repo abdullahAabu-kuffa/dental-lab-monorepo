@@ -10,6 +10,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { DetailsOrder } from "./DetailsOrder";
 import { PaymentStatus } from "./PaymentStatus";
 import { OrderCardInvoices } from "./OrderCardInvoices";
+import PayPalButton, { PayPalOrderDetails } from "./PayPalButtonsComponentOptions";
+
 
 export interface Invoice {
 	id: number;
@@ -32,6 +34,7 @@ export default function PaymentPage() {
 	);
 	const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
 	const [showModal, setShowModal] = useState(false);
+	const [showSuccessModal, setShowSuccessModal] = useState(false);
 
 	// Initialize ordersState when user data loads
 	// useEffect(() => {
@@ -64,6 +67,30 @@ export default function PaymentPage() {
 
 		setOrdersState(updatedOrders);
 		setShowModal(false);
+
+		if (selectedOrder?.id === invoiceId) {
+			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
+		}
+	};
+
+	const handlePayPalSuccess = (details: PayPalOrderDetails, invoiceId?: number) => {
+		if (!invoiceId) return;
+
+		const updatedOrders = ordersState.map((order) =>
+			order.id === invoiceId
+				? {
+						...order,
+						status: "PAID",
+						paymentMethod: "PayPal",
+						transactionId: details.id,
+						paidAt: new Date().toISOString(),
+				  }
+				: order
+		);
+
+		setOrdersState(updatedOrders);
+		setShowModal(false);
+		setShowSuccessModal(true);
 
 		if (selectedOrder?.id === invoiceId) {
 			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
@@ -120,14 +147,57 @@ export default function PaymentPage() {
 				</div>
 			</div>
 
-			{selectedOrder && (
-				<InvoiceModal
-					invoice={selectedOrder}
-					isOpen={showModal}
-					onClose={() => setShowModal(false)}
-					onConfirmPayment={handleConfirmPayment}
-				/>
+			{selectedOrder && showModal && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+					<div
+						className="absolute inset-0 bg-black/40"
+						onClick={() => setShowModal(false)}
+					></div>
+					<div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-5">
+						<PayPalButton
+							clientId="AfHtv6qaOH3_qbLa-YHx-W7ZTLdnv5SRt5FEtgrxKvqBaWSNHyg39LP1qxpTaqNp6du5zTz8RfqGPDKU"
+							amount={selectedOrder.totalPrice.toString()}
+							currency="EGP"
+							invoiceId={selectedOrder.id}
+							onSuccess={handlePayPalSuccess}
+							onError={(error) => console.error("PayPal error:", error)}
+						/>
+					</div>
+				</div>
 			)}
+
+			{showSuccessModal && selectedOrder && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+					<div
+						className="absolute inset-0 bg-black/40"
+						onClick={() => setShowSuccessModal(false)}
+					></div>
+					<div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-6 text-center">
+						<div className="flex justify-center mb-4">
+							<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+								<svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+								</svg>
+							</div>
+						</div>
+						<h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+						<p className="text-gray-600 mb-4">Your payment has been completed successfully.</p>
+						<div className="bg-gray-50 rounded-lg p-4 mb-6">
+							<p className="text-sm text-gray-500">Amount Paid</p>
+							<p className="text-2xl font-bold text-gray-900">
+								{selectedOrder.totalPrice.toLocaleString("en-US", { style: "currency", currency: "EGP" })}
+							</p>
+						</div>
+						<button
+							onClick={() => setShowSuccessModal(false)}
+							className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+						>
+							Continue
+						</button>
+					</div>
+				</div>
+			)}
+
 		</div>
 	);
 }
