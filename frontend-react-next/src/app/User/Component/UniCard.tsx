@@ -19,7 +19,6 @@ interface UniversalStatusCardProps {
   defaultIconClass?: string;
   onClick?: () => void;
 
-  /*  Payment Props */
   paymentStatus?: "paid" | "unpaid";
   paidClass?: string;
   unpaidClass?: string;
@@ -47,43 +46,62 @@ export const UniversalStatusCard: React.FC<UniversalStatusCardProps> = ({
   return (
     <motion.div
       onClick={onClick}
-      className={`flex items-center gap-4 rounded-2xl p-4 cursor-pointer transition-all duration-300 ${isSelected ? selectedCardClass : defaultCardClass}`}
+      className={`flex items-center gap-4 rounded-2xl p-4 cursor-pointer transition-all duration-300 ${
+        isSelected ? selectedCardClass : defaultCardClass
+      }`}
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
       {/* Icon */}
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${isSelected ? selectedIconClass : defaultIconClass}`}>
+      <div
+        className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+          isSelected ? selectedIconClass : defaultIconClass
+        }`}
+      >
         {icon}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className={`font-bold text-base truncate ${isSelected ? "text-slate-900 dark:text-white" : "text-slate-800 dark:text-slate-200"}`}>
+        <p
+          className={`font-bold text-base truncate ${
+            isSelected ? "text-slate-900 dark:text-white" : "text-slate-800 dark:text-slate-200"
+          }`}
+        >
           {title}
         </p>
         {subtitle && (
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 truncate">{subtitle}</p>
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 truncate">
+            {subtitle}
+          </p>
         )}
       </div>
 
-      {/* Status + Urgency + Payment + Footer */}
+      {/* Right Section: Status + (Urgency + Payment) + Footer */}
       <div className="flex flex-col items-end gap-1">
         {/* Status */}
-        <span className={`text-xs font-bold rounded-lg px-3 py-1.5 border whitespace-nowrap ${statusBadgeClass}`}>
+        <span
+          className={`text-xs font-bold rounded-lg px-3 py-1.5 border whitespace-nowrap ${statusBadgeClass}`}
+        >
           {statusLabel}
         </span>
 
-        {/* Urgency */}
-        {urgency && <span className={`text-xs font-semibold ${urgencyClass}`}>{urgency}</span>}
+        {/* Urgency + Payment in the same row */}
+        <div className="flex items-center gap-2">
+          {urgency && <span className={`text-xs font-semibold ${urgencyClass}`}>{urgency}</span>}
 
-        {/* Payment */}
-        {paymentStatus && (
-          <span className={`text-xs font-semibold rounded-lg px-2 py-1 border whitespace-nowrap ${paymentStatus === "paid" ? paidClass : unpaidClass}`}>
-            {paymentStatus === "paid" ? "Paid" : "Unpaid"}
-          </span>
-        )}
+          {paymentStatus && (
+            <span
+              className={`text-xs font-semibold rounded-lg px-2 py-1 border whitespace-nowrap ${
+                paymentStatus === "paid" ? paidClass : unpaidClass
+              }`}
+            >
+              {paymentStatus === "paid" ? "Paid" : "Unpaid"}
+            </span>
+          )}
+        </div>
 
         {/* Footer */}
         {footer && <div className="whitespace-nowrap text-xs text-gray-500 mt-1">{footer}</div>}
