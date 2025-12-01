@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 interface OrderFormProps {
 	onSubmit: (formData: FormData) => void;
 	isSubmitting: boolean;
-	onFormDataChange?: (formData: Record<string, unknown>) => void;
+	onFormDataChange?: (formData: Record<string, string|boolean>) => void;
 	onContinueToUpload?: () => void;
 }
 
@@ -27,7 +27,7 @@ export default function OrderForm({
 	onFormDataChange,
 	onContinueToUpload,
 }: OrderFormProps) {
-	const [formData, setFormData] = useState<Record<string, unknown>>({});
+	const [formData, setFormData] = useState<Record<string, string|boolean>>({});
 
 	const { selectedServices, totalAmount } = calculateSelectedServices(formData);
 	const handleChange = (fieldId: string, value: string | boolean) => {

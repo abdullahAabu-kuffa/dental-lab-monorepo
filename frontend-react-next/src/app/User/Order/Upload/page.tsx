@@ -89,7 +89,7 @@ export default function UploadPage() {
 			const fileIds = [];
 			for (const file of uploadedFiles) {
 				const resp = await uploadMutation.mutateAsync(file);
-				fileIds.push(resp?.data?.id);
+				fileIds.push(resp?.id);
 			}
 
 			await orderMutation.mutateAsync({
