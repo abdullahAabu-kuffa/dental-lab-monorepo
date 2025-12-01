@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -99,7 +100,10 @@ export default function AccountUI() {
                     type="text"
                     placeholder="Dr. Ahmed Hassan"
                     value={info?.fullName || ""}
-                    onChange={(e) => updateInfo('fullName', e.target.value)}
+                    // onChange={(e) =>
+                    //   (info.fullName = e.target.value)
+                    // }
+
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm ${successStyle}`}
                   />
                 </div>
@@ -111,7 +115,9 @@ export default function AccountUI() {
                     type="email"
                     placeholder="ahmed.hassan@dentalclinic.com"
                     value={info?.email || ""}
-                    onChange={(e) => updateInfo('email', e.target.value)}
+                    // onChange={(e) =>
+                    //   (info.email = e.target.value)
+                    // }
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm ${successStyle}`}
                   />
                 </div>
@@ -123,7 +129,9 @@ export default function AccountUI() {
                     type="text"
                     placeholder="+1 234 567 8900"
                     value={info?.phoneNumber || ""}
-                    onChange={(e) => updateInfo('phoneNumber', e.target.value)}
+                    // onChange={(e) =>
+                    //   (info.phoneNumber = e.target.value)
+                    // }
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm ${successStyle}`}
                   />
                 </div>
@@ -135,7 +143,9 @@ export default function AccountUI() {
                     type="text"
                     placeholder="Chicago"
                     value={info?.city || ""}
-                    onChange={(e) => updateInfo('city', e.target.value)}
+                    // onChange={(e) =>
+                    //   (info.city = e.target.value)
+                    // }
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm ${successStyle}`}
                   />
                 </div>
@@ -147,7 +157,9 @@ export default function AccountUI() {
                     type="text"
                     placeholder="EN12345678"
                     value={info?.clinicName || ""}
-                    onChange={(e) => updateInfo('clinicName', e.target.value)}
+                    // onChange={(e) =>
+                    //   (info.clinicName = e.target.value)
+                    // }
                     className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-md shadow-sm ${successStyle}`}
                   />
                 </div>
