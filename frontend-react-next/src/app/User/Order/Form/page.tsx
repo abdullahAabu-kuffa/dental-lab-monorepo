@@ -20,7 +20,7 @@ export default function NewOrderPage() {
 	const router = useRouter();
 	const { user, loading: userLoading } = useAuth();
 
-	const handleFormDataChange = (newFormData: Record<string, unknown>) => {
+	const handleFormDataChange = (newFormData: Record<string, string|boolean>) => {
 		setFormData(newFormData);
 	};
 
@@ -81,7 +81,9 @@ export default function NewOrderPage() {
 					{/* Form */}
 					<div className="flex-1 min-w-0 order-2 lg:order-1">
 						<OrderForm
-							onSubmit={() => {}}
+							onSubmit={() => {
+								setIsSubmitting(true);
+							}}
 							isSubmitting={isSubmitting}
 							onFormDataChange={handleFormDataChange}
 							onContinueToUpload={() => navigateToUpload()}

@@ -7,7 +7,6 @@ import {
   UseMutationOptions,
 } from "@tanstack/react-query";
 import {
-  PaginatedOrdersResponse,
   ApiOrder,
 } from "@/app/dashboard/interfaces/orders";
 async function fetchOrders(page = 1) {
@@ -26,7 +25,8 @@ export function useOrders(page = 1) {
     queryKey: ["orders", page],
     queryFn: async () => {
       const res = await fetchOrders(page);
-      return res;
+      return res.data.orders;
+      return res.data.orders;
     },
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -80,20 +80,21 @@ export async function uploadFile(file: File) {
   }
 
   const data = await res.json();
-  return data;
+  return data.data.id;
 }
 
 
 
 export function useUploadFile(
-  options?: UseMutationOptions<{ url: string }, Error, File, unknown>) {
+  options?: UseMutationOptions<{ id: string }, Error, File>) {
   const queryClient = useQueryClient();
 
-  return useMutation<any, unknown, File>({
+  return useMutation<{ id: string }, Error, File>({
     mutationFn: (file: File) => uploadFile(file),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, Error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ["files"] });
-      if (options?.onSuccess) options.onSuccess(data, variables, context);
+      if (options?.onSuccess) options.onSuccess(data,Error, variables, context);
+      if (options?.onSuccess) options.onSuccess(data,Error, variables, context);
     },
     onError: options?.onError,
     onSettled: options?.onSettled,
