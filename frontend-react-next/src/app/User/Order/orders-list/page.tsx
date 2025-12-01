@@ -9,6 +9,7 @@ import { filterOrdersByStatus } from "@/config/UserData/orderDataService";
 import { Order } from "@/types";
 import { useOrders } from "@/lib/orders";
 import { useLoading } from "@/contexts/LoadingContext";
+import { transformApiOrders } from "@/utils/orderTransform";
 
 export default function OrdersListPage() {
 	const router = useRouter();
@@ -17,11 +18,12 @@ export default function OrdersListPage() {
 	const [showDetails, setShowDetails] = useState(false);
 	const [activeFilter, setActiveFilter] = useState<string>("all-orders");
 	const { data, isLoading } = useOrders();
-	const orders = data;
+	const orders = transformApiOrders(data || []);
 	// console.log(selectedOrder);
 	// console.log(orders);
 
-	const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders || []);
+
+	const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
 
 	const handleDetailsClick = (order: Order) => {
 		setSelectedOrder(order);
@@ -77,7 +79,7 @@ export default function OrdersListPage() {
 										const searchTerm = e.target.value.toLowerCase();
 										const filtered = orders?.filter(
 											(order) =>
-												order.patientName.toLowerCase().includes(searchTerm) ||
+												order.patientName?.toLowerCase().includes(searchTerm) ||
 												order.orderType.toLowerCase().includes(searchTerm) ||
 												order.material.toLowerCase().includes(searchTerm)
 										);
