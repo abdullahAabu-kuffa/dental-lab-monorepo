@@ -14,7 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function NewOrderPage() {
 	const { navigateToUpload } = useNavigation();
-ئ	const { formData, setFormData } = useOrderStore();
+	const { formData, setFormData } = useOrderStore();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 	const router = useRouter();
