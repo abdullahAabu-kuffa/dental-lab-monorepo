@@ -89,6 +89,7 @@ export default function OrderForm({
     onSubmit(data);
   };
 // handle continue date and name validation
+
   const handleContinueClick = () => {
     if (!formData.patientName || !formData.age) {
       return Swal.fire({

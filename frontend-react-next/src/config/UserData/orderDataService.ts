@@ -311,7 +311,7 @@ export const calculateStatusCounts = (orders: Order[]) => {
 // Helper function to get count for a specific status
 export const getStatusCount = (orders: Order[], status: string): number => {
   if (status === "all-orders") return orders.length;
-  if(!orders|| !Array.isArray(orders)) return 0;
+
   return orders.filter((order) => order.status === status).length;
 };
 
@@ -321,8 +321,7 @@ export const filterOrdersByStatus = (
   status: string
 ): Order[] => {
   if (status === "all-orders") return orders;
-  console.log("orders : " ,orders);
-  if(!orders|| !Array.isArray(orders)) return [];
+
   return orders.filter((order) => order.status === status);
 };
 
