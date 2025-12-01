@@ -65,8 +65,7 @@ export async function requireAuth(): Promise<SessionPayload> {
  */
 export async function requireRole(allowedRoles: string[]): Promise<SessionPayload> {
   const session = await requireAuth();
-
-  if (!allowedRoles.includes(session.role)) {
+  if (!session.isActive || !allowedRoles.includes(session.role)) {
     const { redirect } = await import('next/navigation');
     redirect('/');
   }
