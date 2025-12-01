@@ -85,12 +85,12 @@ export default function UploadPage() {
       return;
     }
 
-    try {
-      const fileIds = [];
-      for (const file of uploadedFiles) {
-        const resp = await uploadMutation.mutateAsync(file);
-        fileIds.push(resp?.id);
-      }
+		try {
+			const fileIds = [];
+			for (const file of uploadedFiles) {
+				const resp = await uploadMutation.mutateAsync(file);
+				fileIds.push(resp?.id);
+			}
 
       await orderMutation.mutateAsync({
         ...formData,

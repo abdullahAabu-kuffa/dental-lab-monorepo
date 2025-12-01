@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 interface OrderState {
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
+  formData: Record<string, string|boolean>;
+  setFormData: (data: Record<string, string|boolean>) => void;
   clearForm: () => void;
 }
 

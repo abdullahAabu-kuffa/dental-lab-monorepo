@@ -42,8 +42,7 @@ const OrdersTable = ({
   const [showModal, setShowModal] = useState(false);
   const [orderId, setOrderId] = useState(0);
   const [action, setAction] = useState("");
-  const { data, isLoading, error, isError, refetch } =
-    useGetAllOrders(currentPage);
+  const { data, isLoading, error, isError,refetch } = useGetAllOrders(currentPage);
   const apiOrders = data?.data?.orders ?? [];
   useEffect(() => {
     setLoading(isLoading);
@@ -225,6 +224,7 @@ const OrdersTable = ({
                 {
                   onSuccess: () => {
                     setShowModal(false);
+                    refetch();
                     refetch();
                   },
                 }
