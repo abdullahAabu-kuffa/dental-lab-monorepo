@@ -10,7 +10,6 @@ import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 
 // Auth
 import { logoutRequest } from "../../../services/auth";
-import { useAuth } from "@/hooks/useAuth";
 
 // Notifications
 import NotificationBell from "../../molecules/notificationBell";
@@ -19,6 +18,7 @@ import NotificationsMenu from "../notificationMenu";
 import Swal from "sweetalert2";
 import List from "../list";
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/auth.store";
 // import { useAuthStore } from "@/app/src/store/auth.store";
 
 const Navbar = () => {
@@ -29,16 +29,10 @@ const Navbar = () => {
 
 	const pathname = usePathname();
 	const router = useRouter();
-	const { user: clientDashboardResponse, loading, isAuthenticated } = useAuth();
-	const user = clientDashboardResponse?.data?.user;
-	// const { user, loading, isAuthenticated } = useAuthStore(s => ({
-	// 	user: s.user,
-	// 	loading: s.isLoading,
-	// 	isAuthenticated: s.isAuthenticated
-	// }));
-	// 	const user = useAuthStore((s) => s.user);
-	// const loading = useAuthStore((s) => s.isLoading);
-	// const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+	
+	const user = useAuthStore((s) => s.user);
+	const loading = useAuthStore((s) => s.isLoading);
+	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
 	//   console.log(user);
 

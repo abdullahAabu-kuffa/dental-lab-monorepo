@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
 
-// const HostIp = process.env.BACKEND_URL;
-// console.log("host ip: ",HostIp);
 
 interface ApiNotification {
 	id: number;
@@ -53,7 +51,6 @@ export default function NotificationsMenu({
 	useEffect(() => {
 		async function fetchNotifications() {
 			try {
-				console.log("[Notification] Fetching notifications... from ",`/api/notifications`);
 				const res = await fetch(`/api/notifications`, {
 					method: "GET",
 					credentials: "include",
