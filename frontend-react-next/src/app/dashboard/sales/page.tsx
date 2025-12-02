@@ -3,7 +3,7 @@
 import React from "react";
 
 function doSubmit() {
-	fetch("127.0.0.1:3001/api/auth/refreshToken", {
+	fetch("/api/auth/refreshToken", {
 		method: "POST",
 		credentials: "include",
 		headers: {

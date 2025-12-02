@@ -10,7 +10,7 @@ import {
   ApiOrder,
 } from "@/app/dashboard/interfaces/orders";
 async function fetchOrders(page = 1) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders?page=${page}`, {
+  const res = await fetch(`/api/orders?page=${page}`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -34,7 +34,7 @@ export function useOrders(page = 1) {
 }
 
 export async function fetchCreateOrder(body: object) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
+  const res = await fetch(`/api/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export function useCreateOrder() {
 export async function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
+  const res = await fetch(`/api/upload`, {
     method: "POST",
     body: formData,
     credentials: "include",

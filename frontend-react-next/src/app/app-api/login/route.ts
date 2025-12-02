@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const HostIP = process.env.NEXT_PUBLIC_API_URL;
+const HostIP = process.env.BACKEND_URL;
 export async function POST(req: Request) {
   if (!HostIP) {
     return NextResponse.json({ error: "Host ip not valid" }, { status: 500 });

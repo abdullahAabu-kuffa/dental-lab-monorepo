@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-const HostIP = process.env.NEXT_PUBLIC_API_URL;
+const HostIP = process.env.BACKEND_URL;
 
 export async function POST(req: Request) {
   try {

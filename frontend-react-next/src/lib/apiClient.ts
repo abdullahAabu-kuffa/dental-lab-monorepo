@@ -2,7 +2,7 @@ import { getAccessToken, setAccessToken } from "../auth/tokenStore";
 
 
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.BACKEND_URL;
 
 let getAccessTokenInternal: () => string | null = getAccessToken;
 let setAccessTokenInternal: (t: string | null) => void = setAccessToken;

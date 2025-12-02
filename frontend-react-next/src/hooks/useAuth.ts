@@ -38,9 +38,9 @@ export interface ClientDashboardResponse {
 }
 
 async function fetchUser(): Promise<ClientDashboardResponse> {
-  const res = await apiFetch("/api/users/me", {
+  const res = await fetch("/api/users/me", {
     method: "GET",
-    retryOn401: true,
+    credentials: "include",
   });
 
   if (!res.ok) throw new Error("Failed to fetch User Data");

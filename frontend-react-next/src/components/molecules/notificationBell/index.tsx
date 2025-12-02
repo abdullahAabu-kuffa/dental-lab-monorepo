@@ -4,11 +4,13 @@ import NotificationBadge from "../../atoms/NotificationBadge";
 interface NotificationBellProps {
 	unreadCount: number;
 	onClick: () => void;
+	className?: string;
 }
 
 export default function NotificationBell({
 	unreadCount,
 	onClick,
+	className = "",
 }: NotificationBellProps) {
 	return (
 		<button
@@ -22,6 +24,7 @@ export default function NotificationBell({
 				"transition-transform transition-colors duration-150",
 				"hover:scale-105 hover:border-[#FFD700] hover:text-[#FFE78A]",
 				"focus:outline-none focus:ring-2 focus:ring-[#E4B441]/80 focus:ring-offset-2 focus:ring-offset-[#1C1C1C]",
+				className,
 			].join(" ")}
 		>
 			<Bell className="h-5 w-5" />
