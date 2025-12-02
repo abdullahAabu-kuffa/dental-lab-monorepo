@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
 
-const HostIp = process.env.BACKEND_URL;
+// const HostIp = process.env.BACKEND_URL;
+// console.log("host ip: ",HostIp);
 
 interface ApiNotification {
 	id: number;
@@ -52,7 +53,8 @@ export default function NotificationsMenu({
 	useEffect(() => {
 		async function fetchNotifications() {
 			try {
-				const res = await fetch(`${HostIp}/api/notifications`, {
+				console.log("[Notification] Fetching notifications... from ",`/api/notifications`);
+				const res = await fetch(`/api/notifications`, {
 					method: "GET",
 					credentials: "include",
 				});
@@ -80,7 +82,7 @@ export default function NotificationsMenu({
 	useEffect(() => {
 		function connectSSE() {
 			console.log("[SSE] Connecting...");
-			const es = new EventSource(`${HostIp}/api/notifications/stream`, {
+			const es = new EventSource(`/api/notifications/stream`, {
 				withCredentials: true,
 			});
 
@@ -133,7 +135,7 @@ export default function NotificationsMenu({
 		);
 
 		try {
-			await fetch(`${HostIp}/api/notifications/${id}/read/`, {
+			await fetch(`/api/notifications/${id}/read/`, {
 				method: "PATCH",
 				credentials: "include",
 			});
@@ -146,7 +148,7 @@ export default function NotificationsMenu({
 		setItems((prev) => prev.filter((n) => n.id !== id));
 
 		try {
-			await fetch(`${HostIp}/api/notifications/${id}`, {
+			await fetch(`/api/notifications/${id}`, {
 				method: "DELETE",
 				credentials: "include",
 			});
