@@ -158,6 +158,8 @@ const OrdersTable = ({
                             ? statusColors["CANCELLED"]
                             : order.status === "IN_PROGRESS"
                             ? statusColors["IN_PROGRESS"]
+                            : order.status === "REJECTED"
+                            ? statusColors["REJECTED"]
                             : statusColors["PENDING"]
                         }`}
                       >
@@ -167,6 +169,8 @@ const OrdersTable = ({
                           ? "Cancelled"
                           : order.status === "IN_PROGRESS"
                           ? "In Progress"
+                          : order.status === "REJECTED"
+                          ? "Rejected"
                           : "Pending"}
                       </span>
                     </td>
