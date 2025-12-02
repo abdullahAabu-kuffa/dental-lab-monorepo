@@ -20,7 +20,7 @@ process.on('SIGINT', () => {
 });
 
 // TODO: Start server
-app.listen(PORT,"127.0.0.1", () => {
+app.listen(PORT,"0.0.0.0", () => {
   console.log(`[Server] Running on port ${PORT}`);
   console.log(`[Server] Environment: ${process.env.NODE_ENV}`);
 });

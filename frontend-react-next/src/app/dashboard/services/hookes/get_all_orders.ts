@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getAllOrders } from "../apiServices";
 
 export const useGetAllOrders = (page: number,search?: string, filter?: string) => {
@@ -8,5 +8,6 @@ export const useGetAllOrders = (page: number,search?: string, filter?: string) =
         queryFn: () => getAllOrders({ page , search, filter }), 
         staleTime: 1000 * 60 * 5,
         refetchInterval: 1000 * 60 * 5,
+        placeholderData: keepPreviousData,
     })
 };
