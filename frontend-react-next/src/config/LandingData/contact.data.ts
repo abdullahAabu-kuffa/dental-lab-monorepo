@@ -4,7 +4,8 @@ export const CONTACT_INFO: ContactInfo[] = [
   {
     icon: 'map',
     title: 'Location',
-    value: 'Beni Suef - East of Nile, in front of Industrial Education Complex, Above Al-Damyti Furniture'
+    value: 'Beni Suef - East of Nile, in front of Industrial Education Complex, Above Al-Damyti Furniture',
+    link: 'https://maps.google.com/maps?q=29.0439521,31.1074104&z=19&output=embed'
   },
   {
     icon: 'telegram',
@@ -22,7 +23,7 @@ export const CONTACT_INFO: ContactInfo[] = [
     icon: 'linkedin',
     title: 'LinkedIn',
     value: 'Avante Dental Lab',
-    link: 'https://linkedin.com/company/avante-dental-lab'
+    link: 'https://www.linkedin.com/in/avant%C3%A9-lab-9a823238a/?originalSubdomain=eg'
   },
   {
     icon: 'email',
