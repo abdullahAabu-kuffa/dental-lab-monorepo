@@ -1,7 +1,7 @@
 "use client";
 
 import HeroLogo from "../../../../components/molecules/HeroLogo/HeroLogo";
-import { HeroHeading, HeroSubtitle } from "@/app/design-system";
+import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
 import HeroCTAButtons from "../../../../components/molecules/HeroCTAButtons/HeroCTAButtons";
 import AutoScrollCarousel from "../../../atoms/AutoScrollCarousel/AutoScrollCarousel";
 

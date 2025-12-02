@@ -3,9 +3,8 @@
 import React from "react";
 import { SERVICES } from "../../../../config/LandingData/services.data";
 import ServiceIcon from "../../../molecules/ServiceIcon/ServiceIcon";
-import { HeroHeading, HeroSubtitle } from "@/app/design-system";
-import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
-
+import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
+import { ScrollAnimation } from "@/app/[locale]/design-system";
 export default function ServicesSection() {
 	return (
 		<section className="py-24 bg-[#F5F5F5]">

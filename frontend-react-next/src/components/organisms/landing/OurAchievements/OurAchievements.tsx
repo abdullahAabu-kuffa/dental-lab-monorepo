@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Smile, CheckCircle } from "../../../../utils/UnifiedIcons";
 import StatCard from "../../../atoms/StatCard/StatCard";
 import Button from "../../../atoms/Button/Button";
-import { HeroHeading, HeroSubtitle } from "@/app/design-system";
-import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
-import DentalBackground from "../../../atoms/MedicalBackground/MedicalBackgroundLight";
+import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
+import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
+// import DentalBackground from "../../../atoms/MedicalBackground/MedicalBackgroundLight";
+import DentalBackground
 
 import { STATS } from "../../../../config/LandingData/OurAchievements";
 

@@ -1,10 +1,7 @@
 "use client";
 import Button from "../../../atoms/Button/Button";
-import {
-	HeroHeading,
-	HeroSubtitle,
-} from "@/app/design-system";
-import { ScrollAnimation } from "@/app/design-system";
+import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
+import { ScrollAnimation } from "@/app/[locale]/design-system";
 import { useRouter } from "next/navigation";
 import Lottie from "lottie-react";
 import animationData from "../../../../../assets/lotties/Generate-Initial.json";

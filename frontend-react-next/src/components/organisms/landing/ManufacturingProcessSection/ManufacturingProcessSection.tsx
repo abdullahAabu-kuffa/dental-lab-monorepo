@@ -5,13 +5,12 @@ import {
 	HeroSubtitle,
 	componentStyles,
 	gradients,
-} from "@/app/design-system";
+} from "@/app/[locale]/design-system";
 
-import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
+import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { USER_PROCESS_STEPS } from "../../../../config/UserData/orderDataService";
 
 export default function ManufacturingProcessSection() {
-
 	return (
 		<section
 			className={`${componentStyles.layout.spacingSection} bg-linear-to-br from-gray-50 via-white to-gray-100`}

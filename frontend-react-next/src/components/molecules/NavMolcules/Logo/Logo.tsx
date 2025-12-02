@@ -2,7 +2,11 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
-import { animations, hoverEffects, tapEffects } from "@/app/design-system";
+import {
+	animations,
+	hoverEffects,
+	tapEffects,
+} from "@/app/[locale]/design-system";
 
 export default function Logo() {
 	const [isHovered, setIsHovered] = useState(false);

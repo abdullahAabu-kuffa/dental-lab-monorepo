@@ -1,7 +1,7 @@
 "use client";
 
-import { HeroHeading, HeroSubtitle } from "@/app/design-system";
-import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
+import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
+import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { WORKFLOW_CARDS } from "../../../../config/LandingData/workflow.config";
 
 export default function WorkflowSection() {

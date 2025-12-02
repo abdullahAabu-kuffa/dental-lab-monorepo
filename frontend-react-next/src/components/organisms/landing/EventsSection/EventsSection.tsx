@@ -5,8 +5,8 @@ import {
 	HeroHeading,
 	HeroSubtitle,
 	componentStyles,
-} from "@/app/design-system";
-import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
+} from "@/app/[locale]/design-system";
+import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { EVENTS } from "../../../../config/LandingData/events.data";
 
 const EventsSection: React.FC = () => {
