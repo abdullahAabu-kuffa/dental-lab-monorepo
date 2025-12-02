@@ -7,6 +7,7 @@ dotenv.config();
 import app from './app';
 console.log(`[Server] Starting...`, process.env.PORT);
 const PORT = Number(process.env.PORT) || 3001;
+const HOST=process.env.HOST||"127.0.0.1";
 
 // TODO: Graceful shutdown handlers
 process.on('SIGTERM', () => {
@@ -20,7 +21,7 @@ process.on('SIGINT', () => {
 });
 
 // TODO: Start server
-app.listen(PORT,"0.0.0.0", () => {
+app.listen(PORT, HOST, () => {
   console.log(`[Server] Running on port ${PORT}`);
   console.log(`[Server] Environment: ${process.env.NODE_ENV}`);
 });
