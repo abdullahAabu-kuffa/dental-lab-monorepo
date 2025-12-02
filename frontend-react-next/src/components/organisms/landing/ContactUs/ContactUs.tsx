@@ -9,6 +9,14 @@ import {
 	componentStyles,
 } from "@/app/design-system";
 import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
+import MapEmbed from "./MapEmbed";
+
+interface FormErrors {
+	name?: string;
+	email?: string;
+	phone?: string;
+	message?: string;
+}
 
 const ContactSection: React.FC = () => {
 	const [form, setForm] = useState({
@@ -18,7 +26,7 @@ const ContactSection: React.FC = () => {
 		message: ""
 	});
 
-	const [errors, setErrors] = useState<any>({});
+	const [errors, setErrors] = useState<FormErrors>({});
 	const [submitted, setSubmitted] = useState(false);
 
 
@@ -27,7 +35,7 @@ const ContactSection: React.FC = () => {
 	const handleChange = (field: string, value: string) => {
 		setForm({ ...form, [field]: value });
 
-		setErrors((prev: any) => {
+		setErrors((prev: FormErrors) => {
 			const newErrors = { ...prev };
 
 			switch (field) {
@@ -88,19 +96,37 @@ const ContactSection: React.FC = () => {
 									info.icon,
 									info.icon === "map" ? "environment" : "social"
 								);
-								return (
-									<ScrollAnimation key={index} variant="fadeInFromLeft" delay={0.2 + index*0.1} className="flex items-center gap-4">
-										<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
-											<IconComponent className="w-6 h-6 text-[#D4AF37]" />
-										</div>
-										<div>
-											<div className="font-semibold text-gray-900">{info.title}</div>
-											{info.link ? (
-												<a href={info.link} className="text-gray-600 hover:text-[#D4AF37] transition" target="_blank" rel="noopener noreferrer">{info.value}</a>
-											) : <div className="text-gray-600">{info.value}</div>}
-										</div>
-									</ScrollAnimation>
-								);
+								if (info.icon === 'map') {
+									return (
+										<ScrollAnimation key={index} variant="fadeInFromLeft" delay={0.2 + index*0.1}>
+											<div className="flex items-center gap-4">
+											<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
+												<IconComponent className="w-6 h-6 text-[#D4AF37]" />
+											</div>
+											<div>
+												<div className="font-semibold text-gray-900">{info.title}</div>
+												{info.link ? (
+													<a href={info.link} className="text-gray-600 hover:text-[#D4AF37] transition" target="_blank" rel="noopener noreferrer">{info.value}</a>
+												) : <div className="text-gray-600">{info.value}</div>}
+											</div>
+											</div>
+										</ScrollAnimation>
+									);
+								} else {
+									return (
+										<ScrollAnimation key={index} variant="fadeInFromLeft" delay={0.2 + index*0.1} className="flex items-center gap-4">
+											<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
+												<IconComponent className="w-6 h-6 text-[#D4AF37]" />
+											</div>
+											<div>
+												<div className="font-semibold text-gray-900">{info.title}</div>
+												{info.link ? (
+													<a href={info.link} className="text-gray-600 hover:text-[#D4AF37] transition" target="_blank" rel="noopener noreferrer">{info.value}</a>
+												) : <div className="text-gray-600">{info.value}</div>}
+											</div>
+										</ScrollAnimation>
+									);
+								}
 							})}
 						</div>
 					</ScrollAnimation>
@@ -164,6 +190,16 @@ const ContactSection: React.FC = () => {
 
 							{submitted && <p className="text-green-600 font-semibold text-center mt-3">Message sent successfully!</p>}
 						</form>
+					</ScrollAnimation>
+				</div>
+
+				{/* Google Maps Section */}
+				<div className="mt-16">
+					<ScrollAnimation variant="fadeInUp" delay={0.4}>
+						<MapEmbed
+							mapUrl={CONTACT_INFO.find(info => info.icon === 'map')?.link || ''}
+							className="shadow-lg"
+						/>
 					</ScrollAnimation>
 				</div>
 			</div>
