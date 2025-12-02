@@ -4,10 +4,8 @@ import { useAuthStore } from "@/store/auth.store";
 
 export async function logoutRequest() {
   const onlogout = useAuthStore.getState().onLogout;
-  const res = await apiFetch("/api/auth/logout", {
+  const res = await fetch("/api/auth/logout", {
     method: "POST",
-    retryOn401: false,
-    credentials: "include",
   });
   onlogout();
 
