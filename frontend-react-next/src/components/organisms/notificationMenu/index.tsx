@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
 
-const HostIp = process.env.NEXT_PUBLIC_API_URL;
+const HostIp = process.env.BACKEND_URL;
 
 interface ApiNotification {
 	id: number;
@@ -35,6 +35,11 @@ export default function NotificationsMenu({
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
+			const target = e.target as HTMLElement;
+			if(target.closest(".notification-bell")){
+				return;
+			}
+
 			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
 				onClose?.();
 			}

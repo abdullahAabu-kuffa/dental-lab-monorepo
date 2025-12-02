@@ -2,7 +2,7 @@ import { getAccessToken } from "@/auth/tokenStore";
 import axios from "axios";
 import { FetchUsersResponse } from "../interfaces/users";
 
-axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
+axios.defaults.baseURL = `${process.env.BACKEND_URL}/api`;
 
 const token =
   getAccessToken();

@@ -2,7 +2,7 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-const HostIP = process.env.NEXT_PUBLIC_API_URL;
+const HostIP = process.env.BACKEND_URL;
 
 export function proxy(req: NextRequest) {
    

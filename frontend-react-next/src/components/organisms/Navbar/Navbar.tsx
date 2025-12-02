@@ -156,7 +156,7 @@ const Navbar = () => {
 								<div className="relative min-w-10 h-10 bg-gray-700 rounded-full animate-pulse" />
 							) : user ? (
 								<div className="relative min-w-10">
-									<NotificationBell unreadCount={unread} onClick={toggleMenu} />
+									<NotificationBell unreadCount={unread} onClick={toggleMenu}  className="notification-bell"/>
 									<NotificationsMenu
 										isOpen={open}
 										onUnreadChange={setUnread}

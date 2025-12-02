@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { requireRole } from "@/lib/dal/session";
 import Sidebar from "./_components/@sidebar";
 
