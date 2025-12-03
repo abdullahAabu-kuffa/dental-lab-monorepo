@@ -1,4 +1,14 @@
 {
 	"heroPrimaryText": "Egypt's First Digital Dental Lab",
-	"aboutSubtitle": " who are"
+	"heroSecondaryText": "Digital Dental Lab",
+	"heroSubheadline": "Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
+	"theonlylab": "The only lab in Egypt with a fully digital workflow",
+
+	"ourServiceHeading": "Our Services",
+	"ourServiceSubtitle": "Premium dental restorations crafted with precision and care",
+
+	"crownsBridges": "Crowns & Bridges",
+	"dentalImplants": "Dental Implants",
+	"veneers": "Veneers",
+	"surgicalGuides": "Surgical Guides"
 }

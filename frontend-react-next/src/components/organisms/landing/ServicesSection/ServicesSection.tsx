@@ -5,7 +5,10 @@ import { SERVICES } from "../../../../config/LandingData/services.data";
 import ServiceIcon from "../../../molecules/ServiceIcon/ServiceIcon";
 import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
 import { ScrollAnimation } from "@/app/[locale]/design-system";
+import { useTranslations } from "next-intl";
+
 export default function ServicesSection() {
+	const t = useTranslations();
 	return (
 		<section className="py-24 bg-[#F5F5F5]">
 			<div className="max-w-7xl mx-auto px-6">
@@ -16,13 +19,10 @@ export default function ServicesSection() {
 				>
 					<HeroHeading
 						primaryText=""
-						gradientText="Our Services"
+						gradientText={t("ourServiceHeading")}
 						variant="black"
 					/>
-					<HeroSubtitle
-						text="Premium dental restorations crafted with precision and care"
-						variant="black"
-					/>
+					<HeroSubtitle text={t("ourServiceSubtitle")} />
 				</ScrollAnimation>
 
 				{/* Services Grid - 4 cards in one row */}
