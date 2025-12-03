@@ -3,8 +3,10 @@
 import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
 import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { WORKFLOW_CARDS } from "../../../../config/LandingData/workflow.config";
+import { useTranslations } from "next-intl";
 
 export default function WorkflowSection() {
+	const t = useTranslations();
 	return (
 		<section className="py-20 bg-[#1a1a1a]">
 			<div className="container mx-auto px-4">
@@ -14,11 +16,11 @@ export default function WorkflowSection() {
 				>
 					<HeroHeading
 						primaryText=""
-						gradientText="Our Seamless Digital Workflow"
+						gradientText={t("ourSeamlessDigitalWorkflow")}
 						variant="white"
 					/>
 					<HeroSubtitle
-						text="A seamless digital workflow from scan to delivery"
+						text={t("seamlessDigitalWorkflowSubtitle")}
 						variant="white"
 					/>
 				</ScrollAnimation>

@@ -7,12 +7,12 @@ import AutoScrollCarousel from "../../../atoms/AutoScrollCarousel/AutoScrollCaro
 import { useTranslations } from "next-intl";
 
 export default function HeroSec() {
-	const slides = [
-		{ image: "/c1.jpg", title: "Precision Dental Work" },
-		{ image: "/c2.jpg", title: "Advanced Technology" },
-		{ image: "/c3.jpg", title: "Quality Assurance" },
-	];
 	const t = useTranslations();
+	const slides = [
+		{ image: "/c1.jpg", title: t("precisionDentalWork") },
+		{ image: "/c2.jpg", title: t("advancedTechnology") },
+		{ image: "/c3.jpg", title: t("qualityAssurance") },
+	];
 	return (
 		<section className="relative min-h-screen bg-linear-to-br from-[#151821] via-[#1a1d2e] to-[#252938] overflow-hidden">
 			{/* Decorative Dots Pattern - Top Left (hidden on mobile) */}
@@ -105,7 +105,7 @@ export default function HeroSec() {
 						<div className="mb-2">
 							<HeroHeading
 								primaryText={t("heroPrimaryText")}
-								gradientText={t("heroPrimaryText")}
+								gradientText={t("heroSecondaryText")}
 								variant="white"
 								delay={0.2}
 							/>

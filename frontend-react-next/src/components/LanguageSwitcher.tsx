@@ -58,7 +58,7 @@ export default function LanguageSwitcher({ label }: Props) {
         hover:bg-[#F4E4A6]/90
         focus:outline-none
         focus:ring-2 focus:ring-[#D4AF37]/40
-      "
+    "
 		>
 			<Globe size={14} className="text-[#D4AF37]" />
 

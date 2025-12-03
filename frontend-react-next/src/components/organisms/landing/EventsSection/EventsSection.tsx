@@ -8,8 +8,10 @@ import {
 } from "@/app/[locale]/design-system";
 import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { EVENTS } from "../../../../config/LandingData/events.data";
+import { useTranslations } from "next-intl";
 
 const EventsSection: React.FC = () => {
+	const t = useTranslations();
 	return (
 		<section
 			id="events"
@@ -21,14 +23,11 @@ const EventsSection: React.FC = () => {
 					className="text-center mb-16"
 				>
 					<HeroHeading
-						primaryText="Upcoming Events & "
-						gradientText="Speakers"
+						primaryText={t("upcomingEventsSpeakers").split(" & ")[0] + " & "}
+						gradientText={t("upcomingEventsSpeakers").split(" & ")[1]}
 						variant="white"
 					/>
-					<HeroSubtitle
-						text="Meet industry leaders and innovators shaping the future of digital dentistry"
-						variant="white"
-					/>
+					<HeroSubtitle text={t("meetIndustryLeaders")} variant="white" />
 				</ScrollAnimation>
 
 				<ScrollAnimation animation="fadeInFromBottom" delay={0.2}>

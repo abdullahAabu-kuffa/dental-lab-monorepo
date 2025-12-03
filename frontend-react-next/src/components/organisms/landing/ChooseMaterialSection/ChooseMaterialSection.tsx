@@ -5,9 +5,11 @@ import { ScrollAnimation } from "@/app/[locale]/design-system";
 import { useRouter } from "next/navigation";
 import Lottie from "lottie-react";
 import animationData from "../../../../../assets/lotties/Generate-Initial.json";
+import { useTranslations } from "next-intl";
 
 export default function ChooseMaterialSection() {
 	const router = useRouter();
+	const t = useTranslations();
 
 	return (
 		<section
@@ -20,15 +22,15 @@ export default function ChooseMaterialSection() {
 					<div className="text-center space-y-6">
 						<ScrollAnimation animation="fadeInFromLeft">
 							<HeroHeading
-								primaryText="Choose Your Material & "
-								gradientText="Track Your Order Online"
+								primaryText={t("chooseYourMaterial") + " & "}
+								gradientText={t("trackYourOrderOnline")}
 								variant="black"
 							/>
 						</ScrollAnimation>
 
 						<ScrollAnimation animation="fadeInFromLeft" delay={0.2}>
 							<HeroSubtitle
-								text="Upload your ExoCAD file, select your preferred material, shade, and design options &ndash; and our lab will start manufacturing instantly. You can follow your order's progress online, step by step."
+								text={t("uploadExocadText")}
 								variant="black"
 								highlightText="ExoCAD"
 							/>
@@ -43,13 +45,13 @@ export default function ChooseMaterialSection() {
 								variant="lightPrimary"
 								onClick={() => router.push("/get-started")}
 							>
-								Get Started
+								{t("getStarted")}
 							</Button>
 							<Button
 								variant="lightSecondary"
 								onClick={() => router.push("/track-order")}
 							>
-								Track Order
+								{t("trackOrder")}
 							</Button>
 						</ScrollAnimation>
 					</div>

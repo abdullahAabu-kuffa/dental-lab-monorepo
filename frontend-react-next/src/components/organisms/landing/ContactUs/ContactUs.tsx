@@ -9,8 +9,10 @@ import {
 	componentStyles,
 } from "@/app/[locale]/design-system";
 import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
+import { useTranslations } from "next-intl";
 
 const ContactSection: React.FC = () => {
+	const t = useTranslations();
 	const [form, setForm] = useState({
 		name: "",
 		email: "",
@@ -18,7 +20,7 @@ const ContactSection: React.FC = () => {
 		message: "",
 	});
 
-	const [errors, setErrors] = useState<any>({});
+	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [submitted, setSubmitted] = useState(false);
 
 	// validation handlers
@@ -26,7 +28,7 @@ const ContactSection: React.FC = () => {
 	const handleChange = (field: string, value: string) => {
 		setForm({ ...form, [field]: value });
 
-		setErrors((prev: any) => {
+		setErrors((prev: Record<string, string>) => {
 			const newErrors = { ...prev };
 
 			switch (field) {
@@ -87,13 +89,10 @@ const ContactSection: React.FC = () => {
 					<ScrollAnimation variant="fadeInFromLeft">
 						<HeroHeading
 							primaryText=""
-							gradientText="Get In Touch"
+							gradientText={t("getInTouch")}
 							variant="black"
 						/>
-						<HeroSubtitle
-							text="Have questions? We are here to help you transform your dental practice with digital innovation."
-							variant="black"
-						/>
+						<HeroSubtitle text={t("contactSubtitle")} variant="black" />
 						<div className="space-y-6 mt-8">
 							{CONTACT_INFO.map((info, index) => {
 								const IconComponent = getIcon(
@@ -142,7 +141,7 @@ const ContactSection: React.FC = () => {
 							{/* NAME */}
 							<div>
 								<label className="block text-sm font-semibold mb-2 text-gray-900">
-									Full Name
+									{t("fullName")}
 								</label>
 								<input
 									type="text"
@@ -161,7 +160,7 @@ const ContactSection: React.FC = () => {
 							{/* EMAIL */}
 							<div>
 								<label className="block text-sm font-semibold mb-2 text-gray-900">
-									Email
+									{t("email")}
 								</label>
 								<input
 									type="email"
@@ -180,7 +179,7 @@ const ContactSection: React.FC = () => {
 							{/* PHONE */}
 							<div>
 								<label className="block text-sm font-semibold mb-2 text-gray-900">
-									Phone
+									{t("phone")}
 								</label>
 								<input
 									type="tel"
@@ -199,7 +198,7 @@ const ContactSection: React.FC = () => {
 							{/* MESSAGE */}
 							<div>
 								<label className="block text-sm font-semibold mb-2 text-gray-900">
-									Message
+									{t("message")}
 								</label>
 								<textarea
 									rows={4}
@@ -216,12 +215,12 @@ const ContactSection: React.FC = () => {
 							</div>
 
 							<Button variant="primary" type="submit" className="w-full">
-								Send Message
+								{t("sendMessage")}
 							</Button>
 
 							{submitted && (
 								<p className="text-green-600 font-semibold text-center mt-3">
-									Message sent successfully!
+									{t("messageSentSuccessfully")}
 								</p>
 							)}
 						</form>
