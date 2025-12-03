@@ -1,7 +1,7 @@
 import { getHFClient, MODEL_ID } from "./aiClient";
-import type { AnalyticsKpis } from "./analytics.service";
+import type { KPIResponse } from "./analytics.service"; // Just update the import type name
 
-export async function summarizeKpis(kpis: AnalyticsKpis): Promise<string> {
+export async function summarizeKpis(kpis: KPIResponse): Promise<string> {
   const client = getHFClient();
 
   const prompt = `You are a helpful dental lab analytics assistant.
