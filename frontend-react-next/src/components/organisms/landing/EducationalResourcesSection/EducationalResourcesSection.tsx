@@ -6,11 +6,13 @@ import {
 	HeroHeading,
 	componentStyles,
 	HeroSubtitle,
-} from "@/app/design-system";
-import { ScrollAnimation } from "@/app/design-system";
+} from "@/app/[locale]/design-system";
+import { ScrollAnimation } from "@/app/[locale]/design-system";
 import { EDUCATIONAL_RESOURCES } from "@/config/LandingData/educational-resources.data";
+import { useTranslations } from "next-intl";
 
 const EducationalResourcesSection: React.FC = () => {
+	const t = useTranslations();
 	return (
 		<section className={`bg-white ${componentStyles.layout.spacingSection}`}>
 			<div className="max-w-7xl mx-auto px-6">
@@ -21,13 +23,10 @@ const EducationalResourcesSection: React.FC = () => {
 				>
 					<HeroHeading
 						primaryText=""
-						gradientText="Educational Resources"
+						gradientText={t("educationalResources")}
 						variant="black"
 					/>
-					<HeroSubtitle
-						text="Stay ahead with our comprehensive guides and learning materials"
-						variant="black"
-					/>
+					<HeroSubtitle text={t("stayAheadGuides")} variant="black" />
 				</ScrollAnimation>
 
 				{/* Resources Grid */}
@@ -57,7 +56,7 @@ const EducationalResourcesSection: React.FC = () => {
 						variant="primary"
 						onClick={() => (window.location.href = "/resources")}
 					>
-						View All Resources
+						{t("viewAllResources")}
 					</Button>
 				</ScrollAnimation>
 			</div>

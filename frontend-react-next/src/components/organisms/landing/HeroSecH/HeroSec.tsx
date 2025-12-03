@@ -1,17 +1,18 @@
 "use client";
 
 import HeroLogo from "../../../../components/molecules/HeroLogo/HeroLogo";
-import { HeroHeading, HeroSubtitle } from "@/app/design-system";
+import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
 import HeroCTAButtons from "../../../../components/molecules/HeroCTAButtons/HeroCTAButtons";
 import AutoScrollCarousel from "../../../atoms/AutoScrollCarousel/AutoScrollCarousel";
+import { useTranslations } from "next-intl";
 
 export default function HeroSec() {
+	const t = useTranslations();
 	const slides = [
-		{ image: "/c1.jpg", title: "Precision Dental Work" },
-		{ image: "/c2.jpg", title: "Advanced Technology" },
-		{ image: "/c3.jpg", title: "Quality Assurance" },
+		{ image: "/c1.jpg", title: t("precisionDentalWork") },
+		{ image: "/c2.jpg", title: t("advancedTechnology") },
+		{ image: "/c3.jpg", title: t("qualityAssurance") },
 	];
-
 	return (
 		<section className="relative min-h-screen bg-linear-to-br from-[#151821] via-[#1a1d2e] to-[#252938] overflow-hidden">
 			{/* Decorative Dots Pattern - Top Left (hidden on mobile) */}
@@ -103,8 +104,8 @@ export default function HeroSec() {
 						{/* Main Headline */}
 						<div className="mb-2">
 							<HeroHeading
-								primaryText="Egypt's First "
-								gradientText="Digital Dental Lab"
+								primaryText={t("heroPrimaryText")}
+								gradientText={t("heroSecondaryText")}
 								variant="white"
 								delay={0.2}
 							/>
@@ -112,10 +113,7 @@ export default function HeroSec() {
 
 						{/* Subheadline */}
 						<div className="mb-2">
-							<HeroSubtitle
-								text="Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments"
-								variant="white"
-							/>
+							<HeroSubtitle text={t("heroSubheadline")} variant="white" />
 						</div>
 
 						{/* Key Feature Badge */}
@@ -123,12 +121,8 @@ export default function HeroSec() {
 							<div className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-linear-to-r from-[#d4a574]/10 to-[#d4a574]/5 border border-[#d4a574]/30 rounded-lg backdrop-blur-sm relative">
 								<span className="text-2xl sm:text-4xl">⚡</span>
 								<p className="text-[#d4a574] text-sm sm:text-lg md:text-xl font-semibold text-center leading-tight">
-									<span className="hidden sm:inline">
-										The only lab in Egypt with a fully digital workflow
-									</span>
-									<span className="sm:hidden">
-										Egypt&apos;s only fully digital dental lab
-									</span>
+									<span className="hidden sm:inline">{t("theonlylab")}</span>
+									<span className="sm:hidden"></span>
 								</p>
 								<div className="absolute inset-0 bg-[#d4a574]/5 blur-xl rounded-lg -z-10"></div>
 							</div>

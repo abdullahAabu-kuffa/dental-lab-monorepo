@@ -274,13 +274,13 @@ export interface WelcomePageProps {
 // RE-EXPORT TYPES FROM DESIGN SYSTEM
 
 // Design system types
-export type Typography = import("@/app/design-system/typography").Typography;
+export type Typography = import("@/app/[locale]/design-system/typography").Typography;
 export type ComponentStyles =
-  import("@/app/design-system/components").ComponentStyles;
+  import("@/app/[locale]/design-system/components").ComponentStyles;
 export type AnimationConfig =
-  import("@/app/design-system/animations").AnimationConfig;
-export type Gradients = import("@/app/design-system/gradients").Gradients;
-export type Colors = import("@/app/design-system/colors").Colors;
+  import("@/app/[locale]/design-system/animations").AnimationConfig;
+export type Gradients = import("@/app/[locale]/design-system/gradients").Gradients;
+export type Colors = import("@/app/[locale]/design-system/colors").Colors;
 
 // Lucide icon type
 export type { LucideIcon } from "lucide-react";
@@ -289,9 +289,9 @@ export type { LucideIcon } from "lucide-react";
 export type {
   ApiOrder,
   PaginatedOrdersResponse,
-} from "@/app/dashboard/interfaces/orders";
+} from "@/app/[locale]/dashboard/interfaces/orders";
 export type {
   OrderOptions,
   SelectedService,
   User,
-} from "@/app/dashboard/interfaces/orders";
+} from "@/app/[locale]/dashboard/interfaces/orders";

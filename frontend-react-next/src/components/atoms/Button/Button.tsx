@@ -6,7 +6,7 @@ import {
 	animations,
 	hoverEffects,
 	tapEffects,
-} from "@/app/design-system";
+} from "@/app/[locale]/design-system";
 
 type ButtonVariant =
 	| "primary"

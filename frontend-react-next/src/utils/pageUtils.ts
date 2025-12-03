@@ -16,4 +16,4 @@ export const useNavigation = () => {
 };
 
 // Re-export animations from the consolidated design system
-export { motionVariants as animations } from '@/app/design-system/animations';
+export { motionVariants as animations } from '@/app/[locale]/design-system/animations';

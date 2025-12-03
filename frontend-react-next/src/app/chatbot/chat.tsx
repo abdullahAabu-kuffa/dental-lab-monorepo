@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { MessageCircle, Send, Bot, User, X } from 'lucide-react';
-import { colors } from '@/app/design-system/colors';
+import { colors } from '../[locale]/design-system';
 
 export default function DentalChatButton() {
   const [isOpen, setIsOpen] = useState(false);
