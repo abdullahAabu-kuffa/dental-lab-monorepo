@@ -1,24 +1,56 @@
 import Redis from "ioredis";
 import { SimilarDocument } from "../types/rag.types";
-import dotenv from "dotenv";
-import { InferenceClient } from "@huggingface/inference";
 import { prisma } from "../lib/prisma";
-dotenv.config();
-const databaseUrl = process.env.DATABASE_URL;
+import type { FeatureExtractionPipeline } from "@xenova/transformers";
+import { getHFClient, MODEL_ID } from "./aiClient";
+
 const redis: Redis = new Redis(
   process.env.REDIS_URL || "redis://localhost:6379"
 );
 
-const HF_TOKEN: string = process.env.HUGGINGFACE_API_KEY || "";
-const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2:featherless-ai";
+const SIMILARITY_THRESHOLD = 0.4;
 
-if (!HF_TOKEN) {
-  throw new Error("HUGGINGFACE_API_KEY environment variable is not set");
+let embeddingPipelinePromise: Promise<FeatureExtractionPipeline> | null = null;
+async function getEmbeddingPipeline() {
+  if (!embeddingPipelinePromise) {
+    const { pipeline } = await import("@xenova/transformers");
+    embeddingPipelinePromise = pipeline(
+      "feature-extraction",
+      "Xenova/all-MiniLM-L6-v2"
+    );
+  }
+  return embeddingPipelinePromise;
 }
 
-const hfClient = new InferenceClient(HF_TOKEN);
-
 console.log("🔧 RAG Service initialized with Postgres pgvector");
+
+function isGreetingOrSmallTalk(rawQuestion: string): boolean {
+  const q = rawQuestion.trim().toLowerCase();
+
+  const patterns = [
+    /^hi\b/,
+    /^hello\b/,
+    /^hey\b/,
+    /^yo\b/,
+    /^hi there\b/,
+    /^hello there\b/,
+    /^good (morning|afternoon|evening)\b/,
+    /^what'?s up\b/,
+    /^how are you\b/,
+    /^thank you\b/,
+    /^thanks\b/,
+  ];
+
+  return patterns.some((re) => re.test(q));
+}
+
+function buildGreetingAnswer(): string {
+  return (
+    "Hi! I’m your dental lab assistant. " +
+    "You can ask me about things like zirconia crowns, composite fillings, implants, " +
+    "or procedures such as crown preparation or implant placement that are stored in the lab’s knowledge base."
+  );
+}
 
 /**
  * Generate embedding locally using @xenova/transformers
@@ -35,15 +67,15 @@ async function generateEmbedding(text: string): Promise<number[]> {
     const startTime: number = Date.now();
 
     // Dynamically import to avoid loading on startup
-    const { pipeline } = await import("@xenova/transformers");
+    // const { pipeline } = await import("@xenova/transformers");
 
     // Model downloads on first run (~100MB), cached afterwards
-    const extractor = await pipeline(
-      "feature-extraction",
-      "Xenova/all-MiniLM-L6-v2"
-    );
-
-    const output = await extractor(text.trim(), {
+    // const extractor = await pipeline(
+    //   "feature-extraction",
+    //   "Xenova/all-MiniLM-L6-v2"
+    // );
+    const extractor = await getEmbeddingPipeline();
+    const output: any = await extractor(text.trim(), {
       pooling: "mean",
       normalize: true,
     });
@@ -73,14 +105,27 @@ async function generateAnswer(
   question: string,
   retries: number = 3
 ): Promise<string> {
-  const prompt = `You are a helpful dental lab AI assistant. Use ONLY the provided knowledge base data to answer the question accurately.
+  const client = getHFClient();
+  const prompt = `You are a helpful dental lab assistant.
+
+You can ONLY use information from the "Knowledge Base Data" section below. 
+Do NOT invent details that are not clearly supported by that data.
+
+When you answer:
+- Speak in a natural, friendly tone.
+- Do NOT use phrases like "based on the provided data", "based on the information in our knowledge base", or "according to the knowledge base".
+- Never start your answer with "Based on..." or "According to...".
+- Start your answer directly. For example, write "A zirconia crown is an excellent option for..." instead of "Based on the data, a zirconia crown is...".
+- If the information is not available in the knowledge base, say: "I don't have this information in my knowledge base. Please contact the lab owner for more details."
+- You may use short paragraphs or bullet points if it makes the explanation clearer.
 
 Knowledge Base Data:
 ${context}
 
-Question: ${question}
+User question:
+${question}
 
-Answer based ONLY on the provided data. If the information is not available, say "I don't have this information in my knowledge base. Please consult with the lab owner."`;
+Answer:`;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
@@ -88,7 +133,7 @@ Answer based ONLY on the provided data. If the information is not available, say
         `  💬 HF chatCompletion attempt ${attempt}/${retries} using ${MODEL_ID}...`
       );
 
-      const completion = await hfClient.chatCompletion({
+      const completion = await client.chatCompletion({
         model: MODEL_ID,
         messages: [
           {
@@ -209,6 +254,31 @@ async function findSimilarDocuments(
  * 4. Generate answer with LLM
  * 5. Cache for 24 hours
  */
+function sanitizeAnswer(text: string): string {
+  let cleaned = text.trim();
+
+  // Remove common meta-intro phrases
+  const patterns = [
+    /^based on (the )?(information|data) (in|from) (our )?(knowledge base|data)[, ]*/i,
+    /^based on (the )?(information|data) provided[, ]*/i,
+    /^according to (the )?(knowledge base|provided data)[, ]*/i,
+    /^from (the )?(knowledge base|provided data)[, ]*/i,
+  ];
+
+  for (const pattern of patterns) {
+    if (pattern.test(cleaned)) {
+      cleaned = cleaned.replace(pattern, "").trim();
+    }
+  }
+
+  // Make sure the first letter is capitalized if it's a letter
+  if (cleaned.length > 0) {
+    cleaned = cleaned[0].toUpperCase() + cleaned.slice(1);
+  }
+
+  return cleaned;
+}
+
 export async function ragQuery(userQuestion: string): Promise<{
   answer: string;
   sources: SimilarDocument[];
@@ -218,6 +288,16 @@ export async function ragQuery(userQuestion: string): Promise<{
   try {
     if (!userQuestion || userQuestion.trim().length === 0) {
       throw new Error("Question cannot be empty");
+    }
+    //handle greetings / small talk without RAG
+    if (isGreetingOrSmallTalk(userQuestion)) {
+      const answer = buildGreetingAnswer();
+      return {
+        answer,
+        sources: [],
+        cached: false,
+        duration: 0,
+      };
     }
 
     const cacheKey: string = `rag:${userQuestion
@@ -249,8 +329,8 @@ export async function ragQuery(userQuestion: string): Promise<{
 
     // 3. Find similar documents using pgvector (now O(log n) with ivfflat index)
     const similarDocs = await findSimilarDocuments(questionEmbedding, 3);
-
-    if (similarDocs.length === 0) {
+    const topSimilarity = similarDocs[0]?.similarity ?? 0;
+    if (!similarDocs.length || topSimilarity < SIMILARITY_THRESHOLD) {
       const noDataAnswer: string =
         "I don't have relevant information in my knowledge base. Please contact the lab for more details.";
 
@@ -283,8 +363,8 @@ Relevance: ${(doc.similarity * 100).toFixed(1)}%`
       .join("\n\n---\n\n");
 
     console.log("  ⏱️ Generating answer with LLM...");
-    const answer: string = await generateAnswer(context, userQuestion);
-
+    const rawAnswer: string = await generateAnswer(context, userQuestion);
+    const answer = sanitizeAnswer(rawAnswer);
     // 5. Cache for 24 hours
     const cacheData = {
       answer,
@@ -333,17 +413,26 @@ export async function storeKnowledgeBaseItem(data: {
     const embedding: number[] = await generateEmbedding(textToEmbed);
 
     // Insert into Postgres with pgvector
-    const result = await prisma.$executeRaw`
-      INSERT INTO "KnowledgeBaseEntry" (title, category, content, metadata, embedding, "updatedAt")
-      VALUES (${data.title}, ${data.category}, ${data.content}, ${JSON.stringify(
-        data.metadata || {}
-      )}::jsonb, ${JSON.stringify(embedding)}::vector, NOW())
-      RETURNING id
-    `;
+    const rows = await prisma.$queryRaw<{ id: number }[]>`
+  INSERT INTO "KnowledgeBaseEntry" (title, category, content, metadata, embedding, "updatedAt")
+  VALUES (
+    ${data.title},
+    ${data.category},
+    ${data.content},
+    ${JSON.stringify(data.metadata || {})}::jsonb,
+    ${JSON.stringify(embedding)}::vector,
+    NOW()
+  )
+  RETURNING id
+`;
 
-    console.log(`  ✅ Stored: ${data.title}`);
+    if (!rows.length) {
+      throw new Error("Insert failed: no id returned from Postgres");
+    }
 
-    return { id: String(result) };
+    console.log(`  ✅ Stored: ${data.title} (id=${rows[0].id})`);
+
+    return { id: String(rows[0].id) };
   } catch (error) {
     console.error("Store knowledge base item error:", error);
     throw error;

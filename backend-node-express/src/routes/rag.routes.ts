@@ -44,30 +44,9 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
- *                     question:
- *                       type: string
- *                       example: "What is zirconia used for?"
  *                     answer:
  *                       type: string
  *                       example: "Zirconia is a high-strength ceramic used for..."
- *                     sources:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           id:
- *                             type: string
- *                           title:
- *                             type: string
- *                           category:
- *                             type: string
- *                           content:
- *                             type: string
- *                           similarity:
- *                             type: number
- *                     fromCache:
- *                       type: boolean
- *                       example: false
  *                     responseTime:
  *                       type: string
  *                       example: "2543ms"
