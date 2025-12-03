@@ -22,6 +22,7 @@ import { motion } from "framer-motion";
 
 //Language switcher
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

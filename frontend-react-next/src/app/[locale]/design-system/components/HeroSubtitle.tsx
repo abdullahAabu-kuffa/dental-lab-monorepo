@@ -31,7 +31,7 @@ export const HeroSubtitle: React.FC<HeroSubtitleProps> = ({
   text = "",
   children,
   highlightText = "ExoCAD",
-  variant = 'white',
+  variant = 'black',
   className = '',
   delay = 0.5,
 }) => {

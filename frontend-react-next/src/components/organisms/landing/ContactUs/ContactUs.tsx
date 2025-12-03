@@ -10,6 +10,7 @@ import {
 } from "@/app/[locale]/design-system";
 import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { useTranslations } from "next-intl";
+import MapEmbed from "./MapEmbed";
 
 const ContactSection: React.FC = () => {
   const t = useTranslations();
