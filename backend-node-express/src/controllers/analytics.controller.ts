@@ -5,6 +5,7 @@ import {
 } from "../services/analytics.service";
 import logger from "../utils/logger.util";
 import { successResponse, errorResponse } from "../utils/response.util";
+import { summarizeKpis } from "../services/analyticsSummary.service";
 
 interface AuthRequest extends Request {
   user?: {
@@ -102,13 +103,22 @@ export async function getSummary(
     logger.info(`Analytics: Fetching summary from ${fromDate} to ${toDate}`);
 
     const kpis: KPIResponse = await computeKpisOptimized(fromDate, toDate);
-    const summary = generateTextSummary(kpis);
+
+    let summary: string;
+
+    try {
+      summary = await summarizeKpis(kpis); // Hugging Face client
+    } catch (err) {
+      logger.error(
+        "LLM summary failed, falling back to deterministic summary",
+        err
+      );
+      summary = generateTextSummary(kpis);
+    }
 
     res
       .status(200)
-      .json(
-        successResponse({summary }, "Summary fetched successfully")
-      );
+      .json(successResponse({ kpis, summary }, "Summary fetched successfully"));
   } catch (error: any) {
     logger.error("Analytics Summary Error", error);
 

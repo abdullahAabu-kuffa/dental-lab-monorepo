@@ -370,6 +370,9 @@ router.get("/kpis", verifyAccessToken, requireAdmin, getKpis);
  *                 data:
  *                   type: object
  *                   properties:
+ *                     KPIs:
+ *                       type: string
+ *                       description: object containing all KPIs
  *                     summary:
  *                       type: string
  *                       description: Readable text summary of analytics (same as /kpis response + summary field)
