@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-query";
 import {
   ApiOrder,
-} from "@/app/dashboard/interfaces/orders";
+} from "@/app/[locale]/dashboard/interfaces/orders";
 async function fetchOrders(page = 1) {
   const res = await fetch(`/api/orders?page=${page}`, {
     credentials: "include",
@@ -93,8 +93,8 @@ export function useUploadFile(
     mutationFn: (file: File) => uploadFile(file),
     onSuccess: (data, Error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ["files"] });
-      if (options?.onSuccess) options.onSuccess(data,Error, variables, context);
-      if (options?.onSuccess) options.onSuccess(data,Error, variables, context);
+      if (options?.onSuccess) options.onSuccess(data, Error, variables, context);
+      if (options?.onSuccess) options.onSuccess(data, Error, variables, context);
     },
     onError: options?.onError,
     onSettled: options?.onSettled,

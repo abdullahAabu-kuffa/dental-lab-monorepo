@@ -5,13 +5,14 @@ import {
 	HeroSubtitle,
 	componentStyles,
 	gradients,
-} from "@/app/design-system";
+} from "@/app/[locale]/design-system";
 
-import ScrollAnimation from "@/app/design-system/components/ScrollAnimation";
+import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { USER_PROCESS_STEPS } from "../../../../config/UserData/orderDataService";
+import { useTranslations } from "next-intl";
 
 export default function ManufacturingProcessSection() {
-
+	const t = useTranslations();
 	return (
 		<section
 			className={`${componentStyles.layout.spacingSection} bg-linear-to-br from-gray-50 via-white to-gray-100`}
@@ -20,15 +21,15 @@ export default function ManufacturingProcessSection() {
 				{/* Header */}
 				<ScrollAnimation animation="fadeInFromLeft" className="mb-16 space-y-6">
 					<HeroHeading
-						primaryText="Digital "
-						gradientText="Manufacturing Process"
+						primaryText={t("digitalManufacturingProcess").split(" ")[0] + " "}
+						gradientText={t("digitalManufacturingProcess")
+							.split(" ")
+							.slice(1)
+							.join(" ")}
 						variant="black"
 					/>
 
-					<HeroSubtitle
-						text="Follow your dental case from upload to delivery — every stage, visible in real-time."
-						variant="black"
-					/>
+					<HeroSubtitle text={t("followDentalCase")} variant="black" />
 				</ScrollAnimation>
 
 				{/* Timeline */}

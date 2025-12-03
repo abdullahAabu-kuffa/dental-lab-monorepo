@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { motionVariants, gradients } from "@/app/design-system";
+import { motionVariants, gradients } from "@/app/[locale]/design-system";
 
 interface HeroLogoProps {
 	src: string;

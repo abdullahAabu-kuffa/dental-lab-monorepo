@@ -1,6 +1,6 @@
 // store/useOrderStore.ts
 import { create } from "zustand";
-import { PaginatedOrdersResponse } from "@/app/dashboard/interfaces/orders";
+import { PaginatedOrdersResponse } from "@/app/[locale]/dashboard/interfaces/orders";
 
 interface OrderStore {
   data: PaginatedOrdersResponse | null;

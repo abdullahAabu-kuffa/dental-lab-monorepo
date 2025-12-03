@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 // import { Playfair_Display } from "next/font/google";
-import "./globals.css";
+import "./[locale]/globals.css";
 import { QueryProvider } from "../../QueryProvider";
-import Provider from "./provider";
+import Provider from "./[locale]/provider";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import GlobalLoader from "@/components/GlobalLoader";
 import { TokenRefreshInitializer } from "@/components/TokenRefreshInitializer";
@@ -34,7 +34,6 @@ export default async function RootLayout({
 				<Provider>
 					<QueryProvider>
 						<TokenRefreshInitializer />
-						<NavbarWrapper />
 						{/* <AuthProvider> */}
 						<LoadingProvider>
 							<GlobalLoader />

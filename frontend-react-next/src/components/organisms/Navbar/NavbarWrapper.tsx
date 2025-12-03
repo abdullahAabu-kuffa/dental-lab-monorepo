@@ -4,11 +4,12 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 
 export default function NavbarWrapper() {
-  const pathname = usePathname();
+	const pathname = usePathname();
 
-  const hiddenRoutes = ["/login",'/register'];
-  const hideNavbar = hiddenRoutes.includes(pathname) || pathname.startsWith("/dashboard");
+	const hiddenRoutes = ["/login", "/register"];
+	const hideNavbar =
+		hiddenRoutes.includes(pathname) || pathname.startsWith("/dashboard");
 
-  if (hideNavbar) return null;
-  return <Navbar />;
+	if (hideNavbar) return null;
+	return <Navbar />;
 }
