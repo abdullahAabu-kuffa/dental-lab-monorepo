@@ -13,7 +13,7 @@ import {
   LayoutDashboard,
   CalendarDaysIcon,
   ChartArea,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { logoutRequest } from "@/services/auth";
 
@@ -25,7 +25,7 @@ const ICONS = {
   Bell,
   ListOrdered,
   ChartArea,
-  LogOut
+  LogOut,
 };
 
 const links = [
@@ -36,13 +36,11 @@ const links = [
   { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
   { name: "Settings", to: "/dashboard/settings", icon: "Settings" },
   { name: "Analytics", to: "/dashboard/analytics", icon: "ChartArea" },
-
 ];
 
 const Sidebar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="flex">
       {/* Sidebar */}
@@ -89,16 +87,15 @@ const Sidebar = () => {
         {/* logout button */}
         <div className="p-3 border-t border-gray-700">
           <button
-            onClick={logoutRequest}
+            onClick={() => {
+              logoutRequest();
+              window.location.href = "/";
+            }}
             className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-red-800 hover:text-white rounded-lg transition-all duration-200 w-full text-left"
           >
             <LogOut className="w-5 h-5 shrink-0" />
             {isOpen && <span className="font-medium">Logout</span>}
           </button>
-        </div>
-        {/* Footer */}
-        <div className="p-3 border-t border-gray-700 text-sm text-gray-400">
-          {isOpen ? "© 2025 MyApp" : "©"}
         </div>
       </motion.div>
     </div>
