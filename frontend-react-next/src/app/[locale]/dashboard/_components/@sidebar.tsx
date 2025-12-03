@@ -11,7 +11,8 @@ import {
   XIcon,
   ListOrdered,
   LayoutDashboard,
-  CalendarDaysIcon
+  CalendarDaysIcon,
+  ChartArea
 } from "lucide-react";
 
 const ICONS = {
@@ -21,6 +22,7 @@ const ICONS = {
   CalendarDaysIcon,
   Bell,
   ListOrdered,
+  ChartArea
 };
 
 const links = [
@@ -30,7 +32,7 @@ const links = [
   { name: "Events", to: "/dashboard/events", icon: "CalendarDaysIcon" },
   { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
   { name: "Settings", to: "/dashboard/settings", icon: "Settings" },
-  { name: "Analytics", to: "/dashboard/analytics", icon: "LayoutDashboard" },
+  { name: "Analytics", to: "/dashboard/analytics", icon: "ChartArea" },
 
 ];
 
