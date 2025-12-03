@@ -1,7 +1,11 @@
 import { prisma } from "../lib/prisma";
 import logger from "../utils/logger.util";
 
+//============= CONSTANTS ==============
+const ANALYTICS_CURRENCY = "EGP";
+
 // ============ TYPE DEFINITIONS ============
+type CurrencyCode = "EGP" | "USD" | "EUR" | string;
 
 export interface DateRange {
   from: Date;
@@ -71,7 +75,7 @@ export interface OperationsMetrics {
   totalOrdersInProgress: number;
   chartData: {
     completion: ChartConfig;
-    duration: ChartConfig;
+    stuckItems: ChartConfig;
   };
 }
 
@@ -106,6 +110,7 @@ export interface KPIResponse {
   metadata: {
     generatedAt: string;
     executionTimeMs: number;
+    currency: CurrencyCode;
   };
 }
 
@@ -286,6 +291,7 @@ export async function computeKpisOptimized(
       metadata: {
         generatedAt: new Date().toISOString(),
         executionTimeMs: Date.now() - startTime,
+        currency:ANALYTICS_CURRENCY
       },
     };
 
@@ -464,7 +470,7 @@ function computeOperationsMetrics(
           },
         ],
       },
-      duration: {
+      stuckItems: {
         labels: processes.map((p) => p.process),
         datasets: [
           {
@@ -621,7 +627,7 @@ function extractKeyInsights(
       description: `${pendingAmount} dollars in pending invoices. Follow up with clients.`,
       severity: "info",
       metricValue: pendingAmount,
-      metricUnit: "dollars",
+      metricUnit: ANALYTICS_CURRENCY,
     });
   }
 
