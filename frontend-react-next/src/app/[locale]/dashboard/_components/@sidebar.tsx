@@ -66,7 +66,9 @@ const Sidebar = () => {
         <nav className="flex-1 p-3 space-y-1">
           {links.map((link) => {
             const Icon = ICONS[link.icon as keyof typeof ICONS];
-            const isActive = pathname === link.to;
+            const path = pathname.substring(3, pathname.length);
+            console.log(path);
+            const isActive = path === link.to;
 
             return (
               <Link
