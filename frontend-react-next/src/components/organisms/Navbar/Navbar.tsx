@@ -19,7 +19,10 @@ import NotificationsMenu from "../notificationMenu";
 import Swal from "sweetalert2";
 import List from "../list";
 import { motion } from "framer-motion";
-// import { useAuthStore } from "@/app/src/store/auth.store";
+// import { useAuthStore } from "@/store/auth.store"; //need to handle in mobile menu
+
+//Language switcher
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -39,8 +42,6 @@ const Navbar = () => {
 	// 	const user = useAuthStore((s) => s.user);
 	// const loading = useAuthStore((s) => s.isLoading);
 	// const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-
-	//   console.log(user);
 
 	// Notification toggle
 	function toggleMenu() {
@@ -95,10 +96,11 @@ const Navbar = () => {
 	return (
 		<>
 			<nav
-				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+					isScrolled
 						? "bg-linear-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl"
 						: "bg-linear-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
-					}`}
+				}`}
 			>
 				<div className="max-w-7xl mx-auto px-4 sm:px-6">
 					<div className="flex items-center justify-between h-20">
@@ -130,21 +132,23 @@ const Navbar = () => {
 										onClick={
 											link.name == "Order" ? handleOrdersClick : undefined
 										}
-										className={`font-semibold text-base transition-all duration-200 relative group ${isActive
+										className={`font-semibold text-base transition-all duration-200 relative group ${
+											isActive
 												? "text-[#FFD700] border-b-2 border-[#E4B441]"
 												: "text-[#CABEB2] hover:text-[#FFD700]"
-											}`}
+										}`}
 									>
 										{link.name}
 										<span
-											className={`absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
-												}`}
+											className={`absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${
+												isActive ? "w-full" : "w-0 group-hover:w-full"
+											}`}
 										/>
 									</Link>
 								);
 							})}
 						</div>
-
+						<LanguageSwitcher label={"en"} />
 						{/* Notification Part */}
 						<motion.div
 							style={{ display: "flex", gap: "16px", alignItems: "center" }}

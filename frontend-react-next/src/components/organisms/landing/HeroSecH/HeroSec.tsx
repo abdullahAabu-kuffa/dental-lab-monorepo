@@ -4,6 +4,7 @@ import HeroLogo from "../../../../components/molecules/HeroLogo/HeroLogo";
 import { HeroHeading, HeroSubtitle } from "@/app/[locale]/design-system";
 import HeroCTAButtons from "../../../../components/molecules/HeroCTAButtons/HeroCTAButtons";
 import AutoScrollCarousel from "../../../atoms/AutoScrollCarousel/AutoScrollCarousel";
+import { useTranslations } from "next-intl";
 
 export default function HeroSec() {
 	const slides = [
@@ -11,7 +12,7 @@ export default function HeroSec() {
 		{ image: "/c2.jpg", title: "Advanced Technology" },
 		{ image: "/c3.jpg", title: "Quality Assurance" },
 	];
-
+	const t = useTranslations();
 	return (
 		<section className="relative min-h-screen bg-linear-to-br from-[#151821] via-[#1a1d2e] to-[#252938] overflow-hidden">
 			{/* Decorative Dots Pattern - Top Left (hidden on mobile) */}
@@ -103,7 +104,7 @@ export default function HeroSec() {
 						{/* Main Headline */}
 						<div className="mb-2">
 							<HeroHeading
-								primaryText="Egypt's First "
+								primaryText={t("heroPrimaryText")}
 								gradientText="Digital Dental Lab"
 								variant="white"
 								delay={0.2}

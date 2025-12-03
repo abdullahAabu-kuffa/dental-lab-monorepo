@@ -5,7 +5,6 @@ export function useNavigationGuard(enabled: boolean) {
   useEffect(() => {
     if (!enabled) return;
 
-    // حماية الـ refresh أو close
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "";
@@ -14,7 +13,6 @@ export function useNavigationGuard(enabled: boolean) {
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // حماية الـ back button
     const handlePopState = async (e: PopStateEvent) => {
       e.preventDefault();
 

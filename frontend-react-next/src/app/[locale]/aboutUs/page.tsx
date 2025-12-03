@@ -4,8 +4,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import HeroHeading from "@/app/[locale]/design-system/components/HeroHeading";
 import HeroSubtitle from "@/app/[locale]/design-system/components/HeroSubtitle";
-
+import { useTranslations } from "next-intl";
 export default function AboutPage() {
+	const t = useTranslations();
 	return (
 		<div className="relative flex flex-col min-h-screen overflow-hidden">
 			<div className="absolute inset-0 -z-10 bg-white"></div>
@@ -46,7 +47,7 @@ export default function AboutPage() {
 								transition={{ duration: 0.5, delay: 0.2 }}
 							>
 								<h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight">
-									Who We Are
+									{t("aboutSubtitle")}
 								</h3>
 								<p className="text-base md:text-lg text-gray-700 leading-relaxed font-light">
 									We are Egypt&apos;s first fully digital dental laboratory,
