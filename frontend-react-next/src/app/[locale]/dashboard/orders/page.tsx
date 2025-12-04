@@ -43,12 +43,23 @@ const Orders = () => {
       </h1>
     );
   return (
-    <div className="bg-[F5F7FA]">
-      <div className="p-6">
-        <h1 className="text-3xl font-bold">Orders Management</h1>
-        <p className="text-gray-600">Review and approve or reject Orders</p>
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mx-6">
+    <div className="bg-[#F5F7FA] min-h-screen">
+      {/* Cards Section */}
+      <div className="p-4 md:p-6">
+        <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+            {/* Title */}
+            <div className="lg:col-span-1">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                Orders Management
+              </h1>
+              <p className="text-gray-600 mb-4 md:mb-0">
+                Review and approve or reject Orders
+              </p>
+            </div>
+
+            {/* Cards */}
+            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             <StatsCard
               title="Total Orders"
               value={totalOrders}
@@ -85,7 +96,8 @@ const Orders = () => {
           </div>
         </div>
       </div>
-      <div className="mt-5 mx-6">
+      </div>
+      <div className="mt-5 mx-4 md:mx-6">
         {/* Additional users content can go here */}
         <OrdersTable overview={false} currentPage={currentPage} />
         <Pagination
