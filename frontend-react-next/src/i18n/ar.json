@@ -138,16 +138,12 @@
 	"phoneInvalid": "يجب أن يكون رقم الهاتف أرقام فقط",
 	"messageRequired": "الرسالة مطلوبة.",
 	"messageMinLength": "يجب أن تكون الرسالة 10 أحرف على الأقل.",
-	"namePlaceholder": "د. أحمد محمد",
-	"emailPlaceholder": "ahmed@clinic.com",
-	"phonePlaceholder": "+20 123 456 7890",
 	"messagePlaceholder": "أخبرنا عن احتياجاتك...",
 
 	"location": "الموقع",
 	"telegram": "تليجرام",
 	"whatsapp": "واتساب",
 	"linkedin": "لينكد إن",
-	"email": "البريد الإلكتروني",
 
 	"educational": "الموارد",
 	"resources": " التعليمية",
@@ -186,5 +182,7 @@
 	"contactSupportTeam": "للحصول على المساعدة، اتصل بفريق الدعم.",
 	"securityPriorityReset": "أمانك أولويتنا",
 	"accountSecuritySeriously": "نحن نأخذ أمان حسابك على محمل الجد. تأكد من أن كلمة المرور قوية ولا تشاركها مع أي شخص.",
-	"needHelpContactSupport": "تحتاج مساعدة؟ اتصل بالدعم."
+	"needHelpContactSupport": "تحتاج مساعدة؟ اتصل بالدعم.",
+	"namePlaceholder": "Dr Ahmed Mohammed",
+	"phonePlaceholder": "01234567890"
 }

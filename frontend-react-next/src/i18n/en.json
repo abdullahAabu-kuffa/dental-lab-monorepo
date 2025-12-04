@@ -138,9 +138,6 @@
 	"phoneInvalid": "Phone must be numbers only",
 	"messageRequired": "Message is required.",
 	"messageMinLength": "Message must be at least 10 characters.",
-	"namePlaceholder": "Dr. Ahmed Mohamed",
-	"emailPlaceholder": "ahmed@clinic.com",
-	"phonePlaceholder": "+20 123 456 7890",
 	"messagePlaceholder": "Tell us about your needs...",
 
 	"location": "Location",
@@ -186,5 +183,7 @@
 	"contactSupportTeam": "For assistance, contact our Support Team.",
 	"securityPriorityReset": "Your Security is Our Priority",
 	"accountSecuritySeriously": "We take your account security seriously. Make sure your password is strong and never share it with anyone.",
-	"needHelpContactSupport": "Need help? Contact support."
+	"needHelpContactSupport": "Need help? Contact support.",
+	"namePlaceholder": "Dr Ahmed Mohammed",
+	"phonePlaceholder": "01234567890"
 }
