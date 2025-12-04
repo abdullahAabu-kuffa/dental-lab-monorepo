@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Bell,
@@ -41,6 +41,17 @@ const links = [
 const Sidebar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  async function handleLogout() {
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      router.push("/");
+      router.refresh();
+    }
+  }
   return (
     <div className="flex">
       {/* Sidebar */}
@@ -90,8 +101,7 @@ const Sidebar = () => {
         <div className="p-3 border-t border-gray-700">
           <button
             onClick={() => {
-              logoutRequest();
-              window.location.href = "/";
+              handleLogout();
             }}
             className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-red-800 hover:text-white rounded-lg transition-all duration-200 w-full text-left"
           >
