@@ -6,7 +6,7 @@ export const staticEvents: Event[] = [
     title: 'Advanced Dental Materials Workshop',
     date: '2024-12-15',
     description: 'Learn about the latest innovations in dental materials and their applications in modern dentistry. This workshop covers zirconia, emax, and hybrid ceramics.',
-    image: '/2920348.png',
+    image: '/c1.jpg',
     category: 'Workshop',
     speaker: {
       name: 'Dr. Sarah Johnson',
@@ -22,7 +22,7 @@ export const staticEvents: Event[] = [
     title: 'Digital Dentistry Symposium',
     date: '2024-12-20',
     description: 'Explore cutting-edge digital technologies transforming dental practices. Featuring CAD/CAM, 3D printing, and AI-powered diagnostic tools.',
-    image: '/2920348.png',
+    image: '/c2.jpg',
     category: 'Symposium',
     speaker: {
       name: 'Dr. Michael Chen',
@@ -38,7 +38,7 @@ export const staticEvents: Event[] = [
     title: 'Implant Restoration Masterclass',
     date: '2024-12-25',
     description: 'Comprehensive training on implant restoration techniques, from single crowns to full arch reconstructions. Hands-on sessions included.',
-    image: '/2920348.png',
+    image: '/c3.jpg',
     category: 'Masterclass',
     speaker: {
       name: 'Dr. Elena Rodriguez',

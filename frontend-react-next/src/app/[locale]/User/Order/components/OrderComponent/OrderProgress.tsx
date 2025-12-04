@@ -64,7 +64,7 @@ export const OrderProgress: React.FC<OrderProgressProps> = ({
                           ${
 														step.status === "completed"
 															? "bg-emerald-500"
-															: "bg-slate-200 dark:bg-slate-700"
+															: "bg-slate-200"
 													}
                         `}
 												initial={{ height: 0 }}

@@ -46,7 +46,7 @@ const EducationalResourcesSection: React.FC = () => {
 					))}
 				</ScrollAnimation>
 
-				{/* View All Resources Button */}
+				{/* View All Resources Button
 				<ScrollAnimation
 					animation="fadeInFromBottom"
 					delay={0.6}
@@ -58,7 +58,7 @@ const EducationalResourcesSection: React.FC = () => {
 					>
 						{t("viewAllResources")}
 					</Button>
-				</ScrollAnimation>
+				</ScrollAnimation> */}
 			</div>
 		</section>
 	);

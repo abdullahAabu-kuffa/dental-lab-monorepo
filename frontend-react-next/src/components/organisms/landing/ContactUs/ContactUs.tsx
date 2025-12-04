@@ -110,7 +110,7 @@ const ContactSection: React.FC = () => {
 											<div className="font-semibold text-gray-900">
 												{t(info.title.toLowerCase())}
 											</div>
-											{info.link ? (
+											{info.link && info.icon !== 'map' ? (
 												<a
 													href={info.link}
 													className="text-gray-600 hover:text-[#D4AF37] transition"
@@ -120,7 +120,7 @@ const ContactSection: React.FC = () => {
 													{info.value}
 												</a>
 											) : (
-												<div className="text-gray-600">{info.value}</div>
+												<div className={`text-gray-600 ${info.icon === 'map' ? 'hover:text-[#D4AF37] transition' : ''}`}>{info.value}</div>
 											)}
 										</div>
 									</ScrollAnimation>
@@ -147,7 +147,7 @@ const ContactSection: React.FC = () => {
 									className={`w-full px-4 py-3 rounded-lg border ${
 										errors.name ? "border-red-500" : "border-gray-300"
 									} focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
-									placeholder={t("namePlaceholder")}
+									placeholder={t("name")}
 								/>
 								{errors.name && (
 									<p className="text-red-500 text-sm mt-1">{errors.name}</p>

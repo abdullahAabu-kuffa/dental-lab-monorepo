@@ -51,15 +51,15 @@ export default function OrdersListPage() {
 
 	return (
 		<div className="min-h-screen relative">
-			<div className="px-2 pt-4 space-y-3">
+			<div className="px-0 pt-4 space-y-3">
 				<ScrollAnimation>
 					{/* MAIN GRID */}
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+					<div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
 						{/* LEFT SIDE: Status Icons + Search + Orders List */}
-						<div className="lg:col-span-4 xl:col-span-3 flex flex-col gap-3">
+						<div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-3">
 							{/* STATUS ICONS */}
-							<div className="inline-block bg-gray-50 dark:bg-gray-900 rounded-xl p-0.5">
-								<div className="flex items-center gap-1">
+							<div className="w-full bg-gray-50 rounded-xl p-0.5">
+								<div className="flex items-center justify-center gap-1 flex-wrap">
 									<StatusIcons
 										onNewOrder={() => router.push("/User/Order/Form")}
 										onShowStatusOrders={handleShowStatusOrders}
@@ -69,11 +69,11 @@ export default function OrdersListPage() {
 							</div>
 
 							{/* SEARCH */}
-							<div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-3 group flex items-center">
+							<div className="w-full bg-gray-50 rounded-xl p-3 group flex items-center">
 								<input
 									type="text"
 									placeholder="Search by patient or material..."
-									className="block w-full max-w-sm pl-12 pr-4 py-3 bg-transparent border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
+									className="block w-full pl-12 pr-4 py-3 bg-transparent border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
 									onChange={(e) => {
 										const searchTerm = e.target.value.toLowerCase();
 										const filtered = orders?.filter(
@@ -96,7 +96,7 @@ export default function OrdersListPage() {
 							</div>
 
 							{/* ORDERS LIST - under search */}
-							<div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-3 space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+							<div className="bg-gray-50 rounded-xl p-3 space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
 								{filteredOrders?.map((order, index) => (
 									<ScrollAnimation
 										key={order.id}
@@ -114,7 +114,7 @@ export default function OrdersListPage() {
 						</div>
 
 						{/* RIGHT SIDE: Order Details */}
-						<div className="lg:col-span-5 xl:col-span-8">
+						<div className="lg:col-span-7 xl:col-span-8">
 							{selectedOrder ? (
 								<ScrollAnimation animation="fadeInFromBottom" delay={0.2}>
 									<OrderProgress order={selectedOrder} />
