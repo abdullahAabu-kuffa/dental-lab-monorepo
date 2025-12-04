@@ -18,73 +18,72 @@ import NotificationsMenu from "../notificationMenu";
 import Swal from "sweetalert2";
 import List from "../list";
 import { motion } from "framer-motion";
-// import { useAuthStore } from "@/store/auth.store"; //need to handle in mobile menu
 
 //Language switcher
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useAuthStore } from "@/store/auth.store";
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [unread, setUnread] = useState(0);
+	const [isScrolled, setIsScrolled] = useState(false);
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [unread, setUnread] = useState(0);
 
-  const pathname = usePathname();
-  const router = useRouter();
-  const user = useAuthStore((s) => s.user);
-  const loading = useAuthStore((s) => s.isLoading);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+	const pathname = usePathname();
+	const router = useRouter();
+	const user = useAuthStore((s) => s.user);
+	const loading = useAuthStore((s) => s.isLoading);
+	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
-  // Notification toggle
-  function toggleMenu() {
-    setOpen((prev) => !prev);
-  }
+	// Notification toggle
+	function toggleMenu() {
+		setOpen((prev) => !prev);
+	}
 
-  // Scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+	// Scroll effect
+	useEffect(() => {
+		const handleScroll = () => {
+			setIsScrolled(window.scrollY > 20);
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
-  // Logout
-  async function handleLogout() {
-    try {
-      await logoutRequest();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    } finally {
-      router.push("/");
-      router.refresh();
-      // window.location.reload();
-    }
-  }
+	// Logout
+	async function handleLogout() {
+		try {
+			await logoutRequest();
+		} catch (error) {
+			console.error("Logout failed:", error);
+		} finally {
+			router.push("/");
+			router.refresh();
+			// window.location.reload();
+		}
+	}
 
-  // Orders page authority
-  function handleOrdersClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    if (loading) {
-      e.preventDefault();
-      return;
-    }
-    if (!isAuthenticated) return;
-    if (user && !user.isActive) {
-      e.preventDefault();
-      Swal.fire({
-        icon: "info",
-        title: "Account Not Active Yet",
-        html: `
+	// Orders page authority
+	function handleOrdersClick(e: React.MouseEvent<HTMLAnchorElement>) {
+		if (loading) {
+			e.preventDefault();
+			return;
+		}
+		if (!isAuthenticated) return;
+		if (user && !user.isActive) {
+			e.preventDefault();
+			Swal.fire({
+				icon: "info",
+				title: "Account Not Active Yet",
+				html: `
         Your account is not yet activated.<br/>
         You won't be able to place orders until activation is complete.<br/>
         Activation usually takes 1-2 business days.
         `,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#d4a431",
-      });
-    }
-  }
+				confirmButtonText: "OK",
+				confirmButtonColor: "#d4a431",
+			});
+		}
+	}
 
   return (
     <>
@@ -218,19 +217,19 @@ const Navbar = () => {
           </div>
         </div>
 
-        <NavMobileMenu
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-          user={user}
-          loading={loading}
-          onLogout={handleLogout}
-        />
-      </nav>
+				<NavMobileMenu
+					isOpen={isMobileMenuOpen}
+					onClose={() => setIsMobileMenuOpen(false)}
+					user={user}
+					loading={loading}
+					onLogout={handleLogout}
+				/>
+			</nav>
 
-      {/* Spacer */}
-      <div className="h-20"></div>
-    </>
-  );
+			{/* Spacer */}
+			<div className="h-20"></div>
+		</>
+	);
 };
 
 export default Navbar;
