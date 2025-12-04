@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import HeroHeading from "@/app/[locale]/design-system/components/HeroHeading";
+import { useTranslations } from "next-intl";
 
 export default function CasesPage() {
+	const t = useTranslations();
 	return (
 		<>
 			<div className="absolute inset-0 -z-10 bg-white"></div>
@@ -16,8 +18,8 @@ export default function CasesPage() {
 						transition={{ duration: 0.6 }}
 					>
 						<HeroHeading
-							primaryText="Dental Cases"
-							gradientText=" Collection"
+							primaryText={t("dentalCases")}
+							gradientText={t("dentalCasesCollection")}
 							variant="black"
 							className="!mb-1 drop-shadow-lg"
 						/>
@@ -43,20 +45,20 @@ export default function CasesPage() {
 								transition={{ duration: 0.5, delay: 0.5 }}
 							>
 								<h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-									Restorative Dentistry Cases
+									{t("restorativeDentistryCases")}
 								</h3>
 								<ul className="space-y-2 text-base md:text-lg text-gray-700 leading-relaxed font-light">
 									<li>
-										<strong>Cavity Restoration:</strong> Treating cavities using
-										dental fillings, crowns, or inlays.
+										<strong>{t("cavityRestoration")}:</strong>{" "}
+										{t("cavityRestorationDesc")}
 									</li>
 									<li>
-										<strong>Endodontic Treatment:</strong> Root canals where
-										students practice removing infected tissue and sealing it.
+										<strong>{t("endodonticTreatment")}:</strong>{" "}
+										{t("endodonticTreatmentDesc")}
 									</li>
 									<li>
-										<strong>Composite Bonding:</strong> Repairing chipped or
-										cracked teeth with tooth-colored resins.
+										<strong>{t("compositeBonding")}:</strong>{" "}
+										{t("compositeBondingDesc")}
 									</li>
 								</ul>
 							</motion.div>
@@ -68,16 +70,16 @@ export default function CasesPage() {
 								transition={{ duration: 0.5, delay: 0.7 }}
 							>
 								<h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-									Orthodontic Cases
+									{t("orthodonticCases")}
 								</h3>
 								<ul className="space-y-2 text-base md:text-lg text-gray-700 leading-relaxed font-light">
 									<li>
-										<strong>Braces and Aligners:</strong> Designing braces or
-										aligners to correct misalignment issues.
+										<strong>{t("bracesAndAligners")}:</strong>{" "}
+										{t("bracesAndAlignersDesc")}
 									</li>
 									<li>
-										<strong>Retention Plans:</strong> Creating retainers for
-										maintaining teeth alignment after braces.
+										<strong>{t("retentionPlans")}:</strong>{" "}
+										{t("retentionPlansDesc")}
 									</li>
 								</ul>
 							</motion.div>
@@ -89,16 +91,16 @@ export default function CasesPage() {
 								transition={{ duration: 0.5, delay: 0.9 }}
 							>
 								<h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-									Periodontics Cases
+									{t("periodonticsCases")}
 								</h3>
 								<ul className="space-y-2 text-base md:text-lg text-gray-700 leading-relaxed font-light">
 									<li>
-										<strong>Gum Disease Treatment:</strong> Scaling and root
-										planning procedures to treat gum disease.
+										<strong>{t("gumDiseaseTreatment")}:</strong>{" "}
+										{t("gumDiseaseTreatmentDesc")}
 									</li>
 									<li>
-										<strong>Soft Tissue Grafting:</strong> Reconstructing gums
-										to treat gum recession.
+										<strong>{t("softTissueGrafting")}:</strong>{" "}
+										{t("softTissueGraftingDesc")}
 									</li>
 								</ul>
 							</motion.div>
@@ -115,7 +117,7 @@ export default function CasesPage() {
 						<div className="relative">
 							<Image
 								src="/caseback.jpg"
-								alt="Dental Cases"
+								alt={t("dentalCasesAlt")}
 								width={550}
 								height={450}
 								className="relative rounded-2xl shadow-2xl ring-1 ring-white/50"
