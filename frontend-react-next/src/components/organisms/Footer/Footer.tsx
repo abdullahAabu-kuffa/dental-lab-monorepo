@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
 								return (
 									<div key={index} className="flex items-center gap-2.5">
 										<IconComponent className="w-4 h-4 text-[#D4AF37] shrink-0" />
-										{contact.link ? (
+										{contact.link && contact.icon !== 'map' ? (
 											<a
 												href={contact.link}
 												className="text-sm text-gray-300 hover:text-[#D4AF37] transition-colors duration-300"
@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
 												{contact.value}
 											</a>
 										) : (
-											<span className="text-sm text-gray-300 hover:text-[#D4AF37] transition-colors duration-300">
+											<span className={`text-sm text-gray-300 ${contact.icon === 'map' ? 'hover:text-[#D4AF37] transition-colors duration-300' : ''}`}>
 												{contact.value}
 											</span>
 										)}

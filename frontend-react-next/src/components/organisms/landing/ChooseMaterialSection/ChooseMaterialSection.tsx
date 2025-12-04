@@ -36,24 +36,8 @@ export default function ChooseMaterialSection() {
 							/>
 						</ScrollAnimation>
 
-						<ScrollAnimation
-							animation="fadeInFromBottom"
-							delay={0.4}
-							className="flex flex-wrap gap-8 justify-center"
-						>
-							<Button
-								variant="lightPrimary"
-								onClick={() => router.push("/get-started")}
-							>
-								{t("getStarted")}
-							</Button>
-							<Button
-								variant="lightSecondary"
-								onClick={() => router.push("/track-order")}
-							>
-								{t("trackOrder")}
-							</Button>
-						</ScrollAnimation>
+						
+						
 					</div>
 
 					{/* Lottie Animation - Right */}

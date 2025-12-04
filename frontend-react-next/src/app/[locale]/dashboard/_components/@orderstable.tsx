@@ -78,44 +78,50 @@ const OrdersTable = ({
     options: o.options,
     user: o.user,
   }));
+
   return (
     <>
       <div className="p-6 bg-white rounded-xl shadow-sm mx-6">
         <h2 className="text-lg font-semibold mb-4">All Orders</h2>
 
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search by Customer Name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
-        </div>
+        {/* Search + Filter Row */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
 
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-end gap-2 mb-4">
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => {
-                if (f === "CANCELLED") {
-                  setFilter("Rejected");
-                } else {
-                  setFilter(f);
-                }
-              }}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                filter === f
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {/* Search */}
+          <div className="w-full md:w-1/2 relative">
+            <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search by Customer Name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
+
+    {/* Filters */}
+<div className="w-full md:w-1/2 flex flex-wrap md:justify-end gap-2">
+  {filters.map((f) => (
+    <button
+      key={f}
+      onClick={() => {
+        if (f === "CANCELLED") {
+          setFilter("Rejected");
+        } else {
+          setFilter(f);
+        }
+      }}
+      className={`px-4 py-2 rounded-full text-base font-medium transition duration-200 ease-in-out transform hover:-translate-y-0.5 hover:shadow-md ${
+        filter === f
+          ? "bg-blue-500 text-white shadow"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      {f.charAt(0).toUpperCase() + f.slice(1)}
+    </button>
+  ))}
+</div>
+
         </div>
 
         {/* Table */}

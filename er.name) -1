@@ -1,0 +1,404 @@
+[33mcommit bf531bca55aebcf622091d2407f5506882f58db8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpaypal-integration[m[33m)[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Dec 2 14:42:50 2025 +0200
+
+    google map
+
+[33mcommit 48152e6773a2f40a94a0977c2bff72854341df29[m[33m ([m[1;32mrespons[m[33m)[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Dec 2 01:26:29 2025 +0200
+
+    paypal
+
+[33mcommit 5cd36d6808526b1aaaa7a78e2b6e71ef1ebf3d40[m
+Merge: 211d124 4875f83
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 23:47:35 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo into respons
+
+[33mcommit 211d124f3e7e8d1228312852a698c4055835281a[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 23:45:31 2025 +0200
+
+    Chatbot
+
+[33mcommit b9f0304aad7d36b322bdab5ded67a63d9795faa9[m[33m ([m[1;31morigin/respons[m[33m)[m
+Merge: 3edc037 d629159
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 19:14:50 2025 +0200
+
+    CLEAN COMP
+
+[33mcommit 3edc037fb866f71ea2b24b5faeb6f92c54459bb3[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 15:49:02 2025 +0200
+
+    validation
+
+[33mcommit 2702b8c2e28791d5ac1d2afc4d3dc0c60f4ee30c[m
+Merge: 4a83db7 dc4162f
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 12:18:00 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo into respons
+
+[33mcommit 4a83db7a6bccaf2501b0a09237aff362a77f1f63[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 11:56:52 2025 +0200
+
+    validation
+
+[33mcommit 92f74796f7c5623cfa17d79753cc1f5353d0f15d[m
+Merge: 1d6b521 defa097
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 03:13:21 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo into respons
+
+[33mcommit 1d6b5218a460fa79a3afdfbfbe4a3ebb6c170367[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 03:13:10 2025 +0200
+
+    validation
+
+[33mcommit 7b99c2dbc7a7500d34534fd7b41469e2cafda2d9[m
+Merge: 3203ca3 f8d0d53
+Author: [1;31mhossam1711[m <hossamhy9@gmail.com>
+Date:   Mon Dec 1 01:20:57 2025 +0200
+
+    Merge pull request #92 from abdullahAabu-kuffa/respons
+    
+    Respons
+
+[33mcommit f8d0d5309b7f99cf01558a06777e2bbb60319daa[m
+Merge: 0285832 3203ca3
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 01:19:58 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo into respons
+
+[33mcommit 028583225b31da59c7a5bbd6047393f68612af5d[m
+Merge: 2cfd3fe b6acc4e
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Dec 1 00:54:22 2025 +0200
+
+    validation
+
+[33mcommit 2cfd3fea87430bc0604738b735d2f53216e38e79[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 30 22:37:22 2025 +0200
+
+    validation
+
+[33mcommit 9f9e1750d3342808e27cf744ac8f3458fbb7d05b[m
+Merge: e227b93 6d9973f
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 22:13:09 2025 +0200
+
+    respons
+
+[33mcommit e227b93340b1c39bd23bfc05d151837393272e6c[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 22:04:57 2025 +0200
+
+    respons
+
+[33mcommit b24a327f6185ddaf484ccb56e748370471eb1db2[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 20:50:50 2025 +0200
+
+    welcom page style
+
+[33mcommit 664ba19cc3f8ed156d1c8af22831027f8411273e[m
+Merge: cfe2374 75286f7
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 16:43:27 2025 +0200
+
+    Start work on respons branch
+
+[33mcommit cfe23747e03057dd8dfd8583fdfdb844cae5f934[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 16:24:49 2025 +0200
+
+    Start work on respons branch
+
+[33mcommit 00e57d91f30c5e0880e37fe1ba87ea9bb75ebd79[m[33m ([m[1;32mresponsive[m[33m)[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 16:18:10 2025 +0200
+
+    Make frontend responsive with updated components and assets
+
+[33mcommit 0ec57839978dc4a8b5a09a1c04456f604f60cace[m[33m ([m[1;32mrespon[m[33m)[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sat Nov 29 14:25:34 2025 +0200
+
+    Save changes before linking to main repo
+
+[33mcommit cea931a0f34eb2ad9770abc53435fbffb1dfc508[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Thu Nov 27 12:26:22 2025 +0200
+
+    landPage
+
+[33mcommit 684f416859c2a9b3bfa5b8385f038aad3884d4d9[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 26 12:14:23 2025 +0200
+
+    drop list
+
+[33mcommit 8ceb622615f090aaec4f80be5f81469af0cdbb9c[m
+Merge: 17c3570 50fe21d
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 26 11:20:43 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo
+
+[33mcommit 17c357074990f9a1148f602a803571cd15e807d4[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 26 11:20:29 2025 +0200
+
+    t
+
+[33mcommit 7f5bf3b0eb829ece4c656880a385a9c1aefc6e20[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 26 11:18:00 2025 +0200
+
+    drop list
+
+[33mcommit 0c9a027166dbf06a866b7fcff2ac87b242b043db[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 25 19:52:31 2025 +0200
+
+    invoice setting order draft
+
+[33mcommit 5991da08c74dfd0a4bb23d964185b99d474c888a[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 25 18:23:30 2025 +0200
+
+    invoice
+
+[33mcommit 94d9229bd19af58c48b86f7502b7cb07181dbc9c[m
+Merge: db9bb42 ab29609
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 25 16:44:54 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo
+
+[33mcommit db9bb42aecebb33652e5c954972547343ef086b4[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 25 16:44:47 2025 +0200
+
+    invoice
+
+[33mcommit 681ded88d8abbdb209675cab59ac6040e0b4e782[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 25 16:42:17 2025 +0200
+
+    invoice
+
+[33mcommit fb48e812b9542097834404641a750acdac06d8d9[m
+Merge: 220b59d 21c2cdf
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Thu Nov 20 14:11:20 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo
+
+[33mcommit 220b59da63c96cf09e68ba67fcd440f9c6bf1a07[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Thu Nov 20 14:07:33 2025 +0200
+
+     aa
+
+[33mcommit 31dfec72ad73ad5c7e380572fa4dcb603c4b2c2c[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Thu Nov 20 10:17:47 2025 +0200
+
+     aa
+
+[33mcommit 2aa5a8a7051f9b9d25bcee9519dcbdf3fdc2962d[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 19 05:16:44 2025 +0200
+
+    Add latest changes
+
+[33mcommit a07538e92d619a461b720a4b341bd9a2ffd56505[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 18 11:45:16 2025 +0200
+
+    Add latest changes
+
+[33mcommit b12772a1613d92197675981740343d5152f57803[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 18 09:05:56 2025 +0200
+
+    Initial upload of frontend project
+
+[33mcommit 9b13b795f745bba0fa449f45383fe7861c4329d6[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 18 08:26:17 2025 +0200
+
+    Initial upload of frontend project
+
+[33mcommit 2ded12a6d75a4e2d2ec11aafc507fac1d52f337f[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 18 04:57:06 2025 +0200
+
+    Initial upload of frontend project
+
+[33mcommit 175a3a088dc0ac6a0059d8645fc2a3775689631c[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 18 03:42:26 2025 +0200
+
+    Initial upload of frontend project
+
+[33mcommit 6a7ab8ecd704532b832273d30305eb00ef564772[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 18 00:24:24 2025 +0200
+
+    Initial upload of frontend project
+
+[33mcommit 41d62a7ac55698c6f33f0732098b996fafe9fee4[m
+Merge: 56d2b92 e252ee1
+Author: [1;31mhossam1711[m <hossamhy9@gmail.com>
+Date:   Mon Nov 17 16:13:52 2025 +0200
+
+    Merge pull request #53 from abdullahAabu-kuffa/V4
+    
+    V4
+
+[33mcommit e252ee169cfbaf3f77c2859d194f97acbdc18147[m[33m ([m[1;31morigin/V4[m[33m)[m
+Merge: 28b11c7 56d2b92
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Nov 17 16:08:41 2025 +0200
+
+    upload nav
+
+[33mcommit 28b11c73a19a8a9286550dafaace5b84b24c7ca1[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Nov 17 16:02:52 2025 +0200
+
+    upload branch v3
+
+[33mcommit 5262e85d7c8779ddac11346166791289da2e490e[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Nov 17 15:36:07 2025 +0200
+
+    updates
+
+[33mcommit 4960fbec3e06cc7aaf29f4d9834b882df540525b[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Mon Nov 17 14:26:22 2025 +0200
+
+    upload frontend-react-next to last branch
+
+[33mcommit 189ef45a8321a25ada12ce3221d2d55ced35e3d8[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 16 22:46:34 2025 +0200
+
+    Update form-order-new: remove duplicates, add DropList and UnifiedIcons, optimize layout
+
+[33mcommit 11a2d55f1a1bc7dad8fc5806d3d1e7d441241e22[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 16 21:18:57 2025 +0200
+
+    Update form-order-new: remove duplicates, add DropList and UnifiedIcons, optimize layout
+
+[33mcommit 11c4711ff00b4c276cf2c55227bc70efa8a64054[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 16 19:16:40 2025 +0200
+
+    Add changes from form-order
+
+[33mcommit 0fb7c356dcd2eda2004cde4d7b1873589d722a23[m
+Merge: 061ddfa 4e87d83
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 16 19:22:38 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo
+
+[33mcommit 061ddfa3f4d368bdaef6b1b4e6eb70a48710a327[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 16 02:41:53 2025 +0200
+
+    Initial commit
+
+[33mcommit 840f27dc7b9a8c395474f9d998e37f94046e4f52[m
+Merge: 2836ce6 39974b7
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 19:14:16 2025 +0200
+
+    y
+
+[33mcommit 2836ce690f20101afc5f40a3ee7fbed86ea0012e[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 19:10:42 2025 +0200
+
+    a
+
+[33mcommit 64108f5f27329258f8d24f49cba4c9ab65368ca9[m
+Merge: fad1059 6ebda7e
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 08:04:48 2025 +0200
+
+    Conclude merge with main
+
+[33mcommit fad10598438cf6197e4d39ab1e140817e5f7d74e[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 08:03:32 2025 +0200
+
+    Update React components for improved structure and styling
+
+[33mcommit 993cff86e8c06764282cdb7fd702a2e39d6aa9fd[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 07:55:03 2025 +0200
+
+    Update React components for improved structure and styling
+
+[33mcommit 99691cde866132244a944a800a6f3b21eb2ae816[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 06:21:44 2025 +0200
+
+    Add new feature and update files
+
+[33mcommit 7de7fdb748a5f8c2c00830a0ecce1fb64ca00d0c[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 01:24:33 2025 +0200
+
+    landing
+
+[33mcommit e189b065cfbdd0193ee66e8467a2415d9755dca8[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Wed Nov 12 00:53:38 2025 +0200
+
+    feat: design and structure for the new landing page
+
+[33mcommit 4773a1c94c095a7dee6ea1225d7b41b008f7659e[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Tue Nov 11 23:39:48 2025 +0200
+
+    Initial commit for new landing page and infrastructure file
+
+[33mcommit 392105b250c414dbd2f566aec91fdc526b254ad3[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 9 19:13:32 2025 +0200
+
+    Add frontend-react-next project
+
+[33mcommit 770979f52bf67f9e7f8468bd4e107c3b46d0d957[m
+Merge: 0d2a745 6873f13
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 9 00:53:10 2025 +0200
+
+    Merge branch 'main' of https://github.com/abdullahAabu-kuffa/dental-lab-monorepo into feature-ui
+    
+    :wq
+    :wq
+    
+    i
+
+[33mcommit 0d2a7457b09f0ce81a178c30171891615547f2e5[m
+Author: [1;31mhossam1711[m <your_email@example.com>
+Date:   Sun Nov 9 00:53:00 2025 +0200
+
+    Added new features and updates for Navbar and Hero

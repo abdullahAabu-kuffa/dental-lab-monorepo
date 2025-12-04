@@ -3,8 +3,14 @@
 import React from 'react';
 import EventCard from '../components/EventCard';
 import { staticEvents } from '../staticData/eventsData';
+import { useRouter } from 'next/navigation';
 
 const EventPage: React.FC = () => {
+  const router = useRouter();
+
+  const handleContactUs = () => {
+    router.push('/contact');
+  };
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -13,10 +19,7 @@ const EventPage: React.FC = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Upcoming Events & Scientific Days
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Join our educational events and workshops to stay updated with the latest 
-            advancements in dental technology and materials.
-          </p>
+         
         </div>
 
         {/* Search and Filter Bar */}
@@ -67,7 +70,10 @@ const EventPage: React.FC = () => {
               Partner with Avanté Dental Lab to organize educational events 
               and reach dental professionals in your region.
             </p>
-            <button className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+            <button
+              onClick={handleContactUs}
+              className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
               Contact Us
             </button>
           </div>
