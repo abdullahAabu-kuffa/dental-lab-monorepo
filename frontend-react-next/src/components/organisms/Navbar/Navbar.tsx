@@ -94,7 +94,7 @@ const Navbar = () => {
             : "bg-linear-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
           }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="w-full px-4 sm:px-6">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <div className="shrink-0">
@@ -139,78 +139,82 @@ const Navbar = () => {
               })}
             </div>
             <LanguageSwitcher label={"en"} />
-            {/* Notification Part */}
-            <motion.div
-              style={{ display: "flex", gap: "16px", alignItems: "center" }}
-              initial={{ opacity: 0, y: -15, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-            >
-              {loading ? (
-                <div className="relative min-w-10 h-10 bg-gray-700 rounded-full animate-pulse" />
-              ) : user ? (
-                <div className="relative min-w-10">
-                  <NotificationBell
-                    unreadCount={unread}
-                    onClick={toggleMenu}
-                    className="notification-bell"
-                  />
-                  <NotificationsMenu
-                    isOpen={open}
-                    onUnreadChange={setUnread}
-                    onClose={() => setOpen(false)}
-                  />
-                </div>
-              ) : (
-                <div className="min-w-10 h-10" />
-              )}
-            </motion.div>
-
-            {/* Desktop Auth Section */}
-            <motion.div
-              className="hidden md:flex items-center gap-3"
-              initial={{ opacity: 0, y: -15, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-            >
-              {loading ? (
-                <div className="flex gap-3">
-                  <div className="w-20 h-6 bg-gray-700 rounded-md animate-pulse" />
-                  <div className="w-24 h-6 bg-gray-700 rounded-md animate-pulse" />
-                </div>
-              ) : user ? (
-                <>
-                  <span className="text-[#CABEB2] text-sm font-medium min-w-[120px]">
-                    {user.fullName}
-                  </span>
-                  <List />
-                </>
-              ) : (
-                <>
-                  <Link
-                    href={NAVBAR_CONFIG.authButtons.login.href}
-                    className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm min-w-20 transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
-                  >
-                    {NAVBAR_CONFIG.authButtons.login.text}
-                  </Link>
-
-                  <Link
-                    href={NAVBAR_CONFIG.authButtons.register.href}
-                    className="px-4 py-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm min-w-[90px] transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
-                  >
-                    {NAVBAR_CONFIG.authButtons.register.text}
-                  </Link>
-                </>
-              )}
-            </motion.div>
-
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
+            	onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            	className="md:hidden p-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            	{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
+
+            {/* Auth and Notification Group */}
+            <div className="flex items-center gap-0">
+              {/* Notification Part */}
+              <motion.div
+                className="hidden md:flex"
+                style={{ display: "flex", gap: "0", alignItems: "center" }}
+                initial={{ opacity: 0, y: -15, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                {loading ? (
+                  <div className="relative min-w-10 h-10 bg-gray-700 rounded-full animate-pulse" />
+                ) : user ? (
+                  <div className="relative min-w-10">
+                    <NotificationBell
+                      unreadCount={unread}
+                      onClick={toggleMenu}
+                      className="notification-bell"
+                    />
+                    <NotificationsMenu
+                      isOpen={open}
+                      onUnreadChange={setUnread}
+                      onClose={() => setOpen(false)}
+                    />
+                  </div>
+                ) : (
+                  <div className="min-w-10 h-10" />
+                )}
+              </motion.div>
+
+              {/* Auth Section */}
+              <motion.div
+                className="flex items-center gap-3 flex-row-reverse"
+                initial={{ opacity: 0, y: -15, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                {loading ? (
+                  <div className="flex gap-3">
+                    <div className="w-20 h-6 bg-gray-700 rounded-md animate-pulse" />
+                    <div className="w-24 h-6 bg-gray-700 rounded-md animate-pulse" />
+                  </div>
+                ) : user ? (
+                  <>
+                    <span className="text-[#CABEB2] text-sm font-medium min-w-[120px]">
+                      {user.fullName}
+                    </span>
+                    <List />
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href={NAVBAR_CONFIG.authButtons.login.href}
+                      className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm min-w-20 transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
+                    >
+                      {NAVBAR_CONFIG.authButtons.login.text}
+                    </Link>
+
+                    <Link
+                      href={NAVBAR_CONFIG.authButtons.register.href}
+                      className="px-4 py-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm min-w-[90px] transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
+                    >
+                      {NAVBAR_CONFIG.authButtons.register.text}
+                    </Link>
+                  </>
+                )}
+              </motion.div>
+            </div>
           </div>
         </div>
 
