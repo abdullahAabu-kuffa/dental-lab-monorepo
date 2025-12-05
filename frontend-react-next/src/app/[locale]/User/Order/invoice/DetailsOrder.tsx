@@ -2,8 +2,7 @@
 
 import React from "react";
 import { Package, CheckCircle2, XCircle } from "lucide-react";
-import { Invoice } from "@/app/[locale]/User/Order/invoice/page";
-
+import { Invoice } from "@/hooks/useAuth";
 interface DetailsInvoiceProps {
 	invoice: Invoice;
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { X } from "lucide-react";
-import { Invoice } from "../../invoice/page";
+import { Invoice } from "@/app/[locale]/dashboard/interfaces/users";
 
 interface InvoiceModalProps {
   invoice: Invoice;

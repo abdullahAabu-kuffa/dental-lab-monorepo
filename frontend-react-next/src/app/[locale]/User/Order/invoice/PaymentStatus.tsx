@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Wallet, CreditCard } from "lucide-react";
-import { Invoice } from "@/app/[locale]/User/Order/invoice/page";
+import { Invoice } from "@/app/[locale]/dashboard/interfaces/users";
 
 interface PaymentStatusProps {
 	order: Invoice;

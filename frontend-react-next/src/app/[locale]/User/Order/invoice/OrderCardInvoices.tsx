@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Wallet, CheckCircle2, XCircle } from "lucide-react";
-import { Invoice } from "@/app/[locale]/User/Order/invoice/page";
+import { Invoice } from "@/app/[locale]/dashboard/interfaces/users";
 
 interface OrderCardInvoicesProps {
 	invoices: Invoice;
