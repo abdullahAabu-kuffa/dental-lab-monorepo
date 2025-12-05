@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { Wallet } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import {  useAuth } from "@/hooks/useAuth";
 import { OrderCardInvoices } from "./OrderCardInvoices";
 import { DetailsOrder } from "./DetailsOrder";
 import { PaymentStatus } from "./PaymentStatus";
 import PayPalButton, { PayPalOrderDetails } from "./PayPalButtonsComponentOptions";
+import { Invoice } from "@/app/[locale]/dashboard/interfaces/users";
 
 export default function PaymentPage() {
 	const { user, loading } = useAuth();
@@ -19,11 +20,11 @@ export default function PaymentPage() {
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 
 	// SYNC WHEN USER LOADS
-	useEffect(() => {
-		if (user?.data?.user?.invoices) {
-			setOrdersState(user.data.user.invoices);
-		}
-	}, [user]);
+	// useEffect(() => {
+	// 	if (user?.data?.user?.invoices) {
+	// 		setOrdersState(user.data.user.invoices);
+	// 	}
+	// }, [user]);
 
 	const handleDetailsClick = (invoice: Invoice) => {
 		setSelectedOrder(invoice);
