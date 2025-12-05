@@ -22,7 +22,7 @@ export const transformApiOrder = (apiOrder: ApiOrder): Order => {
     totalAmount: parseFloat(apiOrder.totalPrice || "0"),
     urgency: "Medium" as const, // Default value since API doesn't have urgency
     material: apiOrder.options?.selectedServices?.[0]?.label || "Not specified",
-    notes: `Patient Age: ${apiOrder.options?.age || "Not specified"}`,
+    note: `${apiOrder.options.note || "Not specified"}`,
     createdAt: new Date(apiOrder.createdAt),
     updatedAt: new Date(apiOrder.createdAt),
     lab: "Dental Lab", // Default value

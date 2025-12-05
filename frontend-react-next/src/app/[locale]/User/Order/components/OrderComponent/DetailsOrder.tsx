@@ -16,7 +16,7 @@ interface DetailsOrderProps {
 export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
   const statusColors = getStatusColors(order.status);
   const urgencyColors = getUrgencyColors(order.urgency);
-
+  console.log(order);
   return (
     <div className="space-y-6">
       {/* Order Details Card */}
@@ -86,19 +86,18 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
                 </div>
               </div>
 
-							<div className="group">
-								<label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-								  Date
-								</label>
-								<p className="text-sm font-bold text-slate-800 mt-1">
-								  {order?.options?.date
-										? String(order?.options?.date)
-										: order?.date
-											? String(order?.date)
-											: "Not specified"
-									}
-								</p>
-							</div>
+              <div className="group">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Date
+                </label>
+                <p className="text-sm font-bold text-slate-800 mt-1">
+                  {order?.options?.date
+                    ? String(order?.options?.date)
+                    : order?.date
+                    ? String(order?.date)
+                    : "Not specified"}
+                </p>
+              </div>
 
               {/* Urgency - stacked vertical */}
               <div className="group">
@@ -130,7 +129,7 @@ export const DetailsOrder: React.FC<DetailsOrderProps> = ({ order }) => {
                 Notes
               </label>
               <p className="text-sm font-medium text-slate-700 mt-1 leading-relaxed">
-                {order?.options?.notes || order.notes || "No notes available"}
+                {order?.options?.note || order.note || "No notes available"}
               </p>
             </div>
           </div>

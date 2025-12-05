@@ -1,5 +1,6 @@
 
 export interface OrderOptions {
+  note: string;
   age: string;
   patientName: string;
   selectedServices: SelectedService[];
@@ -30,6 +31,7 @@ export interface Order {
   createdAt: string;
   type: string;
   date: string;
+  note: string;
   options: OrderOptions;
   status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED" | "CANCELLED";
   price: string;
@@ -41,6 +43,7 @@ export interface ApiOrder {
   approvedBy: string | null;
   createdAt: string;
   type: string;
+  note: string;
   date: string;
   options: OrderOptions;
   status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
