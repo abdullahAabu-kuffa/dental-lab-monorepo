@@ -2,45 +2,28 @@
 
 import React, { useEffect, useState } from "react";
 import { Wallet } from "lucide-react";
-// import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
-// import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
-// import { PaymentStatus } from "../components/invoic/PaymentInformation";
-import { InvoiceModal } from "../components/invoic/InvoiceModal";
 import { useAuth } from "@/hooks/useAuth";
+import { OrderCardInvoices } from "./OrderCardInvoices";
 import { DetailsOrder } from "./DetailsOrder";
 import { PaymentStatus } from "./PaymentStatus";
-import { OrderCardInvoices } from "./OrderCardInvoices";
 import PayPalButton, { PayPalOrderDetails } from "./PayPalButtonsComponentOptions";
-
-
-export interface Invoice {
-	id: number;
-	clientId: number;
-	createdAt: string;
-	dueDate: string;
-	status: string;
-	totalPrice: number;
-	paidAt: string | null;
-	paymentMethod?: string;
-	transactionId?: string;
-	paymentDate?: Date;
-}
 
 export default function PaymentPage() {
 	const { user, loading } = useAuth();
-	
-	// const [ordersState, setOrdersState] = useState<Invoice[]>([]);
-	// const [ordersState, setOrdersState] = useState<Invoice[]>(()=>user?.data?.user?.invoices  ?? []);
+
+	// STORE INVOICES LOCALLY
+	const [ordersState, setOrdersState] = useState<Invoice[]>([]);
 	const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
+
 	const [showModal, setShowModal] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-	// Initialize ordersState when user data loads
-	// useEffect(() => {
-	//   if (user?.data?.user?.invoices) {
-	//     setOrdersState(user.data.user.invoices);
-	//   }
-	// }, [user]);
+	// SYNC WHEN USER LOADS
+	useEffect(() => {
+		if (user?.data?.user?.invoices) {
+			setOrdersState(user.data.user.invoices);
+		}
+	}, [user]);
 
 	const handleDetailsClick = (invoice: Invoice) => {
 		setSelectedOrder(invoice);
@@ -51,8 +34,9 @@ export default function PaymentPage() {
 		setShowModal(true);
 	};
 
+	// CONFIRM PAYMENT (CREDIT CARD)
 	const handleConfirmPayment = (invoiceId: number) => {
-		const updatedOrders = user?.data?.user?.invoices.map((order) =>
+		const updated = ordersState.map((order) =>
 			order.id === invoiceId
 				? {
 						...order,
@@ -64,18 +48,19 @@ export default function PaymentPage() {
 				: order
 		);
 
-		setOrdersState(updatedOrders);
+		setOrdersState(updated);
 		setShowModal(false);
 
 		if (selectedOrder?.id === invoiceId) {
-			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
+			setSelectedOrder(updated.find((o) => o.id === invoiceId) || null);
 		}
 	};
 
+	// PAYPAL SUCCESS
 	const handlePayPalSuccess = (details: PayPalOrderDetails, invoiceId?: number) => {
 		if (!invoiceId) return;
 
-		const updatedOrders = ordersState.map((order) =>
+		const updated = ordersState.map((order) =>
 			order.id === invoiceId
 				? {
 						...order,
@@ -87,31 +72,27 @@ export default function PaymentPage() {
 				: order
 		);
 
-		setOrdersState(updatedOrders);
+		setOrdersState(updated);
 		setShowModal(false);
 		setShowSuccessModal(true);
 
 		if (selectedOrder?.id === invoiceId) {
-			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
+			setSelectedOrder(updated.find((o) => o.id === invoiceId) || null);
 		}
 	};
 
-
 	if (loading) return <p>Loading...</p>;
-	// console.log(ordersState);
 
 	return (
 		<div className="w-full min-h-screen">
 			<div className="relative max-w-[1800px] mx-auto p-3 sm:p-4 lg:p-6 space-y-3">
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+
 					{/* LIST */}
 					<div className="lg:col-span-4 xl:col-span-3">
-						<div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-							{user?.data?.user?.invoices .map((invoice, index) => (
-								<div
-									key={invoice.id}
-									style={{ animationDelay: `${0.05 * index}ms` }}
-								>
+						<div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2">
+							{ordersState.map((invoice, index) => (
+								<div key={invoice.id} style={{ animationDelay: `${0.05 * index}ms` }}>
 									<OrderCardInvoices
 										invoices={invoice}
 										isSelected={selectedOrder?.id === invoice.id}
@@ -122,7 +103,7 @@ export default function PaymentPage() {
 						</div>
 					</div>
 
-					{/* DETAILS + PAYMENT */}
+					{/* DETAILS */}
 					<div className="lg:col-span-8 xl:col-span-9 flex gap-6">
 						{selectedOrder ? (
 							<>
@@ -134,7 +115,7 @@ export default function PaymentPage() {
 										order={selectedOrder}
 										onPay={() => handlePayClick(selectedOrder)}
 									/>
-								</div>
+                                </div>
 							</>
 						) : (
 							<div className="w-full bg-white/50 rounded-2xl p-16 text-center border-2 border-dashed border-gray-200">
@@ -145,15 +126,18 @@ export default function PaymentPage() {
 							</div>
 						)}
 					</div>
+
 				</div>
 			</div>
 
+			{/* PAYMENT MODAL */}
 			{selectedOrder && showModal && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 					<div
 						className="absolute inset-0 bg-black/40"
 						onClick={() => setShowModal(false)}
 					></div>
+
 					<div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-5">
 						<PayPalButton
 							clientId="AfHtv6qaOH3_qbLa-YHx-W7ZTLdnv5SRt5FEtgrxKvqBaWSNHyg39LP1qxpTaqNp6du5zTz8RfqGPDKU"
@@ -161,18 +145,20 @@ export default function PaymentPage() {
 							currency="EGP"
 							invoiceId={selectedOrder.id}
 							onSuccess={handlePayPalSuccess}
-							onError={(error) => console.error("PayPal error:", error)}
+							onError={(err) => console.error("PayPal error:", err)}
 						/>
 					</div>
 				</div>
 			)}
 
+			{/* SUCCESS MODAL */}
 			{showSuccessModal && selectedOrder && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 					<div
 						className="absolute inset-0 bg-black/40"
 						onClick={() => setShowSuccessModal(false)}
 					></div>
+
 					<div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-6 text-center">
 						<div className="flex justify-center mb-4">
 							<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -181,24 +167,30 @@ export default function PaymentPage() {
 								</svg>
 							</div>
 						</div>
+
 						<h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+
 						<p className="text-gray-600 mb-4">Your payment has been completed successfully.</p>
+
 						<div className="bg-gray-50 rounded-lg p-4 mb-6">
 							<p className="text-sm text-gray-500">Amount Paid</p>
 							<p className="text-2xl font-bold text-gray-900">
-								{selectedOrder.totalPrice.toLocaleString("en-US", { style: "currency", currency: "EGP" })}
+								{selectedOrder.totalPrice.toLocaleString("en-US", {
+									style: "currency",
+									currency: "EGP",
+								})}
 							</p>
 						</div>
+
 						<button
 							onClick={() => setShowSuccessModal(false)}
-							className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+							className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg"
 						>
 							Continue
 						</button>
 					</div>
 				</div>
 			)}
-
 		</div>
 	);
 }
