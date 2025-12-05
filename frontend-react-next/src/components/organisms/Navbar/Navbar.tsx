@@ -10,19 +10,19 @@ import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 
 // Auth
 import { logoutRequest } from "../../../services/auth";
+import { useAuthStore } from "@/store/auth.store";
 
 // Notifications
 import NotificationBell from "../../molecules/notificationBell";
 import NotificationsMenu from "../notificationMenu";
 
+// Misc
 import Swal from "sweetalert2";
 import List from "../list";
 import { motion } from "framer-motion";
-// import { useAuthStore } from "@/store/auth.store"; //need to handle in mobile menu
 
-//Language switcher
+// Language switcher
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { useAuthStore } from "@/store/auth.store";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,7 +59,6 @@ const Navbar = () => {
     } finally {
       router.push("/");
       router.refresh();
-      // window.location.reload();
     }
   }
 
@@ -76,9 +75,9 @@ const Navbar = () => {
         icon: "info",
         title: "Account Not Active Yet",
         html: `
-        Your account is not yet activated.<br/>
-        You won't be able to place orders until activation is complete.<br/>
-        Activation usually takes 1-2 business days.
+          Your account is not yet activated.<br/>
+          You won't be able to place orders until activation is complete.<br/>
+          Activation usually takes 1-2 business days.
         `,
         confirmButtonText: "OK",
         confirmButtonColor: "#d4a431",
@@ -89,20 +88,22 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-            ? "bg-linear-to-r from-[#1C1C1C] to-[#2A2A2A] shadow-xl"
-            : "bg-linear-to-r from-[#1C1C1C]/95 to-[#2A2A2A]/95 backdrop-blur-sm"
-          }`}
+        className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-gradient-to-r from-gray-900/80 to-gray-800/100 shadow-2xl backdrop-blur-md"
+            : "bg-gradient-to-r from-gray-900/80 to-gray-800/80 backdrop-blur-sm"
+        }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-20">
+        <div className="w-full px-4 sm:px-6">
+          <div className="flex items-center h-20 w-full">
+            
             {/* Logo */}
             <div className="shrink-0">
               <Link href="/" className="flex items-center gap-3">
                 <Image
                   src={NAVBAR_CONFIG.logo.src}
                   alt={NAVBAR_CONFIG.logo.alt}
-                  className={`w-32 h-20 sm:w-40 sm:h-24 md:${NAVBAR_CONFIG.logo.width} md:${NAVBAR_CONFIG.logo.height} filter brightness-110 contrast-125`}
+                  className="w-32 h-20 sm:w-40 sm:h-24 md:w-48 md:h-28 lg:w-56 lg:h-32 filter brightness-110 contrast-125"
                   width={100}
                   height={100}
                   style={{
@@ -113,107 +114,107 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
+            {/* Desktop Navigation (Center) */}
+            <div className="hidden md:flex flex-1 justify-center items-center gap-6">
               {NAVBAR_CONFIG.links.map((link, index) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={index}
                     href={link.href}
-                    onClick={
-                      link.name == "Order" ? handleOrdersClick : undefined
-                    }
-                    className={`font-semibold text-base transition-all duration-200 relative group ${isActive
-                        ? "text-[#FFD700] border-b-2 border-[#E4B441]"
-                        : "text-[#CABEB2] hover:text-[#FFD700]"
-                      }`}
+                    onClick={link.name === "Order" ? handleOrdersClick : undefined}
+                    className={`font-semibold text-base transition-all duration-200 relative group ${
+                      isActive ? "text-[#FFD700] border-b-2 border-[#E4B441]" : "text-[#CABEB2] hover:text-[#FFD700]"
+                    }`}
                   >
                     {link.name}
                     <span
-                      className={`absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
-                        }`}
+                      className={`absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-[#E4B441] to-[#D4A431] transition-all duration-300 ${
+                        isActive ? "w-full" : "w-0 group-hover:w-full"
+                      }`}
                     />
                   </Link>
                 );
               })}
             </div>
-            <LanguageSwitcher label={"en"} />
-            {/* Notification Part */}
-            <motion.div
-              style={{ display: "flex", gap: "16px", alignItems: "center" }}
-              initial={{ opacity: 0, y: -15, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-            >
-              {loading ? (
-                <div className="relative min-w-10 h-10 bg-gray-700 rounded-full animate-pulse" />
-              ) : user ? (
-                <div className="relative min-w-10">
-                  <NotificationBell
-                    unreadCount={unread}
-                    onClick={toggleMenu}
-                    className="notification-bell"
-                  />
-                  <NotificationsMenu
-                    isOpen={open}
-                    onUnreadChange={setUnread}
-                    onClose={() => setOpen(false)}
-                  />
-                </div>
-              ) : (
-                <div className="min-w-10 h-10" />
-              )}
-            </motion.div>
 
-            {/* Desktop Auth Section */}
-            <motion.div
-              className="hidden md:flex items-center gap-3"
-              initial={{ opacity: 0, y: -15, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-            >
-              {loading ? (
-                <div className="flex gap-3">
-                  <div className="w-20 h-6 bg-gray-700 rounded-md animate-pulse" />
-                  <div className="w-24 h-6 bg-gray-700 rounded-md animate-pulse" />
-                </div>
-              ) : user ? (
-                <>
-                  <span className="text-[#CABEB2] text-sm font-medium min-w-[120px]">
-                    {user.fullName}
-                  </span>
-                  <List />
-                </>
-              ) : (
-                <>
-                  <Link
-                    href={NAVBAR_CONFIG.authButtons.login.href}
-                    className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm min-w-20 transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
-                  >
-                    {NAVBAR_CONFIG.authButtons.login.text}
-                  </Link>
+            {/* Right side elements */}
+            <div className="flex items-center gap-4 md:gap-6 ml-auto">
+              
+              {/* Language Switcher */}
+              <div className="hidden md:flex">
+                <LanguageSwitcher label="en" />
+              </div>
 
-                  <Link
-                    href={NAVBAR_CONFIG.authButtons.register.href}
-                    className="px-4 py-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm min-w-[90px] transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
-                  >
-                    {NAVBAR_CONFIG.authButtons.register.text}
-                  </Link>
-                </>
-              )}
-            </motion.div>
+              {/* Notifications */}
+              <motion.div
+                className="hidden md:flex"
+                style={{ display: "flex", gap: "0", alignItems: "center" }}
+                initial={{ opacity: 0, y: -15, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                {loading ? (
+                  <div className="relative min-w-10 h-10 bg-gray-700 rounded-full animate-pulse" />
+                ) : user ? (
+                  <div className="relative min-w-10">
+                    <NotificationBell unreadCount={unread} onClick={toggleMenu} />
+                    <NotificationsMenu
+                      isOpen={open}
+                      onUnreadChange={setUnread}
+                      onClose={() => setOpen(false)}
+                    />
+                  </div>
+                ) : null}
+              </motion.div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              {/* Auth Section */}
+              <motion.div
+                className="flex items-center gap-3 flex-row-reverse"
+                initial={{ opacity: 0, y: -15, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                {loading ? (
+                  <div className="flex gap-3">
+                    <div className="w-20 h-6 bg-gray-700 rounded-md animate-pulse" />
+                    <div className="w-24 h-6 bg-gray-700 rounded-md animate-pulse" />
+                  </div>
+                ) : user ? (
+                  <>
+                    <span className="text-[#CABEB2] text-lg font-medium min-w-[120px]">{user.fullName}</span>
+                    <List />
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href={NAVBAR_CONFIG.authButtons.login.href}
+                      className="px-4 py-2 rounded-lg border border-[#E4B441] text-[#E4B441] font-semibold text-sm min-w-20 transition-all duration-200 hover:bg-[#E4B441] hover:text-white"
+                    >
+                      {NAVBAR_CONFIG.authButtons.login.text}
+                    </Link>
+                    <Link
+                      href={NAVBAR_CONFIG.authButtons.register.href}
+                      className="px-4 py-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white font-bold text-sm min-w-[90px] transition-all duration-200 hover:from-[#FFD700] hover:to-[#E4B441] shadow-lg hover:shadow-xl"
+                    >
+                      {NAVBAR_CONFIG.authButtons.register.text}
+                    </Link>
+                  </>
+                )}
+              </motion.div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg bg-linear-to-r from-[#E4B441] to-[#D4A431] text-white hover:from-[#FFD700] hover:to-[#E4B441] transition-all"
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
 
+        {/* Mobile Menu */}
         <NavMobileMenu
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}

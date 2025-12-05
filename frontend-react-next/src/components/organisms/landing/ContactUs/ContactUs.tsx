@@ -4,244 +4,240 @@ import Button from "../../../atoms/Button/Button";
 import { CONTACT_INFO } from "../../../../config/LandingData/contact.data";
 import { getIcon } from "../../../../utils/UnifiedIcons";
 import {
-  HeroHeading,
-  HeroSubtitle,
-  componentStyles,
+	HeroHeading,
+	HeroSubtitle,
+	componentStyles,
 } from "@/app/[locale]/design-system";
 import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import { useTranslations } from "next-intl";
 import MapEmbed from "./MapEmbed";
 
 const ContactSection: React.FC = () => {
-  const t = useTranslations();
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
+	const t = useTranslations();
+	const [form, setForm] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		message: "",
+	});
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState(false);
+	const [errors, setErrors] = useState<Record<string, string>>({});
+	const [submitted, setSubmitted] = useState(false);
 
-  // validation handlers
+	// validation handlers
 
-  const handleChange = (field: string, value: string) => {
-    setForm({ ...form, [field]: value });
+	const handleChange = (field: string, value: string) => {
+		setForm({ ...form, [field]: value });
 
-    setErrors((prev: Record<string, string>) => {
-      const newErrors = { ...prev };
+		setErrors((prev: Record<string, string>) => {
+			const newErrors = { ...prev };
 
-      switch (field) {
-        case "name":
-          if (!value.trim()) newErrors.name = "Name is required.";
-          else if (value.length < 3)
-            newErrors.name = "Name must be at least 3 characters.";
-          else delete newErrors.name;
-          break;
-        case "email":
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!value.trim()) newErrors.email = "Email is required.";
-          else if (!emailRegex.test(value))
-            newErrors.email = "Enter a valid email.";
-          else delete newErrors.email;
-          break;
-        case "phone":
-          const phoneRegex = /^[0-9]{8,}$/;
-          if (!value.trim()) newErrors.phone = "Phone is required.";
-          else if (!phoneRegex.test(value))
-            newErrors.phone = "Phone must be numbers only ";
-          else delete newErrors.phone;
-          break;
-        case "message":
-          if (!value.trim()) newErrors.message = "Message is required.";
-          else if (value.length < 10)
-            newErrors.message = "Message must be at least 10 characters.";
-          else delete newErrors.message;
-          break;
-      }
+			switch (field) {
+				case "name":
+					if (!value.trim()) newErrors.name = t("nameRequired");
+					else if (value.length < 3) newErrors.name = t("nameMinLength");
+					else delete newErrors.name;
+					break;
+				case "email":
+					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+					if (!value.trim()) newErrors.email = t("emailRequired");
+					else if (!emailRegex.test(value)) newErrors.email = t("emailInvalid");
+					else delete newErrors.email;
+					break;
+				case "phone":
+					const phoneRegex = /^[0-9]{8,}$/;
+					if (!value.trim()) newErrors.phone = t("phoneRequired");
+					else if (!phoneRegex.test(value)) newErrors.phone = t("phoneInvalid");
+					else delete newErrors.phone;
+					break;
+				case "message":
+					if (!value.trim()) newErrors.message = t("messageRequired");
+					else if (value.length < 10) newErrors.message = t("messageMinLength");
+					else delete newErrors.message;
+					break;
+			}
 
-      return newErrors;
-    });
-  };
+			return newErrors;
+		});
+	};
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
 
-    // Final validation before submission
-    const isValid =
-      Object.values(form).every((val) => val.trim() !== "") &&
-      Object.keys(errors).length === 0;
-    if (isValid) {
-      setSubmitted(true);
-      console.log("Form Submitted Successfully:", form);
-    } else {
-      setSubmitted(false);
-    }
-  };
+		// Final validation before submission
+		const isValid =
+			Object.values(form).every((val) => val.trim() !== "") &&
+			Object.keys(errors).length === 0;
+		if (isValid) {
+			setSubmitted(true);
+			console.log("Form Submitted Successfully:", form);
+		} else {
+			setSubmitted(false);
+		}
+	};
 
-  return (
-    <section
-      id="contact"
-      className={`${componentStyles.layout.spacingSection} bg-white`}
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16">
-          <ScrollAnimation variant="fadeInFromLeft">
-            <HeroHeading
-              primaryText=""
-              gradientText={t("getInTouch")}
-              variant="black"
-            />
-            <HeroSubtitle text={t("contactSubtitle")} variant="black" />
-            <div className="space-y-6 mt-8">
-              {CONTACT_INFO.map((info, index) => {
-                const IconComponent = getIcon(
-                  info.icon,
-                  info.icon === "map" ? "environment" : "social"
-                );
-                return (
-                  <ScrollAnimation
-                    key={index}
-                    variant="fadeInFromLeft"
-                    delay={0.2 + index * 0.1}
-                    className="flex items-center gap-4"
-                  >
-                    <div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <IconComponent className="w-6 h-6 text-[#D4AF37]" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900">
-                        {info.title}
-                      </div>
-                      {info.link ? (
-                        <a
-                          href={info.link}
-                          className="text-gray-600 hover:text-[#D4AF37] transition"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {info.value}
-                        </a>
-                      ) : (
-                        <div className="text-gray-600">{info.value}</div>
-                      )}
-                    </div>
-                  </ScrollAnimation>
-                );
-              })}
-            </div>
-          </ScrollAnimation>
+	return (
+		<section
+			id="contact"
+			className={`${componentStyles.layout.spacingSection} bg-white`}
+		>
+			<div className="max-w-7xl mx-auto px-6">
+				<div className="grid lg:grid-cols-2 gap-16">
+					<ScrollAnimation variant="fadeInFromLeft">
+						<HeroHeading
+							primaryText=""
+							gradientText={t("getInTouch")}
+							variant="black"
+						/>
+						<HeroSubtitle text={t("contactSubtitle")} variant="black" />
+						<div className="space-y-6 mt-8">
+							{CONTACT_INFO.map((info, index) => {
+								const IconComponent = getIcon(
+									info.icon,
+									info.icon === "map" ? "environment" : "social"
+								);
+								return (
+									<ScrollAnimation
+										key={index}
+										variant="fadeInFromLeft"
+										delay={0.2 + index * 0.1}
+										className="flex items-center gap-4"
+									>
+										<div className="w-14 h-14 bg-[#D4AF37]/10 rounded-full flex items-center justify-center flex-shrink-0">
+											<IconComponent className="w-6 h-6 text-[#D4AF37]" />
+										</div>
+										<div>
+											<div className="font-semibold text-gray-900">
+												{t(info.title.toLowerCase())}
+											</div>
+											{info.link && info.icon !== 'map' ? (
+												<a
+													href={info.link}
+													className="text-gray-600 hover:text-[#D4AF37] transition"
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													{info.value}
+												</a>
+											) : (
+												<div className={`text-gray-600 ${info.icon === 'map' ? 'hover:text-[#D4AF37] transition' : ''}`}>{info.value}</div>
+											)}
+										</div>
+									</ScrollAnimation>
+								);
+							})}
+						</div>
+					</ScrollAnimation>
 
-          <ScrollAnimation
-            variant="fadeInFromRight"
-            delay={0.2}
-            className="bg-gray-50 rounded-2xl p-8"
-          >
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {/* NAME */}
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">
-                  {t("fullName")}
-                </label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  } focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
-                  placeholder="Dr. Ahmed Mohamed"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-                )}
-              </div>
+					<ScrollAnimation
+						variant="fadeInFromRight"
+						delay={0.2}
+						className="bg-gray-50 rounded-2xl p-8"
+					>
+						<form className="space-y-6" onSubmit={handleSubmit}>
+							{/* NAME */}
+							<div>
+								<label className="block text-sm font-semibold mb-2 text-gray-900">
+									{t("fullName")}
+								</label>
+								<input
+									type="text"
+									value={form.name}
+									onChange={(e) => handleChange("name", e.target.value)}
+									className={`w-full px-4 py-3 rounded-lg border ${
+										errors.name ? "border-red-500" : "border-gray-300"
+									} focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
+									placeholder={t("name")}
+								/>
+								{errors.name && (
+									<p className="text-red-500 text-sm mt-1">{errors.name}</p>
+								)}
+							</div>
 
-              {/* EMAIL */}
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">
-                  {t("email")}
-                </label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  } focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
-                  placeholder="ahmed@clinic.com"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                )}
-              </div>
+							{/* EMAIL */}
+							<div>
+								<label className="block text-sm font-semibold mb-2 text-gray-900">
+									{t("email")}
+								</label>
+								<input
+									type="email"
+									value={form.email}
+									onChange={(e) => handleChange("email", e.target.value)}
+									className={`w-full px-4 py-3 rounded-lg border ${
+										errors.email ? "border-red-500" : "border-gray-300"
+									} focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
+									placeholder={t("emailPlaceholder")}
+								/>
+								{errors.email && (
+									<p className="text-red-500 text-sm mt-1">{errors.email}</p>
+								)}
+							</div>
 
-              {/* PHONE */}
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">
-                  {t("phone")}
-                </label>
-                <input
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => handleChange("phone", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.phone ? "border-red-500" : "border-gray-300"
-                  } focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
-                  placeholder="+20 123 456 7890"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-                )}
-              </div>
+							{/* PHONE */}
+							<div>
+								<label className="block text-sm font-semibold mb-2 text-gray-900">
+									{t("phone")}
+								</label>
+								<input
+									type="tel"
+									value={form.phone}
+									onChange={(e) => handleChange("phone", e.target.value)}
+									className={`w-full px-4 py-3 rounded-lg border ${
+										errors.phone ? "border-red-500" : "border-gray-300"
+									} focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition`}
+									placeholder={t("phonePlaceholder")}
+								/>
+								{errors.phone && (
+									<p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+								)}
+							</div>
 
-              {/* MESSAGE */}
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">
-                  {t("message")}
-                </label>
-                <textarea
-                  rows={4}
-                  value={form.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    errors.message ? "border-red-500" : "border-gray-300"
-                  } focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition resize-none`}
-                  placeholder="Tell us about your needs..."
-                ></textarea>
-                {errors.message && (
-                  <p className="text-red-500 text-sm mt-1">{errors.message}</p>
-                )}
-              </div>
+							{/* MESSAGE */}
+							<div>
+								<label className="block text-sm font-semibold mb-2 text-gray-900">
+									{t("message")}
+								</label>
+								<textarea
+									rows={4}
+									value={form.message}
+									onChange={(e) => handleChange("message", e.target.value)}
+									className={`w-full px-4 py-3 rounded-lg border ${
+										errors.message ? "border-red-500" : "border-gray-300"
+									} focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition resize-none`}
+									placeholder={t("messagePlaceholder")}
+								></textarea>
+								{errors.message && (
+									<p className="text-red-500 text-sm mt-1">{errors.message}</p>
+								)}
+							</div>
 
-              <Button variant="primary" type="submit" className="w-full">
-                {t("sendMessage")}
-              </Button>
+							<Button variant="primary" type="submit" className="w-full">
+								{t("sendMessage")}
+							</Button>
 
-              {submitted && (
-                <p className="text-green-600 font-semibold text-center mt-3">
-                  {t("messageSentSuccessfully")}
-                </p>
-              )}
-            </form>
-          </ScrollAnimation>
-        </div>
+							{submitted && (
+								<p className="text-green-600 font-semibold text-center mt-3">
+									{t("messageSentSuccessfully")}
+								</p>
+							)}
+						</form>
+					</ScrollAnimation>
+				</div>
 
-        {/* Google Maps Section */}
-        <div className="mt-16">
-          <ScrollAnimation variant="fadeInUp" delay={0.4}>
-            <MapEmbed
-              mapUrl={
-                CONTACT_INFO.find((info) => info.icon === "map")?.link || ""
-              }
-              className="shadow-lg"
-            />
-          </ScrollAnimation>
-        </div>
-      </div>
-    </section>
-  );
+				{/* Google Maps Section */}
+				<div className="mt-16">
+					<ScrollAnimation variant="fadeInUp" delay={0.4}>
+						<MapEmbed
+							mapUrl={
+								CONTACT_INFO.find((info) => info.icon === "map")?.link || ""
+							}
+							className="shadow-lg"
+						/>
+					</ScrollAnimation>
+				</div>
+			</div>
+		</section>
+	);
 };
 
 export default ContactSection;

@@ -13,6 +13,7 @@ export default function HeroSec() {
 		{ image: "/c2.jpg", title: t("advancedTechnology") },
 		{ image: "/c3.jpg", title: t("qualityAssurance") },
 	];
+
 	return (
 		<section className="relative min-h-screen bg-linear-to-br from-[#151821] via-[#1a1d2e] to-[#252938] overflow-hidden">
 			{/* Decorative Dots Pattern - Top Left (hidden on mobile) */}

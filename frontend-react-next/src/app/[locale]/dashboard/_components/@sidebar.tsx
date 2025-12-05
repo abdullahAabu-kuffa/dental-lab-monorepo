@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Bell,
@@ -13,7 +13,7 @@ import {
   LayoutDashboard,
   CalendarDaysIcon,
   ChartArea,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { logoutRequest } from "@/services/auth";
 
@@ -25,7 +25,7 @@ const ICONS = {
   Bell,
   ListOrdered,
   ChartArea,
-  LogOut
+  LogOut,
 };
 
 const links = [
@@ -36,13 +36,22 @@ const links = [
   { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
   { name: "Settings", to: "/dashboard/settings", icon: "Settings" },
   { name: "Analytics", to: "/dashboard/analytics", icon: "ChartArea" },
-
 ];
 
 const Sidebar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter();
+  async function handleLogout() {
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      router.push("/");
+      router.refresh();
+    }
+  }
   return (
     <div className="flex">
       {/* Sidebar */}
@@ -68,7 +77,9 @@ const Sidebar = () => {
         <nav className="flex-1 p-3 space-y-1">
           {links.map((link) => {
             const Icon = ICONS[link.icon as keyof typeof ICONS];
-            const isActive = pathname === link.to;
+            const path = pathname.substring(3, pathname.length);
+            console.log(path);
+            const isActive = path === link.to;
 
             return (
               <Link
@@ -89,16 +100,14 @@ const Sidebar = () => {
         {/* logout button */}
         <div className="p-3 border-t border-gray-700">
           <button
-            onClick={logoutRequest}
+            onClick={() => {
+              handleLogout();
+            }}
             className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-red-800 hover:text-white rounded-lg transition-all duration-200 w-full text-left"
           >
             <LogOut className="w-5 h-5 shrink-0" />
             {isOpen && <span className="font-medium">Logout</span>}
           </button>
-        </div>
-        {/* Footer */}
-        <div className="p-3 border-t border-gray-700 text-sm text-gray-400">
-          {isOpen ? "© 2025 MyApp" : "©"}
         </div>
       </motion.div>
     </div>

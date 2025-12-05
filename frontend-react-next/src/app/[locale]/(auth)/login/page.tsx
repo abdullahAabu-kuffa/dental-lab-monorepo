@@ -11,6 +11,7 @@ import { useAuthStore } from "@/store/auth.store";
 import Link from "next/link";
 import { z } from "zod";
 import animationData from "../../../../../assets/lotties/Dentist Hands Cutting Plus Teeth Dental Surgery.json";
+import { useTranslations } from "next-intl";
 // Zod schema for simple validation
 const loginSchema = z.object({
 	email: z.string().email("Invalid email format"),
@@ -24,6 +25,7 @@ const loginSchema = z.object({
 });
 
 export default function LoginPage() {
+	const t = useTranslations();
 	const router = useRouter();
 	const [formData, setFormData] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
@@ -68,7 +70,7 @@ export default function LoginPage() {
 		try {
 			const result = loginSchema.safeParse(formData);
 			if (!result.success) {
-				setErrorMessage("Please correct the highlighted fields.");
+				setErrorMessage(t("correctFields"));
 				setLoading(false);
 				setGlowActive(false);
 				return;
@@ -82,7 +84,7 @@ export default function LoginPage() {
 
 			if (!res.ok) {
 				const data = await res.json();
-				setErrorMessage(data?.message || "Invalid credentials");
+				setErrorMessage(data?.message || t("invalidCredentials"));
 				setLoading(false);
 				setGlowActive(false);
 				return;
@@ -106,7 +108,7 @@ export default function LoginPage() {
 				router.push("/");
 			}
 		} catch {
-			setErrorMessage("Something went wrong. Try again.");
+			setErrorMessage(t("somethingWrong"));
 		} finally {
 			setLoading(false);
 			setGlowActive(false);
@@ -123,11 +125,9 @@ export default function LoginPage() {
 				className="w-full max-w-md bg-white p-12 rounded-2xl shadow-xl relative z-10 mx-auto lg:mx-4"
 			>
 				<h1 className="text-3xl font-bold text-gray-900 text-left mb-2">
-					Welcome Back
+					{t("welcomeBack")}
 				</h1>
-				<p className="text-gray-600 mb-8 text-left">
-					Start your journey with us. Fill in the details to get started.
-				</p>
+				<p className="text-gray-600 mb-8 text-left">{t("startJourney")}</p>
 				<form onSubmit={handleSubmit} className="flex flex-col space-y-6">
 					<div>
 						<input
@@ -169,7 +169,7 @@ export default function LoginPage() {
 							href="/forget-password"
 							className="text-[#886D2D] text-sm hover:underline"
 						>
-							Forgot password?
+							{t("forgotPassword")}
 						</Link>
 					</div>
 
@@ -179,7 +179,7 @@ export default function LoginPage() {
 						className="w-full"
 						disabled={loading || !isFormValid}
 					>
-						{loading ? "Logging in..." : "Login"}
+						{loading ? t("loggingIn") : t("login")}
 					</Button>
 
 					{/* Sign Up section */}
@@ -211,13 +211,9 @@ export default function LoginPage() {
 				</div>
 
 				<h2 className="text-xl font-bold text-[#886D2D] mt-4 mb-3">
-					Your Security is Our Priority
+					{t("yourSecurityPriority")}
 				</h2>
-				<p className="text-sm text-gray-700">
-					By logging in, you acknowledge that **manual verification** is
-					required for security and compliance purposes. We l notify you once
-					your account is activated.
-				</p>
+				<p className="text-sm text-gray-700">{t("loginAcknowledgment")}</p>
 			</ScrollAnimation>
 		</div>
 	);
