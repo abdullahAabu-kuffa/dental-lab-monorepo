@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Wallet } from "lucide-react";
 // import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
 // import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
@@ -28,10 +28,9 @@ export interface Invoice {
 
 export default function PaymentPage() {
 	const { user, loading } = useAuth();
+	
 	// const [ordersState, setOrdersState] = useState<Invoice[]>([]);
-	const [ordersState, setOrdersState] = useState<Invoice[]>(
-		() => user?.data?.user?.invoices ?? []
-	);
+	// const [ordersState, setOrdersState] = useState<Invoice[]>(()=>user?.data?.user?.invoices  ?? []);
 	const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -53,7 +52,7 @@ export default function PaymentPage() {
 	};
 
 	const handleConfirmPayment = (invoiceId: number) => {
-		const updatedOrders = ordersState.map((order) =>
+		const updatedOrders = user?.data?.user?.invoices.map((order) =>
 			order.id === invoiceId
 				? {
 						...order,
@@ -97,7 +96,9 @@ export default function PaymentPage() {
 		}
 	};
 
+
 	if (loading) return <p>Loading...</p>;
+	// console.log(ordersState);
 
 	return (
 		<div className="w-full min-h-screen">
@@ -106,7 +107,7 @@ export default function PaymentPage() {
 					{/* LIST */}
 					<div className="lg:col-span-4 xl:col-span-3">
 						<div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-							{ordersState.map((invoice, index) => (
+							{user?.data?.user?.invoices .map((invoice, index) => (
 								<div
 									key={invoice.id}
 									style={{ animationDelay: `${0.05 * index}ms` }}
