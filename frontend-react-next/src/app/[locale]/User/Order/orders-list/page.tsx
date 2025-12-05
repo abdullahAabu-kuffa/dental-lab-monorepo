@@ -48,7 +48,7 @@ export default function OrdersListPage() {
 	useEffect(() => {
 		setLoading(isLoading);
 	}, [isLoading, setLoading]);
-
+	console.log("from selected"+selectedOrder?.options?.note);
 	return (
 		<div className="min-h-screen relative">
 			<div className="px-0 pt-4 space-y-3">
