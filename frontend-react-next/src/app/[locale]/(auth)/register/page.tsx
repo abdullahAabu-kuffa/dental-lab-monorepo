@@ -50,13 +50,14 @@ export default function RegisterPage() {
 			setErrors(fieldErrors);
 			return;
 		}
+		const { confirmPassword, ...payload } = parsed.data;
 
 		setSubmitting(true);
 		try {
 			const res = await fetch(`/api/auth/register`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(parsed.data),
+				body: JSON.stringify(payload),
 			});
 
 			if (!res.ok) {
@@ -239,6 +240,11 @@ export default function RegisterPage() {
 								onChange={handleChange}
 								disabled={submitting}
 							/>
+							{errors.phoneNumber && (
+								<p className="text-[10px] text-red-600 mt-1">
+									{errors.phoneNumber}
+								</p>
+							)}
 						</div>
 
 						{/* Clinic Name */}
@@ -258,6 +264,11 @@ export default function RegisterPage() {
 								onChange={handleChange}
 								disabled={submitting}
 							/>
+							{errors.clinicName && (
+								<p className="text-[10px] text-red-600 mt-1">
+									{errors.clinicName}
+								</p>
+							)}
 						</div>
 
 						{/* Clinic Address */}
@@ -277,6 +288,11 @@ export default function RegisterPage() {
 								onChange={handleChange}
 								disabled={submitting}
 							/>
+							{errors.clinicAddress && (
+								<p className="text-[10px] text-red-600 mt-1">
+									{errors.clinicAddress}
+								</p>
+							)}
 						</div>
 
 						<div className="shrink-0 pt-4">
