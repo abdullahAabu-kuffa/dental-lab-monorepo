@@ -16,6 +16,7 @@ import notificationRoutes from "./src/routes/notification.routes";
 import notificationTestRoutes from "./src/routes/notification-test.routes";
 import fileRoutes from "./src/routes/file.routes";
 import ragRoutes from "./src/routes/rag.routes";
+import analyticsRoutes from "./src/routes/analytics.routes";
 
 import morgan from "morgan";
 import { setupSwagger } from "./src/config/swagger";
@@ -27,9 +28,21 @@ setupSwagger(app);
 
 // TODO: Security middleware
 app.use(helmet());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://avantedentalsolutions.cloud",
+  "https://www.avantedentalsolutions.cloud",
+];
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ( origin, callback ) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -74,6 +87,9 @@ app.use("/api/notifications", notificationRoutes);
 app.use('/api/files', fileRoutes);
 
 app.use("/api/rag", ragRoutes);
+
+//  analytics routes
+app.use("/api/analytics", analyticsRoutes);
 
 // TODO: 404 handler
 app.use((req, res) => {

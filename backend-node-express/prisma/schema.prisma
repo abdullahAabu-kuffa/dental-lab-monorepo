@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-    url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -75,6 +75,8 @@ model Order {
   @@index([userId])
   @@index([invoiceId])
   @@index([approvedBy])
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model OrderTracking {
@@ -93,6 +95,10 @@ model OrderTracking {
 
   @@index([orderId])
   @@index([orderId, createdAt])
+  @@index([process])
+  @@index([status])
+  @@index([createdAt])
+  @@index([process, status])
 }
 
 model Invoice {
@@ -110,6 +116,9 @@ model Invoice {
 
   @@index([clientId])
   @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
+
 }
 
 model File {

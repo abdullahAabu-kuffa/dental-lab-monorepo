@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
-
+import createNextIntlPlugin from 'next-intl/plugin';
 const nextConfig: NextConfig = {
-  output: 'standalone'
+  output: "standalone",
+  rewrites: async () => {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:3001/api/:path*",
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+//export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);

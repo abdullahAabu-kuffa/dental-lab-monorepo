@@ -6,6 +6,7 @@ import {
   getRAGStatistics,
   clearCache,
 } from "../services/rag.service";
+import { successResponse } from "../utils/response.util";
 
 /**
  * Query the RAG system
@@ -27,16 +28,12 @@ export const queryRag = async (req: Request, res: Response) => {
 
     const result = await ragQuery(question);
 
-    return res.status(200).json({
-      success: true,
-      data: {
-        question,
+    return res.status(200).json(
+      successResponse({
         answer: result.answer,
-        sources: result.sources,
-        fromCache: result.cached,
-        responseTime: `${result.duration}ms`,
-      },
-    });
+        responseTime: `Answer generated in ${Date.now() - startTime}ms`,
+      })
+    );
   } catch (error: any) {
     console.error("Query error:", error);
     return res.status(500).json({
