@@ -250,7 +250,7 @@ export async function computeKpisOptimized(
         },
       }),
     ]);
-
+    logger.info(`stats computed for invoices : ${invoiceStats.toString()}}`);
     const businessMetrics = computeBusinessMetrics(invoiceStats, orderStats);
     const operationsMetrics = computeOperationsMetrics(
       processTrackingStats,
@@ -291,7 +291,7 @@ export async function computeKpisOptimized(
       metadata: {
         generatedAt: new Date().toISOString(),
         executionTimeMs: Date.now() - startTime,
-        currency:ANALYTICS_CURRENCY
+        currency: ANALYTICS_CURRENCY,
       },
     };
 
@@ -319,7 +319,7 @@ function computeBusinessMetrics(
     const amount = stat._sum.totalPrice || 0;
     invoicesByStatus[stat.status] = {
       count: stat._count,
-      amount: formatCurrency(amount),
+      amount: amount,
       percentage: 0,
     };
     totalInvoiceAmount += amount;
@@ -328,7 +328,7 @@ function computeBusinessMetrics(
   Object.keys(invoicesByStatus).forEach((status) => {
     invoicesByStatus[status].percentage = calculatePercentage(
       invoicesByStatus[status].amount,
-      formatCurrency(totalInvoiceAmount)
+      totalInvoiceAmount
     );
   });
 
@@ -353,10 +353,10 @@ function computeBusinessMetrics(
 
   return {
     revenue: {
-      total: formatCurrency(totalInvoiceAmount),
-      paid: formatCurrency(invoicesByStatus.PAID?.amount || 0),
-      pending: formatCurrency(invoicesByStatus.PENDING?.amount || 0),
-      overdue: formatCurrency(invoicesByStatus.PARTIAL?.amount || 0),
+      total: totalInvoiceAmount,
+      paid: invoicesByStatus.PAID?.amount || 0,
+      pending: invoicesByStatus.PENDING?.amount || 0,
+      overdue: invoicesByStatus.PARTIAL?.amount || 0,
     },
     invoices: {
       byStatus: invoicesByStatus,
@@ -376,9 +376,7 @@ function computeBusinessMetrics(
     orders: {
       byStatus: ordersByStatus,
       totalOrders,
-      averageOrderValue: formatCurrency(
-        totalOrders > 0 ? totalOrderAmount / totalOrders : 0
-      ),
+      averageOrderValue: totalOrders > 0 ? totalOrderAmount / totalOrders : 0,
       chartData: {
         labels: Object.keys(ordersByStatus),
         datasets: [
@@ -503,7 +501,7 @@ function computeClientMetrics(
     return {
       clientId: client.clientId,
       clientName: clientInvoice?.client?.fullName || `Client ${index + 1}`,
-      totalRevenue: formatCurrency(amount),
+      totalRevenue: amount,
       orderCount: client._count,
       revenuePercentage: 0,
     };
@@ -512,17 +510,14 @@ function computeClientMetrics(
   clients.forEach((client) => {
     client.revenuePercentage = calculatePercentage(
       client.totalRevenue,
-      formatCurrency(totalRevenue)
+      totalRevenue
     );
   });
 
   const top3Revenue = clients
     .slice(0, 3)
     .reduce((sum, c) => sum + c.totalRevenue, 0);
-  const concentration = calculatePercentage(
-    top3Revenue,
-    formatCurrency(totalRevenue)
-  );
+  const concentration = calculatePercentage(top3Revenue, totalRevenue);
 
   return {
     topClients: clients,
@@ -563,7 +558,7 @@ function computeTrendMetrics(
   dailyTrendData.forEach((trend: any) => {
     const dateStr = new Date(trend.createdAt).toISOString().split("T")[0];
     trendMap[dateStr] = {
-      revenue: formatCurrency(trend._sum.totalPrice || 0),
+      revenue: trend._sum.totalPrice || 0,
       orders: trend._count,
     };
   });
