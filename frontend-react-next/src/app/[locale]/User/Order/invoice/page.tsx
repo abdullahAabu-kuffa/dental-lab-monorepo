@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -5,33 +6,35 @@ import { Wallet } from "lucide-react";
 // import { OrderCardInvoices } from "../components/invoic/OrderCardInvoices";
 // import { DetailsOrder } from "../components/OrderComponent/DetailsOrder";
 // import { PaymentStatus } from "../components/invoic/PaymentInformation";
-import { InvoiceModal } from "../components/invoic/InvoiceModal";
+// import { InvoiceModal } from "../components/invoic/InvoiceModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useOrders } from "@/lib/orders";
+import { transformApiOrders } from "@/utils/orderTransform";
+import { Order } from "@/types";
+import { OrderCardInvoices } from "./OrderCardInvoices";
 import { DetailsOrder } from "./DetailsOrder";
 import { PaymentStatus } from "./PaymentStatus";
-import { OrderCardInvoices } from "./OrderCardInvoices";
 import PayPalButton, { PayPalOrderDetails } from "./PayPalButtonsComponentOptions";
 
-
-export interface Invoice {
-	id: number;
-	clientId: number;
-	createdAt: string;
-	dueDate: string;
-	status: string;
-	totalPrice: number;
-	paidAt: string | null;
-	paymentMethod?: string;
-	transactionId?: string;
-	paymentDate?: Date;
-}
+// export interface Invoice {
+// 	id: number;
+// 	clientId: number;
+// 	createdAt: string;
+// 	dueDate: string;
+// 	status: string;
+// 	totalPrice: number;
+// 	paidAt: string | null;
+// 	paymentMethod?: string;
+// 	transactionId?: string;
+// 	paymentDate?: Date;
+// }
 
 export default function PaymentPage() {
 	const { user, loading } = useAuth();
 	// const [ordersState, setOrdersState] = useState<Invoice[]>([]);
-	const [ordersState, setOrdersState] = useState<Invoice[]>(
-		() => user?.data?.user?.invoices ?? []
-	);
+	const { data: ordersData, isLoading: ordersLoading } = useOrders();
+	const orders = transformApiOrders(ordersData || []);
+	const [ordersState, setOrdersState] = useState<Order[]>(orders);
 	const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -54,7 +57,7 @@ export default function PaymentPage() {
 
 	const handleConfirmPayment = (invoiceId: number) => {
 		const updatedOrders = ordersState.map((order) =>
-			order.id === invoiceId
+			order.id === invoiceId.toString()
 				? {
 						...order,
 						status: "PAID",
@@ -69,7 +72,7 @@ export default function PaymentPage() {
 		setShowModal(false);
 
 		if (selectedOrder?.id === invoiceId) {
-			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
+			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId.toString()) || null);
 		}
 	};
 
@@ -77,7 +80,7 @@ export default function PaymentPage() {
 		if (!invoiceId) return;
 
 		const updatedOrders = ordersState.map((order) =>
-			order.id === invoiceId
+			order.id === invoiceId.toString()
 				? {
 						...order,
 						status: "PAID",
@@ -93,7 +96,7 @@ export default function PaymentPage() {
 		setShowSuccessModal(true);
 
 		if (selectedOrder?.id === invoiceId) {
-			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId) || null);
+			setSelectedOrder(updatedOrders.find((o) => o.id === invoiceId.toString()) || null);
 		}
 	};
 
@@ -149,7 +152,6 @@ export default function PaymentPage() {
 
 			{selectedOrder && showModal && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-					<div
 						className="absolute inset-0 bg-black/40"
 						onClick={() => setShowModal(false)}
 					></div>
@@ -180,7 +182,7 @@ export default function PaymentPage() {
 								</svg>
 							</div>
 						</div>
-						<h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+						<h2 className="text-2l font-bold text-gray-900 mb-2">Payment Successful!</h2>
 						<p className="text-gray-600 mb-4">Your payment has been completed successfully.</p>
 						<div className="bg-gray-50 rounded-lg p-4 mb-6">
 							<p className="text-sm text-gray-500">Amount Paid</p>
