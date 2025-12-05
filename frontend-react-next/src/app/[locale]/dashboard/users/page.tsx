@@ -20,6 +20,7 @@ const UsersList = () => {
 
   const { data: response, isLoading, isError, error } = useUsers(page, limit);
 
+  // --- Data Processing and Hooks ---
   useEffect(() => {
     setLoading(isLoading);
   }, [isLoading, setLoading]);
@@ -44,30 +45,32 @@ const UsersList = () => {
   const handlePreviousPage = () => {
     if (page > 1) setPage(page - 1);
   };
+  // --- End Data Processing ---
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen">
-      {/* Cards Section */}
-      <div className="p-4 md:p-6">
-        <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-            {/* Title */}
-            <div className="lg:col-span-1">
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">
+    // Max width and center alignment for large screens
+    <div className="bg-[#F5F7FA] min-h-screen pb-10">
+      <div className="max-w-[1600px] mx-auto">
+        {/* Cards Section Container */}
+        <div className="p-4 md:p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6">
+            {/* Header */}
+            <div className="mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
                 Users Registration Management
               </h1>
-              <p className="text-gray-600 mb-4 md:mb-0">
+              <p className="text-sm md:text-base text-gray-500">
                 Review and approve or reject new user registrations
               </p>
             </div>
 
-            {/* Cards */}
-            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            {/* Stats Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               <StatsCard
                 title="Total Users"
                 value={total}
                 growth="this month"
-                icon={<Users size={28} />}
+                icon={<Users size={28} className="text-white" />}
                 fromColor="from-blue-500"
                 toColor="to-blue-600"
               />
@@ -76,7 +79,7 @@ const UsersList = () => {
                 title="Approved Registrations"
                 value={approvedUsersNumber}
                 growth="this month"
-                icon={<MdDone size={28} />}
+                icon={<MdDone size={28} className="text-white" />}
                 fromColor="from-green-500"
                 toColor="to-green-600"
               />
@@ -85,7 +88,7 @@ const UsersList = () => {
                 title="Pending Registrations"
                 value={pendingUsersNumber}
                 growth="Awaiting review"
-                icon={<PersonStandingIcon size={28} />}
+                icon={<PersonStandingIcon size={28} className="text-white" />}
                 fromColor="from-yellow-500"
                 toColor="to-yellow-600"
               />
@@ -93,26 +96,34 @@ const UsersList = () => {
               <StatsCard
                 title="Create New User"
                 growth=""
-                icon={<UserIcon size={28} />}
+                icon={<UserIcon size={28} className="text-white" />}
                 fromColor="from-gray-500"
                 toColor="to-gray-600"
               />
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Users Table + Pagination */}
-      <div className="mx-4 md:mx-6 mt-5">
-        {/* Optional: Add Search + Filter here like OrdersTable */}
-        <UsersTable users={users} />
+        {/* Users Table + Pagination Section */}
+        <div className="px-4 md:px-6 mt-2 space-y-4">
+          {/* Table Container with horizontal scroll for mobile */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+              <div className="min-w-full inline-block align-middle">
+                <UsersTable users={users} />
+              </div>
+            </div>
+          </div>
 
-        <PaginationUsers
-          page={page}
-          totalPages={totalPages}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-        />
+          <div className="flex justify-center md:justify-end">
+            <PaginationUsers
+              page={page}
+              totalPages={totalPages}
+              onPrevious={handlePreviousPage}
+              onNext={handleNextPage}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
