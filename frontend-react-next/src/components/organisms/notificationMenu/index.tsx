@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
 
-
 interface ApiNotification {
 	id: number;
 	userId: number;
@@ -63,7 +62,7 @@ export default function NotificationsMenu({
 
 				const json = await res.json();
 				const notifications = json.data.notifications as ApiNotification[];
-				console.log("retrieved Notifications:",);
+				console.log("retrieved Notifications:");
 
 				setItems(notifications);
 			} catch (err) {
@@ -121,6 +120,7 @@ export default function NotificationsMenu({
 			}
 		};
 	}, []);
+
 	useEffect(() => {
 		const unread = items.filter((n) => !n.isRead).length;
 		onUnreadChange?.(unread);
@@ -158,7 +158,9 @@ export default function NotificationsMenu({
 		<div
 			ref={menuRef}
 			className={[
-				"absolute right-0 mt-3 w-96 origin-top-right rounded-2xl",
+				"absolute right-0 mt-3 origin-top-right rounded-xl",
+				// Responsive width: smaller and more compact
+				"w-[calc(100vw-1.5rem)] max-w-[18rem] sm:w-72 md:w-80 lg:w-80",
 				"border border-[#3A3A3A] bg-[#1E1E1E] shadow-[0_8px_20px_rgba(0,0,0,0.35)]",
 				"transition-all duration-200 z-50",
 				isOpen
@@ -167,24 +169,27 @@ export default function NotificationsMenu({
 			].join(" ")}
 		>
 			{/* Header */}
-			<div className="flex items-center justify-between px-4 py-3 border-b border-[#3A3A3A]">
+			<div className="flex items-center justify-between px-3 py-2.5 border-b border-[#3A3A3A]">
 				<div>
-					<p className="text-sm font-semibold text-[#FFD700] tracking-wide">
+					<p className="text-xs font-semibold text-[#FFD700] tracking-wide">
 						Notifications
 					</p>
-					<p className="text-[11px] text-[#B8B8B8]">Latest updates & alerts</p>
+					<p className="text-[10px] text-[#B8B8B8]">
+						Latest updates & alerts
+					</p>
 				</div>
 
 				<button
 					onClick={onClose}
-					className="text-[#B8B8B8] hover:text-[#FFD700] transition text-lg"
+					className="text-[#B8B8B8] hover:text-[#FFD700] transition text-lg p-0.5"
+					aria-label="Close notifications"
 				>
 					✕
 				</button>
 			</div>
 
 			{/* Body */}
-			<div className="max-h-80 overflow-y-auto p-3 custom-scroll">
+			<div className="max-h-64 overflow-y-auto p-2.5 custom-scroll">
 				{loading ? (
 					<div className="py-6 text-center text-xs text-[#A9A9A9]">
 						Loading...
@@ -194,7 +199,7 @@ export default function NotificationsMenu({
 						No notifications
 					</div>
 				) : (
-					<div className="flex flex-col gap-3">
+					<div className="flex flex-col gap-2">
 						{items.map((item) => (
 							<NotificationCard
 								key={`${item.id}-${item.createdAt}`}
