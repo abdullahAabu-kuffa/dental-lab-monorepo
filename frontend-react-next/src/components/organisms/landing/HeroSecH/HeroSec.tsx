@@ -106,7 +106,7 @@ export default function HeroSec() {
 						<div className="mb-2">
 							<HeroHeading
 								primaryText={t("heroPrimaryText")}
-								gradientText={t("heroSecondaryText")}
+								gradientText={t("")}
 								variant="white"
 								delay={0.2}
 							/>
