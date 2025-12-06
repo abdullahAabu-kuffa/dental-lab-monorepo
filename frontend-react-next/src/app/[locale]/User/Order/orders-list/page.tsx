@@ -10,6 +10,7 @@ import { Order } from "@/types";
 import { useOrders } from "@/lib/orders";
 import { useLoading } from "@/contexts/LoadingContext";
 import { transformApiOrders } from "@/utils/orderTransform";
+import { useTranslations } from "next-intl";
 
 export default function OrdersListPage() {
 	const router = useRouter();
@@ -19,6 +20,7 @@ export default function OrdersListPage() {
 	const [activeFilter, setActiveFilter] = useState<string>("all-orders");
 	const { data, isLoading } = useOrders();
 	const orders = transformApiOrders(data || []);
+	const t = useTranslations();
 	// console.log(selectedOrder);
 	// console.log(orders);
 
@@ -48,7 +50,7 @@ export default function OrdersListPage() {
 	useEffect(() => {
 		setLoading(isLoading);
 	}, [isLoading, setLoading]);
-	console.log("from selected"+selectedOrder?.options?.note);
+	console.log("from selected" + selectedOrder?.options?.note);
 	return (
 		<div className="min-h-screen relative">
 			<div className="px-0 pt-4 space-y-3">
@@ -72,7 +74,7 @@ export default function OrdersListPage() {
 							<div className="w-full bg-gray-50 rounded-xl p-3 group flex items-center">
 								<input
 									type="text"
-									placeholder="Search by patient or material..."
+									placeholder={t("searchByPatientOrMaterial")}
 									className="block w-full pl-12 pr-4 py-3 bg-transparent border-2 border-gray-200 rounded-2xl text-sm placeholder-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 outline-none"
 									onChange={(e) => {
 										const searchTerm = e.target.value.toLowerCase();
@@ -135,7 +137,7 @@ export default function OrdersListPage() {
 										/>
 									</svg>
 									<p className="text-gray-400 text-lg font-medium">
-										Select an order to view details
+										{t("selectOrderToViewDetails")}
 									</p>
 								</div>
 							)}

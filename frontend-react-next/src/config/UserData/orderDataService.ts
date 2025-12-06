@@ -145,44 +145,44 @@ export const getOrderStages = (order: Order) => {
   // const rawStatus = order.status;
   const status = order.status;
 
-const stages = [
-  {
-    key: "orderPlaced",
-    label: "Order Placed",
-    icon: Package,
-    status: "completed",
-    date: order.createdAt.toString(),
-  },
-  {
-    key: "inProgress",
-    label: "In Progress",
-    icon: Settings,
-    status:
-      status === "In Progress"
-        ? "active"
-        : status === "Completed"
-        ? "completed"
-        : "pending",
-    date:
-      status === "In Progress" || status === "Completed"
-        ? order.updatedAt.toString()
-        : "---",
-  },
-  {
-    key: "finished",
-    label: "Finished",
-    icon: CheckCircle2,
-    status: status === "Completed" ? "completed" : "pending",
-    date: status === "Completed" ? order.updatedAt.toString() : "---",
-  },
-  {
-    key: "canceled",
-    label: "Canceled",
-    icon: XCircle,
-    status: status === "Cancelled" ? "active" : "pending",
-    date: status === "Cancelled" ? order.updatedAt.toString() : "---",
-  },
-];
+  const stages = [
+    {
+      key: "orderPlaced",
+      label: "Order Placed",
+      icon: Package,
+      status: "completed",
+      date: order.createdAt.toString(),
+    },
+    {
+      key: "inProgress",
+      label: "In Progress",
+      icon: Settings,
+      status:
+        status === "In Progress"
+          ? "active"
+          : status === "Completed"
+            ? "completed"
+            : "pending",
+      date:
+        status === "In Progress" || status === "Completed"
+          ? order.updatedAt.toString()
+          : "---",
+    },
+    {
+      key: "finished",
+      label: "Finished",
+      icon: CheckCircle2,
+      status: status === "Completed" ? "completed" : "pending",
+      date: status === "Completed" ? order.updatedAt.toString() : "---",
+    },
+    {
+      key: "canceled",
+      label: "Canceled",
+      icon: XCircle,
+      status: status === "Cancelled" ? "active" : "pending",
+      date: status === "Cancelled" ? order.updatedAt.toString() : "---",
+    },
+  ];
 
 
   return stages;
@@ -192,70 +192,70 @@ const stages = [
 export const USER_PROCESS_STEPS = [
   {
     id: 1,
-    title: "New Order",
+    titleKey: "newOrder",
     icon: Package,
     completed: true,
     description: "Create and submit new dental case order",
   },
   {
     id: 2,
-    title: "Material Selection",
+    titleKey: "materialSelection",
     icon: Layers,
     completed: true,
     description: "Choose from premium dental materials (Zirconia, PFM, E-max)",
   },
   {
     id: 3,
-    title: "Upload Case",
+    titleKey: "uploadCase",
     icon: Upload,
     completed: true,
     description: "Upload dental impressions, photos, and specifications",
   },
   {
     id: 4,
-    title: "Accept Case",
+    titleKey: "acceptCase",
     icon: CheckCircle,
     completed: true,
     description: "Case review and acceptance confirmation",
   },
   {
     id: 5,
-    title: "Scan or Cast",
+    titleKey: "scanOrCast",
     icon: Search,
     completed: false,
     description: "Digital scanning or physical cast preparation",
   },
   {
     id: 6,
-    title: "Design",
+    titleKey: "design",
     icon: Edit,
     completed: false,
     description: "CAD/CAM design and planning using ExoCAD",
   },
   {
     id: 7,
-    title: "Try in",
+    titleKey: "tryIn",
     icon: User,
     completed: false,
     description: "Initial fit verification and adjustments",
   },
   {
     id: 8,
-    title: "Milling",
+    titleKey: "milling",
     icon: Cog,
     completed: false,
     description: "Precision milling of the dental restoration",
   },
   {
     id: 9,
-    title: "Finishing and Glazing",
+    titleKey: "finishingAndGlazing",
     icon: Wrench,
     completed: false,
     description: "Surface finishing, staining, and glazing",
   },
   {
     id: 10,
-    title: "Delivery",
+    titleKey: "delivery",
     icon: Truck,
     completed: false,
     description: "Secure packaging and shipment to clinic",
