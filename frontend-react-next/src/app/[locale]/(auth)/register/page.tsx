@@ -5,9 +5,10 @@ import {
 	registerSchema,
 	type RegisterInput,
 } from "../../../../../lib/validation/registerSchema";
+import Link from "next/link";
 
 import Lottie from "lottie-react";
-import animationData from "../../../../../assets/lotties/teeth.json";
+import animationData from "../../../../../assets/lotties/Dentistٌُ RES.json";
 import PendingPage from "./pending";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -85,7 +86,7 @@ export default function RegisterPage() {
 	if (submitted) return <PendingPage />;
 
 	return (
-		<main className="flex items-center justify-center p-4 sm:p-6 bg-gray-50/50 overflow-hidden">
+		<main className="flex items-center justify-center p-4 sm:p-6 bg-[#FDFBF7] overflow-hidden">
 			<div className="absolute inset-0 bg-linear-to-br from-indigo-50/50 via-white to-blue-50/50 -z-10" />
 
 			<div className="w-full max-w-5xl h-[90%] grid grid-cols-1 md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
@@ -310,20 +311,30 @@ export default function RegisterPage() {
 							>
 								{submitting ? t("creatingAccount") : t("createAccount")}
 							</button>
+							<div className="text-center mt-4 text-sm text-gray-600">
+								{t("alreadyHaveAccount")} <Link href="/login" className="text-[#d8a832] font-semibold hover:underline">{t("login")}</Link>
+							</div>
 						</div>
 					</form>
 				</div>
 
-				<div className="hidden md:flex flex-col justify-center items-center p-8 bg-[#d8a832]/10 border-l border-[#d8a832]/20">
-					<div className="w-full max-w-xs mb-6 p-4 bg-white/80 rounded-3xl shadow-xl">
-						<Lottie
-							animationData={animationData}
-							loop
-							autoplay
-							className="w-full h-auto"
-						/>
-					</div>
-				</div>
+<div className="hidden md:flex flex-col justify-center items-center p-8 bg-[#d8a832]/10 border-l-2 border-[#d8a832]/30">
+  <div className="w-full max-w-md mb-6 p-4 bg-white/80 rounded-3xl shadow-xl">
+    <Lottie
+      animationData={animationData}
+      loop
+      autoplay
+      className="w-full h-[400px]"
+    />
+  </div>
+
+  <div className="text-center mt-4">
+    <p className="text-sm font-medium text-gray-700 max-w-xs">
+      {t("registerNowText")}
+    </p>
+  </div>
+</div>
+
 			</div>
 		</main>
 	);
