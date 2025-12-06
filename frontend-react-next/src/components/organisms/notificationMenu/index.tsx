@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import NotificationCard from "../../atoms/NotificationCard";
+import { useAuthStore } from "@/store/auth.store";
 
 interface ApiNotification {
 	id: number;
@@ -31,10 +32,15 @@ export default function NotificationsMenu({
 	const menuRef = useRef<HTMLDivElement | null>(null);
 	const eventSourceRef = useRef<EventSource | null>(null);
 
+	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+	const initialized = useAuthStore((s) => s.initialized);
+
+
+
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
 			const target = e.target as HTMLElement;
-			if(target.closest(".notification-bell")){
+			if (target.closest(".notification-bell")) {
 				return;
 			}
 
@@ -48,6 +54,7 @@ export default function NotificationsMenu({
 	}, [onClose]);
 
 	useEffect(() => {
+		if (!isAuthenticated || !initialized) return;
 		async function fetchNotifications() {
 			try {
 				const res = await fetch(`/api/notifications`, {
@@ -73,7 +80,7 @@ export default function NotificationsMenu({
 		}
 
 		fetchNotifications();
-	}, []);
+	}, [initialized, isAuthenticated]);
 
 	useEffect(() => {
 		function connectSSE() {
@@ -124,7 +131,9 @@ export default function NotificationsMenu({
 	useEffect(() => {
 		const unread = items.filter((n) => !n.isRead).length;
 		onUnreadChange?.(unread);
-	}, [items, onUnreadChange]);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [items]);
 
 	async function markAsRead(id: number) {
 		setItems((prev) =>
