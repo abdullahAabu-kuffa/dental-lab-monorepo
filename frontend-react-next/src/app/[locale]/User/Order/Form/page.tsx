@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { useOrderStore } from "@//store/createOrderStore";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslations } from "next-intl";
 
 export default function NewOrderPage() {
 	const { navigateToUpload } = useNavigation();
@@ -19,8 +20,11 @@ export default function NewOrderPage() {
 	const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 	const router = useRouter();
 	const { user, loading: userLoading } = useAuth();
+	const t = useTranslations();
 
-	const handleFormDataChange = (newFormData: Record<string, string|boolean>) => {
+	const handleFormDataChange = (
+		newFormData: Record<string, string | boolean>
+	) => {
 		setFormData(newFormData);
 	};
 
@@ -49,8 +53,8 @@ export default function NewOrderPage() {
 		if (!userLoading && user && !user.data.user?.isActive) {
 			Swal.fire({
 				icon: "info",
-				title: "Account Not Active",
-				text: "You cannot create orders until your account is activated. Activation may take 1-2 days.",
+				title: t("accountNotActive"),
+				text: t("cannotCreateOrders"),
 				timer: 3000,
 				timerProgressBar: true,
 				showConfirmButton: false,
@@ -69,10 +73,10 @@ export default function NewOrderPage() {
 					className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-4 sm:p-6 mb-4 sm:mb-6"
 				>
 					<h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-						Create New Order
+						{t("createNewOrder")}
 					</h1>
 					<p className="text-sm sm:text-base text-gray-600">
-						Fill in the details to create a new dental order
+						{t("fillDetailsNewOrder")}
 					</p>
 				</motion.div>
 
@@ -94,12 +98,12 @@ export default function NewOrderPage() {
 					<div className="w-full lg:w-80 xl:w-96 shrink-0 order-1 lg:order-2">
 						<div className="lg:sticky lg:top-6">
 							<PaymentSummary
-								title="Order Summary"
-								subtitle="Selected services"
+								title={t("orderSummary")}
+								subtitle={t("selectedServices")}
 								icon={<ShoppingCart className="w-5 h-5 text-white" />}
 								selectedItems={selectedServices}
 								totalAmount={totalAmount}
-								buttonLabel="Pay Now"
+								buttonLabel={t("payNow")}
 								onAction={handlePayNow}
 								disabled={isProcessingPayment}
 								maxHeight="max-h-60 sm:max-h-80 lg:max-h-96"
