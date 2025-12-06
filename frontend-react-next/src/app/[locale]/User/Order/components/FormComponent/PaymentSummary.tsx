@@ -94,13 +94,13 @@ export default function PaymentSummary({
             Total Amount:
           </span>
           <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#E4B441]">
-            ${totalAmount}
+            EG {totalAmount}
           </span>
         </div>
       </div>
 
       {/* Action Button */}
-      <motion.button
+      {/* <motion.button
         whileHover={!isDisabled ? { scale: 1.02 } : {}}
         whileTap={!isDisabled ? { scale: 0.98 } : {}}
         onClick={!isDisabled ? onAction : undefined}
@@ -113,7 +113,7 @@ export default function PaymentSummary({
       >
         <span className="truncate">{buttonLabel}</span>
         <span className="font-bold shrink-0">- ${totalAmount}</span>
-      </motion.button>
+      </motion.button> */}
     </motion.div>
   );
 }
