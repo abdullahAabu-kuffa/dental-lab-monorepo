@@ -8,7 +8,7 @@ export default async function UserOrderLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	await requireRole(["CLIENT"]);
+	await requireRole(["CLIENT","ADMIN", "OWNER"]);
 	return (
 		<div className="w-full relative min-h-screen">
 			{/* Fixed User Profile Dropdown - positioned at top right with high z-index */}

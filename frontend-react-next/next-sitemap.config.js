@@ -5,5 +5,6 @@ module.exports = {
     changefreq: "weekly",
     priority: 0.7,
     sitemapSize: 7000,
+    generateIndexSitemap: true,
     exclude: ["/app-api/*", "/api-docs", "/dashboard/*"],
 };
