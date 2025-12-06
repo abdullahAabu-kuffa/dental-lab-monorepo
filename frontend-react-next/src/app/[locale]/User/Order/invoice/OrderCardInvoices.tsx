@@ -57,7 +57,7 @@ export const OrderCardInvoices: React.FC<OrderCardInvoicesProps> = ({
 
 			<div className="flex-1 min-w-0">
 				<p className="font-bold text-base truncate">{`Invoice #${invoices.id}`}</p>
-				<p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{`Total: $${invoices.totalPrice}`}</p>
+				<p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-1">{`Total: EG ${invoices.totalPrice}`}</p>
 			</div>
 
 			<div className="flex flex-col items-end gap-1">

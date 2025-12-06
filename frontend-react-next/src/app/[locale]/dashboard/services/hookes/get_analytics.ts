@@ -151,7 +151,6 @@ export function useAnalyticsSummary(from?: string, to?: string) {
       const params = new URLSearchParams();
       if (from) params.set("from", from);
       if (to) params.set("to", to);
-
       const res = await fetch(`/api/analytics/summary?${params.toString()}`, {
         method: "GET",
         credentials: "include",

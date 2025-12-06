@@ -11,6 +11,8 @@ import PayPalButton, {
 } from "./PayPalButtonsComponentOptions";
 import { Invoice } from "@/app/[locale]/dashboard/interfaces/users";
 import { useTranslations } from "next-intl";
+import { useUpdateInvoice } from "@/lib/orders";
+
 
 export default function PaymentPage() {
   const { user, loading } = useAuth();
@@ -21,15 +23,13 @@ export default function PaymentPage() {
   const invoices = user?.data?.user?.invoices ?? [];
   const userId = user?.data?.user?.id ?? "anonymous";
 
-  // key forces the inner component to remount (and re-initialize state)
-  // whenever the logged-in user changes
   return <PaymentPageInner key={userId} initialInvoices={invoices} />;
 }
 
 function PaymentPageInner({ initialInvoices }: { initialInvoices: Invoice[] }) {
   const t = useTranslations();
+  const { mutate: updateInvoice } = useUpdateInvoice();
 
-  // STORE INVOICES LOCALLY (initialized once per userId)
   const [ordersState, setOrdersState] = useState<Invoice[]>(() => initialInvoices);
   const [selectedOrder, setSelectedOrder] = useState<Invoice | null>(null);
 
@@ -45,68 +45,78 @@ function PaymentPageInner({ initialInvoices }: { initialInvoices: Invoice[] }) {
     setShowModal(true);
   };
 
-  // CONFIRM PAYMENT (CREDIT CARD)
-//   const handleConfirmPayment = (invoiceId: number) => {
-//     const updated = ordersState.map((order) =>
-//       order.id === invoiceId
-//         ? {
-//             ...order,
-//             status: "PAID",
-//             paymentMethod: "Credit Card",
-//             transactionId: "TXN" + Date.now(),
-//             paidAt: new Date().toISOString(),
-//           }
-//         : order
-//     );
+  //=========================
+  // CREDIT CARD PAYMENT
+  //=========================
+  const handleConfirmPayment = (invoiceId: number) => {
+    updateInvoice(invoiceId, {
+      onSuccess: () => {
+        const updated = ordersState.map((order) =>
+          order.id === invoiceId
+            ? {
+                ...order,
+                status: "PAID",
+                paymentMethod: "Credit Card",
+                transactionId: "TXN" + Date.now(),
+                paidAt: new Date().toISOString(),
+              }
+            : order
+        );
 
-//     setOrdersState(updated);
-//     setShowModal(false);
+        setOrdersState(updated);
+        setShowModal(false);
 
-//     if (selectedOrder?.id === invoiceId) {
-//       setSelectedOrder(updated.find((o) => o.id === invoiceId) || null);
-//     }
-//   };
+        if (selectedOrder?.id === invoiceId) {
+          setSelectedOrder(updated.find((o) => o.id === invoiceId) || null);
+        }
+      },
+    });
+  };
 
-  // PAYPAL SUCCESS
+  //=========================
+  // PAYPAL PAYMENT SUCCESS
+  //=========================
   const handlePayPalSuccess = (
     details: PayPalOrderDetails,
     invoiceId?: number
   ) => {
     if (!invoiceId) return;
 
-    const updated = ordersState.map((order) =>
-      order.id === invoiceId
-        ? {
-            ...order,
-            status: "PAID",
-            paymentMethod: "PayPal",
-            transactionId: details.id,
-            paidAt: new Date().toISOString(),
-          }
-        : order
-    );
+    updateInvoice(invoiceId, {
+      onSuccess: () => {
+        const updated = ordersState.map((order) =>
+          order.id === invoiceId
+            ? {
+                ...order,
+                status: "PAID",
+                paymentMethod: "PayPal",
+                transactionId: details.id,
+                paidAt: new Date().toISOString(),
+              }
+            : order
+        );
 
-    setOrdersState(updated);
-    setShowModal(false);
-    setShowSuccessModal(true);
+        setOrdersState(updated);
+        setShowModal(false);
+        setShowSuccessModal(true);
 
-    if (selectedOrder?.id === invoiceId) {
-      setSelectedOrder(updated.find((o) => o.id === invoiceId) || null);
-    }
+        if (selectedOrder?.id === invoiceId) {
+          setSelectedOrder(updated.find((o) => o.id === invoiceId) || null);
+        }
+      },
+    });
   };
 
   return (
     <div className="w-full min-h-screen">
       <div className="relative max-w-[1800px] mx-auto p-3 sm:p-4 lg:p-6 space-y-3">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+
           {/* LIST */}
           <div className="lg:col-span-4 xl:col-span-3">
             <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2">
               {ordersState.map((invoice, index) => (
-                <div
-                  key={invoice.id}
-                  style={{ animationDelay: `${0.05 * index}ms` }}
-                >
+                <div key={invoice.id} style={{ animationDelay: `${0.05 * index}ms` }}>
                   <OrderCardInvoices
                     invoices={invoice}
                     isSelected={selectedOrder?.id === invoice.id}
@@ -124,6 +134,7 @@ function PaymentPageInner({ initialInvoices }: { initialInvoices: Invoice[] }) {
                 <div className="w-1/2">
                   <DetailsOrder invoice={selectedOrder} />
                 </div>
+
                 <div className="w-1/2">
                   <PaymentStatus
                     order={selectedOrder}
@@ -146,11 +157,7 @@ function PaymentPageInner({ initialInvoices }: { initialInvoices: Invoice[] }) {
       {/* PAYMENT MODAL */}
       {selectedOrder && showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setShowModal(false)}
-          ></div>
-
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowModal(false)} />
           <div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-5">
             <PayPalButton
               clientId="AfHtv6qaOH3_qbLa-YHx-W7ZTLdnv5SRt5FEtgrxKvqBaWSNHyg39LP1qxpTaqNp6du5zTz8RfqGPDKU"
@@ -170,7 +177,7 @@ function PaymentPageInner({ initialInvoices }: { initialInvoices: Invoice[] }) {
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowSuccessModal(false)}
-          ></div>
+          />
 
           <div className="relative bg-white w-full max-w-md rounded-xl shadow-lg p-6 text-center">
             <div className="flex justify-center mb-4">
@@ -181,12 +188,7 @@ function PaymentPageInner({ initialInvoices }: { initialInvoices: Invoice[] }) {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>

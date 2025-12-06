@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { apiFetch } from "@/lib/apiClient";
 
 import Lottie from "lottie-react";
 import Button from "@/components/atoms/Button/Button";
 import animationData from "../../../../../assets/lotties/teeth.json";
+import Link from "next/link";
 
 export default function ForgotPasswordPage() {
 	const [email, setEmail] = useState("");
@@ -20,10 +20,10 @@ export default function ForgotPasswordPage() {
 		setError(null);
 
 		try {
-			const res = await apiFetch("/api/auth/forgot-password", {
+			const res = await fetch("/api/auth/forgot-password", {
 				method: "POST",
 				body: JSON.stringify({ email }),
-				retryOn401: false,
+				headers: { "Content-Type": "application/json" },
 			});
 			setMessage("Reset link sent to your email (if it exists).");
 
@@ -105,9 +105,9 @@ export default function ForgotPasswordPage() {
 							</p>
 							<p>
 								For assistance, contact our{" "}
-								<a href="/support" className="text-yellow-500 underline">
+								<Link href="/support" className="text-yellow-500 underline">
 									Support Team
-								</a>
+								</Link>
 								.
 							</p>
 							<p>

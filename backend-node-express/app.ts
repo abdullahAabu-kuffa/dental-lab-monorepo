@@ -2,7 +2,7 @@
 // Responsibility: Configure middleware, routes, error handling
 
 import express from "express";
-import "./src/jobs/createMonthlyInvoices";
+// import "./src/jobs/createMonthlyInvoices";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import compression from "compression";
