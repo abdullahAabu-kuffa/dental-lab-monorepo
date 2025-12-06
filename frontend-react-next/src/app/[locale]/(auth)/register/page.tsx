@@ -10,8 +10,10 @@ import Lottie from "lottie-react";
 import animationData from "../../../../../assets/lotties/teeth.json";
 import PendingPage from "./pending";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
+	const t = useTranslations();
 	const [form, setForm] = useState<RegisterInput>({
 		fullName: "",
 		email: "",
@@ -63,7 +65,9 @@ export default function RegisterPage() {
 			if (!res.ok) {
 				const data = await res.json().catch(() => ({}));
 				const message =
-					typeof data?.error === "string" ? data.error : "Registration failed";
+					typeof data?.error === "string"
+						? data.error
+						: t("registrationFailed");
 				setGeneralError(message);
 				setForm((p) => ({ ...p, password: "", confirmPassword: "" }));
 				setSubmitting(false);
@@ -73,7 +77,7 @@ export default function RegisterPage() {
 			setSubmitted(true);
 			setSubmitting(false);
 		} catch {
-			setGeneralError("Network error. Please try again.");
+			setGeneralError(t("networkError"));
 			setSubmitting(false);
 		}
 	}
@@ -88,7 +92,10 @@ export default function RegisterPage() {
 				<div className="p-4 sm:p-6 space-y-3 overflow-hidden flex flex-col justify-between">
 					<div className="shrink-0 space-y-2">
 						<h1 className="text-3xl font-extrabold text-gray-900">
-							Create Your <span className="text-[#d8a832]">Account</span>
+							{t("createYourAccount").split(" ").slice(0, -1).join(" ")}{" "}
+							<span className="text-[#d8a832]">
+								{t("createYourAccount").split(" ").pop()}
+							</span>
 						</h1>
 
 						{generalError && (
@@ -109,7 +116,7 @@ export default function RegisterPage() {
 								htmlFor="fullName"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Full name <span className="text-red-500">*</span>
+								{t("fullName")} <span className="text-red-500">*</span>
 							</label>
 							<input
 								id="fullName"
@@ -134,7 +141,7 @@ export default function RegisterPage() {
 								htmlFor="email"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Email <span className="text-red-500">*</span>
+								{t("email")} <span className="text-red-500">*</span>
 							</label>
 							<input
 								id="email"
@@ -157,7 +164,7 @@ export default function RegisterPage() {
 								htmlFor="password"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Password <span className="text-red-500">*</span>
+								{t("password")} <span className="text-red-500">*</span>
 							</label>
 
 							<input
@@ -193,7 +200,7 @@ export default function RegisterPage() {
 								htmlFor="confirmPassword"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Confirm Password <span className="text-red-500">*</span>
+								{t("confirmPassword")} <span className="text-red-500">*</span>
 							</label>
 
 							<input
@@ -229,7 +236,7 @@ export default function RegisterPage() {
 								htmlFor="phoneNumber"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Phone number
+								{t("phoneNumber")}
 							</label>
 							<input
 								id="phoneNumber"
@@ -253,7 +260,7 @@ export default function RegisterPage() {
 								htmlFor="clinicName"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Clinic/Lab name
+								{t("clinicLabName")}
 							</label>
 							<input
 								id="clinicName"
@@ -277,7 +284,7 @@ export default function RegisterPage() {
 								htmlFor="clinicAddress"
 								className="block text-xs font-medium text-gray-700"
 							>
-								Clinic/Lab address
+								{t("clinicLabAddress")}
 							</label>
 							<input
 								id="clinicAddress"
@@ -301,7 +308,7 @@ export default function RegisterPage() {
 								className="w-full flex justify-center items-center rounded-lg px-4 py-3 text-lg font-semibold bg-[#d8a832] text-white hover:bg-yellow-700 transition duration-300 disabled:opacity-50"
 								disabled={submitting}
 							>
-								{submitting ? "Creating account..." : "Create account"}
+								{submitting ? t("creatingAccount") : t("createAccount")}
 							</button>
 						</div>
 					</form>

@@ -11,17 +11,17 @@ import { USER_PROCESS_STEPS } from "@/config/UserData/orderDataService";
 import { WelcomePageProps } from "@/types";
 import { useNavigation } from "@/utils/pageUtils";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslations } from "next-intl";
 
 const PROCESS_STEPS = USER_PROCESS_STEPS;
 
 const WelcomePage: React.FC<WelcomePageProps> = ({
 	onStartOrder,
 	onViewOrders,
-	
 }) => {
 	const { navigateToForm, navigateToOrdersList } = useNavigation();
 	const { user } = useAuth();
-
+	const t = useTranslations();
 	const handleStartOrder = () => {
 		navigateToForm();
 		onStartOrder?.();
@@ -41,16 +41,13 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 					{/* Left Column */}
 					<motion.div className="flex-1 text-left space-y-4 sm:space-y-6">
 						<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800">
-							Welcome back,
+							{t("welcomeBack")}
 						</h1>
 						<h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">
 							{user?.data?.user?.fullName}
 						</h2>
 						<p className="text-base sm:text-lg md:text-xl text-black max-w-full md:max-w-lg leading-relaxed">
-							Your personalized dental lab management system is ready to
-							streamline your practice. All updates appear live in your client
-							dashboard — giving you full transparency and control over your
-							cases.
+							{t("userWelcomeDescription")}
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6">
@@ -61,7 +58,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 								<div className="flex items-center gap-2 sm:gap-3">
 									<Crown className="w-4 h-4 sm:w-5 sm:h-5" />
 									<span className="text-sm sm:text-base md:text-lg">
-										Start New Order
+										{t("startNewOrder")}
 									</span>
 								</div>
 								<div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
@@ -74,7 +71,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 								<div className="flex items-center gap-2 sm:gap-3">
 									<User className="w-4 h-4 sm:w-5 sm:h-5" />
 									<span className="text-sm sm:text-base md:text-lg">
-										View My Orders
+										{t("viewMyOrders")}
 									</span>
 								</div>
 								<div className="absolute inset-0 bg-linear-to-r from-[#D4AF37]/10 to-[#E4B441]/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
@@ -87,10 +84,10 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 						{/* Section 1 */}
 						<div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg space-y-2 sm:space-y-4">
 							<h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
-								1-Choose Material & Upload File
+								{t("chooseMaterialUploadFile")}
 							</h3>
 							<p className="text-sm sm:text-base md:text-lg text-gray-600">
-								Select from our premium materials and upload your case file.
+								{t("selectPremiumMaterials")}
 							</p>
 
 							<div className="flex gap-6 sm:gap-8 md:gap-12 justify-start relative">
@@ -106,7 +103,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 											<process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
 										</div>
 										<h4 className="text-xs sm:text-sm md:text-sm font-semibold text-gray-800">
-											{process.title}
+											{t(process.titleKey)}
 										</h4>
 									</motion.div>
 								))}
@@ -116,11 +113,10 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 						{/* Section 2 */}
 						<div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg space-y-2 sm:space-y-4">
 							<h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
-								2-Track Your Order Online
+								{t("trackOrderOnline")}
 							</h3>
 							<p className="text-sm sm:text-base md:text-lg text-gray-600">
-								Follow your dental case from upload to delivery — every stage,
-								visible in real-time.
+								{t("followDentalCaseRealtime")}
 							</p>
 
 							<div className="flex gap-6 sm:gap-8 md:gap-12 justify-start relative">
@@ -136,7 +132,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 											<process.icon className="text-white w-6 h-6 sm:w-8 sm:h-8" />
 										</div>
 										<h4 className="text-xs sm:text-sm md:text-sm font-semibold text-gray-800">
-											{process.title}
+											{t(process.titleKey)}
 										</h4>
 									</motion.div>
 								))}
