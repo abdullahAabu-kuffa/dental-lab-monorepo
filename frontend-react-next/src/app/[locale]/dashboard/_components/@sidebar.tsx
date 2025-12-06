@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  Bell,
+  // Bell,
   Settings,
   Users,
   Menu,
@@ -21,8 +21,8 @@ const ICONS = {
   LayoutDashboard,
   Settings,
   Users,
-  CalendarDaysIcon,
-  Bell,
+  // CalendarDaysIcon,
+  // Bell,
   ListOrdered,
   ChartArea,
   LogOut,
@@ -32,8 +32,8 @@ const links = [
   { name: "Dashboard", to: "/dashboard", icon: "LayoutDashboard" },
   { name: "Users", to: "/dashboard/users", icon: "Users" },
   { name: "Orders", to: "/dashboard/orders", icon: "ListOrdered" },
-  { name: "Events", to: "/dashboard/events", icon: "CalendarDaysIcon" },
-  { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
+  // { name: "Events", to: "/dashboard/events", icon: "CalendarDaysIcon" },
+  // { name: "Notifications", to: "/dashboard/notifications", icon: "Bell" },
   { name: "Settings", to: "/dashboard/settings", icon: "Settings" },
   { name: "Analytics", to: "/dashboard/analytics", icon: "ChartArea" },
 ];
