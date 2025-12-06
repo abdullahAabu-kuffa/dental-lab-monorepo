@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Lottie from "lottie-react";
 import Button from "@/components/atoms/Button/Button";
 import animationData from "../../../../../assets/lotties/teeth.json";
-import { apiFetch } from "@/lib/apiClient";
+import Link from "next/link";
 
 export default function ResetPasswordContent() {
 	const router = useRouter();
@@ -30,13 +30,13 @@ export default function ResetPasswordContent() {
 		setError(null);
 
 		try {
-			const res = await apiFetch("/api/auth/reset-password", {
+			const res = await fetch("/api/auth/reset-password", {
 				method: "POST",
 				body: JSON.stringify({
 					token,
 					newPassword: password,
 				}),
-				retryOn401: false,
+				headers: { "Content-Type": "application/json" },
 			});
 
 			if (!res.ok) {
@@ -139,9 +139,9 @@ export default function ResetPasswordContent() {
 							</p>
 							<p>
 								For assistance, contact our{" "}
-								<a href="/support" className="text-yellow-500 underline">
+								<Link href="/support" className="text-yellow-500 underline">
 									Support Team
-								</a>
+								</Link>
 								.
 							</p>
 						</div>
