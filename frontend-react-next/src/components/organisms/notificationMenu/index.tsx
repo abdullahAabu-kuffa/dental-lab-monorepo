@@ -31,16 +31,6 @@ export default function NotificationsMenu({
 	const [loading, setLoading] = useState(true);
 	const menuRef = useRef<HTMLDivElement | null>(null);
 	const eventSourceRef = useRef<EventSource | null>(null);
-	// const { isAuthenticated, initialized } = useAuthStore((s) => ({
-	//   isAuthenticated: s.isAuthenticated,
-	//   initialized: s.initialized,
-	// }));
-	// const {isAuthenticated}=useAuthStore((s) => ({
-	//   isAuthenticated: s.isAuthenticated,
-	// }));
-	// const {initialized}=useAuthStore((s) => ({
-	//   initialized: s.initialized,
-	// }));
 
 	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 	const initialized = useAuthStore((s) => s.initialized);
