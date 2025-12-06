@@ -30,7 +30,9 @@ function parseDate(
   if (isNaN(date.getTime())) {
     throw new Error(`Invalid date format: ${dateString}. Use YYYY-MM-DD`);
   }
+  date.setDate(date.getDate() + defaultOffset);
   date.setHours(0, 0, 0, 0);
+  // logger.warn(`transformed date: ${date}`);
   return date;
 }
 
@@ -57,19 +59,19 @@ export async function getKpis(
       res.status(403).json(errorResponse("Admin access required", 403));
       return;
     }
-
+    // logger.info(`Analytics: Fetching KPIs, from: ${req.query.from} to: ${ req.query.to}`);
     const toDate = parseDate(req.query.to as string, 1);
     const fromDate = parseDate(req.query.from as string, -30);
 
     validateDateRange(fromDate, toDate);
 
-    logger.info(`Analytics: Fetching KPIs from ${fromDate} to ${toDate}`);
+    // logger.info(`Analytics: Fetching KPIs from ${fromDate} to ${toDate}`);
 
     const kpis: KPIResponse = await computeKpisOptimized(fromDate, toDate);
 
     res.status(200).json(successResponse(kpis, "KPIs fetched successfully"));
   } catch (error: any) {
-    logger.error("Analytics Controller Error", error);
+    // logger.error("Analytics Controller Error", error);
 
     if (error.message.includes("Invalid date format")) {
       res.status(400).json(errorResponse(error.message, 400));
@@ -95,12 +97,12 @@ export async function getSummary(
       return;
     }
 
-    const toDate = parseDate(req.query.to as string, 0);
+    const toDate = parseDate(req.query.to as string, 1);
     const fromDate = parseDate(req.query.from as string, -30);
 
     validateDateRange(fromDate, toDate);
 
-    logger.info(`Analytics: Fetching summary from ${fromDate} to ${toDate}`);
+    // logger.info(`Analytics: Fetching summary from ${fromDate} to ${toDate}`);
 
     const kpis: KPIResponse = await computeKpisOptimized(fromDate, toDate);
 
@@ -109,10 +111,11 @@ export async function getSummary(
     try {
       summary = await summarizeKpis(kpis); // Hugging Face client
     } catch (err) {
-      logger.error(
-        "LLM summary failed, falling back to deterministic summary",
-        err
-      );
+      // logger.error(
+      //   "LLM summary failed, falling back to deterministic summary",
+      //   err
+      // );
+
       summary = generateTextSummary(kpis);
     }
 
@@ -120,7 +123,7 @@ export async function getSummary(
       .status(200)
       .json(successResponse({ kpis, summary }, "Summary fetched successfully"));
   } catch (error: any) {
-    logger.error("Analytics Summary Error", error);
+    // logger.error("Analytics Summary Error", error);
 
     if (error.message.includes("Invalid date format")) {
       res.status(400).json(errorResponse(error.message, 400));
