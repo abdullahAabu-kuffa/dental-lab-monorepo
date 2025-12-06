@@ -18,7 +18,7 @@ import DentalChatButton from "@/app/chatbot/chat";
 
 export const metadata: Metadata = {
 	title: "Avante Dental Lab",
-	icons: { icon: `/search.png` },
+	icons: { icon: `/search.ico` },
 	description:
 		"Revolutionizing dental restoration with ExoCAD integration, real-time tracking, and instant online payments",
 };

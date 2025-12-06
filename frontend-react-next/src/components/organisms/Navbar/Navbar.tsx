@@ -83,7 +83,7 @@ const Navbar = () => {
 			});
 		}
 	}
-	if (pathname.includes("/dashboard") || pathname.includes("/login") || pathname.includes("/register")) {
+	if (pathname.includes("/dashboard") ) {
 		return null;
 	}
 	return (

@@ -322,7 +322,8 @@ export const forgotPasswordService = async (email: string) => {
       isActive: user.isActive,
     });
     logger.info(`[Forgot Password Service] Token: ${token}`);
-    const resetLink = `https://avantedentalsolutions.cloud/reset-password?token=${token}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    logger.info(`reset link: ${resetLink}`);
     const htmlTemplate = buildEmailTemplate({
       title: "Secure Password Reset",
       body: `
