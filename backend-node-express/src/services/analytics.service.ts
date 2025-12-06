@@ -185,7 +185,7 @@ export async function computeKpisOptimized(
       prisma.invoice.groupBy({
         by: ["status"],
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         _count: true,
         _sum: { totalPrice: true },
@@ -195,7 +195,7 @@ export async function computeKpisOptimized(
       prisma.order.groupBy({
         by: ["status"],
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         _count: true,
         _sum: { totalPrice: true },
@@ -205,7 +205,7 @@ export async function computeKpisOptimized(
       prisma.orderTracking.groupBy({
         by: ["process", "status"],
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         _count: true,
       }),
@@ -214,7 +214,7 @@ export async function computeKpisOptimized(
       prisma.invoice.groupBy({
         by: ["clientId"],
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         _sum: { totalPrice: true },
         _count: true,
@@ -226,7 +226,7 @@ export async function computeKpisOptimized(
       prisma.order.groupBy({
         by: ["createdAt"],
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         _count: true,
         _sum: { totalPrice: true },
@@ -235,7 +235,7 @@ export async function computeKpisOptimized(
       // Query 6: All orders for analysis
       prisma.order.findMany({
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         select: { status: true, totalPrice: true, userId: true },
       }),
@@ -243,7 +243,7 @@ export async function computeKpisOptimized(
       // Query 7: All invoices for analysis
       prisma.invoice.findMany({
         where: {
-          createdAt: { gte: startDate, lte: endDate },
+          createdAt: { gte: startDate, lt: endDate },
         },
         include: {
           client: { select: { fullName: true } },

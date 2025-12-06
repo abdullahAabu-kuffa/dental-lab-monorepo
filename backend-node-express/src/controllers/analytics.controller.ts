@@ -58,7 +58,7 @@ export async function getKpis(
       return;
     }
 
-    const toDate = parseDate(req.query.to as string, 0);
+    const toDate = parseDate(req.query.to as string, 1);
     const fromDate = parseDate(req.query.from as string, -30);
 
     validateDateRange(fromDate, toDate);
