@@ -152,7 +152,7 @@ export default function PaymentPage() {
 							clientId="AfHtv6qaOH3_qbLa-YHx-W7ZTLdnv5SRt5FEtgrxKvqBaWSNHyg39LP1qxpTaqNp6du5zTz8RfqGPDKU"
 							amount={selectedOrder.totalPrice.toString()}
 							currency="EGP"
-							invoiceId={selectedOrder.id}
+							invoiceId={Number(selectedOrder.id)}
 							onSuccess={handlePayPalSuccess}
 							onError={(err) => console.error("PayPal error:", err)}
 						/>

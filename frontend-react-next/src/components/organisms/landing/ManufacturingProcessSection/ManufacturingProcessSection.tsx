@@ -57,7 +57,7 @@ export default function ManufacturingProcessSection() {
 									<ProcessStep
 										step={{
 											id: step.id.toString(),
-											title: step.title,
+											title: step.titleKey,
 											icon: step.icon,
 											status: step.completed ? "completed" : "pending",
 										}}
@@ -88,7 +88,7 @@ export default function ManufacturingProcessSection() {
 									<ProcessStep
 										step={{
 											id: step.id.toString(),
-											title: step.title,
+											title: step.titleKey,
 											icon: step.icon,
 											status: step.completed ? "completed" : "pending",
 										}}

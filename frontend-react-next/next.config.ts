@@ -6,7 +6,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:3001/api/:path*",
+        destination: "https://avantedentalsolutions.cloud/api/:path*",
+      },
+      {
+        source: "/api-docs",
+        destination: "http://localhost:3001/api-docs",
       },
     ];
   },
