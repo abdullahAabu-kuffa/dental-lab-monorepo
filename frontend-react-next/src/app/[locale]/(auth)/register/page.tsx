@@ -311,6 +311,9 @@ export default function RegisterPage() {
 							>
 								{submitting ? t("creatingAccount") : t("createAccount")}
 							</button>
+							<div className="text-center mt-4 text-sm text-gray-600">
+								{t("alreadyHaveAccount")} <Link href="/login" className="text-[#d8a832] font-semibold hover:underline">{t("login")}</Link>
+							</div>
 						</div>
 					</form>
 				</div>
@@ -324,27 +327,15 @@ export default function RegisterPage() {
       className="w-full h-[400px]"
     />
   </div>
+
   <div className="text-center mt-4">
     <p className="text-sm font-medium text-gray-700 max-w-xs">
       {t("registerNowText")}
     </p>
-  <div className="flex justify-center mt-4">
-    <Link
-      href="/login"
-      className="text-[#d8a832] text-sm font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d8a832] transition duration-300"
-    >
-      {t("login")}
-    </Link>
   </div>
-  </div>
-
-
-
 </div>
-
 
 			</div>
 		</main>
 	);
 }
-
