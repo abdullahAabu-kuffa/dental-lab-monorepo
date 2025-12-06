@@ -12,10 +12,9 @@ import { usePathname } from "next/navigation";
 const Footer: React.FC = () => {
 	const pathname = usePathname();
 	const hideOnDashboard =
-		pathname.startsWith("/en/dashboard") ||
 		pathname.includes("/dashboard") ||
-		pathname.startsWith("/en/login") ||
-		pathname.startsWith("/en/register");
+		pathname.includes("login") ||
+		pathname.includes("register");
 
 	const currentYear = new Date().getFullYear();
 	if (hideOnDashboard) {
