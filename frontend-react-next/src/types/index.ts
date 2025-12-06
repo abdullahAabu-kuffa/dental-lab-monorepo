@@ -12,7 +12,7 @@ export interface Order {
     patientName?: string;
     age?: string;
     material?: string;
-    notes?: string;
+    note?: string;
     [key: string]: unknown;
   };
   status: "Pending" | "In Progress" | "Completed" | "Cancelled";
@@ -20,7 +20,7 @@ export interface Order {
   totalAmount: number;
   urgency: "Low" | "Medium" | "High";
   material: string;
-  notes: string;
+  note: string;
   attachments?: FileAttachment[];
   createdAt: Date | string;
   updatedAt: Date | string;

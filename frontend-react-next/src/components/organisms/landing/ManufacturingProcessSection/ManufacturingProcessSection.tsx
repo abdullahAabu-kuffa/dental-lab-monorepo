@@ -1,4 +1,5 @@
 "use client";
+
 import ProcessStep from "../../../atoms/ProcessStep/ProcessStep";
 import {
 	HeroHeading,
@@ -13,11 +14,13 @@ import { useTranslations } from "next-intl";
 
 export default function ManufacturingProcessSection() {
 	const t = useTranslations();
+
 	return (
 		<section
 			className={`${componentStyles.layout.spacingSection} bg-linear-to-br from-gray-50 via-white to-gray-100`}
 		>
 			<div className={`${componentStyles.layout.containerDefault} text-center`}>
+
 				{/* Header */}
 				<ScrollAnimation animation="fadeInFromLeft" className="mb-16 space-y-6">
 					<HeroHeading
@@ -38,10 +41,10 @@ export default function ManufacturingProcessSection() {
 					delay={0.2}
 					className="relative mb-16 px-4"
 				>
-					{/*
-              FIRST ROW (2 STEPS)
-         */}
+
+					{/* FIRST ROW (3 STEPS) */}
 					<div className="relative w-fit mx-auto mb-12">
+
 						{/* Steps */}
 						<div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 relative z-10 mt-6">
 							{USER_PROCESS_STEPS.slice(0, 3).map((step, index) => (
@@ -63,17 +66,16 @@ export default function ManufacturingProcessSection() {
 							))}
 						</div>
 
-						{/* First row line - behind icons */}
+						{/* Line Behind Icons */}
 						<div
 							className="absolute top-[45px] left-0 right-0 h-[3px] rounded-full opacity-30 z-0"
 							style={{ backgroundImage: gradients.gold }}
 						/>
 					</div>
 
-					{/*
-              SECOND ROW (7 STEPS)
-       */}
+					{/* SECOND ROW (7 STEPS) */}
 					<div className="relative w-fit mx-auto">
+
 						{/* Steps */}
 						<div className="grid grid-cols-7 gap-2 sm:gap-3 md:gap-3 relative z-10 mt-5">
 							{USER_PROCESS_STEPS.slice(3).map((step, index) => (
@@ -95,12 +97,13 @@ export default function ManufacturingProcessSection() {
 							))}
 						</div>
 
-						{/* Second row line - behind icons */}
+						{/* Line Behind Icons */}
 						<div
 							className="absolute top-[55px] left-0 right-0 h-[3px] rounded-full opacity-40 z-0"
 							style={{ backgroundImage: gradients.gold }}
 						/>
 					</div>
+
 				</ScrollAnimation>
 			</div>
 		</section>

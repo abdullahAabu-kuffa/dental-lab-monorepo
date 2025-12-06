@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { NAVBAR_CONFIG } from "../../../config/LandingData/navigation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 interface NavMobileMenuProps {
 	isOpen: boolean;
@@ -26,6 +27,11 @@ const NavMobileMenu: React.FC<NavMobileMenuProps> = ({
 			}`}
 		>
 			<div className="px-4 pt-2 pb-6 space-y-3 bg-linear-to-br from-[#1C1C1C] to-[#2A2A2A] border-t border-[#E4B441]/20">
+				{/* Language Switcher - Added to mobile menu */}
+				<div className="flex justify-center pb-3 border-b border-[#E4B441]/20">
+					<LanguageSwitcher label="en" />
+				</div>
+
 				{/* Navigation Links */}
 				{NAVBAR_CONFIG.links.map((link, index) => (
 					<Link

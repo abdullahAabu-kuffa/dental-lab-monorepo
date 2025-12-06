@@ -22,17 +22,7 @@ export const StatusIcons: React.FC<StatusIconsProps> = ({
 	orders = SAMPLE_ORDERS,
 }) => {
 	const statusItems = calculateStatusCounts(orders);
-	const statusItemsWithDraft = [
-		...statusItems,
-		{
-			id: "draft",
-			label: "Draft",
-			Icon: FileText,
-			gradient: ["#FFD700", "#FFA500"],
-			// count: orders.filter(o => o.status === "draft").length,
-			count: orders.length,
-		},
-	];
+	const statusItemsWithDraft = [...statusItems];
 
 	return (
 		<motion.div className="flex items-center gap-2">
