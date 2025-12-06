@@ -12,6 +12,7 @@ import {
   getAllOrders,
   getAllStepOrder,
   getUserOrder,
+  updateInvoice,
   updateUserOrder,
 } from "../controllers/order.controller";
 
@@ -449,4 +450,5 @@ router.patch(
   completeStepOrder
 );
 
+router.patch("/invoice/:invoiceId", verifyAccessToken, updateInvoice);
 export default router;

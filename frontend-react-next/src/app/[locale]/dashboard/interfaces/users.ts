@@ -1,10 +1,12 @@
-interface Invoice {
-    id: number;
-    total: number;
-    status: string;
-    createdAt: string; // ISO date string
-    totalPrice:number
-}
+// interface Invoice {
+//     id: number;
+//     total: number;
+//     status: string;
+//     createdAt: string; // ISO date string
+//     totalPrice:number
+// }
+
+import { Invoice } from "@/types";
 
 interface Order {
     id: number;

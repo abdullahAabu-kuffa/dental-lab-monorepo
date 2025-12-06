@@ -320,6 +320,32 @@ export const completeStepOrderServices = async (orderTrackingId: number) => {
       data: { status: "COMPLETED" },
     });
   }
-
+  
   return stepUpdated;
+};
+
+
+export const updateInvoiceService = async (invoiceId: number) => {
+  try {
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      include: { orders: true },
+    });
+
+    if (!invoice) {
+      throw new Error("Invoice not found");
+    }
+    const updatedInvoice = await prisma.invoice.update({
+      where: { id: invoiceId },
+      data: {
+        status: "PAID",
+        paidAt: new Date(),
+      },
+    });
+
+    return updatedInvoice;
+  } catch (error) {
+    console.error("updateInvoiceService error:", error);
+    throw error;
+  }
 };

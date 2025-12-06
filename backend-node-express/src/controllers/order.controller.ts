@@ -1,4 +1,3 @@
-import { date } from "joi";
 // TODO: Order Controller
 // Purpose: Handle order operations
 // Usage: Called from order routes
@@ -12,6 +11,7 @@ import {
   getAllOrdersServices,
   getAllStepOrderServices,
   getUserOrderServices,
+  updateInvoiceService,
   updateUserOrderService,
 } from "../services/order.service";
 import logger from "../utils/logger.util";
@@ -117,6 +117,26 @@ export async function completeStepOrder(req: Request, res: Response) {
       .json(successResponse(orderSteps, "completeStepOrder successfully"));
   } catch (error: any) {
     logger.error(`completeStepOrder controller error: ${error.message}`);
+    return res.status(400).json(errorResponse(error.message, 400));
+  }
+}
+
+export async function updateInvoice(req: Request, res: Response) {
+  try {
+    const invoiceId = parseInt(req.params.invoiceId);
+
+    if (isNaN(invoiceId)) {
+      return res.status(400).json(errorResponse("Invalid invoiceId", 400));
+    }
+
+
+    const invoice = await updateInvoiceService(invoiceId);
+
+    return res
+      .status(200)
+      .json(successResponse(invoice, "Invoice updated successfully"));
+  } catch (error: any) {
+    console.error(`updateInvoice controller error: ${error.message}`);
     return res.status(400).json(errorResponse(error.message, 400));
   }
 }

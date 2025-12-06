@@ -3,18 +3,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { apiFetch } from "../lib/apiClient";
+import { Invoice } from "@/types";
 
-export interface Invoice {
-  id: number;
-  clientId: number;
-  totalPrice: number;
-  isSummary: boolean;
-  status: "PENDING" | "PAID" | "CANCELLED";
-  dueDate: string;
-  paidAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+// export interface Invoice {
+//   id: number;
+//   clientId: number;
+//   totalPrice: number;
+//   isSummary: boolean;
+//   status: "PENDING" | "PAID" | "CANCELLED";
+//   dueDate: string;
+//   paidAt: string | null;
+//   createdAt: string;
+//   updatedAt: string;
+// }
+
 export interface UserWithInvoices {
   id: number;
   fullName: string;

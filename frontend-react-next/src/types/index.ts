@@ -193,14 +193,22 @@ export interface ContactInfo {
   };
 }
 export interface Invoice {
-  id: string;
+  id: number | string;             
+  clientId?: number;
   totalPrice: number;
-  paymentStatus?: "paid" | "unpaid";
-  createdAt: string;
+  total?: number;            
+  status?: "PENDING" | "PAID" | "CANCELLED" | "paid" | "unpaid" | string;
+  isSummary?: boolean;
+  paymentStatus?: "paid" | "unpaid"; 
   paymentMethod?: string;
   transactionId?: string;
   paymentDate?: Date;
+  dueDate?: string;
+  paidAt?: string | null;
+  createdAt: string;
+  updatedAt?: string;
 }
+
 
 export interface WorkflowStep {
   id: number;

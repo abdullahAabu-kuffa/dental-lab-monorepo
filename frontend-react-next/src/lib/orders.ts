@@ -100,3 +100,31 @@ export function useUploadFile(
     onSettled: options?.onSettled,
   });
 }
+
+
+export async function fetchUpdateInvoice(invoiceId: number) {
+  const res = await fetch(`/api/orders/invoice/${invoiceId}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null);
+    throw new Error(errorData?.error || "Failed to update invoice");
+  }
+
+  const data = await res.json();
+  return data;
+}
+
+export function useUpdateInvoice() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (invoiceId: number) => fetchUpdateInvoice(invoiceId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+  });
+}
