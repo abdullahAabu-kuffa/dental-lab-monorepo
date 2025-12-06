@@ -11,6 +11,7 @@ import NavMobileMenu from "../../molecules/NavMobileMenu/NavMobileMenu";
 import { logoutRequest } from "../../../services/auth";
 import { useAuthStore } from "@/store/auth.store";
 
+
 // Notifications
 import NotificationBell from "../../molecules/notificationBell";
 import NotificationsMenu from "../notificationMenu";
@@ -82,7 +83,9 @@ const Navbar = () => {
 			});
 		}
 	}
-
+	if (pathname.includes("/dashboard") ) {
+		return null;
+	}
 	return (
 		<>
 			<nav
