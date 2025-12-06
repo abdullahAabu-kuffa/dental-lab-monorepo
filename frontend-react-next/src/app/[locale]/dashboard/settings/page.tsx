@@ -313,13 +313,13 @@ export default function AccountPage() {
           </form>
         </div>
         {/* Security & Preferences */}
-        <div className="bg-white shadow p-6 rounded-xl space-y-6">
+        {/* <div className="bg-white shadow p-6 rounded-xl space-y-6">
           <h2 className="text-lg font-semibold text-gray-700">
             Security & Preferences
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Change Password */}
+
             <div className="space-y-3 flex flex-col">
               <h3 className="font-medium">Change Password</h3>
               <form onSubmit={handlePasswordSubmit}>
@@ -404,7 +404,7 @@ export default function AccountPage() {
               </form>
             </div>
 
-            {/* Notifications */}
+            
             <div className="space-y-0">
               <h3 className="font-medium">Notifications & Theme</h3>
 
@@ -416,7 +416,7 @@ export default function AccountPage() {
                 />
               </div>
 
-              {/* <div className="flex items-center justify-between p-2">
+              <div className="flex items-center justify-between p-2">
                     <span>In‑App Alerts</span>
                     <SwitchButton  />
                 </div>
@@ -424,7 +424,7 @@ export default function AccountPage() {
                 <div className="flex items-center justify-between p-2">
                     <span>Guest Requests</span>
                     <SwitchButton />
-                </div> */}
+                </div>
 
               <div className="flex items-center justify-between p-2">
                 <span>Dark Mode</span>
@@ -439,10 +439,10 @@ export default function AccountPage() {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Danger Zone */}
-        <div className="bg-red-50 border border-red-200 p-6 rounded-xl">
+        {/* <div className="bg-red-50 border border-red-200 p-6 rounded-xl">
           <h2 className="text-lg font-semibold text-red-700 mb-2">
             Danger Zone
           </h2>
@@ -453,7 +453,7 @@ export default function AccountPage() {
           <button className="bg-red-600 text-white px-4 py-2 rounded-md">
             Delete My Account
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Tailwind helper styles */}

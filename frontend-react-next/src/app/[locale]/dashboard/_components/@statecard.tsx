@@ -32,7 +32,7 @@ const StatsCard: FC<StatsCardProps> = ({
     >
       <div className="flex-1">
         <p className="text-sm opacity-90">{title}</p>
-        <h2 className="text-3xl font-semibold wrap-break-word">{value}</h2>
+        <h2 className="text-2xl font-semibold wrap-break-word">{value}</h2>
         {growth && <p className="text-xs mt-1 opacity-80">{growth}</p>}
       </div>
 

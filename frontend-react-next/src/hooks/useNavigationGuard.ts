@@ -1,43 +1,52 @@
 import Swal from "sweetalert2";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export function useNavigationGuard(enabled: boolean) {
+  const allowExitRef = useRef(false);
+  const router = useRouter();
+
   useEffect(() => {
     if (!enabled) return;
 
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-      return "";
-    };
+    // Push a fake state so back button triggers popstate
+    history.pushState(null, "", location.href);
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    const onPopState = () => {
+      if (allowExitRef.current) return;
 
-    const handlePopState = async (e: PopStateEvent) => {
-      e.preventDefault();
+      // Cancel actual back
+      history.pushState(null, "", location.href);
 
-      const result = await Swal.fire({
+      Swal.fire({
         title: "Do you want to leave?",
         text: "The order will be canceled if you leave this page!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, leave",
         cancelButtonText: "No, stay here",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          allowExitRef.current = true;
+          window.onbeforeunload = null;
+          router.push("/User/Order");
+        }
       });
+    };
 
-      if (!result.isConfirmed) {
-        // إعادة نفس الحالة في التاريخ حتى يظل المستخدم هنا
-        history.pushState(null, "", window.location.href);
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!allowExitRef.current) {
+        e.preventDefault();
+        e.returnValue = "";
       }
     };
 
-    // push initial state to avoid immediate back
-    history.pushState(null, "", window.location.href);
-    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
     };
-  }, [enabled]);
+  }, [enabled, router]);
 }
