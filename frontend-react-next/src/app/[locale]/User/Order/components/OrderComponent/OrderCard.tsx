@@ -76,7 +76,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
 			selectedCardClass={statusColors.card}
 			selectedIconClass={statusColors.icon}
 			onClick={onClick}
-			paymentStatus={order.paymentStatus}
+			// paymentStatus={order.paymentStatus}
 		/>
 	);
 };

@@ -41,14 +41,14 @@ export default function UploadPage() {
 		      ${selectedServices
 						?.map(
 							(m) =>
-								`<li>• ${m.label} — <span style="color:#e4b441;">$${m.price}</span></li>`
+								`<li>• ${m.label} — <span style="color:#e4b441;">EG ${m.price}</span></li>`
 						)
 						.join("")}
 		    </ul>
 
 		    <br/>
 		    <strong>${t("totalAmount")}</strong>
-		    <span style="color:#e4b441; font-weight:600;">$${totalAmount}</span>
+		    <span style="color:#e4b441; font-weight:600;">EG ${totalAmount}</span>
 		    <br/><br/>
 		    <strong>${t("patientName")}</strong> ${formData?.patientName || "-"} <br/>
 		    <strong>${t("age")}</strong> ${formData?.date || "-"} <br/>

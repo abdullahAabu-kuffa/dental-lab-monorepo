@@ -89,7 +89,7 @@ export const DetailsOrder: React.FC<DetailsInvoiceProps> = ({ invoice }) => {
 									Total Price
 								</label>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									${invoice.totalPrice}
+									EG {invoice.totalPrice}
 								</p>
 							</div>
 						</div>
