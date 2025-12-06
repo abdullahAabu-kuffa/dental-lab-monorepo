@@ -1,22 +1,24 @@
 import cron from "node-cron";
 import { prisma } from "../lib/prisma";
 import dayjs from "dayjs";
+
 console.log("Cron job registered!");
-cron.schedule("24 0 * * *", async () => {
-  console.log(" Generating monthly invoices...");
 
-  const lastMonthStart = dayjs().startOf("day").toDate();
-  const lastMonthEnd = dayjs().endOf("day").toDate();
+cron.schedule("* * * * *", async () => {
+  console.log(" Generating invoices for current month...");
 
-  console.log("Start:", lastMonthStart.toLocaleString());
-  console.log("End:", lastMonthEnd.toLocaleString());
+  const monthStart = dayjs().startOf("month").toDate();
+  const monthEnd = dayjs().endOf("month").toDate();
+
+  console.log("Start:", monthStart.toLocaleString());
+  console.log("End:", monthEnd.toLocaleString());
 
   const clients = await prisma.user.findMany({
     where: {
       orders: {
         some: {
           invoiceId: null,
-          createdAt: { gte: lastMonthStart, lte: lastMonthEnd },
+          createdAt: { gte: monthStart, lte: monthEnd },
         },
       },
     },
@@ -28,8 +30,8 @@ cron.schedule("24 0 * * *", async () => {
         userId: client.id,
         invoiceId: null,
         createdAt: {
-          gte: lastMonthStart,
-          lte: lastMonthEnd,
+          gte: monthStart,
+          lte: monthEnd,
         },
       },
     });
@@ -55,7 +57,7 @@ cron.schedule("24 0 * * *", async () => {
     console.log(`✔ Invoice created for client ${client.id}: ${invoice.id}`);
   }
 
-  console.log("🎉 Monthly invoices created successfully!");
+  console.log("🎉 Invoices for current month created successfully!");
 }, {
   timezone: "Africa/Cairo"
 });
