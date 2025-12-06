@@ -33,6 +33,7 @@ export default async function RootLayout({
 			<body>
 				<Provider>
 					<QueryProvider>
+						{/* <NavbarWrapper/> */}
 						<TokenRefreshInitializer />
 						{/* <AuthProvider> */}
 						<LoadingProvider>
