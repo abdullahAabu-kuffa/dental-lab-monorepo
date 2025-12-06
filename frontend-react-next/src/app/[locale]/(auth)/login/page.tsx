@@ -3,6 +3,7 @@
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 import ScrollAnimation from "@/app/[locale]/design-system/components/ScrollAnimation";
 import Button from "@/components/atoms/Button/Button";

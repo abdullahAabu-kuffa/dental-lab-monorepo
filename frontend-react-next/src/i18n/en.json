@@ -151,6 +151,8 @@
 	"educationalSubtitle": "Expert insights and tips for maintaining your oral health",
 
 	"createYourAccount": "Create Your Account",
+	"password": "Password",
+	"confirmPassword": "Confirm Password",
 	"phoneNumber": "Phone number",
 	"clinicLabName": "Clinic/Lab name",
 	"clinicLabAddress": "Clinic/Lab address",
