@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Package, CheckCircle2, XCircle } from "lucide-react";
-import { Invoice } from "@/hooks/useAuth";
+import { Invoice } from "@/types";
+
 interface DetailsInvoiceProps {
 	invoice: Invoice;
 }
@@ -79,7 +80,7 @@ export const DetailsOrder: React.FC<DetailsInvoiceProps> = ({ invoice }) => {
 									Due Date
 								</label>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									{formatDate(invoice.dueDate)}
+									{invoice.dueDate ? formatDate(invoice.dueDate) : "—"}
 								</p>
 							</div>
 

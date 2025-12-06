@@ -77,6 +77,7 @@ const OrdersTable = ({
     createdAt: o.createdAt,
     options: o.options,
     user: o.user,
+    note: o.note
   }));
 
   return (
